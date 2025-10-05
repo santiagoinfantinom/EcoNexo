@@ -1,103 +1,214 @@
-import Image from "next/image";
+"use client";
+import dynamic from "next/dynamic";
+import { useI18n, categoryLabel } from "@/lib/i18n";
+import { useEffect, useMemo, useState } from "react";
+
+type Category =
+  | "Medio ambiente"
+  | "Educación"
+  | "Salud"
+  | "Comunidad"
+  | "Océanos"
+  | "Alimentación";
+
+type Project = {
+  id: string;
+  name: string;
+  category: Category;
+  lat: number;
+  lng: number;
+  city: string;
+  country: string;
+  spots?: number;
+};
+
+const Map = dynamic(() => import("../components/EuropeMap"), { ssr: false });
+
+const ALL_CATEGORIES: Category[] = [
+  "Medio ambiente",
+  "Educación",
+  "Salud",
+  "Comunidad",
+  "Océanos",
+  "Alimentación",
+];
+
+const DUMMY_PROJECTS: Project[] = [
+  {
+    id: "p1",
+    name: "Reforestación Urbana Berlín",
+    category: "Medio ambiente",
+    lat: 52.52,
+    lng: 13.405,
+    city: "Berlín",
+    country: "Alemania",
+    spots: 50,
+  },
+  {
+    id: "p2",
+    name: "Taller de Robótica Educativa",
+    category: "Educación",
+    lat: 40.4168,
+    lng: -3.7038,
+    city: "Madrid",
+    country: "España",
+  },
+  {
+    id: "p3",
+    name: "Clínica móvil comunitaria",
+    category: "Salud",
+    lat: 45.4642,
+    lng: 9.19,
+    city: "Milán",
+    country: "Italia",
+  },
+  {
+    id: "p4",
+    name: "Recuperación de playas",
+    category: "Océanos",
+    lat: 43.2965,
+    lng: 5.3698,
+    city: "Marsella",
+    country: "Francia",
+  },
+  {
+    id: "p5",
+    name: "Huertos urbanos",
+    category: "Alimentación",
+    lat: 51.5072,
+    lng: -0.1276,
+    city: "Londres",
+    country: "Reino Unido",
+  },
+  {
+    id: "p6",
+    name: "Centros vecinales inclusivos",
+    category: "Comunidad",
+    lat: 59.3293,
+    lng: 18.0686,
+    city: "Estocolmo",
+    country: "Suecia",
+  },
+];
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [active, setActive] = useState<Category | "Todas">("Todas");
+  const [remote, setRemote] = useState<Project[] | null>(null);
+  const { t, locale } = useI18n();
+  const COLOR_BY_CATEGORY: Record<Category, { bg: string; text: string; border: string }> = {
+    "Medio ambiente": { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },
+    "Educación": { bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-200" },
+    "Salud": { bg: "bg-rose-100", text: "text-rose-800", border: "border-rose-200" },
+    "Comunidad": { bg: "bg-amber-100", text: "text-amber-900", border: "border-amber-200" },
+    "Océanos": { bg: "bg-cyan-100", text: "text-cyan-800", border: "border-cyan-200" },
+    "Alimentación": { bg: "bg-lime-100", text: "text-lime-800", border: "border-lime-200" },
+  };
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch("/api/projects");
+        if (!res.ok) return; // fallback a DUMMY_PROJECTS
+        const data: Project[] = await res.json();
+        if (Array.isArray(data) && data.length) setRemote(data);
+      } catch {}
+    }
+    load();
+  }, []);
+  const filtered = useMemo(
+    () =>
+      (active === "Todas"
+        ? (remote ?? DUMMY_PROJECTS)
+        : (remote ?? DUMMY_PROJECTS).filter((p) => p.category === active)),
+    [active, remote]
+  );
+  // TODO: fetch from API when env is set
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap gap-2 justify-center">
+        <button
+          className={`px-3 py-1 rounded-full border ${
+            active === "Todas" ? "bg-green-600 text-black" : "bg-white text-black"
+          }`}
+          onClick={() => setActive("Todas")}
+        >
+          {t("all")}
+        </button>
+        {ALL_CATEGORIES.map((c) => (
+          <button
+            key={c}
+            className={`px-3 py-1 rounded-full border ${
+              active === c
+                ? "bg-green-600 text-white"
+                : `${COLOR_BY_CATEGORY[c].bg} ${COLOR_BY_CATEGORY[c].text} ${COLOR_BY_CATEGORY[c].border}`
+            }`}
+            onClick={() => setActive(c)}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            {categoryLabel(c as any, locale as any)}
+          </button>
+        ))}
+      </div>
+      <div className="flex justify-center">
+        <div className="relative flex items-center justify-center" style={{ padding: "12px" }}>
+          <div
+            aria-hidden
+            className="absolute -z-10"
+            style={{
+              height: "min(76vh, 92vw)",
+              width: "min(76vh, 92vw)",
+              borderRadius: "9999px",
+              background:
+                "radial-gradient(closest-side, rgba(34,197,94,0.25), rgba(34,197,94,0.05) 60%, transparent 65%)",
+              filter: "blur(2px)",
+            }}
+          />
+          <div
+            className="overflow-hidden border-4 border-green-600 shadow-xl"
+            style={{
+              height: "min(70vh, 88vw)",
+              width: "min(70vh, 88vw)",
+              borderRadius: "9999px",
+            }}
           >
-            Read our docs
-          </a>
+            <Map projects={filtered} />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </div>
+      {/* Buscador bajo el mapa */}
+      <div className="flex justify-center">
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const input = (e.currentTarget.elements.namedItem('q') as HTMLInputElement);
+            const q = input?.value?.trim();
+            if (!q) return;
+            try {
+              const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1&addressdetails=1`, { headers: { 'Accept-Language': locale } });
+              const data = await res.json();
+              const first = Array.isArray(data) ? data[0] : null;
+              if (first) {
+                const lat = parseFloat(first.lat); const lon = parseFloat(first.lon);
+                window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat, lon } }));
+              }
+            } catch {}
+          }}
+          className="bg-white/95 backdrop-blur border rounded-full shadow flex items-center gap-2 px-3 py-1"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <input name="q" placeholder={t('cityPh')} className="outline-none text-sm bg-transparent w-64 text-black" />
+          <button className="text-sm bg-green-600 text-white rounded-full px-3 py-1">OK</button>
+          <button type="button" className="text-sm ml-2 border rounded-full px-3 py-1" onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}>Reset</button>
+          <button type="button" className="text-sm ml-2 border rounded-full px-3 py-1 flex items-center gap-1" onClick={() => {
+            if (!('geolocation' in navigator)) return;
+            navigator.geolocation.getCurrentPosition((pos) => {
+              const lat = pos.coords.latitude; const lon = pos.coords.longitude;
+              window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat, lon } }));
+            });
+          }}>
+            <span>📍</span>
+            <span>GPS</span>
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
