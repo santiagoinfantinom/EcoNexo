@@ -1,5 +1,5 @@
 "use client";
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L, { Map as LeafletMap } from "leaflet";
 import Link from "next/link";
 import { useI18n, categoryLabel, projectNameLabel } from "@/lib/i18n";
@@ -87,8 +87,6 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         setTimeout(() => mapRef.current?.invalidateSize(), 1000);
       }}
     >
-      {/* Control nativo de zoom (+/−) de Leaflet */}
-      <ZoomControl position="topright" />
       {/* Bridge to capture map instance safely */}
       {/** @ts-ignore */}
       <SetMapRef onReady={(m: LeafletMap) => (mapRef.current = m)} />
@@ -151,8 +149,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </div>
 
       {/* Arrows + zoom controls (top-right) */}
-      {/* Paneo (izquierda, centrado vertical dentro de la burbuja) */}
-      <div className="pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 z-[300] flex flex-col gap-2">
+      {/* Paneo (izquierda, centrado vertical) pegado al borde interno de la burbuja */}
+      <div className="pointer-events-auto absolute left-[12px] top-1/2 -translate-y-1/2 z-[300] flex flex-col gap-3">
         <button
           className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.panBy([0, -140], { animate: true })}
@@ -179,8 +177,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         >↓</button>
       </div>
 
-      {/* Zoom custom (derecha, centrado) */}
-      <div className="pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 z-[300] flex flex-col gap-2">
+      {/* Zoom custom (derecha, centrado) pegado al borde interno de la burbuja */}
+      <div className="pointer-events-auto absolute right-[12px] top-1/2 -translate-y-1/2 z-[300] flex flex-col gap-3">
         <button
           className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.zoomIn()}
