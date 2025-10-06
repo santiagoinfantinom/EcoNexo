@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Geist, Geist_Mono, Inter_Tight } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
+import { ThemeProvider } from "@/lib/theme";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import HeaderNav from "@/components/HeaderNav";
 
@@ -33,11 +34,13 @@ export default function RootLayout({
       <body
         className={`${interTight.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <I18nProvider>
-        <LanguageSwitcher />
-        <HeaderNav />
-        <main className="p-6">{children}</main>
-        </I18nProvider>
+        <ThemeProvider>
+          <I18nProvider>
+            <LanguageSwitcher />
+            <HeaderNav />
+            <main className="p-6">{children}</main>
+          </I18nProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

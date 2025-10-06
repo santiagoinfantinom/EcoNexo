@@ -3,12 +3,17 @@
 create table if not exists public.projects (
   id uuid primary key default gen_random_uuid(),
   name text not null,
+  name_en text,
+  name_de text,
   category text not null,
   city text not null,
   country text not null,
   lat double precision not null,
   lng double precision not null,
   spots integer,
+  description text,
+  description_en text,
+  description_de text,
   created_at timestamptz default now()
 );
 

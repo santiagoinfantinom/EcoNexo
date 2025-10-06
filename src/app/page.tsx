@@ -124,7 +124,7 @@ export default function Home() {
   // TODO: fetch from API when env is set
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 bg-modern rounded-2xl p-2">
       <div className="flex flex-wrap gap-2 justify-center">
         <button
           className={`px-3 py-1 rounded-full border ${
