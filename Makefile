@@ -11,7 +11,8 @@ supabase-link:
 	$(SUPABASE) link --project-ref $(PROJECT_REF)
 
 supabase-apply:
-	$(SUPABASE) db execute --file supabase/schema.sql
+	$(SUPABASE) db push --yes
 
 supabase-rollback:
-	$(SUPABASE) db execute --file supabase/rollback.sql
+	@echo "Rollback por CLI no soporta archivos arbitrarios en esta versión."
+	@echo "Abre supabase/rollback.sql en el SQL Editor y ejecútalo para revertir los datos demo."
