@@ -1,5 +1,5 @@
 "use client";
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L, { Map as LeafletMap } from "leaflet";
 import Link from "next/link";
 import { useI18n, categoryLabel, projectNameLabel } from "@/lib/i18n";
@@ -90,7 +90,6 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       {/* Bridge to capture map instance safely */}
       {/** @ts-ignore */}
       <SetMapRef onReady={(m: LeafletMap) => (mapRef.current = m)} />
-      <ZoomControl position="topright" />
       <TileLayer
         attribution='&copy; OpenStreetMap & CARTO'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
@@ -151,6 +150,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </div>
 
       {/* Arrows + zoom controls (top-right) */}
+      {/* Flechas (arriba a la derecha) */}
       <div className="pointer-events-auto absolute right-3 top-3 grid gap-2">
         <div className="grid grid-cols-3 gap-1">
           <span />
@@ -176,18 +176,22 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
             title="Derecha"
           >→</button>
         </div>
-        <div className="flex flex-col gap-1">
-          <button
-            className="h-8 w-8 rounded bg-white/95 border shadow text-lg leading-none text-black"
-            onClick={() => mapRef.current?.zoomIn()}
-            title="Acercar"
-          >+</button>
-          <button
-            className="h-8 w-8 rounded bg-white/95 border shadow text-lg leading-none text-black"
-            onClick={() => mapRef.current?.zoomOut()}
-            title="Alejar"
-          >−</button>
-        </div>
+      </div>
+
+      {/* Zoom (derecha, centrado vertical dentro de la burbuja) */}
+      <div className="pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 flex flex-col gap-2">
+        <button
+          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          onClick={() => mapRef.current?.zoomIn()}
+          title="Acercar"
+          aria-label="Acercar"
+        >+</button>
+        <button
+          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          onClick={() => mapRef.current?.zoomOut()}
+          title="Alejar"
+          aria-label="Alejar"
+        >−</button>
       </div>
     </div>
     </div>
