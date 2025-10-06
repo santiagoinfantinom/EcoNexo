@@ -16,3 +16,9 @@ supabase-apply:
 supabase-rollback:
 	@echo "Rollback por CLI no soporta archivos arbitrarios en esta versión."
 	@echo "Abre supabase/rollback.sql en el SQL Editor y ejecútalo para revertir los datos demo."
+
+supabase-repair:
+	$(SUPABASE) migration repair --status reverted $(VERSION)
+
+supabase-pull:
+	$(SUPABASE) db pull
