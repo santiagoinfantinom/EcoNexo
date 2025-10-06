@@ -122,7 +122,10 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <div className="pointer-events-auto absolute inset-0 flex items-center justify-center">
         <button
           onClick={() => {
-            if (!("geolocation" in navigator)) return;
+            if (!("geolocation" in navigator)) {
+              alert("Geolocation no está disponible en este dispositivo.");
+              return;
+            }
             navigator.geolocation.getCurrentPosition(
               (pos) => {
                 const lat = pos.coords.latitude;
@@ -131,7 +134,11 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
                 const circle = L.circle([lat, lon], { radius: 300, color: "#16a34a" }).addTo(mapRef.current!);
                 setTimeout(() => circle.remove(), 2500);
               },
-              () => {},
+              (err) => {
+                if (err.code === err.PERMISSION_DENIED) {
+                  alert("Para centrar en tu ubicación, concede permiso de localización al navegador.");
+                }
+              },
               { enableHighAccuracy: true, timeout: 8000 }
             );
           }}
@@ -149,23 +156,23 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
           <span />
           <button
             className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
-            onClick={() => mapRef.current?.panBy([0, -120])}
+            onClick={() => mapRef.current?.panBy([0, -120], { animate: true })}
             title="Arriba"
           >↑</button>
           <span />
           <button
             className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
-            onClick={() => mapRef.current?.panBy([-120, 0])}
+            onClick={() => mapRef.current?.panBy([-120, 0], { animate: true })}
             title="Izquierda"
           >←</button>
           <button
             className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
-            onClick={() => mapRef.current?.panBy([0, 120])}
+            onClick={() => mapRef.current?.panBy([0, 120], { animate: true })}
             title="Abajo"
           >↓</button>
           <button
             className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
-            onClick={() => mapRef.current?.panBy([120, 0])}
+            onClick={() => mapRef.current?.panBy([120, 0], { animate: true })}
             title="Derecha"
           >→</button>
         </div>
