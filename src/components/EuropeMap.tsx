@@ -115,10 +115,9 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         </Marker>
       ))}
     </MapContainer>
-    {/* Controles superpuestos */}
-    <div className="pointer-events-none absolute inset-0 z-[400]">
+    {/* Controles superpuestos (solo envolvemos cada bloque para no bloquear popups) */}
       {/* Botón de ubicación (centrado sobre el mapa) */}
-      <div className="pointer-events-auto absolute inset-0 flex items-center justify-center">
+      <div className="pointer-events-auto absolute inset-0 z-[300] flex items-center justify-center">
         <button
           onClick={() => {
             if (!("geolocation" in navigator)) {
@@ -151,7 +150,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
 
       {/* Arrows + zoom controls (top-right) */}
       {/* Paneo (izquierda, centrado vertical dentro de la burbuja) */}
-      <div className="pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 flex flex-col gap-2">
+      <div className="pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 z-[300] flex flex-col gap-2">
         <button
           className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.panBy([0, -140], { animate: true })}
@@ -179,7 +178,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </div>
 
       {/* Zoom (derecha, centrado vertical dentro de la burbuja) */}
-      <div className="pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 flex flex-col gap-2">
+      <div className="pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 z-[300] flex flex-col gap-2">
         <button
           className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.zoomIn()}
@@ -197,7 +196,6 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <style jsx>{`
         :global(.leaflet-popup) { z-index: 1000; }
       `}</style>
-    </div>
     </div>
     </>
   );
