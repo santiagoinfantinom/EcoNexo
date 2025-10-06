@@ -52,6 +52,7 @@ const DICTS: Record<Locale, Dict> = {
     capacityPh: "Número de plazas",
     notesPh: "Detalles, requisitos, etc.",
     availabilityPh: "Ej: fines de semana",
+    backToProject: "Volver al proyecto",
   },
   en: {
     app: "EcoNexo",
@@ -99,6 +100,7 @@ const DICTS: Record<Locale, Dict> = {
     capacityPh: "Number of seats",
     notesPh: "Details, requirements, etc.",
     availabilityPh: "e.g., weekends",
+    backToProject: "Back to project",
   },
   de: {
     app: "EcoNexo",
@@ -146,6 +148,7 @@ const DICTS: Record<Locale, Dict> = {
     capacityPh: "Anzahl der Plätze",
     notesPh: "Details, Anforderungen usw.",
     availabilityPh: "z. B. Wochenenden",
+    backToProject: "Zurück zum Projekt",
   },
 };
 

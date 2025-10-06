@@ -119,7 +119,7 @@ export default function VoluntariadoPage({ params }: { params: Promise<{ id: str
         )}
       </div>
 
-      <Link href={`/projects/${id}`} className="text-green-700 underline w-fit">Volver al proyecto</Link>
+      <Link href={`/projects/${id}`} className="text-green-700 underline w-fit">{t("backToProject")}</Link>
     </div>
   );
 }
