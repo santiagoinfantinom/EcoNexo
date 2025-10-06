@@ -200,4 +200,61 @@ export function categoryLabel(original: string, locale: Locale) {
   return (m as any)[locale] || original;
 }
 
+// Impact tags translations from Spanish labels used in data
+const IMPACT_TAG_MAP: Record<string, { en: string; de: string }> = {
+  "Reforestación": { en: "Reforestation", de: "Aufforstung" },
+  "Calidad del aire": { en: "Air quality", de: "Luftqualität" },
+  STEM: { en: "STEM", de: "STEM" },
+  "Inclusión": { en: "Inclusion", de: "Inklusion" },
+  "Prevención": { en: "Prevention", de: "Prävention" },
+  "Acceso": { en: "Access", de: "Zugang" },
+  "Integración": { en: "Integration", de: "Integration" },
+  "Cultura": { en: "Culture", de: "Kultur" },
+  "Playas limpias": { en: "Clean beaches", de: "Saubere Strände" },
+  "Biodiversidad": { en: "Biodiversity", de: "Biodiversität" },
+  "Huertos urbanos": { en: "Urban gardens", de: "Urbane Gärten" },
+  "Comunidad": { en: "Community", de: "Gemeinschaft" },
+};
+
+export function impactTagLabel(original: string, locale: Locale) {
+  if (locale === "es") return original;
+  const m = IMPACT_TAG_MAP[original];
+  if (!m) return original;
+  return (m as any)[locale] || original;
+}
+
+// Optional per-project description translations for fallback/demo content
+const PROJECT_DESCRIPTION_MAP: Record<string, { en: string; de: string }> = {
+  p1: {
+    en: "Planting native trees in neighborhoods lacking green areas, engaging schools and local organizations.",
+    de: "Pflanzung einheimischer Bäume in Vierteln mit wenig Grünflächen, unter Einbindung von Schulen und lokalen Organisationen.",
+  },
+  p2: {
+    en: "STEAM program for at‑risk youth focusing on prototyping and computational thinking.",
+    de: "STEAM‑Programm für benachteiligte Jugendliche mit Schwerpunkt auf Prototyping und Computational Thinking.",
+  },
+  p3: {
+    en: "Mobile primary care with a focus on prevention and basic check‑ups in peripheral neighborhoods.",
+    de: "Mobile Grundversorgung mit Fokus auf Prävention und Basis‑Checks in Randbezirken.",
+  },
+  p4: {
+    en: "Coastal clean‑ups, microplastic monitoring, and environmental education for tourists and residents.",
+    de: "Küstenreinigung, Mikroplastik‑Monitoring und Umweltbildung für Tourist:innen und Einwohner:innen.",
+  },
+  p5: {
+    en: "Network of community gardens to strengthen food security and promote sustainable diets.",
+    de: "Netzwerk von Gemeinschaftsgärten zur Stärkung der Ernährungssicherheit und Förderung nachhaltiger Ernährung.",
+  },
+  p6: {
+    en: "Creation of community centers with cultural programming and integration workshops for new residents.",
+    de: "Aufbau von Nachbarschaftszentren mit Kulturprogramm und Integrationsworkshops für neue Einwohner:innen.",
+  },
+};
+
+export function projectDescriptionLabel(projectId: string, original: string, locale: Locale) {
+  if (locale === "es") return original;
+  const m = PROJECT_DESCRIPTION_MAP[projectId];
+  if (!m) return original;
+  return (m as any)[locale] || original;
+}
 

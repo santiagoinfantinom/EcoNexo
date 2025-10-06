@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useI18n, categoryLabel } from "@/lib/i18n";
+import { useI18n, categoryLabel, impactTagLabel, projectDescriptionLabel } from "@/lib/i18n";
 import ProjectImage from "@/components/ProjectImage";
 
 type ProjectDetails = {
@@ -68,7 +68,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
 
           <div className="grid gap-2">
             <div className="text-base font-semibold text-white">{t("description")}</div>
-            <p className="text-[16px] leading-relaxed text-white">{details.description}</p>
+            <p className="text-[16px] leading-relaxed text-white">{projectDescriptionLabel(details.id, details.description, locale)}</p>
           </div>
 
           <div className="grid gap-2">
@@ -77,7 +77,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
               {impactTags.map((tag, i) => (
                 <span key={i} className={`px-3 py-1 rounded-full border ${tag.color} inline-flex items-center gap-1 text-sm`}>
                   <span>{tag.emoji}</span>
-                  <span>{tag.label}</span>
+                  <span>{impactTagLabel(tag.label, locale)}</span>
                 </span>
               ))}
             </div>

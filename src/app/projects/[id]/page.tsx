@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
+import { impactTagLabel, projectDescriptionLabel, useI18n } from "@/lib/i18n";
 
 type Project = {
   id: string;
@@ -190,11 +191,12 @@ export default async function ProjectPage({
   const paypalLink = process.env.NEXT_PUBLIC_PAYPAL_LINK || "https://www.paypal.com/donate";
   const stripeLink = process.env.NEXT_PUBLIC_STRIPE_LINK || "https://stripe.com/payments/checkout";
 
+  // Translate impact tags based on current locale on the client, so pass raw labels
   return (
     <ProjectDetailClient
       id={id}
       details={details}
-      impactTags={IMPACT_TAGS_BY_CATEGORY[details.category] ?? []}
+      impactTags={(IMPACT_TAGS_BY_CATEGORY[details.category] ?? [])}
       paypalLink={paypalLink}
       stripeLink={stripeLink}
     />
