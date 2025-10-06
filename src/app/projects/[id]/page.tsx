@@ -5,6 +5,8 @@ import { impactTagLabel, projectDescriptionLabel, useI18n } from "@/lib/i18n";
 type Project = {
   id: string;
   name: string;
+  name_en?: string;
+  name_de?: string;
   category: string;
   lat: number;
   lng: number;
@@ -19,6 +21,8 @@ type ProjectDetails = Project & {
   budgetGoalEur: number;
   image: string; // path under /public or URL
   description: string;
+  description_en?: string;
+  description_de?: string;
 };
 
 const FALLBACK_DETAILS: Record<string, ProjectDetails> = {
@@ -175,12 +179,16 @@ export default async function ProjectPage({
     // If API provided values, prefer them
     id: project.id,
     name: project.name,
+    name_en: (project as any).name_en,
+    name_de: (project as any).name_de,
     category: project.category,
     lat: project.lat,
     lng: project.lng,
     city: project.city,
     country: project.country,
     spots: project.spots,
+    description_en: (project as any).description_en,
+    description_de: (project as any).description_de,
   } as ProjectDetails;
 
   const progress = Math.min(

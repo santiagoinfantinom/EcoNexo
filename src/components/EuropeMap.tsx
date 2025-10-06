@@ -9,6 +9,8 @@ import { useEffect, useRef } from "react";
 type Project = {
   id: string;
   name: string;
+  name_en?: string;
+  name_de?: string;
   category: string;
   lat: number;
   lng: number;
@@ -92,7 +94,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         <Marker key={p.id} position={[p.lat, p.lng]}>
           <Popup>
             <div className="grid gap-1">
-              <div className="font-medium">{projectNameLabel(p.id, p.name, locale as any)}</div>
+              <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
               <div className="text-xs text-gray-600">{p.city}, {p.country}</div>
               <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
               {p.spots !== undefined && (

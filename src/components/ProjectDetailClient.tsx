@@ -6,6 +6,8 @@ import ProjectImage from "@/components/ProjectImage";
 type ProjectDetails = {
   id: string;
   name: string;
+  name_en?: string;
+  name_de?: string;
   category: string;
   lat: number;
   lng: number;
@@ -17,6 +19,8 @@ type ProjectDetails = {
   budgetGoalEur: number;
   image: string;
   description: string;
+  description_en?: string;
+  description_de?: string;
 };
 
 export default function ProjectDetailClient({ id, details, impactTags, paypalLink, stripeLink }: {
@@ -68,7 +72,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
 
           <div className="grid gap-2">
             <div className="text-base font-semibold text-white">{t("description")}</div>
-            <p className="text-[16px] leading-relaxed text-white">{projectDescriptionLabel(details.id, details.description, locale)}</p>
+            <p className="text-[16px] leading-relaxed text-white">{(locale === 'en' && details.description_en) ? details.description_en : (locale === 'de' && details.description_de) ? details.description_de : projectDescriptionLabel(details.id, details.description, locale)}</p>
           </div>
 
           <div className="grid gap-2">
