@@ -150,27 +150,27 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
 
       {/* Arrows + zoom controls (top-right) */}
       {/* Paneo (izquierda, centrado vertical) pegado al borde interno de la burbuja */}
-      <div className="pointer-events-auto absolute left-[12px] top-1/2 -translate-y-1/2 z-[300] flex flex-col gap-3">
+      <div className="pointer-events-auto absolute left-[20px] top-1/2 -translate-y-1/2 z-[1000] flex flex-col gap-3">
         <button
-          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.panBy([0, -140], { animate: true })}
           title="Arriba"
           aria-label="Arriba"
         >↑</button>
         <button
-          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.panBy([-140, 0], { animate: true })}
           title="Izquierda"
           aria-label="Izquierda"
         >←</button>
         <button
-          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.panBy([140, 0], { animate: true })}
           title="Derecha"
           aria-label="Derecha"
         >→</button>
         <button
-          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.panBy([0, 140], { animate: true })}
           title="Abajo"
           aria-label="Abajo"
@@ -178,15 +178,15 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </div>
 
       {/* Zoom custom (derecha, centrado) pegado al borde interno de la burbuja */}
-      <div className="pointer-events-auto absolute right-[12px] top-1/2 -translate-y-1/2 z-[300] flex flex-col gap-3">
+      <div className="pointer-events-auto absolute right-[20px] top-1/2 -translate-y-1/2 z-[1000] flex flex-col gap-3">
         <button
-          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.zoomIn()}
           title="Acercar"
           aria-label="Acercar"
         >+</button>
         <button
-          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
           onClick={() => mapRef.current?.zoomOut()}
           title="Alejar"
           aria-label="Alejar"
