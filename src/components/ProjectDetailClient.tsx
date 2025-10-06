@@ -67,7 +67,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
             <div className="h-3 w-full bg-gray-300 rounded">
               <div className="h-3 bg-green-700 rounded" style={{ width: `${progress}%` }} aria-label="Progreso de recaudación" />
             </div>
-            <div className="text-base font-bold text-white">{progress}% alcanzado</div>
+            <div className="text-base font-bold text-white">{progress}% {t("reached")}</div>
           </div>
 
           <div className="grid gap-2">
