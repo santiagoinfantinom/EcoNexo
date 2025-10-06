@@ -150,8 +150,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </div>
 
       {/* Arrows + zoom controls (top-right) */}
-      {/* Flechas (arriba a la derecha) */}
-      <div className="pointer-events-auto absolute right-3 top-3 grid gap-2">
+      {/* Flechas (arriba a la izquierda) */}
+      <div className="pointer-events-auto absolute left-3 top-3 grid gap-2">
         <div className="grid grid-cols-3 gap-1">
           <span />
           <button
