@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:link": "make supabase-link PROJECT_REF=$PROJECT_REF",
+    "db:apply": "make supabase-apply",
+    "db:rollback": "make supabase-rollback"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.58.0",
