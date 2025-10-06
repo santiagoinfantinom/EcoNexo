@@ -19,13 +19,13 @@
   --background: #020617; /* slate-950 */
   --foreground: #e5e7eb; /* gray-200 */
   --accent: #22c55e; /* green-500 */
-  --accent-2: #38bdf8; /* sky-400 */
+  --accent-2: #8b5cf6; /* violet-500 */
 }
 [data-theme="light"] {
   --background: #ffffff;
   --foreground: #0f172a;
-  --accent: #16a34a;
-  --accent-2: #22d3ee;
+  --accent: #16a34a; /* green */
+  --accent-2: #7c3aed; /* violet */
 }
 
 body {
