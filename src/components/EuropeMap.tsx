@@ -116,7 +116,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       ))}
     </MapContainer>
     {/* Controles superpuestos */}
-    <div className="pointer-events-none absolute inset-0 z-[1000]">
+    <div className="pointer-events-none absolute inset-0 z-[400]">
       {/* Botón de ubicación (centrado sobre el mapa) */}
       <div className="pointer-events-auto absolute inset-0 flex items-center justify-center">
         <button
@@ -193,6 +193,10 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
           aria-label="Alejar"
         >−</button>
       </div>
+      {/* Asegurar que popups estén por encima de controles */}
+      <style jsx>{`
+        :global(.leaflet-popup) { z-index: 1000; }
+      `}</style>
     </div>
     </div>
     </>
