@@ -82,6 +82,10 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       style={{ height: "100%", width: "100%", display: "block" }}
       whenReady={() => {
         // fuerza el render correcto dentro del contenedor circular
+        if (!mapRef.current) {
+          // @ts-ignore rely on internal ref assigned by react-leaflet
+          mapRef.current = (document.querySelector('.leaflet-container') as any)?._leaflet_map || mapRef.current;
+        }
         setTimeout(() => mapRef.current?.invalidateSize(), 50);
         setTimeout(() => mapRef.current?.invalidateSize(), 300);
         setTimeout(() => mapRef.current?.invalidateSize(), 1000);
@@ -114,7 +118,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       ))}
     </MapContainer>
     {/* Controles superpuestos */}
-    <div className="pointer-events-none absolute inset-0">
+    <div className="pointer-events-none absolute inset-0 z-10">
       {/* Botón de ubicación (centrado sobre el mapa) */}
       <div className="pointer-events-auto absolute inset-0 flex items-center justify-center">
         <button
@@ -145,35 +149,35 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         <div className="grid grid-cols-3 gap-1">
           <span />
           <button
-            className="h-8 w-8 rounded bg-white/90 dark:bg-black/50 border text-sm"
+            className="h-8 w-8 rounded bg-white/90 border text-sm"
             onClick={() => mapRef.current?.panBy([0, -120])}
             title="Arriba"
           >↑</button>
           <span />
           <button
-            className="h-8 w-8 rounded bg-white/90 dark:bg-black/50 border text-sm"
+            className="h-8 w-8 rounded bg-white/90 border text-sm"
             onClick={() => mapRef.current?.panBy([-120, 0])}
             title="Izquierda"
           >←</button>
           <button
-            className="h-8 w-8 rounded bg-white/90 dark:bg-black/50 border text-sm"
+            className="h-8 w-8 rounded bg-white/90 border text-sm"
             onClick={() => mapRef.current?.panBy([0, 120])}
             title="Abajo"
           >↓</button>
           <button
-            className="h-8 w-8 rounded bg-white/90 dark:bg-black/50 border text-sm"
+            className="h-8 w-8 rounded bg-white/90 border text-sm"
             onClick={() => mapRef.current?.panBy([120, 0])}
             title="Derecha"
           >→</button>
         </div>
         <div className="flex flex-col gap-1">
           <button
-            className="h-8 w-8 rounded bg-white/90 dark:bg-black/50 border text-lg leading-none"
+            className="h-8 w-8 rounded bg-white/90 border text-lg leading-none"
             onClick={() => mapRef.current?.zoomIn()}
             title="Acercar"
           >+</button>
           <button
-            className="h-8 w-8 rounded bg-white/90 dark:bg-black/50 border text-lg leading-none"
+            className="h-8 w-8 rounded bg-white/90 border text-lg leading-none"
             onClick={() => mapRef.current?.zoomOut()}
             title="Alejar"
           >−</button>
