@@ -1,5 +1,5 @@
 "use client";
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap } from "react-leaflet";
 import L, { Map as LeafletMap } from "leaflet";
 import Link from "next/link";
 import { useI18n, categoryLabel, projectNameLabel } from "@/lib/i18n";
@@ -79,18 +79,17 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       zoom={4}
       scrollWheelZoom={true}
       zoomControl={false}
-      style={{ height: "100%", width: "100%", display: "block" }}
+      style={{ height: "100%", width: "100%", display: "block", position: "relative" }}
       whenReady={() => {
         // fuerza el render correcto dentro del contenedor circular
-        if (!mapRef.current) {
-          // @ts-ignore rely on internal ref assigned by react-leaflet
-          mapRef.current = (document.querySelector('.leaflet-container') as any)?._leaflet_map || mapRef.current;
-        }
         setTimeout(() => mapRef.current?.invalidateSize(), 50);
         setTimeout(() => mapRef.current?.invalidateSize(), 300);
         setTimeout(() => mapRef.current?.invalidateSize(), 1000);
       }}
     >
+      {/* Bridge to capture map instance safely */}
+      {/** @ts-ignore */}
+      <SetMapRef onReady={(m: LeafletMap) => (mapRef.current = m)} />
       <ZoomControl position="topright" />
       <TileLayer
         attribution='&copy; OpenStreetMap & CARTO'
@@ -118,7 +117,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       ))}
     </MapContainer>
     {/* Controles superpuestos */}
-    <div className="pointer-events-none absolute inset-0 z-10">
+    <div className="pointer-events-none absolute inset-0 z-[1000]">
       {/* Botón de ubicación (centrado sobre el mapa) */}
       <div className="pointer-events-auto absolute inset-0 flex items-center justify-center">
         <button
@@ -136,7 +135,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
               { enableHighAccuracy: true, timeout: 8000 }
             );
           }}
-          className="h-10 w-10 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur border shadow flex items-center justify-center text-xl"
+          className="h-10 w-10 rounded-full bg-white/95 backdrop-blur border shadow flex items-center justify-center text-xl text-black"
           title="Ubicación"
           aria-label="Ubicación"
         >
@@ -149,35 +148,35 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         <div className="grid grid-cols-3 gap-1">
           <span />
           <button
-            className="h-8 w-8 rounded bg-white/90 border text-sm"
+            className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
             onClick={() => mapRef.current?.panBy([0, -120])}
             title="Arriba"
           >↑</button>
           <span />
           <button
-            className="h-8 w-8 rounded bg-white/90 border text-sm"
+            className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
             onClick={() => mapRef.current?.panBy([-120, 0])}
             title="Izquierda"
           >←</button>
           <button
-            className="h-8 w-8 rounded bg-white/90 border text-sm"
+            className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
             onClick={() => mapRef.current?.panBy([0, 120])}
             title="Abajo"
           >↓</button>
           <button
-            className="h-8 w-8 rounded bg-white/90 border text-sm"
+            className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
             onClick={() => mapRef.current?.panBy([120, 0])}
             title="Derecha"
           >→</button>
         </div>
         <div className="flex flex-col gap-1">
           <button
-            className="h-8 w-8 rounded bg-white/90 border text-lg leading-none"
+            className="h-8 w-8 rounded bg-white/95 border shadow text-lg leading-none text-black"
             onClick={() => mapRef.current?.zoomIn()}
             title="Acercar"
           >+</button>
           <button
-            className="h-8 w-8 rounded bg-white/90 border text-lg leading-none"
+            className="h-8 w-8 rounded bg-white/95 border shadow text-lg leading-none text-black"
             onClick={() => mapRef.current?.zoomOut()}
             title="Alejar"
           >−</button>
@@ -187,6 +186,18 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     </div>
     </>
   );
+}
+
+function SetMapRef({ onReady }: { onReady: (m: LeafletMap) => void }) {
+	// Using a nested component to access the react-leaflet map instance
+	// without changing parent signatures.
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	const map = useMap();
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	useEffect(() => {
+		onReady(map as unknown as LeafletMap);
+	}, [map, onReady]);
+	return null;
 }
 
 
