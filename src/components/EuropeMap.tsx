@@ -2,7 +2,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L, { Map as LeafletMap } from "leaflet";
 import Link from "next/link";
-import { useI18n, categoryLabel } from "@/lib/i18n";
+import { useI18n, categoryLabel, projectNameLabel } from "@/lib/i18n";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 
@@ -92,7 +92,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         <Marker key={p.id} position={[p.lat, p.lng]}>
           <Popup>
             <div className="grid gap-1">
-              <div className="font-medium">{p.name}</div>
+              <div className="font-medium">{projectNameLabel(p.id, p.name, locale as any)}</div>
               <div className="text-xs text-gray-600">{p.city}, {p.country}</div>
               <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
               {p.spots !== undefined && (

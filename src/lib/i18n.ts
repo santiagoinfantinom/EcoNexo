@@ -258,3 +258,20 @@ export function projectDescriptionLabel(projectId: string, original: string, loc
   return (m as any)[locale] || original;
 }
 
+// Translations for demo project names (as displayed on the map)
+const PROJECT_NAME_MAP: Record<string, { en: string; de: string }> = {
+  p1: { en: "Berlin Urban Reforestation", de: "Urbane Aufforstung Berlin" },
+  p2: { en: "Educational Robotics Workshop", de: "Workshop für Bildungsrobotik" },
+  p3: { en: "Community Mobile Clinic", de: "Mobile Gemeinschaftsklinik" },
+  p4: { en: "Beach Recovery", de: "Strandaufbereitung" },
+  p5: { en: "Urban Gardens", de: "Urbane Gärten" },
+  p6: { en: "Inclusive Neighborhood Centers", de: "Inklusive Nachbarschaftszentren" },
+};
+
+export function projectNameLabel(projectId: string, original: string, locale: Locale) {
+  if (locale === "es") return original;
+  const m = PROJECT_NAME_MAP[projectId];
+  if (!m) return original;
+  return (m as any)[locale] || original;
+}
+
