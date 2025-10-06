@@ -150,32 +150,32 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </div>
 
       {/* Arrows + zoom controls (top-right) */}
-      {/* Flechas (arriba a la izquierda) */}
-      <div className="pointer-events-auto absolute left-3 top-3 grid gap-2">
-        <div className="grid grid-cols-3 gap-1">
-          <span />
-          <button
-            className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
-            onClick={() => mapRef.current?.panBy([0, -120], { animate: true })}
-            title="Arriba"
-          >↑</button>
-          <span />
-          <button
-            className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
-            onClick={() => mapRef.current?.panBy([-120, 0], { animate: true })}
-            title="Izquierda"
-          >←</button>
-          <button
-            className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
-            onClick={() => mapRef.current?.panBy([0, 120], { animate: true })}
-            title="Abajo"
-          >↓</button>
-          <button
-            className="h-8 w-8 rounded bg-white/95 border shadow text-sm text-black"
-            onClick={() => mapRef.current?.panBy([120, 0], { animate: true })}
-            title="Derecha"
-          >→</button>
-        </div>
+      {/* Paneo (izquierda, centrado vertical dentro de la burbuja) */}
+      <div className="pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 flex flex-col gap-2">
+        <button
+          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          onClick={() => mapRef.current?.panBy([0, -140], { animate: true })}
+          title="Arriba"
+          aria-label="Arriba"
+        >↑</button>
+        <button
+          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          onClick={() => mapRef.current?.panBy([-140, 0], { animate: true })}
+          title="Izquierda"
+          aria-label="Izquierda"
+        >←</button>
+        <button
+          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          onClick={() => mapRef.current?.panBy([140, 0], { animate: true })}
+          title="Derecha"
+          aria-label="Derecha"
+        >→</button>
+        <button
+          className="h-9 w-9 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
+          onClick={() => mapRef.current?.panBy([0, 140], { animate: true })}
+          title="Abajo"
+          aria-label="Abajo"
+        >↓</button>
       </div>
 
       {/* Zoom (derecha, centrado vertical dentro de la burbuja) */}
