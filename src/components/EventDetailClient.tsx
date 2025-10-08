@@ -848,7 +848,7 @@ function getLocalizedEventData(eventId: string, locale: string) {
 
   // For now, we'll use the base event data and translate the category
   // In a real app, you'd have localized fields in the database
-  const overridesFromMap = (EVENT_I18N as any)[eventId]?.[locale as 'en' | 'de'] || {};
+  const overridesFromMap = (EVENT_I18N as Record<string, Record<string, Partial<EventDetails>>>)[eventId]?.[locale as 'en' | 'de'] || {};
   const auto = autoTranslateEvent(baseEvent, locale);
   const translatedCategory = baseEvent.category === 'environment' ? 
     (locale === 'de' ? 'Umwelt' : locale === 'en' ? 'Environment' : 'Medio ambiente') :
@@ -885,7 +885,19 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
     setShowRegistrationForm(true);
   };
 
-  const handleRegistration = async (registrationData: any) => {
+  const handleRegistration = async (registrationData: {
+    name: string;
+    email: string;
+    phone: string;
+    emergencyContact: string;
+    emergencyPhone: string;
+    dietaryRestrictions?: string;
+    accessibilityNeeds?: string;
+    experience: 'beginner' | 'intermediate' | 'expert';
+    motivation: string;
+    agreeToTerms: boolean;
+    agreeToPhotos: boolean;
+  }) => {
     try {
       // In a real app, call API to register participation here
       // await fetch('/api/events/join', { 

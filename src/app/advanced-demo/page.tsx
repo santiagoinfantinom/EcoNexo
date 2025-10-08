@@ -124,15 +124,15 @@ const mockEvents = [
   }
 ];
 
+// Force dynamic rendering to avoid SSR issues with window object
+export const dynamic = 'force-dynamic';
+
 export default function AdvancedDemoPage() {
   return (
     <div className="min-h-screen bg-modern">
       <EcoNexoAdvanced 
         events={mockEvents}
         userId="demo-user"
-        onEventClick={(event) => {
-          console.log('Event clicked:', event.title);
-        }}
       />
     </div>
   );

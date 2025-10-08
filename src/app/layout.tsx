@@ -5,6 +5,7 @@ import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import CreateEventFAB from "@/components/CreateEventFAB";
 import HeaderNav from "@/components/HeaderNav";
 
 const geistSans = Geist({
@@ -39,6 +40,7 @@ export default function RootLayout({
             <LanguageSwitcher />
             <HeaderNav />
             <main className="p-6">{children}</main>
+            <CreateEventFAB />
           </I18nProvider>
         </ThemeProvider>
       </body>

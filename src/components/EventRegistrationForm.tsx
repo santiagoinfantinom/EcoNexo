@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { useI18n } from "@/lib/i18n";
 
 interface EventRegistrationFormProps {
   event: {
@@ -30,6 +31,7 @@ interface RegistrationData {
 }
 
 export default function EventRegistrationForm({ event, onRegister, onCancel }: EventRegistrationFormProps) {
+  const { t, locale } = useI18n();
   const [formData, setFormData] = useState<RegistrationData>({
     name: '',
     email: '',
@@ -51,37 +53,37 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
 
     // Required fields validation
     if (!formData.name.trim()) {
-      newErrors.name = 'El nombre es obligatorio';
+      newErrors.name = t('fullNameRequired');
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'El email es obligatorio';
+      newErrors.email = t('emailRequired');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'El email no es válido';
+      newErrors.email = t('emailInvalid');
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'El número de teléfono es obligatorio';
+      newErrors.phone = t('phoneRequired');
     } else if (!/^[\+]?[0-9\s\-\(\)]{9,15}$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'El número de teléfono no es válido';
+      newErrors.phone = t('phoneInvalid');
     }
 
     if (!formData.emergencyContact.trim()) {
-      newErrors.emergencyContact = 'El contacto de emergencia es obligatorio';
+      newErrors.emergencyContact = t('emergencyContactNameRequired');
     }
 
     if (!formData.emergencyPhone.trim()) {
-      newErrors.emergencyPhone = 'El teléfono de emergencia es obligatorio';
+      newErrors.emergencyPhone = t('emergencyContactPhoneRequired');
     } else if (!/^[\+]?[0-9\s\-\(\)]{9,15}$/.test(formData.emergencyPhone.replace(/\s/g, ''))) {
-      newErrors.emergencyPhone = 'El teléfono de emergencia no es válido';
+      newErrors.emergencyPhone = t('phoneInvalid');
     }
 
     if (!formData.motivation.trim()) {
-      newErrors.motivation = 'Por favor explica por qué quieres participar';
+      newErrors.motivation = t('motivationRequired');
     }
 
     if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = 'Debes aceptar los términos y condiciones';
+      newErrors.agreeToTerms = t('termsRequired');
     }
 
     setErrors(newErrors);
@@ -143,7 +145,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-                Registrarse al Evento
+                {t('registerForEvent')}
               </h2>
               <p className="text-slate-600 dark:text-slate-400 mt-1">
                 {event.title}
@@ -161,28 +163,26 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
           <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4 mb-6">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-slate-500 dark:text-slate-400">📅 Fecha:</span>
+                <span className="text-slate-500 dark:text-slate-400">📅 {t('date')}:</span>
                 <span className="ml-2 font-medium text-slate-900 dark:text-slate-100">
                   {new Date(event.date).toLocaleDateString()}
                 </span>
               </div>
               <div>
-                <span className="text-slate-500 dark:text-slate-400">⏰ Hora:</span>
+                <span className="text-slate-500 dark:text-slate-400">⏰ {t('time')}:</span>
                 <span className="ml-2 font-medium text-slate-900 dark:text-slate-100">
                   {event.time}
                 </span>
               </div>
               <div>
-                <span className="text-slate-500 dark:text-slate-400">📍 Ubicación:</span>
+                <span className="text-slate-500 dark:text-slate-400">📍 {t('location')}:</span>
                 <span className="ml-2 font-medium text-slate-900 dark:text-slate-100">
                   {event.location}
                 </span>
               </div>
               <div>
-                <span className="text-slate-500 dark:text-slate-400">👥 Plazas:</span>
-                <span className="ml-2 font-medium text-slate-900 dark:text-slate-100">
-                  {spotsLeft} disponibles
-                </span>
+                <span className="text-slate-500 dark:text-slate-400">👥 {t('availableSpots')}:</span>
+                <span className="ml-2 font-medium text-slate-900 dark:text-slate-100">{spotsLeft}</span>
               </div>
             </div>
           </div>
@@ -192,12 +192,12 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
             {/* Personal Information */}
             <div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                Información Personal
+                {t('personalInformation')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Nombre completo *
+                    {t('fullName')} *
                   </label>
                   <input
                     type="text"
@@ -206,7 +206,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                       errors.name ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
-                    placeholder="Tu nombre completo"
+                    placeholder={t('fullName')}
                   />
                   {errors.name && (
                     <p className="text-red-500 text-sm mt-1">{errors.name}</p>
@@ -233,7 +233,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Teléfono *
+                    {t('phoneNumber')} *
                   </label>
                   <input
                     type="tel"
@@ -251,16 +251,16 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Nivel de experiencia
+                    {t('experienceLevel')}
                   </label>
                   <select
                     value={formData.experience}
                     onChange={(e) => handleInputChange('experience', e.target.value as RegistrationData['experience'])}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   >
-                    <option value="beginner">Principiante</option>
-                    <option value="intermediate">Intermedio</option>
-                    <option value="expert">Experto</option>
+                    <option value="beginner">{t('beginner')}</option>
+                    <option value="intermediate">{t('intermediate')}</option>
+                    <option value="expert">{t('expert')}</option>
                   </select>
                 </div>
               </div>
@@ -269,12 +269,12 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
             {/* Emergency Contact */}
             <div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                Contacto de Emergencia
+                {t('emergencyContact')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Nombre del contacto *
+                    {t('emergencyContactName')} *
                   </label>
                   <input
                     type="text"
@@ -283,7 +283,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                       errors.emergencyContact ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
-                    placeholder="Nombre del contacto de emergencia"
+                    placeholder={t('emergencyContactName')}
                   />
                   {errors.emergencyContact && (
                     <p className="text-red-500 text-sm mt-1">{errors.emergencyContact}</p>
@@ -292,7 +292,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Teléfono de emergencia *
+                    {t('emergencyContactPhone')} *
                   </label>
                   <input
                     type="tel"
@@ -313,12 +313,12 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
             {/* Additional Information */}
             <div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                Información Adicional
+                {t('additionalInformation')}
               </h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    ¿Por qué quieres participar en este evento? *
+                    {t('motivationToParticipate')} *
                   </label>
                   <textarea
                     value={formData.motivation}
@@ -327,7 +327,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                       errors.motivation ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
-                    placeholder="Explica brevemente tu motivación para participar..."
+                    placeholder={t('motivationToParticipate')}
                   />
                   {errors.motivation && (
                     <p className="text-red-500 text-sm mt-1">{errors.motivation}</p>
@@ -336,20 +336,20 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Restricciones alimentarias (opcional)
+                    {t('dietaryRestrictions')}
                   </label>
                   <input
                     type="text"
                     value={formData.dietaryRestrictions}
                     onChange={(e) => handleInputChange('dietaryRestrictions', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
-                    placeholder="Ej: Vegetariano, alergias, etc."
+                    placeholder="z. B. Vegetarisch, Allergien, etc."
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Necesidades de accesibilidad (opcional)
+                    {t('accessibilityNeeds')}
                   </label>
                   <input
                     type="text"
@@ -365,7 +365,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
             {/* Terms and Conditions */}
             <div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                Términos y Condiciones
+                {t('consents')}
               </h3>
               <div className="space-y-3">
                 <label className="flex items-start gap-3">
@@ -375,9 +375,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     onChange={(e) => handleInputChange('agreeToTerms', e.target.checked)}
                     className="mt-1 w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                   />
-                  <span className="text-sm text-slate-700 dark:text-slate-300">
-                    Acepto los <a href="#" className="text-green-600 hover:text-green-700 underline">términos y condiciones</a> y la <a href="#" className="text-green-600 hover:text-green-700 underline">política de privacidad</a> *
-                  </span>
+                  <span className="text-sm text-slate-700 dark:text-slate-300">{t('acceptTerms')} *</span>
                 </label>
                 {errors.agreeToTerms && (
                   <p className="text-red-500 text-sm">{errors.agreeToTerms}</p>
@@ -390,9 +388,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     onChange={(e) => handleInputChange('agreeToPhotos', e.target.checked)}
                     className="mt-1 w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                   />
-                  <span className="text-sm text-slate-700 dark:text-slate-300">
-                    Autorizo el uso de mi imagen en fotografías y videos del evento para fines promocionales
-                  </span>
+                  <span className="text-sm text-slate-700 dark:text-slate-300">{t('photoVideoConsent')}</span>
                 </label>
               </div>
             </div>
@@ -404,7 +400,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                 onClick={onCancel}
                 className="flex-1 py-3 px-4 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors font-medium"
               >
-                Cancelar
+                {t('cancel')}
               </button>
               <button
                 type="submit"
@@ -414,10 +410,10 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    Registrando...
+                    {t('registering')}
                   </div>
                 ) : (
-                  'Registrarse al Evento'
+                  t('register')
                 )}
               </button>
             </div>
