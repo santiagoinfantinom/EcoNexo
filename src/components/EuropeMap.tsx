@@ -214,10 +214,10 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       )}
     </div>
 
-    {/* Zoom Controls - VISIBLES */}
-    <div className="pointer-events-auto absolute right-4 top-1/2 -translate-y-1/2 z-[2000] flex flex-col gap-2">
+    {/* Zoom Controls - MUY VISIBLES */}
+    <div className="pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 z-[3000] flex flex-col gap-3">
       <button
-        className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200 font-bold"
+        className="h-12 w-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-green-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.zoomIn()}
         title="Acercar"
         aria-label="Acercar"
@@ -225,7 +225,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         +
       </button>
       <button
-        className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200 font-bold"
+        className="h-12 w-12 rounded-full bg-red-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-red-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.zoomOut()}
         title="Alejar"
         aria-label="Alejar"
