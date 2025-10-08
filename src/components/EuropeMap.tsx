@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 import MapFilters from "./MapFilters";
 import CalendarView from "./CalendarView";
 import MapLayers from "./MapLayers";
-import MarkerCluster from "./MarkerCluster";
 
 type Project = {
   id: string;
@@ -44,7 +43,6 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
-  const [useClustering, setUseClustering] = useState(true);
   // Listen to external center events from the page-level search bar
   useEffect(() => {
     function onCenter(e: Event) {
@@ -136,31 +134,27 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       {/* Map Layers */}
       <MapLayers />
       
-      {/* Conditional rendering: clustering or individual markers */}
-      {useClustering ? (
-        <MarkerCluster projects={filteredProjects} />
-      ) : (
-        filteredProjects.map((p) => (
-          <Marker key={p.id} position={[p.lat, p.lng]}>
-            <Popup>
-              <div className="grid gap-1">
-                <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
-                <div className="text-xs text-gray-600">{p.city}, {p.country}</div>
-                <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
-                {p.spots !== undefined && (
-                  <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
-                )}
-                <Link
-                  href={`/projects/${p.id}`}
-                  className="text-green-700 underline text-sm mt-1"
-                >
-                  {t("viewDetails")}
-                </Link>
-              </div>
-            </Popup>
-          </Marker>
-        ))
-      )}
+      {/* Individual markers */}
+      {filteredProjects.map((p) => (
+        <Marker key={p.id} position={[p.lat, p.lng]}>
+          <Popup>
+            <div className="grid gap-1">
+              <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
+              <div className="text-xs text-gray-600">{p.city}, {p.country}</div>
+              <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
+              {p.spots !== undefined && (
+                <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
+              )}
+              <Link
+                href={`/projects/${p.id}`}
+                className="text-green-700 underline text-sm mt-1"
+              >
+                {t("viewDetails")}
+              </Link>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
     </MapContainer>
     
     {/* Controles superpuestos - VISIBLES */}
@@ -177,17 +171,6 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
 
       {/* Right Controls */}
       <div className="flex gap-2 pointer-events-auto">
-        <button
-          onClick={() => setUseClustering(!useClustering)}
-          className={`px-3 py-2 rounded-lg shadow-md transition-all text-sm font-medium hover:shadow-lg hover:scale-105 ${
-            useClustering 
-              ? 'bg-green-600 text-white hover:bg-green-700' 
-              : 'bg-gray-600 text-white hover:bg-gray-700'
-          }`}
-          title={useClustering ? t("showAll") : t("clusterMarkers")}
-        >
-          {useClustering ? `🔗 ${t("cluster")}` : `📍 ${t("individual")}`}
-        </button>
         <button
           onClick={() => setShowCalendar(!showCalendar)}
           className="px-3 py-2 bg-purple-600 text-white rounded-lg shadow-md hover:bg-purple-700 hover:shadow-lg hover:scale-105 transition-all text-sm font-medium"
