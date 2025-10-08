@@ -149,25 +149,14 @@ export default function Home() {
         ))}
       </div>
       <div className="flex justify-center">
-        <div className="relative flex items-center justify-center" style={{ padding: "2px" }}>
+        <div className="relative flex items-center justify-center" style={{ padding: "8px" }}>
           <div
-            aria-hidden
-            className="absolute -z-10"
+            className="overflow-hidden border-4 border-green-600 shadow-xl rounded-xl"
             style={{
-              height: "min(95vh, 99vw)",
-              width: "min(95vh, 99vw)",
-              borderRadius: "9999px",
-              background:
-                "radial-gradient(closest-side, rgba(34,197,94,0.25), rgba(34,197,94,0.05) 60%, transparent 65%)",
-              filter: "blur(2px)",
-            }}
-          />
-          <div
-            className="overflow-hidden border-4 border-green-600 shadow-xl"
-            style={{
-              height: "min(92vh, 96vw)",
-              width: "min(92vh, 96vw)",
-              borderRadius: "9999px",
+              height: "min(85vh, 90vw)",
+              width: "min(85vh, 90vw)",
+              maxWidth: "1200px",
+              maxHeight: "800px",
             }}
           >
             <Map projects={filtered} />
