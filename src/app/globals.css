@@ -4,8 +4,8 @@
 :root {
   --background: #ffffff;
   --foreground: #0f172a; /* slate-900 */
-  --accent: #16a34a; /* green-600 */
-  --accent-2: #22d3ee; /* cyan-400 */
+  --accent: #64748b; /* slate-500 - más sutil */
+  --accent-2: #94a3b8; /* slate-400 - más sutil */
 }
 
 @theme inline {
@@ -17,16 +17,16 @@
 
 /* Theme override by data attribute */
 [data-theme="dark"] {
-  --background: #020617; /* slate-950 */
-  --foreground: #e5e7eb; /* gray-200 */
-  --accent: #22c55e; /* green-500 */
-  --accent-2: #8b5cf6; /* violet-500 */
+  --background: #0f172a; /* slate-900 */
+  --foreground: #e2e8f0; /* slate-200 */
+  --accent: #64748b; /* slate-500 - sutil */
+  --accent-2: #475569; /* slate-600 - sutil */
 }
 [data-theme="light"] {
   --background: #ffffff;
   --foreground: #0f172a;
-  --accent: #16a34a; /* green */
-  --accent-2: #7c3aed; /* violet */
+  --accent: #64748b; /* slate-500 - sutil */
+  --accent-2: #94a3b8; /* slate-400 - sutil */
 }
 
 body {
@@ -39,12 +39,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Modern dual-color gradient background container */
+/* Modern minimal gradient background container */
 .bg-modern {
-  background:
-    radial-gradient(60rem 60rem at 85% 10%, color-mix(in oklab, var(--accent) 35%, transparent), transparent 40%),
-    radial-gradient(60rem 60rem at 10% 90%, color-mix(in oklab, var(--accent-2) 35%, transparent), transparent 40%),
-    linear-gradient(180deg, color-mix(in oklab, var(--background) 96%, transparent), color-mix(in oklab, var(--background) 96%, transparent));
+  background: 
+    linear-gradient(135deg, 
+      color-mix(in oklab, var(--background) 98%, var(--foreground) 2%) 0%,
+      color-mix(in oklab, var(--background) 99%, var(--foreground) 1%) 50%,
+      color-mix(in oklab, var(--background) 98%, var(--foreground) 2%) 100%
+    );
 }
 
 /* Typography utilities */
