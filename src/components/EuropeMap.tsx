@@ -214,6 +214,44 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       )}
     </div>
 
+    {/* Pan Controls - MUY VISIBLES */}
+    <div className="pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 z-[3000] flex flex-col gap-2">
+      <button
+        className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+        onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
+        title="Arriba"
+        aria-label="Arriba"
+      >
+        ↑
+      </button>
+      <div className="flex gap-2">
+        <button
+          className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+          onClick={() => mapRef.current?.panBy([-100, 0], { animate: true })}
+          title="Izquierda"
+          aria-label="Izquierda"
+        >
+          ←
+        </button>
+        <button
+          className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+          onClick={() => mapRef.current?.panBy([100, 0], { animate: true })}
+          title="Derecha"
+          aria-label="Derecha"
+        >
+          →
+        </button>
+      </div>
+      <button
+        className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+        onClick={() => mapRef.current?.panBy([0, 100], { animate: true })}
+        title="Abajo"
+        aria-label="Abajo"
+      >
+        ↓
+      </button>
+    </div>
+
     {/* Zoom Controls - MUY VISIBLES */}
     <div className="pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 z-[3000] flex flex-col gap-3">
       <button
@@ -237,7 +275,9 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
 
     {/* Asegurar que popups estén por encima de controles */}
     <style jsx>{`
-      :global(.leaflet-popup) { z-index: 1000; }
+      :global(.leaflet-popup) { z-index: 4000 !important; }
+      :global(.leaflet-popup-content-wrapper) { z-index: 4000 !important; }
+      :global(.leaflet-popup-tip) { z-index: 4000 !important; }
     `}</style>
     </div>
 
