@@ -12,6 +12,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   const { t, locale } = useI18n();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
+  const [monthCategory, setMonthCategory] = useState<'' | 'environment' | 'education' | 'community'>('');
   
   // Filter states for list view
   const [showFilters, setShowFilters] = useState(false);
@@ -612,7 +613,8 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
   const getEventsForDate = (date: Date) => {
     return mockEvents.filter(event => 
-      event.date.toDateString() === date.toDateString()
+      event.date.toDateString() === date.toDateString() &&
+      (monthCategory ? event.category === monthCategory : true)
     );
   };
 
@@ -756,6 +758,19 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
       {viewMode === 'month' && (
         <>
+          {/* Month category filter */}
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <select
+              value={monthCategory}
+              onChange={(e) => setMonthCategory(e.target.value as any)}
+              className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+            >
+              <option value="">{locale === 'es' ? 'Todas las categorías' : locale === 'de' ? 'Alle Kategorien' : 'All categories'}</option>
+              <option value="environment">{locale === 'es' ? 'Medio Ambiente' : locale === 'de' ? 'Umwelt' : 'Environment'}</option>
+              <option value="education">{locale === 'es' ? 'Educación' : locale === 'de' ? 'Bildung' : 'Education'}</option>
+              <option value="community">{locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community'}</option>
+            </select>
+          </div>
           {/* Month Navigation */}
           <div className="flex items-center justify-between mb-4">
             <button
@@ -816,6 +831,9 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                 event.category === 'environment' ? 'bg-green-600' : event.category === 'education' ? 'bg-blue-700' : 'bg-purple-700'
                               }`} />
                               {event.title}
+                              <span className="ml-1 opacity-80">
+                                ({event.registered}/{event.spots})
+                              </span>
                             </span>
                           </Link>
                         ))}

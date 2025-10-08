@@ -216,7 +216,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-4 mt-8 justify-center">
+        <div id="join" className="flex gap-4 mt-8 justify-center">
           <button 
             className="px-8 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-lg"
             disabled={spotsLeft === 0}
