@@ -214,6 +214,26 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       )}
     </div>
 
+    {/* Zoom Controls - VISIBLES */}
+    <div className="pointer-events-auto absolute right-4 top-1/2 -translate-y-1/2 z-[2000] flex flex-col gap-2">
+      <button
+        className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200 font-bold"
+        onClick={() => mapRef.current?.zoomIn()}
+        title="Acercar"
+        aria-label="Acercar"
+      >
+        +
+      </button>
+      <button
+        className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200 font-bold"
+        onClick={() => mapRef.current?.zoomOut()}
+        title="Alejar"
+        aria-label="Alejar"
+      >
+        −
+      </button>
+    </div>
+
 
     {/* Asegurar que popups estén por encima de controles */}
     <style jsx>{`
