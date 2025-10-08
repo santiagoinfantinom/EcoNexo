@@ -124,8 +124,8 @@ export default function Home() {
   // TODO: fetch from API when env is set
 
   return (
-    <div className="flex flex-col gap-0 bg-modern rounded-2xl p-1">
-      <div className="flex flex-wrap gap-0.5 justify-center">
+    <div className="flex flex-col gap-2 bg-modern rounded-2xl p-1">
+      <div className="flex flex-wrap gap-1 justify-center">
         <button
           className={`px-3 py-2 rounded-full border text-sm font-medium transition-all hover:scale-105 ${
             active === "Todas" ? "bg-green-600 text-white shadow-lg" : "bg-white/90 text-gray-700 hover:bg-white shadow-md"
@@ -149,7 +149,7 @@ export default function Home() {
         ))}
       </div>
       <div className="flex justify-center">
-        <div className="relative flex items-center justify-center" style={{ padding: "2px" }}>
+        <div className="relative flex items-center justify-center" style={{ padding: "8px" }}>
           <div
             className="overflow-hidden border-4 border-green-600 shadow-xl rounded-xl"
             style={{
@@ -181,7 +181,7 @@ export default function Home() {
               }
             } catch {}
           }}
-          className="bg-white/95 backdrop-blur border rounded-full shadow-lg flex items-center gap-1 px-3 py-2 font-medium"
+          className="bg-white/95 backdrop-blur border rounded-full shadow-lg flex items-center gap-2 px-3 py-2 font-medium"
         >
           <input name="q" placeholder={t('cityPh')} className="outline-none text-sm bg-transparent w-48 text-gray-700 font-medium" />
           <button className="text-sm bg-green-600 text-white rounded-full px-3 py-1 font-medium hover:bg-green-700 transition-colors">OK</button>

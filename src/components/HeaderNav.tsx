@@ -7,7 +7,7 @@ export default function HeaderNav() {
   const { t } = useI18n();
   const { theme, setTheme } = useTheme();
   return (
-    <header className="grid place-items-center gap-2 px-6 py-4 border-b relative">
+    <header className="grid place-items-center gap-2 px-6 py-4 relative">
       <div className="flex items-center gap-2 text-green-700 font-semibold">
         <span className="text-2xl">🌿</span>
         <span className="text-xl">{t("app")}</span>
