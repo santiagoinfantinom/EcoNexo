@@ -197,8 +197,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </div>
     </div>
 
-    {/* Botón de ubicación (centrado sobre el mapa) - DETRÁS DEL CALENDARIO */}
-    <div className={`pointer-events-auto absolute inset-0 flex items-center justify-center transition-all duration-300 ${showCalendar ? 'z-[1000] opacity-50' : 'z-[1500] opacity-100'}`}>
+    {/* Botón de ubicación (esquina inferior derecha) - DETRÁS DEL CALENDARIO */}
+    <div className={`pointer-events-auto absolute bottom-4 right-4 transition-all duration-300 ${showCalendar ? 'z-[1000] opacity-50' : 'z-[1500] opacity-100'}`}>
       <button
         onClick={handleCenterOnLocation}
         className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200"
