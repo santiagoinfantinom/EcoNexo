@@ -65,7 +65,6 @@ export default function VoluntariadoPage({ params }: { params: Promise<{ id: str
     <div className="grid gap-6 max-w-2xl">
       <div className="grid gap-2">
         <h1 className="text-2xl font-semibold">{t("volunteersPageTitle")}</h1>
-        <div className="text-sm text-gray-500">Proyecto: {id}</div>
       </div>
 
       <form onSubmit={submit} className="grid gap-4">
@@ -92,16 +91,16 @@ export default function VoluntariadoPage({ params }: { params: Promise<{ id: str
       <div className="grid gap-2">
         <h2 className="text-lg font-semibold">{t("localRecords")}</h2>
         {list.length === 0 ? (
-          <div className="text-sm text-gray-500">Aún no hay personas registradas.</div>
+          <div className="text-sm text-gray-500">{t("noVolunteersYet")}</div>
         ) : (
           <div className="overflow-auto border rounded bg-white text-black">
             <table className="min-w-full text-sm text-gray-900">
               <thead className="bg-gray-50 text-gray-900">
                 <tr>
-                  <th className="text-left p-2 border-b text-gray-900">Nombre</th>
-                  <th className="text-left p-2 border-b text-gray-900">Email</th>
-                  <th className="text-left p-2 border-b text-gray-900">Disponibilidad</th>
-                  <th className="text-left p-2 border-b text-gray-900">Notas</th>
+                  <th className="text-left p-2 border-b text-gray-900">{t("name")}</th>
+                  <th className="text-left p-2 border-b text-gray-900">{t("email")}</th>
+                  <th className="text-left p-2 border-b text-gray-900">{t("availability")}</th>
+                  <th className="text-left p-2 border-b text-gray-900">{t("notes")}</th>
                 </tr>
               </thead>
               <tbody>
