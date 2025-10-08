@@ -265,6 +265,52 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       category: 'environment',
       organizer: locale === 'es' ? 'Plantadores del Otoño' : locale === 'de' ? 'Herbstpflanzer' : 'Autumn Planters'
     },
+    // Extra October events to show immediately
+    {
+      id: 'e15b',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Ruta en bici por carriles verdes' :
+             locale === 'de' ? 'Radtour auf grünen Wegen' : 'Bike tour on green lanes',
+      date: new Date(2025, 9, 8), // October 8, 2025 (Wed)
+      time: '17:30',
+      duration: 2,
+      spots: 25,
+      registered: 14,
+      location: locale === 'es' ? 'Parque del Río, Madrid' :
+                locale === 'de' ? 'Flusspark, Madrid' : 'River Park, Madrid',
+      category: 'community',
+      organizer: locale === 'es' ? 'Ciclistas Verdes' : locale === 'de' ? 'Grüne Radler' : 'Green Cyclists'
+    },
+    {
+      id: 'e16b',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Taller de compost en casa' :
+             locale === 'de' ? 'Kompostieren zu Hause Workshop' : 'Home composting workshop',
+      date: new Date(2025, 9, 15), // October 15, 2025 (Wed)
+      time: '18:00',
+      duration: 2,
+      spots: 20,
+      registered: 11,
+      location: locale === 'es' ? 'Centro Vecinal, Berlín' :
+                locale === 'de' ? 'Nachbarschaftszentrum, Berlin' : 'Community Center, Berlin',
+      category: 'education',
+      organizer: locale === 'es' ? 'Compost Masters' : locale === 'de' ? 'Kompost-Meister' : 'Compost Masters'
+    },
+    {
+      id: 'e17b',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Poda urbana responsable' :
+             locale === 'de' ? 'Verantwortungsvoller Stadtbaumschnitt' : 'Responsible urban pruning',
+      date: new Date(2025, 9, 29), // October 29, 2025 (Wed)
+      time: '09:30',
+      duration: 3,
+      spots: 18,
+      registered: 9,
+      location: locale === 'es' ? 'Avenida Verde, Milán' :
+                locale === 'de' ? 'Grüne Allee, Mailand' : 'Green Avenue, Milan',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Arboristas Urbanos' : locale === 'de' ? 'Städtische Arboristen' : 'Urban Arborists'
+    },
     {
       id: 'e16',
       projectId: 'p4',
