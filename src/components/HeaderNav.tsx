@@ -9,13 +9,16 @@ export default function HeaderNav() {
   const { theme, setTheme } = useTheme();
   return (
     <header className="grid place-items-center gap-3 px-6 py-6 relative bg-gradient-to-b from-transparent via-transparent to-transparent">
-      <div className="flex items-center gap-3 text-black dark:text-slate-300 text-brand font-black">
-        <span className="text-3xl">🌿</span>
-        <span className="text-2xl" style={{ 
-          color: '#000000',
-          textShadow: '0.5px 0.5px 0 white, -0.5px -0.5px 0 white, 0.5px -0.5px 0 white, -0.5px 0.5px 0 white',
-          WebkitTextStroke: '0.5px white'
-        }}>{t("app")}</span>
+      {/* Brand block with persistent white background */}
+      <div className="rounded-xl bg-white shadow-sm px-4 py-2">
+        <div className="flex items-center gap-3 text-black text-brand font-black">
+          <span className="text-3xl">🌿</span>
+          <span className="text-2xl" style={{ 
+            color: '#000000',
+            textShadow: '0.5px 0.5px 0 white, -0.5px -0.5px 0 white, 0.5px -0.5px 0 white, -0.5px 0.5px 0 white',
+            WebkitTextStroke: '0.5px white'
+          }}>{t("app")}</span>
+        </div>
       </div>
       <nav className="flex gap-6 text-base">
         <Link 
@@ -23,6 +26,12 @@ export default function HeaderNav() {
           href="/"
         >
           {t("map")}
+        </Link>
+        <Link 
+          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          href="/calendario"
+        >
+          {t("calendar")}
         </Link>
         <Link 
           className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 

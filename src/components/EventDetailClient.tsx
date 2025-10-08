@@ -616,10 +616,29 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   }
 };
 
+// Function to get localized event data
+function getLocalizedEventData(eventId: string, locale: string) {
+  const baseEvent = EVENT_DETAILS[eventId];
+  if (!baseEvent) return null;
+
+  // For now, we'll use the base event data and translate the category
+  // In a real app, you'd have localized fields in the database
+  return {
+    ...baseEvent,
+    category: baseEvent.category === 'environment' ? 
+      (locale === 'de' ? 'Umwelt' : locale === 'en' ? 'Environment' : 'Medio ambiente') :
+      baseEvent.category === 'education' ?
+      (locale === 'de' ? 'Bildung' : locale === 'en' ? 'Education' : 'Educación') :
+      baseEvent.category === 'community' ?
+      (locale === 'de' ? 'Gemeinschaft' : locale === 'en' ? 'Community' : 'Comunidad') :
+      baseEvent.category
+  };
+}
+
 export default function EventDetailClient({ eventId }: { eventId: string }) {
   const { t, locale } = useI18n();
   
-  const event = EVENT_DETAILS[eventId];
+  const event = getLocalizedEventData(eventId, locale);
   
   if (!event) {
     notFound();
@@ -629,21 +648,22 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
   const spotsLeft = event.maxVolunteers - event.currentVolunteers;
 
   const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "environment": return "bg-green-100 text-green-800";
-      case "education": return "bg-blue-100 text-blue-800";
-      case "community": return "bg-purple-100 text-purple-800";
-      default: return "bg-gray-100 text-gray-800";
+    // Check for localized category names
+    if (category.includes('Umwelt') || category.includes('Environment') || category.includes('Medio ambiente')) {
+      return "bg-green-100 text-green-800";
     }
+    if (category.includes('Bildung') || category.includes('Education') || category.includes('Educación')) {
+      return "bg-blue-100 text-blue-800";
+    }
+    if (category.includes('Gemeinschaft') || category.includes('Community') || category.includes('Comunidad')) {
+      return "bg-purple-100 text-purple-800";
+    }
+    return "bg-gray-100 text-gray-800";
   };
 
   const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case "environment": return t("environment");
-      case "education": return t("education");
-      case "community": return t("community");
-      default: return category;
-    }
+    // Since we're already returning localized category names, just return them
+    return category;
   };
 
   return (

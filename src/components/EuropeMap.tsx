@@ -6,7 +6,6 @@ import { useI18n, categoryLabel, projectNameLabel } from "@/lib/i18n";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
 import MapFilters from "./MapFilters";
-import CalendarView from "./CalendarView";
 import MapLayers from "./MapLayers";
 
 type Project = {
@@ -40,7 +39,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
   const mapRef = useRef<LeafletMap | null>(null);
   const { t, locale } = useI18n();
   const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
-  const [showCalendar, setShowCalendar] = useState(false);
+  // Calendar overlay removed; calendar lives on its own page now
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   // Listen to external center events from the page-level search bar
@@ -107,7 +106,6 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     setSelectedProject(project);
     if (project) {
       mapRef.current?.setView([project.lat, project.lng], 13, { animate: true });
-      setShowCalendar(false);
     }
   };
 
@@ -168,20 +166,12 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
           onCenterOnLocation={handleCenterOnLocation}
         />
       </div>
-
-      {/* Right Controls */}
-      <div className="flex gap-2 pointer-events-auto">
-        <button
-          onClick={() => setShowCalendar(!showCalendar)}
-          className="px-3 py-2 bg-purple-600 text-white rounded-lg shadow-md hover:bg-purple-700 hover:shadow-lg hover:scale-105 transition-all text-sm font-medium"
-        >
-          📅 {t("calendar")}
-        </button>
-      </div>
+      {/* Right Controls (calendar button removed) */}
+      <div className="flex gap-2 pointer-events-auto" />
     </div>
 
-    {/* Botón de ubicación (esquina inferior derecha) - DETRÁS DEL CALENDARIO */}
-    <div className={`pointer-events-auto absolute bottom-4 right-4 transition-all duration-300 ${showCalendar ? 'z-[1000] opacity-50' : 'z-[1500] opacity-100'}`}>
+    {/* Botón de ubicación (esquina inferior derecha) */}
+    <div className={`pointer-events-auto absolute bottom-4 right-4 transition-all duration-300 z-[1500] opacity-100`}>
       <button
         onClick={handleCenterOnLocation}
         className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200"
@@ -197,8 +187,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       )}
     </div>
 
-    {/* Pan Controls - DETRÁS DEL CALENDARIO */}
-    <div className={`pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-2 transition-all duration-300 ${showCalendar ? 'z-[1000] opacity-50' : 'z-[3000] opacity-100'}`}>
+    {/* Pan Controls */}
+    <div className={`pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-2 transition-all duration-300 z-[3000] opacity-100`}>
       <button
         className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
@@ -235,8 +225,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </button>
     </div>
 
-    {/* Zoom Controls - DETRÁS DEL CALENDARIO */}
-    <div className={`pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-3 transition-all duration-300 ${showCalendar ? 'z-[1000] opacity-50' : 'z-[3000] opacity-100'}`}>
+    {/* Zoom Controls */}
+    <div className={`pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-3 transition-all duration-300 z-[3000] opacity-100`}>
       <button
         className="h-12 w-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-green-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.zoomIn()}
@@ -264,25 +254,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     `}</style>
     </div>
 
-    {/* Calendar Modal */}
-    {showCalendar && (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[6000] p-4">
-        <div className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-xl">
-          <button
-            onClick={() => setShowCalendar(false)}
-            className="absolute top-4 right-4 z-10 bg-gray-500 hover:bg-gray-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors font-bold text-lg"
-            title="Cerrar calendario"
-            aria-label="Cerrar calendario"
-          >
-            ×
-          </button>
-          <CalendarView 
-            projects={projects}
-            onProjectSelect={handleProjectSelect}
-          />
-        </div>
-      </div>
-    )}
+    {/* Calendar Modal removed */}
     </>
   );
 }
