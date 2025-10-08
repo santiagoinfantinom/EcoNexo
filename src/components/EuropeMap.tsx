@@ -115,7 +115,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
 
   return (
     <>
-    <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
+    <div ref={containerRef} className="relative group" style={{ height: "100%", width: "100%" }}>
     <MapContainer
       center={[50.1109, 8.6821]} // centro aproximado de Europa (Frankfurt)
       zoom={4}
@@ -184,7 +184,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <div className="flex gap-2 pointer-events-auto">
         <button
           onClick={() => setUseClustering(!useClustering)}
-          className={`px-4 py-2 rounded-lg shadow-lg transition-colors text-sm font-semibold ${
+          className={`px-3 py-2 rounded-lg shadow-md transition-all text-sm font-medium hover:shadow-lg hover:scale-105 ${
             useClustering 
               ? 'bg-green-600 text-white hover:bg-green-700' 
               : 'bg-gray-600 text-white hover:bg-gray-700'
@@ -195,18 +195,18 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         </button>
         <button
           onClick={() => setShowCalendar(!showCalendar)}
-          className="px-4 py-2 bg-purple-600 text-white rounded-lg shadow-lg hover:bg-purple-700 transition-colors text-sm font-semibold"
+          className="px-3 py-2 bg-purple-600 text-white rounded-lg shadow-md hover:bg-purple-700 hover:shadow-lg hover:scale-105 transition-all text-sm font-medium"
         >
           📅 {t("calendar")}
         </button>
       </div>
     </div>
 
-    {/* Botón de ubicación (centrado sobre el mapa) - VISIBLE */}
+    {/* Botón de ubicación (centrado sobre el mapa) - ELEGANTE */}
     <div className="pointer-events-auto absolute inset-0 z-[1500] flex items-center justify-center">
       <button
         onClick={handleCenterOnLocation}
-        className="h-12 w-12 rounded-full bg-white border-2 border-blue-500 shadow-lg flex items-center justify-center text-2xl text-blue-600 hover:bg-blue-50 transition-colors"
+        className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200"
         title="Centrar en mi ubicación"
         aria-label="Centrar en mi ubicación"
       >
@@ -219,47 +219,46 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       )}
     </div>
 
-    {/* Navigation Controls - VISIBLES */}
-    {/* Pan controls (left side) */}
-    <div className="pointer-events-auto absolute left-4 top-1/2 -translate-y-1/2 z-[2000] flex flex-col gap-2">
+    {/* Navigation Controls - HIDDEN by default, show on hover */}
+    <div className="pointer-events-none group-hover:pointer-events-auto absolute left-4 top-1/2 -translate-y-1/2 z-[2000] flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       <button
-        className="h-10 w-10 rounded-full bg-white border-2 border-gray-300 shadow-lg text-lg leading-none text-black hover:bg-gray-50 transition-colors font-bold"
+        className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
         onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
         title="Arriba"
         aria-label="Arriba"
       >↑</button>
       <div className="flex gap-2">
         <button
-          className="h-10 w-10 rounded-full bg-white border-2 border-gray-300 shadow-lg text-lg leading-none text-black hover:bg-gray-50 transition-colors font-bold"
+          className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
           onClick={() => mapRef.current?.panBy([-100, 0], { animate: true })}
           title="Izquierda"
           aria-label="Izquierda"
         >←</button>
         <button
-          className="h-10 w-10 rounded-full bg-white border-2 border-gray-300 shadow-lg text-lg leading-none text-black hover:bg-gray-50 transition-colors font-bold"
+          className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
           onClick={() => mapRef.current?.panBy([100, 0], { animate: true })}
           title="Derecha"
           aria-label="Derecha"
         >→</button>
       </div>
       <button
-        className="h-10 w-10 rounded-full bg-white border-2 border-gray-300 shadow-lg text-lg leading-none text-black hover:bg-gray-50 transition-colors font-bold"
+        className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
         onClick={() => mapRef.current?.panBy([0, 100], { animate: true })}
         title="Abajo"
         aria-label="Abajo"
       >↓</button>
     </div>
 
-    {/* Zoom controls (right side) */}
-    <div className="pointer-events-auto absolute right-4 top-1/2 -translate-y-1/2 z-[2000] flex flex-col gap-2">
+    {/* Zoom controls (right side) - HIDDEN by default, show on hover */}
+    <div className="pointer-events-none group-hover:pointer-events-auto absolute right-4 top-1/2 -translate-y-1/2 z-[2000] flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       <button
-        className="h-10 w-10 rounded-full bg-white border-2 border-gray-300 shadow-lg text-lg leading-none text-black hover:bg-gray-50 transition-colors font-bold"
+        className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
         onClick={() => mapRef.current?.zoomIn()}
         title="Acercar"
         aria-label="Acercar"
       >+</button>
       <button
-        className="h-10 w-10 rounded-full bg-white border-2 border-gray-300 shadow-lg text-lg leading-none text-black hover:bg-gray-50 transition-colors font-bold"
+        className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
         onClick={() => mapRef.current?.zoomOut()}
         title="Alejar"
         aria-label="Alejar"
