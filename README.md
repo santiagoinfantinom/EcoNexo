@@ -4,6 +4,19 @@
 
 Mapa interactivo de proyectos y eventos sostenibles en Europa.
 
+## Funciones sociales (beta)
+
+- Perfil de usuario: `/perfil` (edición local + API con fallback)
+- Chats: `/chats` (mensajes mock + API con fallback)
+- Botón flotante “Crear evento” disponible en todas las páginas
+
+API relacionadas (con Supabase opcional):
+
+- `GET/POST /api/profiles` → perfiles de usuario
+- `GET/POST /api/messages` → mensajes de chat
+
+Más detalles en [`docs/SOCIAL_FEATURES.md`](./docs/SOCIAL_FEATURES.md)
+
 ## Desarrollo
 
 Requisitos: Node 18+
