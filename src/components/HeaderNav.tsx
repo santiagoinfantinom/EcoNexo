@@ -12,6 +12,7 @@ export default function HeaderNav() {
       <div className="flex items-center gap-3 text-black dark:text-slate-300 text-brand font-black">
         <span className="text-3xl">🌿</span>
         <span className="text-2xl" style={{ 
+          color: '#000000',
           textShadow: '1px 1px 0 white, -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white',
           WebkitTextStroke: '1px white'
         }}>{t("app")}</span>
