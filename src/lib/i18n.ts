@@ -83,6 +83,15 @@ const DICTS: Record<Locale, Dict> = {
     clusterMarkers: "Agrupar marcadores",
     cluster: "Agrupar",
     individual: "Individual",
+    // Eco Tips
+    ecoTips: "Tips Ecológicos",
+    ecoTipsDescription: "Descubre formas sencillas de reducir tu impacto ambiental",
+    highImpact: "Alto Impacto",
+    mediumImpact: "Medio Impacto",
+    lowImpact: "Bajo Impacto",
+    easy: "Fácil",
+    medium: "Medio",
+    hard: "Difícil",
   },
   en: {
     app: "EcoNexo",
@@ -161,6 +170,15 @@ const DICTS: Record<Locale, Dict> = {
     clusterMarkers: "Cluster markers",
     cluster: "Cluster",
     individual: "Individual",
+    // Eco Tips
+    ecoTips: "Eco Tips",
+    ecoTipsDescription: "Discover simple ways to reduce your environmental impact",
+    highImpact: "High Impact",
+    mediumImpact: "Medium Impact",
+    lowImpact: "Low Impact",
+    easy: "Easy",
+    medium: "Medium",
+    hard: "Hard",
   },
   de: {
     app: "EcoNexo",
@@ -239,6 +257,15 @@ const DICTS: Record<Locale, Dict> = {
     clusterMarkers: "Marker gruppieren",
     cluster: "Gruppieren",
     individual: "Einzeln",
+    // Eco Tips
+    ecoTips: "Öko-Tipps",
+    ecoTipsDescription: "Entdecke einfache Wege, deinen Umweltfußabdruck zu reduzieren",
+    highImpact: "Hoher Einfluss",
+    mediumImpact: "Mittlerer Einfluss",
+    lowImpact: "Geringer Einfluss",
+    easy: "Einfach",
+    medium: "Mittel",
+    hard: "Schwer",
   },
 };
 

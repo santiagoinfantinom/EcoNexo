@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
+import EcoTips from "./EcoTips";
 
 export default function HeaderNav() {
   const { t } = useI18n();
@@ -25,6 +26,7 @@ export default function HeaderNav() {
         >
           {t("events")}
         </Link>
+        <EcoTips />
       </nav>
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
