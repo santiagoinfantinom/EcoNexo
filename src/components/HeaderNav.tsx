@@ -39,6 +39,12 @@ export default function HeaderNav() {
         >
           {t("events")}
         </Link>
+        <Link 
+          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          href="/trabajos"
+        >
+          {t("jobs")}
+        </Link>
         <EcoTips />
       </nav>
       <button

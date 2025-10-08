@@ -92,6 +92,7 @@ const DICTS: Record<Locale, Dict> = {
     easy: "Fácil",
     medium: "Medio",
     hard: "Difícil",
+    jobs: "Trabajos verdes",
     // Event Details
     backToEvents: "Volver a eventos",
     volunteerProgress: "Progreso de voluntarios",
@@ -239,6 +240,7 @@ const DICTS: Record<Locale, Dict> = {
     easy: "Easy",
     medium: "Medium",
     hard: "Hard",
+    jobs: "Green jobs",
     // Event Details
     backToEvents: "Back to events",
     volunteerProgress: "Volunteer progress",
@@ -386,6 +388,7 @@ const DICTS: Record<Locale, Dict> = {
     easy: "Einfach",
     medium: "Mittel",
     hard: "Schwer",
+    jobs: "Grüne Jobs",
     // Event Details
     backToEvents: "Zurück zu Veranstaltungen",
     volunteerProgress: "Freiwilligenfortschritt",
