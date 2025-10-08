@@ -8,7 +8,7 @@ export default function HeaderNav() {
   const { t } = useI18n();
   const { theme, setTheme } = useTheme();
   return (
-    <header className="grid place-items-center gap-3 px-6 py-6 relative bg-gradient-to-b from-transparent via-transparent to-transparent">
+    <header className="grid place-items-center gap-6 px-6 py-6 relative bg-gradient-to-b from-transparent via-transparent to-transparent">
       {/* Brand block with persistent white background */}
       <div className="rounded-xl bg-white shadow-sm px-4 py-2">
         <div className="flex items-center gap-3 text-black text-brand font-black">
@@ -20,7 +20,7 @@ export default function HeaderNav() {
           }}>{t("app")}</span>
         </div>
       </div>
-      <nav className="flex gap-6 text-base">
+      <nav className="flex gap-6 text-base mt-2 md:mt-4">
         <Link 
           className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
           href="/"
