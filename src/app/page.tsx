@@ -124,11 +124,11 @@ export default function Home() {
   // TODO: fetch from API when env is set
 
   return (
-    <div className="flex flex-col gap-2 bg-modern rounded-2xl p-1">
+    <div className="flex flex-col gap-1 bg-modern rounded-2xl p-1">
       <div className="flex flex-wrap gap-1 justify-center">
         <button
-          className={`px-2 py-1 rounded-full border text-sm ${
-            active === "Todas" ? "bg-green-600 text-black" : "bg-white text-black"
+          className={`px-3 py-2 rounded-full border text-sm font-medium transition-all hover:scale-105 ${
+            active === "Todas" ? "bg-green-600 text-white shadow-lg" : "bg-white/90 text-gray-700 hover:bg-white shadow-md"
           }`}
           onClick={() => setActive("Todas")}
         >
@@ -137,10 +137,10 @@ export default function Home() {
         {ALL_CATEGORIES.map((c) => (
           <button
             key={c}
-            className={`px-2 py-1 rounded-full border text-sm ${
+            className={`px-3 py-2 rounded-full border text-sm font-medium transition-all hover:scale-105 ${
               active === c
-                ? "bg-green-600 text-white"
-                : `${COLOR_BY_CATEGORY[c].bg} ${COLOR_BY_CATEGORY[c].text} ${COLOR_BY_CATEGORY[c].border}`
+                ? "bg-green-600 text-white shadow-lg"
+                : `${COLOR_BY_CATEGORY[c].bg} ${COLOR_BY_CATEGORY[c].text} ${COLOR_BY_CATEGORY[c].border} hover:shadow-md`
             }`}
             onClick={() => setActive(c)}
           >
@@ -181,12 +181,12 @@ export default function Home() {
               }
             } catch {}
           }}
-          className="bg-white/95 backdrop-blur border rounded-full shadow flex items-center gap-1 px-2 py-1"
+          className="bg-white/95 backdrop-blur border rounded-full shadow-lg flex items-center gap-2 px-3 py-2 font-medium"
         >
-          <input name="q" placeholder={t('cityPh')} className="outline-none text-xs bg-transparent w-48 text-black" />
-          <button className="text-xs bg-green-600 text-white rounded-full px-2 py-1">OK</button>
-          <button type="button" className="text-xs border rounded-full px-2 py-1" onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}>Reset</button>
-          <button type="button" className="text-xs border rounded-full px-2 py-1 flex items-center gap-1" onClick={() => {
+          <input name="q" placeholder={t('cityPh')} className="outline-none text-sm bg-transparent w-48 text-gray-700 font-medium" />
+          <button className="text-sm bg-green-600 text-white rounded-full px-3 py-1 font-medium hover:bg-green-700 transition-colors">OK</button>
+          <button type="button" className="text-sm border border-gray-300 rounded-full px-3 py-1 font-medium hover:bg-gray-50 transition-colors" onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}>Reset</button>
+          <button type="button" className="text-sm border border-gray-300 rounded-full px-3 py-1 flex items-center gap-1 font-medium hover:bg-gray-50 transition-colors" onClick={() => {
             if (!('geolocation' in navigator)) return;
             navigator.geolocation.getCurrentPosition((pos) => {
               const lat = pos.coords.latitude; const lon = pos.coords.longitude;
