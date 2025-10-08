@@ -804,10 +804,19 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                           <Link
                             key={event.id}
                             href={`/eventos/${event.id}`}
-                            className="text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded cursor-pointer hover:bg-blue-200 truncate block"
+                            className="text-xs px-1 py-0.5 rounded cursor-pointer truncate block hover:opacity-90"
                             title={event.title}
+                            style={{
+                              backgroundColor: event.category === 'environment' ? '#dcfce7' : event.category === 'education' ? '#dbeafe' : '#f3e8ff',
+                              color: event.category === 'environment' ? '#166534' : event.category === 'education' ? '#1e3a8a' : '#6b21a8'
+                            }}
                           >
-                            {event.title}
+                            <span className="inline-flex items-center gap-1">
+                              <span className={`w-2 h-2 rounded-full ${
+                                event.category === 'environment' ? 'bg-green-600' : event.category === 'education' ? 'bg-blue-700' : 'bg-purple-700'
+                              }`} />
+                              {event.title}
+                            </span>
                           </Link>
                         ))}
                         {events.length > 2 && (
@@ -1021,9 +1030,12 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                 >
                                   {t("viewEvent")}
                                 </Link>
-                                <button className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
+                                <Link
+                                  href={`/eventos/${event.id}#join`}
+                                  className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
+                                >
                                   {t("join")}
-                                </button>
+                                </Link>
                               </div>
                             </div>
                           </div>
