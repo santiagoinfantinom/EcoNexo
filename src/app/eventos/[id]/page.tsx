@@ -6,6 +6,7 @@ type EventDetailPageProps = {
   };
 };
 
-export default function EventDetailPage({ params }: EventDetailPageProps) {
-  return <EventDetailClient eventId={params.id} />;
+export default async function EventDetailPage({ params }: EventDetailPageProps) {
+  const { id } = await params;
+  return <EventDetailClient eventId={id} />;
 }

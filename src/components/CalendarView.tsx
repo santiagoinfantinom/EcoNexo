@@ -309,6 +309,235 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                 locale === 'de' ? 'Saisonplatz, London' : 'Season Square, London',
       category: 'community',
       organizer: locale === 'es' ? 'Productores de Temporada' : locale === 'de' ? 'Saisonproduzenten' : 'Seasonal Producers'
+    },
+
+    // Additional Events - November 2025
+    {
+      id: 'e19',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Construcción de refugios para aves' :
+             locale === 'de' ? 'Vogelschutzunterstände bauen' : 'Building bird shelters',
+      date: new Date(2025, 10, 3), // November 3, 2025 (Monday)
+      time: '13:00',
+      duration: 4,
+      spots: 15,
+      registered: 12,
+      location: locale === 'es' ? 'Reserva Natural, Berlín' :
+                locale === 'de' ? 'Naturschutzgebiet, Berlin' : 'Nature Reserve, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Protectores de Aves' : locale === 'de' ? 'Vogelschützer' : 'Bird Protectors'
+    },
+    {
+      id: 'e20',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Taller de energía eólica' :
+             locale === 'de' ? 'Windenergie-Workshop' : 'Wind energy workshop',
+      date: new Date(2025, 10, 7), // November 7, 2025 (Friday)
+      time: '16:00',
+      duration: 2,
+      spots: 25,
+      registered: 20,
+      location: locale === 'es' ? 'Centro de Energías Renovables, Madrid' :
+                locale === 'de' ? 'Zentrum für erneuerbare Energien, Madrid' : 'Renewable Energy Center, Madrid',
+      category: 'education',
+      organizer: locale === 'es' ? 'Energía Verde' : locale === 'de' ? 'Grüne Energie' : 'Green Energy'
+    },
+    {
+      id: 'e21',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Feria de productos orgánicos' :
+             locale === 'de' ? 'Bio-Produktmesse' : 'Organic products fair',
+      date: new Date(2025, 10, 10), // November 10, 2025 (Monday)
+      time: '09:00',
+      duration: 6,
+      spots: 100,
+      registered: 75,
+      location: locale === 'es' ? 'Mercado Central, Barcelona' :
+                locale === 'de' ? 'Zentralmarkt, Barcelona' : 'Central Market, Barcelona',
+      category: 'community',
+      organizer: locale === 'es' ? 'Productos Orgánicos' : locale === 'de' ? 'Bio-Produkte' : 'Organic Products'
+    },
+    {
+      id: 'e22',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Restauración de humedales' :
+             locale === 'de' ? 'Feuchtgebietssanierung' : 'Wetland restoration',
+      date: new Date(2025, 10, 14), // November 14, 2025 (Friday)
+      time: '08:00',
+      duration: 5,
+      spots: 20,
+      registered: 16,
+      location: locale === 'es' ? 'Humedales del Norte, Milán' :
+                locale === 'de' ? 'Nordfeuchtgebiete, Mailand' : 'North Wetlands, Milan',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Restauradores de Humedales' : locale === 'de' ? 'Feuchtgebietssanierer' : 'Wetland Restorers'
+    },
+    {
+      id: 'e23',
+      projectId: 'p5',
+      title: locale === 'es' ? 'Conferencia sobre biodiversidad' :
+             locale === 'de' ? 'Biodiversitätskonferenz' : 'Biodiversity conference',
+      date: new Date(2025, 10, 17), // November 17, 2025 (Monday)
+      time: '18:30',
+      duration: 3,
+      spots: 150,
+      registered: 120,
+      location: locale === 'es' ? 'Centro de Convenciones, París' :
+                locale === 'de' ? 'Kongresszentrum, Paris' : 'Convention Center, Paris',
+      category: 'education',
+      organizer: locale === 'es' ? 'Instituto de Biodiversidad' : locale === 'de' ? 'Biodiversitätsinstitut' : 'Biodiversity Institute'
+    },
+    {
+      id: 'e24',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Construcción de jardines comunitarios' :
+             locale === 'de' ? 'Gemeinschaftsgärten bauen' : 'Building community gardens',
+      date: new Date(2025, 10, 21), // November 21, 2025 (Friday)
+      time: '10:00',
+      duration: 6,
+      spots: 30,
+      registered: 25,
+      location: locale === 'es' ? 'Barrio Verde, Londres' :
+                locale === 'de' ? 'Grüner Bezirk, London' : 'Green District, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Jardineros Comunitarios' : locale === 'de' ? 'Gemeinschaftsgärtner' : 'Community Gardeners'
+    },
+    {
+      id: 'e25',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Monitoreo de especies en peligro' :
+             locale === 'de' ? 'Überwachung gefährdeter Arten' : 'Monitoring endangered species',
+      date: new Date(2025, 10, 24), // November 24, 2025 (Monday)
+      time: '07:00',
+      duration: 4,
+      spots: 12,
+      registered: 10,
+      location: locale === 'es' ? 'Reserva de Vida Silvestre, Berlín' :
+                locale === 'de' ? 'Wildtierreservat, Berlin' : 'Wildlife Reserve, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Protectores de Vida Silvestre' : locale === 'de' ? 'Wildtierschützer' : 'Wildlife Protectors'
+    },
+    {
+      id: 'e26',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Taller de reciclaje creativo' :
+             locale === 'de' ? 'Kreatives Recycling-Workshop' : 'Creative recycling workshop',
+      date: new Date(2025, 10, 28), // November 28, 2025 (Friday)
+      time: '15:00',
+      duration: 3,
+      spots: 20,
+      registered: 18,
+      location: locale === 'es' ? 'Centro de Arte Reciclado, Madrid' :
+                locale === 'de' ? 'Recycling-Kunstzentrum, Madrid' : 'Recycled Art Center, Madrid',
+      category: 'education',
+      organizer: locale === 'es' ? 'Arte Reciclado' : locale === 'de' ? 'Recycling-Kunst' : 'Recycled Art'
+    },
+
+    // December 2025 Events
+    {
+      id: 'e27',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Mercado navideño sostenible' :
+             locale === 'de' ? 'Nachhaltiger Weihnachtsmarkt' : 'Sustainable Christmas market',
+      date: new Date(2025, 11, 1), // December 1, 2025 (Monday)
+      time: '12:00',
+      duration: 8,
+      spots: 200,
+      registered: 150,
+      location: locale === 'es' ? 'Plaza Navideña, Barcelona' :
+                locale === 'de' ? 'Weihnachtsplatz, Barcelona' : 'Christmas Square, Barcelona',
+      category: 'community',
+      organizer: locale === 'es' ? 'Navidad Sostenible' : locale === 'de' ? 'Nachhaltiges Weihnachten' : 'Sustainable Christmas'
+    },
+    {
+      id: 'e28',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Reforestación de invierno' :
+             locale === 'de' ? 'Winteraufforstung' : 'Winter reforestation',
+      date: new Date(2025, 11, 5), // December 5, 2025 (Friday)
+      time: '09:00',
+      duration: 4,
+      spots: 40,
+      registered: 32,
+      location: locale === 'es' ? 'Bosque de Invierno, Milán' :
+                locale === 'de' ? 'Winterwald, Mailand' : 'Winter Forest, Milan',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Reforestadores de Invierno' : locale === 'de' ? 'Winteraufforster' : 'Winter Reforesters'
+    },
+    {
+      id: 'e29',
+      projectId: 'p5',
+      title: locale === 'es' ? 'Seminario de cambio climático' :
+             locale === 'de' ? 'Klimawandel-Seminar' : 'Climate change seminar',
+      date: new Date(2025, 11, 8), // December 8, 2025 (Monday)
+      time: '17:00',
+      duration: 2,
+      spots: 80,
+      registered: 65,
+      location: locale === 'es' ? 'Universidad Verde, París' :
+                locale === 'de' ? 'Grüne Universität, Paris' : 'Green University, Paris',
+      category: 'education',
+      organizer: locale === 'es' ? 'Clima Verde' : locale === 'de' ? 'Grünes Klima' : 'Green Climate'
+    },
+    {
+      id: 'e30',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Celebración de fin de año ecológica' :
+             locale === 'de' ? 'Ökologische Jahresendfeier' : 'Eco-friendly year-end celebration',
+      date: new Date(2025, 11, 15), // December 15, 2025 (Monday)
+      time: '19:00',
+      duration: 4,
+      spots: 120,
+      registered: 95,
+      location: locale === 'es' ? 'Centro Cultural Verde, Londres' :
+                locale === 'de' ? 'Grünes Kulturzentrum, London' : 'Green Cultural Center, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Año Nuevo Verde' : locale === 'de' ? 'Grünes Neues Jahr' : 'Green New Year'
+    },
+    {
+      id: 'e31',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Conservación de especies marinas' :
+             locale === 'de' ? 'Meeresartenkonservierung' : 'Marine species conservation',
+      date: new Date(2025, 11, 19), // December 19, 2025 (Friday)
+      time: '11:00',
+      duration: 3,
+      spots: 25,
+      registered: 20,
+      location: locale === 'es' ? 'Centro Marino, Berlín' :
+                locale === 'de' ? 'Meereszentrum, Berlin' : 'Marine Center, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Protectores Marinos' : locale === 'de' ? 'Meeresschützer' : 'Marine Protectors'
+    },
+    {
+      id: 'e32',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Taller de energía hidroeléctrica' :
+             locale === 'de' ? 'Wasserkraft-Workshop' : 'Hydroelectric energy workshop',
+      date: new Date(2025, 11, 22), // December 22, 2025 (Monday)
+      time: '14:00',
+      duration: 3,
+      spots: 18,
+      registered: 15,
+      location: locale === 'es' ? 'Centro Hidroeléctrico, Madrid' :
+                locale === 'de' ? 'Wasserkraftzentrum, Madrid' : 'Hydroelectric Center, Madrid',
+      category: 'education',
+      organizer: locale === 'es' ? 'Energía Hidroeléctrica' : locale === 'de' ? 'Wasserkraft' : 'Hydroelectric Energy'
+    },
+    {
+      id: 'e33',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Fiesta de la sostenibilidad' :
+             locale === 'de' ? 'Nachhaltigkeitsfest' : 'Sustainability party',
+      date: new Date(2025, 11, 29), // December 29, 2025 (Monday)
+      time: '20:00',
+      duration: 5,
+      spots: 150,
+      registered: 120,
+      location: locale === 'es' ? 'Plaza de la Sostenibilidad, Barcelona' :
+                locale === 'de' ? 'Nachhaltigkeitsplatz, Barcelona' : 'Sustainability Square, Barcelona',
+      category: 'community',
+      organizer: locale === 'es' ? 'Sostenibilidad Total' : locale === 'de' ? 'Totale Nachhaltigkeit' : 'Total Sustainability'
     }
   ];
 
