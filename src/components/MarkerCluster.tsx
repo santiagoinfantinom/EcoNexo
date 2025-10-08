@@ -1,6 +1,5 @@
 "use client";
 import { Marker, Popup } from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
 import Link from "next/link";
 import { useI18n, categoryLabel, projectNameLabel } from "@/lib/i18n";
 
@@ -25,7 +24,7 @@ export default function MarkerCluster({ projects }: MarkerClusterProps) {
   const { t, locale } = useI18n();
 
   return (
-    <MarkerClusterGroup chunkedLoading>
+    <>
       {projects.map((p) => (
         <Marker key={p.id} position={[p.lat, p.lng]}>
           <Popup>
@@ -46,6 +45,6 @@ export default function MarkerCluster({ projects }: MarkerClusterProps) {
           </Popup>
         </Marker>
       ))}
-    </MarkerClusterGroup>
+    </>
   );
 }
