@@ -93,6 +93,16 @@ export default function JobsPage() {
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES', { style: 'currency', currency: 'EUR' }).format(v);
 
+  const [savedJobs, setSavedJobs] = useState<Record<string, boolean>>({});
+  const [applyFor, setApplyFor] = useState<Job | null>(null);
+  const [applicant, setApplicant] = useState({ name: "", email: "", cv: "" });
+  const toggleSave = (id: string) => setSavedJobs((s)=> ({ ...s, [id]: !s[id] }));
+  const submitApplication = async () => {
+    setApplyFor(null);
+    alert(t("applicationSent"));
+    setApplicant({ name: "", email: "", cv: "" });
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">{t("jobs")}</h1>
@@ -159,12 +169,38 @@ export default function JobsPage() {
               ))}
             </div>
             <div className="mt-4 flex gap-3">
-              <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{t("applyBtn")}</button>
-              <button className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-50 dark:hover:bg-slate-700">{t("saveBtn")}</button>
+              <button onClick={()=>setApplyFor(job)} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{t("applyBtn")}</button>
+              <button onClick={()=>toggleSave(job.id)} className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-50 dark:hover:bg-slate-700">{savedJobs[job.id] ? t("saved") : t("saveBtn")}</button>
             </div>
           </li>
         ))}
       </ul>
+
+      {applyFor && (
+        <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg p-6">
+            <h2 className="text-xl font-bold mb-4">{t("applyForJob")}: {applyFor.title}</h2>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm mb-1">{t("yourName")}</label>
+                <input value={applicant.name} onChange={(e)=>setApplicant({...applicant,name:e.target.value})} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">{t("yourEmail")}</label>
+                <input value={applicant.email} onChange={(e)=>setApplicant({...applicant,email:e.target.value})} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">{t("cvLink")}</label>
+                <input value={applicant.cv} onChange={(e)=>setApplicant({...applicant,cv:e.target.value})} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button onClick={()=>setApplyFor(null)} className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded">{t("cancel")}</button>
+                <button onClick={submitApplication} className="px-4 py-2 bg-green-600 text-white rounded">{t("sendApplication")}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
