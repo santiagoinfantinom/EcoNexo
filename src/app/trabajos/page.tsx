@@ -76,7 +76,7 @@ export default function JobsPage() {
   const { t, locale } = useI18n();
   const [query, setQuery] = useState("");
   const [minSalary, setMinSalary] = useState(0);
-  const [maxExperience, setMaxExperience] = useState(10);
+  const [minExperience, setMinExperience] = useState(0);
   const [city, setCity] = useState<string>("all");
   const [contract, setContract] = useState<string>("all");
   const [remoteOnly, setRemoteOnly] = useState(false);
@@ -85,11 +85,11 @@ export default function JobsPage() {
       j.title.toLowerCase().includes(query.toLowerCase()) ||
       j.company.toLowerCase().includes(query.toLowerCase()) ||
       j.knowledgeAreas.some(a => a.toLowerCase().includes(query.toLowerCase()))
-    ).filter(j => j.salaryEur >= minSalary && j.experienceYears <= maxExperience)
+    ).filter(j => j.salaryEur >= minSalary && j.experienceYears >= minExperience)
     .filter(j => city === "all" ? true : j.city.toLowerCase() === city.toLowerCase())
     .filter(j => contract === "all" ? true : j.contract === contract)
     .filter(j => remoteOnly ? j.remote : true);
-  }, [query, minSalary, maxExperience, city, contract, remoteOnly]);
+  }, [query, minSalary, minExperience, city, contract, remoteOnly]);
 
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES', { style: 'currency', currency: 'EUR' }).format(v);
@@ -147,8 +147,8 @@ export default function JobsPage() {
           <input type="number" value={minSalary} onChange={(e)=>setMinSalary(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
         </div>
         <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("maxExperience")}</label>
-          <input type="number" value={maxExperience} onChange={(e)=>setMaxExperience(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("minExperience")}</label>
+          <input type="number" value={minExperience} onChange={(e)=>setMinExperience(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
         </div>
         <div>
           <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("cityLabel")}</label>
@@ -176,9 +176,9 @@ export default function JobsPage() {
         <div className="text-sm text-slate-500 dark:text-slate-400 flex items-end">{filtered.length} {t("results")}</div>
       </div>
 
-      <ul className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.map((job)=> (
-          <li key={job.id} className="bg-white dark:bg-slate-800 rounded-xl shadow p-5">
+          <div key={job.id} className="bg-white dark:bg-slate-800 rounded-xl shadow p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{tr(job.title)}</h2>
@@ -200,9 +200,9 @@ export default function JobsPage() {
               <button onClick={()=>setApplyFor(job)} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{t("applyBtn")}</button>
               <button onClick={()=>toggleSave(job.id)} className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-50 dark:hover:bg-slate-700">{savedJobs[job.id] ? t("saved") : t("saveBtn")}</button>
             </div>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
 
       {applyFor && (
         <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
