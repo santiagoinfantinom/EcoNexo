@@ -118,24 +118,30 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
         <div className="flex gap-2">
           <button
             onClick={() => setViewMode('month')}
-            className={`px-3 py-1 rounded-md text-sm ${
-              viewMode === 'month' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              viewMode === 'month' 
+                ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
             {t("month")}
           </button>
           <button
             onClick={() => setViewMode('week')}
-            className={`px-3 py-1 rounded-md text-sm ${
-              viewMode === 'week' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              viewMode === 'week' 
+                ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
             {t("week")}
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`px-3 py-1 rounded-md text-sm ${
-              viewMode === 'list' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              viewMode === 'list' 
+                ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
             {t("list")}

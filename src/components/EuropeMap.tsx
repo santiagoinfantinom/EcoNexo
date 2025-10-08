@@ -274,10 +274,12 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     {/* Calendar Modal */}
     {showCalendar && (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[2000] p-4">
-        <div className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-xl">
           <button
             onClick={() => setShowCalendar(false)}
-            className="absolute top-4 right-4 z-10 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600"
+            className="absolute top-4 right-4 z-10 bg-gray-500 hover:bg-gray-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors font-bold text-lg"
+            title="Cerrar calendario"
+            aria-label="Cerrar calendario"
           >
             ×
           </button>
