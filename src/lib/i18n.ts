@@ -92,6 +92,14 @@ const DICTS: Record<Locale, Dict> = {
     easy: "Fácil",
     medium: "Medio",
     hard: "Difícil",
+    // Event Details
+    backToEvents: "Volver a eventos",
+    volunteerProgress: "Progreso de voluntarios",
+    spotsLeft: "lugares disponibles",
+    fullyBooked: "Completo",
+    joinEvent: "Unirse al evento",
+    shareEvent: "Compartir evento",
+    viewEvent: "Ver evento",
   },
   en: {
     app: "EcoNexo",
@@ -179,6 +187,14 @@ const DICTS: Record<Locale, Dict> = {
     easy: "Easy",
     medium: "Medium",
     hard: "Hard",
+    // Event Details
+    backToEvents: "Back to events",
+    volunteerProgress: "Volunteer progress",
+    spotsLeft: "spots available",
+    fullyBooked: "Fully booked",
+    joinEvent: "Join event",
+    shareEvent: "Share event",
+    viewEvent: "View event",
   },
   de: {
     app: "EcoNexo",
@@ -266,6 +282,14 @@ const DICTS: Record<Locale, Dict> = {
     easy: "Einfach",
     medium: "Mittel",
     hard: "Schwer",
+    // Event Details
+    backToEvents: "Zurück zu Veranstaltungen",
+    volunteerProgress: "Freiwilligenfortschritt",
+    spotsLeft: "Plätze verfügbar",
+    fullyBooked: "Ausgebucht",
+    joinEvent: "Veranstaltung beitreten",
+    shareEvent: "Veranstaltung teilen",
+    viewEvent: "Veranstaltung ansehen",
   },
 };
 

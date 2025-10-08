@@ -15,44 +15,224 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
   // Mock events data - localized based on current locale
   const mockEvents = [
+    // Week 1 - December 1-7
     {
       id: 'e1',
       projectId: 'p1',
-      title: locale === 'es' ? 'Plantación de árboles' : 
-             locale === 'de' ? 'Baumpflanzung' : 'Tree planting',
-      date: new Date(2024, 11, 15), // December 15, 2024
+      title: locale === 'es' ? 'Plantación de árboles nativos' : 
+             locale === 'de' ? 'Einheimische Baumpflanzung' : 'Native tree planting',
+      date: new Date(2024, 11, 2),
       time: '09:00',
-      duration: 4,
-      spots: 20,
-      registered: 15,
-      location: locale === 'es' ? 'Parque Central, Berlín' :
-                locale === 'de' ? 'Zentralpark, Berlin' : 'Central Park, Berlin'
+      duration: 3,
+      spots: 30,
+      registered: 12,
+      location: locale === 'es' ? 'Bosque Urbano Norte, Berlín' :
+                locale === 'de' ? 'Stadtwald Nord, Berlin' : 'North Urban Forest, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Green City Initiative' : locale === 'de' ? 'Grüne Stadt Initiative' : 'Green City Initiative'
     },
     {
       id: 'e2',
       projectId: 'p2',
-      title: locale === 'es' ? 'Taller de robótica' :
-             locale === 'de' ? 'Robotik-Workshop' : 'Robotics workshop',
-      date: new Date(2024, 11, 18),
+      title: locale === 'es' ? 'Taller de energía solar' :
+             locale === 'de' ? 'Solar-Energie Workshop' : 'Solar energy workshop',
+      date: new Date(2024, 11, 4),
       time: '14:00',
       duration: 3,
-      spots: 15,
-      registered: 8,
-      location: locale === 'es' ? 'Centro Comunitario, Madrid' :
-                locale === 'de' ? 'Gemeinschaftszentrum, Madrid' : 'Community Center, Madrid'
+      spots: 20,
+      registered: 15,
+      location: locale === 'es' ? 'Centro de Innovación Verde, Madrid' :
+                locale === 'de' ? 'Grünes Innovationszentrum, Madrid' : 'Green Innovation Center, Madrid',
+      category: 'education',
+      organizer: locale === 'es' ? 'SolarTech Academy' : locale === 'de' ? 'SolarTech Akademie' : 'SolarTech Academy'
     },
     {
       id: 'e3',
       projectId: 'p3',
-      title: locale === 'es' ? 'Clínica móvil' :
-             locale === 'de' ? 'Mobile Klinik' : 'Mobile clinic',
-      date: new Date(2024, 11, 22),
+      title: locale === 'es' ? 'Mercado de productos locales' :
+             locale === 'de' ? 'Lokaler Produktmarkt' : 'Local products market',
+      date: new Date(2024, 11, 6),
       time: '10:00',
       duration: 6,
-      spots: 30,
+      spots: 40,
       registered: 25,
-      location: locale === 'es' ? 'Plaza Mayor, Milán' :
-                locale === 'de' ? 'Hauptplatz, Mailand' : 'Main Square, Milan'
+      location: locale === 'es' ? 'Plaza del Mercado, Barcelona' :
+                locale === 'de' ? 'Marktplatz, Barcelona' : 'Market Square, Barcelona',
+      category: 'community',
+      organizer: locale === 'es' ? 'Asociación de Productores Locales' : locale === 'de' ? 'Vereinigung lokaler Produzenten' : 'Local Producers Association'
+    },
+
+    // Week 2 - December 8-14
+    {
+      id: 'e4',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Limpieza de río' :
+             locale === 'de' ? 'Flussreinigung' : 'River cleanup',
+      date: new Date(2024, 11, 9),
+      time: '08:00',
+      duration: 3,
+      spots: 25,
+      registered: 18,
+      location: locale === 'es' ? 'Río Verde, Milán' :
+                locale === 'de' ? 'Grüner Fluss, Mailand' : 'Green River, Milan',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Guardianes del Río' : locale === 'de' ? 'Flusswächter' : 'River Guardians'
+    },
+    {
+      id: 'e5',
+      projectId: 'p5',
+      title: locale === 'es' ? 'Conferencia sobre cambio climático' :
+             locale === 'de' ? 'Klimawandel-Konferenz' : 'Climate change conference',
+      date: new Date(2024, 11, 11),
+      time: '18:00',
+      duration: 2,
+      spots: 200,
+      registered: 150,
+      location: locale === 'es' ? 'Auditorio Municipal, París' :
+                locale === 'de' ? 'Stadtauditorium, Paris' : 'City Auditorium, Paris',
+      category: 'education',
+      organizer: locale === 'es' ? 'Instituto Climático Local' : locale === 'de' ? 'Lokales Klimainstitut' : 'Local Climate Institute'
+    },
+    {
+      id: 'e6',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Construcción de jardines verticales' :
+             locale === 'de' ? 'Vertikale Gartenbau' : 'Vertical garden building',
+      date: new Date(2024, 11, 13),
+      time: '10:00',
+      duration: 5,
+      spots: 15,
+      registered: 8,
+      location: locale === 'es' ? 'Edificio Comercial Centro, Londres' :
+                locale === 'de' ? 'Zentrum Geschäftsgebäude, London' : 'Downtown Commercial Building, London',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Urban Green Solutions' : locale === 'de' ? 'Städtische Grüne Lösungen' : 'Urban Green Solutions'
+    },
+
+    // Week 3 - December 15-21
+    {
+      id: 'e7',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Taller de compostaje' :
+             locale === 'de' ? 'Kompostierungs-Workshop' : 'Composting workshop',
+      date: new Date(2024, 11, 16),
+      time: '15:00',
+      duration: 2,
+      spots: 20,
+      registered: 16,
+      location: locale === 'es' ? 'Jardín Comunitario Sur, Berlín' :
+                locale === 'de' ? 'Südlicher Gemeinschaftsgarten, Berlin' : 'South Community Garden, Berlin',
+      category: 'education',
+      organizer: locale === 'es' ? 'Compost Masters' : locale === 'de' ? 'Kompost-Meister' : 'Compost Masters'
+    },
+    {
+      id: 'e8',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Carrera ecológica 5K' :
+             locale === 'de' ? 'Ökologischer 5K-Lauf' : 'Eco-friendly 5K run',
+      date: new Date(2024, 11, 18),
+      time: '08:00',
+      duration: 2,
+      spots: 100,
+      registered: 75,
+      location: locale === 'es' ? 'Parque Central, Madrid' :
+                locale === 'de' ? 'Zentralpark, Madrid' : 'Central Park, Madrid',
+      category: 'community',
+      organizer: locale === 'es' ? 'Runners Verdes' : locale === 'de' ? 'Grüne Läufer' : 'Green Runners'
+    },
+    {
+      id: 'e9',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Instalación de paneles solares' :
+             locale === 'de' ? 'Solarpanel-Installation' : 'Solar panel installation',
+      date: new Date(2024, 11, 20),
+      time: '09:00',
+      duration: 7,
+      spots: 12,
+      registered: 9,
+      location: locale === 'es' ? 'Escuela Primaria Verde, Barcelona' :
+                locale === 'de' ? 'Grüne Grundschule, Barcelona' : 'Green Elementary School, Barcelona',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Solar Community' : locale === 'de' ? 'Solar-Gemeinschaft' : 'Solar Community'
+    },
+
+    // Week 4 - December 22-28
+    {
+      id: 'e10',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Navidad sostenible' :
+             locale === 'de' ? 'Nachhaltiges Weihnachten' : 'Sustainable Christmas',
+      date: new Date(2024, 11, 22),
+      time: '16:00',
+      duration: 3,
+      spots: 30,
+      registered: 22,
+      location: locale === 'es' ? 'Centro Cultural, Milán' :
+                locale === 'de' ? 'Kulturzentrum, Mailand' : 'Cultural Center, Milan',
+      category: 'community',
+      organizer: locale === 'es' ? 'Navidad Verde' : locale === 'de' ? 'Grünes Weihnachten' : 'Green Christmas'
+    },
+    {
+      id: 'e11',
+      projectId: 'p5',
+      title: locale === 'es' ? 'Monitoreo de calidad del aire' :
+             locale === 'de' ? 'Luftqualitätsüberwachung' : 'Air quality monitoring',
+      date: new Date(2024, 11, 24),
+      time: '13:00',
+      duration: 4,
+      spots: 8,
+      registered: 6,
+      location: locale === 'es' ? 'Distrito Industrial, París' :
+                locale === 'de' ? 'Industriegebiet, Paris' : 'Industrial District, Paris',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Aire Limpio' : locale === 'de' ? 'Saubere Luft' : 'Clean Air'
+    },
+    {
+      id: 'e12',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Cena vegana comunitaria' :
+             locale === 'de' ? 'Gemeinschaftliches veganes Abendessen' : 'Community vegan dinner',
+      date: new Date(2024, 11, 26),
+      time: '19:00',
+      duration: 2,
+      spots: 50,
+      registered: 35,
+      location: locale === 'es' ? 'Restaurante Verde, Londres' :
+                locale === 'de' ? 'Grünes Restaurant, London' : 'Green Restaurant, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Veganos Unidos' : locale === 'de' ? 'Vereinte Veganer' : 'United Vegans'
+    },
+
+    // Week 5 - December 29-31
+    {
+      id: 'e13',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Reflexión anual ambiental' :
+             locale === 'de' ? 'Jährliche Umweltreflexion' : 'Annual environmental reflection',
+      date: new Date(2024, 11, 29),
+      time: '17:00',
+      duration: 2,
+      spots: 40,
+      registered: 28,
+      location: locale === 'es' ? 'Biblioteca Pública, Berlín' :
+                locale === 'de' ? 'Öffentliche Bibliothek, Berlin' : 'Public Library, Berlin',
+      category: 'education',
+      organizer: locale === 'es' ? 'Futuro Verde' : locale === 'de' ? 'Grüne Zukunft' : 'Green Future'
+    },
+    {
+      id: 'e14',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Celebración de año nuevo sostenible' :
+             locale === 'de' ? 'Nachhaltige Neujahrsfeier' : 'Sustainable New Year celebration',
+      date: new Date(2024, 11, 31),
+      time: '20:00',
+      duration: 4.5,
+      spots: 200,
+      registered: 120,
+      location: locale === 'es' ? 'Plaza Principal, Madrid' :
+                locale === 'de' ? 'Hauptplatz, Madrid' : 'Main Square, Madrid',
+      category: 'community',
+      organizer: locale === 'es' ? 'Año Nuevo Verde' : locale === 'de' ? 'Grünes Neues Jahr' : 'Green New Year'
     }
   ];
 
@@ -186,14 +366,14 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                       </div>
                       <div className="mt-1 space-y-1">
                         {events.slice(0, 2).map(event => (
-                          <div
+                          <Link
                             key={event.id}
-                            onClick={() => onProjectSelect(projects.find(p => p.id === event.projectId))}
-                            className="text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded cursor-pointer hover:bg-blue-200 truncate"
+                            href={`/eventos/${event.id}`}
+                            className="text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded cursor-pointer hover:bg-blue-200 truncate block"
                             title={event.title}
                           >
                             {event.title}
-                          </div>
+                          </Link>
                         ))}
                         {events.length > 2 && (
                           <div className="text-xs text-gray-500">
@@ -218,7 +398,12 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
               <div key={event.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h3 className="font-medium text-gray-800">{event.title}</h3>
+                    <Link 
+                      href={`/eventos/${event.id}`}
+                      className="font-medium text-gray-800 hover:text-blue-600 transition-colors"
+                    >
+                      {event.title}
+                    </Link>
                     <p className="text-sm text-gray-600">{event.location}</p>
                     <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                       <span>📅 {event.date.toLocaleDateString()}</span>
@@ -228,13 +413,13 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => onProjectSelect(project)}
-                      className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
+                    <Link
+                      href={`/eventos/${event.id}`}
+                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
                     >
-                      {t("viewProject")}
-                    </button>
-                    <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                      {t("viewEvent")}
+                    </Link>
+                    <button className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
                       {t("join")}
                     </button>
                   </div>
