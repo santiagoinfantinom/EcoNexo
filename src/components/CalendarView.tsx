@@ -456,45 +456,84 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
         </>
       )}
 
-      {viewMode === 'list' && (
-        <div className="space-y-3">
-          {mockEvents.map(event => {
-            const project = projects.find(p => p.id === event.projectId);
-            return (
-              <div key={event.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <Link 
-                      href={`/eventos/${event.id}`}
-                      className="font-medium text-gray-800 hover:text-blue-600 transition-colors"
-                    >
-                      {event.title}
-                    </Link>
-                    <p className="text-sm text-gray-600">{event.location}</p>
-                    <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                      <span>📅 {event.date.toLocaleDateString()}</span>
-                      <span>🕐 {event.time}</span>
-                      <span>⏱️ {event.duration}h</span>
-                      <span>👥 {event.registered}/{event.spots}</span>
+                {viewMode === 'list' && (
+                  <>
+                    {/* Month Navigation for List View */}
+                    <div className="flex items-center justify-between mb-4">
+                      <button
+                        onClick={() => navigateMonth('prev')}
+                        className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                      >
+                        ←
+                      </button>
+                      <h3 className="text-lg font-medium">{formatMonthYear(currentMonth)}</h3>
+                      <button
+                        onClick={() => navigateMonth('next')}
+                        className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                      >
+                        →
+                      </button>
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Link
-                      href={`/eventos/${event.id}`}
-                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
-                    >
-                      {t("viewEvent")}
-                    </Link>
-                    <button className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
-                      {t("join")}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+
+                    {/* Filtered Events for Current Month */}
+                    <div className="space-y-3">
+                      {mockEvents
+                        .filter(event => 
+                          event.date.getMonth() === currentMonth.getMonth() && 
+                          event.date.getFullYear() === currentMonth.getFullYear()
+                        )
+                        .sort((a, b) => a.date.getTime() - b.date.getTime())
+                        .map(event => {
+                          const project = projects.find(p => p.id === event.projectId);
+                          return (
+                            <div key={event.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <Link 
+                                    href={`/eventos/${event.id}`}
+                                    className="font-medium text-gray-800 hover:text-blue-600 transition-colors"
+                                  >
+                                    {event.title}
+                                  </Link>
+                                  <p className="text-sm text-gray-600">{event.location}</p>
+                                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                                    <span>📅 {event.date.toLocaleDateString()}</span>
+                                    <span>🕐 {event.time}</span>
+                                    <span>⏱️ {event.duration}h</span>
+                                    <span>👥 {event.registered}/{event.spots}</span>
+                                  </div>
+                                </div>
+                                <div className="flex gap-2">
+                                  <Link
+                                    href={`/eventos/${event.id}`}
+                                    className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                                  >
+                                    {t("viewEvent")}
+                                  </Link>
+                                  <button className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
+                                    {t("join")}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      
+                      {/* Show message if no events for current month */}
+                      {mockEvents.filter(event => 
+                        event.date.getMonth() === currentMonth.getMonth() && 
+                        event.date.getFullYear() === currentMonth.getFullYear()
+                      ).length === 0 && (
+                        <div className="text-center py-8 text-gray-500">
+                          <p className="text-lg mb-2">📅</p>
+                          <p>{locale === 'es' ? 'No hay eventos programados para este mes' : 
+                              locale === 'de' ? 'Keine Veranstaltungen für diesen Monat geplant' : 
+                              'No events scheduled for this month'}</p>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
     </div>
   );
 }
