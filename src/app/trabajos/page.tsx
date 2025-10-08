@@ -1,6 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { locationLabel } from "@/lib/i18n";
 
 type Job = {
   id: string;
@@ -103,6 +104,33 @@ export default function JobsPage() {
     setApplicant({ name: "", email: "", cv: "" });
   };
 
+  // Simple ES->DE term mapping for demo data to keep German UI fully localized
+  const ES_DE: Record<string, string> = {
+    "Especialista": "Spezialist/in",
+    "Reforestación Urbana": "Urbane Aufforstung",
+    "Analista de Datos de Calidad del Aire": "Datenanalyst/in für Luftqualität",
+    "Educador/a ambiental (STEM)": "Umweltpädagog/in (STEM)",
+    "Coordinador/a de Limpiezas de Ríos": "Koordinator/in Flussreinigung",
+    "Planificación y ejecución de proyectos de reforestación en barrios con déficit de áreas verdes.": "Planung und Durchführung von Aufforstungsprojekten in Vierteln mit wenig Grünflächen.",
+    "Procesamiento y visualización de datos de sensores urbanos para políticas de aire limpio.": "Verarbeitung und Visualisierung von Sensordaten für saubere‑Luft‑Politiken.",
+    "Talleres prácticos de energía renovable para escuelas y centros comunitarios.": "Praxisworkshops zu erneuerbarer Energie für Schulen und Gemeinschaftszentren.",
+    "Organización de jornadas de limpieza, logística de equipos y reportes de impacto.": "Organisation von Reinigungstagen, Logistik der Teams und Wirkungsberichten.",
+    "Silvicultura": "Forstwirtschaft",
+    "Biodiversidad": "Biodiversität",
+    "Gestión de proyectos": "Projektmanagement",
+    "Sensores": "Sensorik",
+    "Energía solar": "Solarenergie",
+    "Robótica educativa": "Bildungsrobotik",
+    "Gestión de voluntariado": "Freiwilligenmanagement",
+    "Residuos": "Abfall",
+    "Seguridad": "Sicherheit",
+  };
+
+  const tr = (text: string) => {
+    if (locale !== 'de') return text;
+    return ES_DE[text] || text;
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">{t("jobs")}</h1>
@@ -153,19 +181,19 @@ export default function JobsPage() {
           <li key={job.id} className="bg-white dark:bg-slate-800 rounded-xl shadow p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{job.title}</h2>
-                <p className="text-slate-600 dark:text-slate-400">{job.company} — {job.city}, {job.country}</p>
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{tr(job.title)}</h2>
+                <p className="text-slate-600 dark:text-slate-400">{job.company} — {locationLabel(job.city, locale as any)}, {locationLabel(job.country, locale as any)}</p>
               </div>
               <div className="text-right">
                 <div className="text-green-600 font-bold">{fmtCurrency(job.salaryEur)}</div>
                 <div className="text-xs text-slate-500 dark:text-slate-400">{job.contract}{job.remote ? " · Remote" : ""}</div>
               </div>
             </div>
-            <div className="mt-3 text-slate-700 dark:text-slate-300">{job.description}</div>
+            <div className="mt-3 text-slate-700 dark:text-slate-300">{tr(job.description)}</div>
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-800">{job.experienceYears} {t("yearsExp")}</span>
               {job.knowledgeAreas.map((a) => (
-                <span key={a} className="px-2 py-1 rounded-full text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">{a}</span>
+                <span key={a} className="px-2 py-1 rounded-full text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">{tr(a)}</span>
               ))}
             </div>
             <div className="mt-4 flex gap-3">
