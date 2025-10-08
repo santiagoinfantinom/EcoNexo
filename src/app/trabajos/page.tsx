@@ -106,6 +106,7 @@ export default function JobsPage() {
 
   // Simple ES->DE term mapping for demo data to keep German UI fully localized
   const ES_DE: Record<string, string> = {
+    "Especialista en Reforestación Urbana": "Spezialist/in für Urbane Aufforstung",
     "Especialista": "Spezialist/in",
     "Reforestación Urbana": "Urbane Aufforstung",
     "Analista de Datos de Calidad del Aire": "Datenanalyst/in für Luftqualität",
@@ -229,8 +230,37 @@ export default function JobsPage() {
           </div>
         </div>
       )}
+
+      {/* Job Posting Conditions and Create Job Offer Section */}
+      <div className="mt-12 bg-white dark:bg-slate-800 rounded-xl shadow p-6">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+          {t("jobPostingConditions")}
+        </h2>
+        
+        <div className="mb-6">
+          <p className="text-slate-700 dark:text-slate-300 mb-4">
+            {t("jobPostingInfo")}
+          </p>
+          
+          <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">
+              {t("conductGuidelines")}
+            </h3>
+            <div className="text-slate-700 dark:text-slate-300 whitespace-pre-line">
+              {t("conductGuidelinesText")}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-center">
+          <button 
+            onClick={() => alert(t("createJobOffer") + " - " + (locale === 'de' ? 'Funktion wird bald verfügbar sein!' : locale === 'en' ? 'Feature coming soon!' : '¡Función próximamente disponible!'))}
+            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-lg shadow-md hover:shadow-lg"
+          >
+            {t("createJobOffer")}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
-
-

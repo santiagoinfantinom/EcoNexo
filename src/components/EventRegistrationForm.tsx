@@ -356,7 +356,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     value={formData.accessibilityNeeds}
                     onChange={(e) => handleInputChange('accessibilityNeeds', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
-                    placeholder="Ej: Silla de ruedas, movilidad reducida, etc."
+                    placeholder="z. B. Rollstuhl, eingeschränkte Mobilität, etc."
                   />
                 </div>
               </div>

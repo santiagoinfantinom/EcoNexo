@@ -45,11 +45,35 @@ export default function HeaderNav() {
         >
           {t("jobs")}
         </Link>
+        <Link 
+          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          href="/chat"
+        >
+          {t("chat")}
+        </Link>
+        <Link 
+          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          href="/perfil"
+        >
+          {t("profile")}
+        </Link>
         <EcoTips />
       </nav>
+      
+      {/* Support Us Button */}
+      <button
+        onClick={() => window.open('https://www.paypal.com/donate/?hosted_button_id=ECONEXO_DONATE_BUTTON', '_blank')}
+        className="absolute right-6 top-6 rounded-full border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm bg-slate-50 dark:bg-slate-800/60 backdrop-blur-sm hover:bg-slate-100 dark:hover:bg-slate-700/80 transition-all duration-200 shadow-sm hover:shadow-md text-slate-600 dark:text-slate-300 font-medium"
+        title={t("supportUs")}
+        aria-label={t("supportUs")}
+      >
+        💚 {t("supportUs")}
+      </button>
+      
+      {/* Theme Toggle */}
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="absolute right-6 top-1/2 -translate-y-1/2 rounded-full border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all duration-200 shadow-sm hover:shadow-md text-slate-600 dark:text-slate-300"
+        className="absolute right-6 top-20 rounded-full border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all duration-200 shadow-sm hover:shadow-md text-slate-600 dark:text-slate-300"
         title="Toggle theme"
         aria-label="Toggle theme"
       >

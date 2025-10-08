@@ -44,6 +44,29 @@ export default function EventosPage() {
   });
   const [created, setCreated] = useState<EventInput | null>(null);
   const [list, setList] = useState<EventInput[]>([]);
+  
+  // Load participated events from localStorage
+  React.useEffect(() => {
+    const participatedEvents = JSON.parse(localStorage.getItem('econexo:participatedEvents') || '[]');
+    setList(participatedEvents);
+  }, []);
+
+  // Function to refresh the participated events list
+  const refreshParticipatedEvents = () => {
+    const participatedEvents = JSON.parse(localStorage.getItem('econexo:participatedEvents') || '[]');
+    setList(participatedEvents);
+  };
+
+  // Listen for storage changes to update the list when events are added from other tabs
+  React.useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'econexo:participatedEvents') {
+        refreshParticipatedEvents();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
   const COLOR_BY_CATEGORY: Record<Category, { bg: string; text: string; border: string }> = {
     "Medio ambiente": { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },
     "Educación": { bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-200" },
@@ -257,7 +280,15 @@ export default function EventosPage() {
 
       <div className="grid gap-3">
         <div className="h-1 bg-gradient-to-r from-transparent via-green-600 to-transparent rounded-full" />
-        <h2 className="text-2xl font-semibold">{t("existingEvents")}</h2>
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-semibold">{t("existingEvents")}</h2>
+          <button 
+            onClick={refreshParticipatedEvents}
+            className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
+          >
+            {locale === 'de' ? 'Aktualisieren' : locale === 'en' ? 'Refresh' : 'Actualizar'}
+          </button>
+        </div>
         <div className="overflow-auto border rounded">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50">
@@ -273,7 +304,7 @@ export default function EventosPage() {
             <tbody>
               {list.length === 0 ? (
                 <tr>
-                  <td className="p-3 text-gray-500" colSpan={6}>{t("noEvents")}</td>
+                  <td className="p-3 text-gray-500" colSpan={6}>{t("noParticipatedEvents")}</td>
                 </tr>
               ) : (
                 list.map((ev, idx) => (

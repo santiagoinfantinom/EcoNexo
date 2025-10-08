@@ -46,6 +46,8 @@ const FALLBACK_DETAILS: Record<string, ProjectDetails> = {
   p2: {
     id: "p2",
     name: "Taller de Robótica Educativa",
+    name_en: "Educational Robotics Workshop",
+    name_de: "Workshop für Bildungsrobotik",
     category: "Educación",
     lat: 40.4168,
     lng: -3.7038,
@@ -54,9 +56,11 @@ const FALLBACK_DETAILS: Record<string, ProjectDetails> = {
     volunteers: 58,
     budgetRaisedEur: 8450,
     budgetGoalEur: 15000,
-    image: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1600&q=80",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80",
     description:
       "Programa STEAM para jóvenes en situación de vulnerabilidad con enfoque en prototipado y pensamiento computacional.",
+    description_en: "STEAM program for at-risk youth focusing on prototyping and computational thinking.",
+    description_de: "STEAM-Programm für benachteiligte Jugendliche mit Schwerpunkt auf Prototyping und Computational Thinking.",
   },
   p3: {
     id: "p3",

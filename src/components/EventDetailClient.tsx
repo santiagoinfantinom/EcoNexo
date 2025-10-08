@@ -911,6 +911,25 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
       setCurrentVolunteers((v: number) => Math.min(event.maxVolunteers, v + 1));
       setShowRegistrationForm(false);
       
+      // Add event to user's participated events list
+      const participatedEvents = JSON.parse(localStorage.getItem('econexo:participatedEvents') || '[]');
+      const eventToAdd = {
+        id: event.id,
+        title: event.title,
+        date: event.date,
+        city: event.location.split(',')[0]?.trim() || 'Unknown',
+        country: event.location.split(',')[1]?.trim() || 'Unknown',
+        category: event.category,
+        capacity: event.maxVolunteers
+      };
+      
+      // Check if event is already in the list
+      const isAlreadyParticipated = participatedEvents.some((e: any) => e.id === event.id);
+      if (!isAlreadyParticipated) {
+        participatedEvents.push(eventToAdd);
+        localStorage.setItem('econexo:participatedEvents', JSON.stringify(participatedEvents));
+      }
+      
       alert(locale === 'de' ? 
         'Du hast dich erfolgreich für die Veranstaltung angemeldet!' : 
         locale === 'en' ? 
