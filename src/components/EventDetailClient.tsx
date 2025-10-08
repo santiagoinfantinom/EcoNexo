@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { locationLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import EventRegistrationForm from "./EventRegistrationForm";
 
 type EventDetails = {
   id: string;
@@ -877,17 +878,41 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
   const [currentVolunteers, setCurrentVolunteers] = React.useState<number>(event.currentVolunteers);
   const progressPercentage = (currentVolunteers / event.maxVolunteers) * 100;
   const spotsLeft = event.maxVolunteers - currentVolunteers;
+  const [showRegistrationForm, setShowRegistrationForm] = React.useState(false);
 
   const handleJoin = async () => {
     if (spotsLeft <= 0) return;
-    setCurrentVolunteers((v: number) => Math.min(event.maxVolunteers, v + 1));
+    setShowRegistrationForm(true);
+  };
+
+  const handleRegistration = async (registrationData: any) => {
     try {
       // In a real app, call API to register participation here
-      // await fetch('/api/events/join', { method: 'POST', body: JSON.stringify({ id: eventId }) })
-      alert(locale === 'de' ? 'Du hast dich für die Veranstaltung angemeldet.' : locale === 'en' ? 'You have joined the event.' : 'Te uniste al evento.');
-    } catch {
-      setCurrentVolunteers((v: number) => Math.max(0, v - 1));
-      alert(locale === 'de' ? 'Fehler beim Beitreten.' : locale === 'en' ? 'Failed to join.' : 'No se pudo unir.');
+      // await fetch('/api/events/join', { 
+      //   method: 'POST', 
+      //   body: JSON.stringify({ 
+      //     eventId, 
+      //     ...registrationData 
+      //   }) 
+      // })
+      
+      setCurrentVolunteers((v: number) => Math.min(event.maxVolunteers, v + 1));
+      setShowRegistrationForm(false);
+      
+      alert(locale === 'de' ? 
+        'Du hast dich erfolgreich für die Veranstaltung angemeldet!' : 
+        locale === 'en' ? 
+        'You have successfully registered for the event!' : 
+        '¡Te has registrado exitosamente al evento!'
+      );
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert(locale === 'de' ? 
+        'Fehler bei der Anmeldung.' : 
+        locale === 'en' ? 
+        'Registration failed.' : 
+        'Error en el registro.'
+      );
     }
   };
 
@@ -1054,6 +1079,23 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
           </button>
         </div>
       </div>
+
+      {/* Registration Form Modal */}
+      {showRegistrationForm && (
+        <EventRegistrationForm
+          event={{
+            id: event.id,
+            title: event.title,
+            date: event.date,
+            time: event.time,
+            location: event.location,
+            maxVolunteers: event.maxVolunteers,
+            currentVolunteers: currentVolunteers
+          }}
+          onRegister={handleRegistration}
+          onCancel={() => setShowRegistrationForm(false)}
+        />
+      )}
     </div>
   );
 }
