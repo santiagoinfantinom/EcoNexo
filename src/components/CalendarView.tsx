@@ -12,6 +12,16 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   const { t, locale } = useI18n();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
+  
+  // Filter states for list view
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    category: '',
+    location: '',
+    dateRange: '',
+    spotsAvailable: false,
+    searchText: ''
+  });
 
   // Mock events data - localized based on current locale (2025)
   const mockEvents = [
@@ -350,6 +360,90 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     });
   };
 
+  // Filter functions
+  const getFilteredEvents = () => {
+    let filtered = mockEvents.filter(event => 
+      event.date.getMonth() === currentMonth.getMonth() && 
+      event.date.getFullYear() === currentMonth.getFullYear()
+    );
+
+    // Apply filters
+    if (filters.category) {
+      filtered = filtered.filter(event => event.category === filters.category);
+    }
+
+    if (filters.location) {
+      filtered = filtered.filter(event => 
+        event.location.toLowerCase().includes(filters.location.toLowerCase())
+      );
+    }
+
+    if (filters.dateRange) {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const nextWeek = new Date(today);
+      nextWeek.setDate(nextWeek.getDate() + 7);
+      const nextMonth = new Date(today);
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+      switch (filters.dateRange) {
+        case 'today':
+          filtered = filtered.filter(event => 
+            event.date.toDateString() === today.toDateString()
+          );
+          break;
+        case 'tomorrow':
+          filtered = filtered.filter(event => 
+            event.date.toDateString() === tomorrow.toDateString()
+          );
+          break;
+        case 'week':
+          filtered = filtered.filter(event => 
+            event.date >= today && event.date <= nextWeek
+          );
+          break;
+        case 'month':
+          filtered = filtered.filter(event => 
+            event.date >= today && event.date <= nextMonth
+          );
+          break;
+      }
+    }
+
+    if (filters.spotsAvailable) {
+      filtered = filtered.filter(event => event.registered < event.spots);
+    }
+
+    if (filters.searchText) {
+      filtered = filtered.filter(event => 
+        event.title.toLowerCase().includes(filters.searchText.toLowerCase()) ||
+        event.location.toLowerCase().includes(filters.searchText.toLowerCase()) ||
+        event.organizer.toLowerCase().includes(filters.searchText.toLowerCase())
+      );
+    }
+
+    return filtered.sort((a, b) => a.date.getTime() - b.date.getTime());
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      category: '',
+      location: '',
+      dateRange: '',
+      spotsAvailable: false,
+      searchText: ''
+    });
+  };
+
+  const getUniqueCategories = () => {
+    return [...new Set(mockEvents.map(event => event.category))];
+  };
+
+  const getUniqueLocations = () => {
+    return [...new Set(mockEvents.map(event => event.location))];
+  };
+
   const weekDays = locale === 'es' ? 
     ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'] :
     locale === 'de' ?
@@ -458,77 +552,224 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
                 {viewMode === 'list' && (
                   <>
-                    {/* Month Navigation for List View */}
+                    {/* Month Navigation and Filter Toggle */}
                     <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => navigateMonth('prev')}
+                          className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                        >
+                          ←
+                        </button>
+                        <h3 className="text-lg font-medium">{formatMonthYear(currentMonth)}</h3>
+                        <button
+                          onClick={() => navigateMonth('next')}
+                          className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                        >
+                          →
+                        </button>
+                      </div>
                       <button
-                        onClick={() => navigateMonth('prev')}
-                        className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        ←
-                      </button>
-                      <h3 className="text-lg font-medium">{formatMonthYear(currentMonth)}</h3>
-                      <button
-                        onClick={() => navigateMonth('next')}
-                        className="p-2 hover:bg-gray-100 rounded-md transition-colors"
-                      >
-                        →
+                        {showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'}
                       </button>
                     </div>
 
+                    {/* Filters Panel */}
+                    {showFilters && (
+                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {/* Search */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {locale === 'es' ? 'Buscar' : locale === 'de' ? 'Suchen' : 'Search'}
+                            </label>
+                            <input
+                              type="text"
+                              value={filters.searchText}
+                              onChange={(e) => setFilters({...filters, searchText: e.target.value})}
+                              placeholder={locale === 'es' ? 'Título, ubicación, organizador...' : 
+                                         locale === 'de' ? 'Titel, Ort, Organisator...' : 
+                                         'Title, location, organizer...'}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+
+                          {/* Category Filter */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {locale === 'es' ? 'Categoría' : locale === 'de' ? 'Kategorie' : 'Category'}
+                            </label>
+                            <select
+                              value={filters.category}
+                              onChange={(e) => setFilters({...filters, category: e.target.value})}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">{locale === 'es' ? 'Todas las categorías' : 
+                                               locale === 'de' ? 'Alle Kategorien' : 
+                                               'All categories'}</option>
+                              {getUniqueCategories().map(category => (
+                                <option key={category} value={category}>
+                                  {category === 'environment' ? 
+                                    (locale === 'es' ? 'Medio Ambiente' : 
+                                     locale === 'de' ? 'Umwelt' : 'Environment') :
+                                   category === 'education' ?
+                                    (locale === 'es' ? 'Educación' : 
+                                     locale === 'de' ? 'Bildung' : 'Education') :
+                                   category === 'community' ?
+                                    (locale === 'es' ? 'Comunidad' : 
+                                     locale === 'de' ? 'Gemeinschaft' : 'Community') :
+                                   category}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {/* Location Filter */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {locale === 'es' ? 'Ubicación' : locale === 'de' ? 'Standort' : 'Location'}
+                            </label>
+                            <select
+                              value={filters.location}
+                              onChange={(e) => setFilters({...filters, location: e.target.value})}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">{locale === 'es' ? 'Todas las ubicaciones' : 
+                                               locale === 'de' ? 'Alle Standorte' : 
+                                               'All locations'}</option>
+                              {getUniqueLocations().map(location => (
+                                <option key={location} value={location}>{location}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {/* Date Range Filter */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {locale === 'es' ? 'Rango de fechas' : locale === 'de' ? 'Datumsbereich' : 'Date range'}
+                            </label>
+                            <select
+                              value={filters.dateRange}
+                              onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">{locale === 'es' ? 'Todas las fechas' : 
+                                               locale === 'de' ? 'Alle Daten' : 
+                                               'All dates'}</option>
+                              <option value="today">{locale === 'es' ? 'Hoy' : 
+                                                   locale === 'de' ? 'Heute' : 'Today'}</option>
+                              <option value="tomorrow">{locale === 'es' ? 'Mañana' : 
+                                                       locale === 'de' ? 'Morgen' : 'Tomorrow'}</option>
+                              <option value="week">{locale === 'es' ? 'Esta semana' : 
+                                                   locale === 'de' ? 'Diese Woche' : 'This week'}</option>
+                              <option value="month">{locale === 'es' ? 'Este mes' : 
+                                                    locale === 'de' ? 'Diesen Monat' : 'This month'}</option>
+                            </select>
+                          </div>
+
+                          {/* Spots Available Filter */}
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id="spotsAvailable"
+                              checked={filters.spotsAvailable}
+                              onChange={(e) => setFilters({...filters, spotsAvailable: e.target.checked})}
+                              className="mr-2"
+                            />
+                            <label htmlFor="spotsAvailable" className="text-sm font-medium text-gray-700">
+                              {locale === 'es' ? 'Solo con cupos disponibles' : 
+                               locale === 'de' ? 'Nur mit verfügbaren Plätzen' : 
+                               'Only with available spots'}
+                            </label>
+                          </div>
+
+                          {/* Clear Filters Button */}
+                          <div className="flex items-end">
+                            <button
+                              onClick={clearFilters}
+                              className="px-4 py-2 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 transition-colors"
+                            >
+                              {locale === 'es' ? 'Limpiar Filtros' : 
+                               locale === 'de' ? 'Filter löschen' : 
+                               'Clear Filters'}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Filtered Events for Current Month */}
                     <div className="space-y-3">
-                      {mockEvents
-                        .filter(event => 
-                          event.date.getMonth() === currentMonth.getMonth() && 
-                          event.date.getFullYear() === currentMonth.getFullYear()
-                        )
-                        .sort((a, b) => a.date.getTime() - b.date.getTime())
-                        .map(event => {
-                          const project = projects.find(p => p.id === event.projectId);
-                          return (
-                            <div key={event.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <Link 
-                                    href={`/eventos/${event.id}`}
-                                    className="font-medium text-gray-800 hover:text-blue-600 transition-colors"
-                                  >
-                                    {event.title}
-                                  </Link>
-                                  <p className="text-sm text-gray-600">{event.location}</p>
-                                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                                    <span>📅 {event.date.toLocaleDateString()}</span>
-                                    <span>🕐 {event.time}</span>
-                                    <span>⏱️ {event.duration}h</span>
-                                    <span>👥 {event.registered}/{event.spots}</span>
-                                  </div>
-                                </div>
-                                <div className="flex gap-2">
-                                  <Link
-                                    href={`/eventos/${event.id}`}
-                                    className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
-                                  >
-                                    {t("viewEvent")}
-                                  </Link>
-                                  <button className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
-                                    {t("join")}
-                                  </button>
+                      {getFilteredEvents().map(event => {
+                        const project = projects.find(p => p.id === event.projectId);
+                        return (
+                          <div key={event.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <Link 
+                                  href={`/eventos/${event.id}`}
+                                  className="font-medium text-gray-800 hover:text-blue-600 transition-colors"
+                                >
+                                  {event.title}
+                                </Link>
+                                <p className="text-sm text-gray-600">{event.location}</p>
+                                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                                  <span>📅 {event.date.toLocaleDateString()}</span>
+                                  <span>🕐 {event.time}</span>
+                                  <span>⏱️ {event.duration}h</span>
+                                  <span>👥 {event.registered}/{event.spots}</span>
+                                  <span className={`px-2 py-1 rounded-full text-xs ${
+                                    event.category === 'environment' ? 'bg-green-100 text-green-800' :
+                                    event.category === 'education' ? 'bg-blue-100 text-blue-800' :
+                                    'bg-purple-100 text-purple-800'
+                                  }`}>
+                                    {event.category === 'environment' ? 
+                                      (locale === 'es' ? 'Medio Ambiente' : 
+                                       locale === 'de' ? 'Umwelt' : 'Environment') :
+                                     event.category === 'education' ?
+                                      (locale === 'es' ? 'Educación' : 
+                                       locale === 'de' ? 'Bildung' : 'Education') :
+                                     event.category === 'community' ?
+                                      (locale === 'es' ? 'Comunidad' : 
+                                       locale === 'de' ? 'Gemeinschaft' : 'Community') :
+                                     event.category}
+                                  </span>
                                 </div>
                               </div>
+                              <div className="flex gap-2">
+                                <Link
+                                  href={`/eventos/${event.id}`}
+                                  className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                                >
+                                  {t("viewEvent")}
+                                </Link>
+                                <button className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
+                                  {t("join")}
+                                </button>
+                              </div>
                             </div>
-                          );
-                        })}
+                          </div>
+                        );
+                      })}
                       
-                      {/* Show message if no events for current month */}
-                      {mockEvents.filter(event => 
-                        event.date.getMonth() === currentMonth.getMonth() && 
-                        event.date.getFullYear() === currentMonth.getFullYear()
-                      ).length === 0 && (
+                      {/* Show message if no events match filters */}
+                      {getFilteredEvents().length === 0 && (
                         <div className="text-center py-8 text-gray-500">
-                          <p className="text-lg mb-2">📅</p>
-                          <p>{locale === 'es' ? 'No hay eventos programados para este mes' : 
-                              locale === 'de' ? 'Keine Veranstaltungen für diesen Monat geplant' : 
-                              'No events scheduled for this month'}</p>
+                          <p className="text-lg mb-2">🔍</p>
+                          <p>{locale === 'es' ? 'No se encontraron eventos que coincidan con los filtros' : 
+                              locale === 'de' ? 'Keine Veranstaltungen gefunden, die den Filtern entsprechen' : 
+                              'No events found matching the filters'}</p>
+                          <button
+                            onClick={clearFilters}
+                            className="mt-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                          >
+                            {locale === 'es' ? 'Limpiar Filtros' : 
+                             locale === 'de' ? 'Filter löschen' : 
+                             'Clear Filters'}
+                          </button>
                         </div>
                       )}
                     </div>
