@@ -113,8 +113,8 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   return (
     <div className="bg-white/95 backdrop-blur rounded-lg shadow-lg border p-4 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">{t("calendar")}</h2>
+      <div className="flex flex-col items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-800 mb-3">{t("calendar")}</h2>
         <div className="flex gap-2">
           <button
             onClick={() => setViewMode('month')}
