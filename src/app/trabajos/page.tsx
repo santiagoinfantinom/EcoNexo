@@ -76,13 +76,19 @@ export default function JobsPage() {
   const [query, setQuery] = useState("");
   const [minSalary, setMinSalary] = useState(0);
   const [maxExperience, setMaxExperience] = useState(10);
+  const [city, setCity] = useState<string>("all");
+  const [contract, setContract] = useState<string>("all");
+  const [remoteOnly, setRemoteOnly] = useState(false);
   const filtered = useMemo(() => {
     return JOBS.filter((j) =>
       j.title.toLowerCase().includes(query.toLowerCase()) ||
       j.company.toLowerCase().includes(query.toLowerCase()) ||
       j.knowledgeAreas.some(a => a.toLowerCase().includes(query.toLowerCase()))
-    ).filter(j => j.salaryEur >= minSalary && j.experienceYears <= maxExperience);
-  }, [query, minSalary, maxExperience]);
+    ).filter(j => j.salaryEur >= minSalary && j.experienceYears <= maxExperience)
+    .filter(j => city === "all" ? true : j.city.toLowerCase() === city.toLowerCase())
+    .filter(j => contract === "all" ? true : j.contract === contract)
+    .filter(j => remoteOnly ? j.remote : true);
+  }, [query, minSalary, maxExperience, city, contract, remoteOnly]);
 
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES', { style: 'currency', currency: 'EUR' }).format(v);
@@ -91,7 +97,7 @@ export default function JobsPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">{t("jobs")}</h1>
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow p-4 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow p-4 mb-6 grid grid-cols-1 md:grid-cols-6 gap-4">
         <input
           value={query}
           onChange={(e)=>setQuery(e.target.value)}
@@ -106,6 +112,29 @@ export default function JobsPage() {
           <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Años de experiencia (máx.)</label>
           <input type="number" value={maxExperience} onChange={(e)=>setMaxExperience(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
         </div>
+        <div>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Ciudad</label>
+          <select value={city} onChange={(e)=>setCity(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
+            <option value="all">Todas</option>
+            {Array.from(new Set(JOBS.map(j=>j.city))).map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Contrato</label>
+          <select value={contract} onChange={(e)=>setContract(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
+            <option value="all">Todos</option>
+            <option value="full-time">Tiempo completo</option>
+            <option value="part-time">Medio tiempo</option>
+            <option value="contract">Contrato</option>
+            <option value="internship">Prácticas</option>
+          </select>
+        </div>
+        <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+          <input type="checkbox" checked={remoteOnly} onChange={(e)=>setRemoteOnly(e.target.checked)} className="h-4 w-4" />
+          Solo remoto
+        </label>
         <div className="text-sm text-slate-500 dark:text-slate-400 flex items-end">{filtered.length} resultados</div>
       </div>
 
