@@ -102,18 +102,18 @@ export default function JobsPage() {
           value={query}
           onChange={(e)=>setQuery(e.target.value)}
           className="border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
-          placeholder="Buscar por título, empresa o área"
+          placeholder={t("searchJobsPlaceholder")}
         />
         <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Salario mínimo (€)</label>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("minSalary")}</label>
           <input type="number" value={minSalary} onChange={(e)=>setMinSalary(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
         </div>
         <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Años de experiencia (máx.)</label>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("maxExperience")}</label>
           <input type="number" value={maxExperience} onChange={(e)=>setMaxExperience(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
         </div>
         <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Ciudad</label>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("cityLabel")}</label>
           <select value={city} onChange={(e)=>setCity(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
             <option value="all">Todas</option>
             {Array.from(new Set(JOBS.map(j=>j.city))).map(c => (
@@ -122,20 +122,20 @@ export default function JobsPage() {
           </select>
         </div>
         <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Contrato</label>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("contractLabel")}</label>
           <select value={contract} onChange={(e)=>setContract(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
-            <option value="all">Todos</option>
-            <option value="full-time">Tiempo completo</option>
-            <option value="part-time">Medio tiempo</option>
-            <option value="contract">Contrato</option>
-            <option value="internship">Prácticas</option>
+            <option value="all">All</option>
+            <option value="full-time">{t("contract_full_time")}</option>
+            <option value="part-time">{t("contract_part_time")}</option>
+            <option value="contract">{t("contract_contract")}</option>
+            <option value="internship">{t("contract_internship")}</option>
           </select>
         </div>
         <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
           <input type="checkbox" checked={remoteOnly} onChange={(e)=>setRemoteOnly(e.target.checked)} className="h-4 w-4" />
-          Solo remoto
+          {t("remoteOnly")}
         </label>
-        <div className="text-sm text-slate-500 dark:text-slate-400 flex items-end">{filtered.length} resultados</div>
+        <div className="text-sm text-slate-500 dark:text-slate-400 flex items-end">{filtered.length} {t("results")}</div>
       </div>
 
       <ul className="space-y-4">
@@ -153,14 +153,14 @@ export default function JobsPage() {
             </div>
             <div className="mt-3 text-slate-700 dark:text-slate-300">{job.description}</div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-800">{job.experienceYears} años exp.</span>
+              <span className="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-800">{job.experienceYears} {t("yearsExp")}</span>
               {job.knowledgeAreas.map((a) => (
                 <span key={a} className="px-2 py-1 rounded-full text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">{a}</span>
               ))}
             </div>
             <div className="mt-4 flex gap-3">
-              <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Postular</button>
-              <button className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-50 dark:hover:bg-slate-700">Guardar</button>
+              <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{t("applyBtn")}</button>
+              <button className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-50 dark:hover:bg-slate-700">{t("saveBtn")}</button>
             </div>
           </li>
         ))}
