@@ -67,3 +67,17 @@ body {
   font-weight: 400;
   letter-spacing: -0.01em;
 }
+
+.text-nav {
+  font-family: 'Inter', 'Poppins', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+.text-brand {
+  font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
