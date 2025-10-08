@@ -124,10 +124,10 @@ export default function Home() {
   // TODO: fetch from API when env is set
 
   return (
-    <div className="flex flex-col gap-4 bg-modern rounded-2xl p-2">
-      <div className="flex flex-wrap gap-2 justify-center">
+    <div className="flex flex-col gap-2 bg-modern rounded-2xl p-1">
+      <div className="flex flex-wrap gap-1 justify-center">
         <button
-          className={`px-3 py-1 rounded-full border ${
+          className={`px-2 py-1 rounded-full border text-sm ${
             active === "Todas" ? "bg-green-600 text-black" : "bg-white text-black"
           }`}
           onClick={() => setActive("Todas")}
@@ -137,7 +137,7 @@ export default function Home() {
         {ALL_CATEGORIES.map((c) => (
           <button
             key={c}
-            className={`px-3 py-1 rounded-full border ${
+            className={`px-2 py-1 rounded-full border text-sm ${
               active === c
                 ? "bg-green-600 text-white"
                 : `${COLOR_BY_CATEGORY[c].bg} ${COLOR_BY_CATEGORY[c].text} ${COLOR_BY_CATEGORY[c].border}`
@@ -149,13 +149,13 @@ export default function Home() {
         ))}
       </div>
       <div className="flex justify-center">
-        <div className="relative flex items-center justify-center" style={{ padding: "8px" }}>
+        <div className="relative flex items-center justify-center" style={{ padding: "4px" }}>
           <div
             aria-hidden
             className="absolute -z-10"
             style={{
-              height: "min(85vh, 95vw)",
-              width: "min(85vh, 95vw)",
+              height: "min(92vh, 98vw)",
+              width: "min(92vh, 98vw)",
               borderRadius: "9999px",
               background:
                 "radial-gradient(closest-side, rgba(34,197,94,0.25), rgba(34,197,94,0.05) 60%, transparent 65%)",
@@ -165,8 +165,8 @@ export default function Home() {
           <div
             className="overflow-hidden border-4 border-green-600 shadow-xl"
             style={{
-              height: "min(80vh, 90vw)",
-              width: "min(80vh, 90vw)",
+              height: "min(88vh, 94vw)",
+              width: "min(88vh, 94vw)",
               borderRadius: "9999px",
             }}
           >
@@ -174,7 +174,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* Buscador bajo el mapa */}
+      {/* Buscador compacto bajo el mapa */}
       <div className="flex justify-center">
         <form
           onSubmit={async (e) => {
@@ -192,12 +192,12 @@ export default function Home() {
               }
             } catch {}
           }}
-          className="bg-white/95 backdrop-blur border rounded-full shadow flex items-center gap-2 px-3 py-1"
+          className="bg-white/95 backdrop-blur border rounded-full shadow flex items-center gap-1 px-2 py-1"
         >
-          <input name="q" placeholder={t('cityPh')} className="outline-none text-sm bg-transparent w-64 text-black" />
-          <button className="text-sm bg-green-600 text-white rounded-full px-3 py-1">OK</button>
-          <button type="button" className="text-sm ml-2 border rounded-full px-3 py-1" onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}>Reset</button>
-          <button type="button" className="text-sm ml-2 border rounded-full px-3 py-1 flex items-center gap-1" onClick={() => {
+          <input name="q" placeholder={t('cityPh')} className="outline-none text-xs bg-transparent w-48 text-black" />
+          <button className="text-xs bg-green-600 text-white rounded-full px-2 py-1">OK</button>
+          <button type="button" className="text-xs border rounded-full px-2 py-1" onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}>Reset</button>
+          <button type="button" className="text-xs border rounded-full px-2 py-1 flex items-center gap-1" onClick={() => {
             if (!('geolocation' in navigator)) return;
             navigator.geolocation.getCurrentPosition((pos) => {
               const lat = pos.coords.latitude; const lon = pos.coords.longitude;
