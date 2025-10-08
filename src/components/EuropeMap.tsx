@@ -136,11 +136,6 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       {/* Map Layers */}
       <MapLayers />
       
-      <TileLayer
-        attribution='&copy; OpenStreetMap & CARTO'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
-      />
-      
       {/* Conditional rendering: clustering or individual markers */}
       {useClustering ? (
         <MarkerCluster projects={filteredProjects} />
