@@ -13,15 +13,15 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
 
-  // Mock events data - localized based on current locale
+  // Mock events data - localized based on current locale (2025)
   const mockEvents = [
-    // Week 1 - December 1-7
+    // January 2025
     {
       id: 'e1',
       projectId: 'p1',
       title: locale === 'es' ? 'Plantación de árboles nativos' : 
              locale === 'de' ? 'Einheimische Baumpflanzung' : 'Native tree planting',
-      date: new Date(2024, 11, 2),
+      date: new Date(2025, 0, 15), // January 15, 2025
       time: '09:00',
       duration: 3,
       spots: 30,
@@ -36,7 +36,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       projectId: 'p2',
       title: locale === 'es' ? 'Taller de energía solar' :
              locale === 'de' ? 'Solar-Energie Workshop' : 'Solar energy workshop',
-      date: new Date(2024, 11, 4),
+      date: new Date(2025, 0, 22), // January 22, 2025
       time: '14:00',
       duration: 3,
       spots: 20,
@@ -46,12 +46,14 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       category: 'education',
       organizer: locale === 'es' ? 'SolarTech Academy' : locale === 'de' ? 'SolarTech Akademie' : 'SolarTech Academy'
     },
+
+    // February 2025
     {
       id: 'e3',
       projectId: 'p3',
       title: locale === 'es' ? 'Mercado de productos locales' :
              locale === 'de' ? 'Lokaler Produktmarkt' : 'Local products market',
-      date: new Date(2024, 11, 6),
+      date: new Date(2025, 1, 8), // February 8, 2025
       time: '10:00',
       duration: 6,
       spots: 40,
@@ -61,14 +63,12 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       category: 'community',
       organizer: locale === 'es' ? 'Asociación de Productores Locales' : locale === 'de' ? 'Vereinigung lokaler Produzenten' : 'Local Producers Association'
     },
-
-    // Week 2 - December 8-14
     {
       id: 'e4',
       projectId: 'p4',
       title: locale === 'es' ? 'Limpieza de río' :
              locale === 'de' ? 'Flussreinigung' : 'River cleanup',
-      date: new Date(2024, 11, 9),
+      date: new Date(2025, 1, 14), // February 14, 2025
       time: '08:00',
       duration: 3,
       spots: 25,
@@ -78,12 +78,14 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       category: 'environment',
       organizer: locale === 'es' ? 'Guardianes del Río' : locale === 'de' ? 'Flusswächter' : 'River Guardians'
     },
+
+    // March 2025
     {
       id: 'e5',
       projectId: 'p5',
       title: locale === 'es' ? 'Conferencia sobre cambio climático' :
              locale === 'de' ? 'Klimawandel-Konferenz' : 'Climate change conference',
-      date: new Date(2024, 11, 11),
+      date: new Date(2025, 2, 5), // March 5, 2025
       time: '18:00',
       duration: 2,
       spots: 200,
@@ -98,7 +100,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       projectId: 'p6',
       title: locale === 'es' ? 'Construcción de jardines verticales' :
              locale === 'de' ? 'Vertikale Gartenbau' : 'Vertical garden building',
-      date: new Date(2024, 11, 13),
+      date: new Date(2025, 2, 18), // March 18, 2025
       time: '10:00',
       duration: 5,
       spots: 15,
@@ -109,13 +111,13 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       organizer: locale === 'es' ? 'Urban Green Solutions' : locale === 'de' ? 'Städtische Grüne Lösungen' : 'Urban Green Solutions'
     },
 
-    // Week 3 - December 15-21
+    // April 2025
     {
       id: 'e7',
       projectId: 'p1',
       title: locale === 'es' ? 'Taller de compostaje' :
              locale === 'de' ? 'Kompostierungs-Workshop' : 'Composting workshop',
-      date: new Date(2024, 11, 16),
+      date: new Date(2025, 3, 12), // April 12, 2025
       time: '15:00',
       duration: 2,
       spots: 20,
@@ -130,7 +132,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       projectId: 'p2',
       title: locale === 'es' ? 'Carrera ecológica 5K' :
              locale === 'de' ? 'Ökologischer 5K-Lauf' : 'Eco-friendly 5K run',
-      date: new Date(2024, 11, 18),
+      date: new Date(2025, 3, 22), // April 22, 2025 (Earth Day)
       time: '08:00',
       duration: 2,
       spots: 100,
@@ -140,12 +142,14 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       category: 'community',
       organizer: locale === 'es' ? 'Runners Verdes' : locale === 'de' ? 'Grüne Läufer' : 'Green Runners'
     },
+
+    // May 2025
     {
       id: 'e9',
       projectId: 'p3',
       title: locale === 'es' ? 'Instalación de paneles solares' :
              locale === 'de' ? 'Solarpanel-Installation' : 'Solar panel installation',
-      date: new Date(2024, 11, 20),
+      date: new Date(2025, 4, 10), // May 10, 2025
       time: '09:00',
       duration: 7,
       spots: 12,
@@ -155,29 +159,29 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       category: 'environment',
       organizer: locale === 'es' ? 'Solar Community' : locale === 'de' ? 'Solar-Gemeinschaft' : 'Solar Community'
     },
-
-    // Week 4 - December 22-28
     {
       id: 'e10',
       projectId: 'p4',
-      title: locale === 'es' ? 'Navidad sostenible' :
-             locale === 'de' ? 'Nachhaltiges Weihnachten' : 'Sustainable Christmas',
-      date: new Date(2024, 11, 22),
+      title: locale === 'es' ? 'Festival de sostenibilidad' :
+             locale === 'de' ? 'Nachhaltigkeitsfestival' : 'Sustainability festival',
+      date: new Date(2025, 4, 25), // May 25, 2025
       time: '16:00',
-      duration: 3,
-      spots: 30,
-      registered: 22,
+      duration: 6,
+      spots: 200,
+      registered: 120,
       location: locale === 'es' ? 'Centro Cultural, Milán' :
                 locale === 'de' ? 'Kulturzentrum, Mailand' : 'Cultural Center, Milan',
       category: 'community',
-      organizer: locale === 'es' ? 'Navidad Verde' : locale === 'de' ? 'Grünes Weihnachten' : 'Green Christmas'
+      organizer: locale === 'es' ? 'Festival Verde' : locale === 'de' ? 'Grünes Festival' : 'Green Festival'
     },
+
+    // June 2025
     {
       id: 'e11',
       projectId: 'p5',
       title: locale === 'es' ? 'Monitoreo de calidad del aire' :
              locale === 'de' ? 'Luftqualitätsüberwachung' : 'Air quality monitoring',
-      date: new Date(2024, 11, 24),
+      date: new Date(2025, 5, 8), // June 8, 2025
       time: '13:00',
       duration: 4,
       spots: 8,
@@ -192,7 +196,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       projectId: 'p6',
       title: locale === 'es' ? 'Cena vegana comunitaria' :
              locale === 'de' ? 'Gemeinschaftliches veganes Abendessen' : 'Community vegan dinner',
-      date: new Date(2024, 11, 26),
+      date: new Date(2025, 5, 21), // June 21, 2025 (Summer Solstice)
       time: '19:00',
       duration: 2,
       spots: 50,
@@ -203,13 +207,13 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       organizer: locale === 'es' ? 'Veganos Unidos' : locale === 'de' ? 'Vereinte Veganer' : 'United Vegans'
     },
 
-    // Week 5 - December 29-31
+    // July 2025
     {
       id: 'e13',
       projectId: 'p1',
-      title: locale === 'es' ? 'Reflexión anual ambiental' :
-             locale === 'de' ? 'Jährliche Umweltreflexion' : 'Annual environmental reflection',
-      date: new Date(2024, 11, 29),
+      title: locale === 'es' ? 'Reflexión semestral ambiental' :
+             locale === 'de' ? 'Halbjährliche Umweltreflexion' : 'Semi-annual environmental reflection',
+      date: new Date(2025, 6, 15), // July 15, 2025
       time: '17:00',
       duration: 2,
       spots: 40,
@@ -222,17 +226,17 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e14',
       projectId: 'p2',
-      title: locale === 'es' ? 'Celebración de año nuevo sostenible' :
-             locale === 'de' ? 'Nachhaltige Neujahrsfeier' : 'Sustainable New Year celebration',
-      date: new Date(2024, 11, 31),
+      title: locale === 'es' ? 'Celebración de verano sostenible' :
+             locale === 'de' ? 'Nachhaltige Sommerfeier' : 'Sustainable summer celebration',
+      date: new Date(2025, 6, 30), // July 30, 2025
       time: '20:00',
-      duration: 4.5,
-      spots: 200,
-      registered: 120,
+      duration: 4,
+      spots: 150,
+      registered: 90,
       location: locale === 'es' ? 'Plaza Principal, Madrid' :
                 locale === 'de' ? 'Hauptplatz, Madrid' : 'Main Square, Madrid',
       category: 'community',
-      organizer: locale === 'es' ? 'Año Nuevo Verde' : locale === 'de' ? 'Grünes Neues Jahr' : 'Green New Year'
+      organizer: locale === 'es' ? 'Verano Verde' : locale === 'de' ? 'Grüner Sommer' : 'Green Summer'
     }
   ];
 
