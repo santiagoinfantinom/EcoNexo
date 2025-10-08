@@ -11,7 +11,10 @@ export default function HeaderNav() {
     <header className="grid place-items-center gap-3 px-6 py-6 relative bg-gradient-to-b from-transparent via-transparent to-transparent">
       <div className="flex items-center gap-3 text-black dark:text-slate-300 text-brand font-black">
         <span className="text-3xl">🌿</span>
-        <span className="text-2xl">{t("app")}</span>
+        <span className="text-2xl" style={{ 
+          textShadow: '1px 1px 0 white, -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white',
+          WebkitTextStroke: '1px white'
+        }}>{t("app")}</span>
       </div>
       <nav className="flex gap-6 text-base">
         <Link 
