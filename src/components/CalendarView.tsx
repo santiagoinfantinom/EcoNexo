@@ -237,6 +237,68 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                 locale === 'de' ? 'Hauptplatz, Madrid' : 'Main Square, Madrid',
       category: 'community',
       organizer: locale === 'es' ? 'Verano Verde' : locale === 'de' ? 'Grüner Sommer' : 'Green Summer'
+    },
+
+    // October 2025
+    {
+      id: 'e15',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Plantación de otoño' :
+             locale === 'de' ? 'Herbstpflanzung' : 'Autumn planting',
+      date: new Date(2025, 9, 5), // October 5, 2025
+      time: '10:00',
+      duration: 4,
+      spots: 25,
+      registered: 18,
+      location: locale === 'es' ? 'Parque del Otoño, Barcelona' :
+                locale === 'de' ? 'Herbstpark, Barcelona' : 'Autumn Park, Barcelona',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Plantadores del Otoño' : locale === 'de' ? 'Herbstpflanzer' : 'Autumn Planters'
+    },
+    {
+      id: 'e16',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Taller de conservación de alimentos' :
+             locale === 'de' ? 'Lebensmittelkonservierungsworkshop' : 'Food preservation workshop',
+      date: new Date(2025, 9, 12), // October 12, 2025
+      time: '14:00',
+      duration: 3,
+      spots: 20,
+      registered: 15,
+      location: locale === 'es' ? 'Centro Culinario Verde, Milán' :
+                locale === 'de' ? 'Grünes Kulinarisches Zentrum, Mailand' : 'Green Culinary Center, Milan',
+      category: 'education',
+      organizer: locale === 'es' ? 'Cocina Sostenible' : locale === 'de' ? 'Nachhaltige Küche' : 'Sustainable Kitchen'
+    },
+    {
+      id: 'e17',
+      projectId: 'p5',
+      title: locale === 'es' ? 'Limpieza de bosque otoñal' :
+             locale === 'de' ? 'Herbstwaldreinigung' : 'Autumn forest cleanup',
+      date: new Date(2025, 9, 19), // October 19, 2025
+      time: '09:00',
+      duration: 3,
+      spots: 30,
+      registered: 22,
+      location: locale === 'es' ? 'Bosque de Otoño, París' :
+                locale === 'de' ? 'Herbstwald, Paris' : 'Autumn Forest, Paris',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Guardianes del Bosque' : locale === 'de' ? 'Waldwächter' : 'Forest Guardians'
+    },
+    {
+      id: 'e18',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Mercado de productos de temporada' :
+             locale === 'de' ? 'Saisonproduktmarkt' : 'Seasonal products market',
+      date: new Date(2025, 9, 26), // October 26, 2025
+      time: '11:00',
+      duration: 5,
+      spots: 50,
+      registered: 35,
+      location: locale === 'es' ? 'Plaza de la Temporada, Londres' :
+                locale === 'de' ? 'Saisonplatz, London' : 'Season Square, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Productores de Temporada' : locale === 'de' ? 'Saisonproduzenten' : 'Seasonal Producers'
     }
   ];
 
