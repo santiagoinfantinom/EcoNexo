@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useI18n, categoryLabel, impactTagLabel, projectDescriptionLabel, projectNameLabel } from "@/lib/i18n";
+import { useI18n, categoryLabel, impactTagLabel, projectDescriptionLabel, projectNameLabel, locationLabel } from "@/lib/i18n";
 import ProjectImage from "@/components/ProjectImage";
 
 type ProjectDetails = {
@@ -38,7 +38,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
       <div className="grid gap-2 place-items-center text-center">
         <div className="text-3xl font-semibold">{projectNameLabel(details.id, details.name, locale)}</div>
         <div className="text-sm text-gray-400">
-          {details.city}, {details.country} · {t("category")}: {categoryLabel(details.category, locale)}
+          {locationLabel(details.city, locale)}, {locationLabel(details.country, locale)} · {t("category")}: {categoryLabel(details.category, locale)}
         </div>
       </div>
 
@@ -65,7 +65,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
 
           <div className="grid gap-2">
             <div className="h-3 w-full bg-gray-300 rounded">
-              <div className="h-3 bg-green-700 rounded" style={{ width: `${progress}%` }} aria-label="Progreso de recaudación" />
+              <div className="h-3 bg-green-700 rounded" style={{ width: `${progress}%` }} aria-label={t("progressReached")} />
             </div>
             <div className="text-base font-bold text-white">{progress}% {t("reached")}</div>
           </div>

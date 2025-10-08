@@ -1,7 +1,7 @@
 "use client";
 import { Marker, Popup } from "react-leaflet";
 import Link from "next/link";
-import { useI18n, categoryLabel, projectNameLabel } from "@/lib/i18n";
+import { useI18n, categoryLabel, projectNameLabel, locationLabel } from "@/lib/i18n";
 
 type Project = {
   id: string;
@@ -30,7 +30,7 @@ export default function MarkerCluster({ projects }: MarkerClusterProps) {
           <Popup>
             <div className="grid gap-1">
               <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
-              <div className="text-xs text-gray-600">{p.city}, {p.country}</div>
+              <div className="text-xs text-gray-600">{locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}</div>
               <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
               {p.spots !== undefined && (
                 <div className="text-xs">{t("availableSpots")}: {p.spots}</div>

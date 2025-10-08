@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 
 type EcoTip = {
@@ -169,6 +169,26 @@ export default function EcoTips() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+    
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+    
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   const tips = ECO_TIPS[locale] || ECO_TIPS["es"];
   const categories = [...new Set(tips.map(tip => tip.category))];
 
@@ -204,8 +224,13 @@ export default function EcoTips() {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[3000] p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-200">
+          {/* Backdrop clickable */}
+          <div 
+            className="absolute inset-0" 
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl max-w-5xl w-full max-h-[85vh] overflow-hidden flex flex-col relative z-10 animate-in zoom-in-95 duration-200">
             <div className="p-6 border-b border-gray-200 dark:border-slate-700">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
@@ -213,7 +238,8 @@ export default function EcoTips() {
                 </h2>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200 text-2xl"
+                  className="text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200 text-2xl font-bold hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+                  aria-label="Cerrar"
                 >
                   ×
                 </button>
@@ -223,9 +249,9 @@ export default function EcoTips() {
               </p>
             </div>
 
-            <div className="p-6">
+            <div className="p-6 flex flex-col flex-1 min-h-0">
               {/* Category Filter */}
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-2 mb-6 flex-shrink-0">
                 <button
                   onClick={() => setSelectedCategory(null)}
                   className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
@@ -252,17 +278,17 @@ export default function EcoTips() {
               </div>
 
               {/* Tips Grid */}
-              <div className="grid gap-4 max-h-96 overflow-y-auto">
+              <div className="grid gap-4 flex-1 overflow-y-auto pr-2 min-h-0">
                 {filteredTips.map(tip => (
                   <div
                     key={tip.id}
-                    className="p-4 border border-gray-200 dark:border-slate-700 rounded-lg hover:shadow-md transition-shadow"
+                    className="p-4 border border-gray-200 dark:border-slate-700 rounded-lg hover:shadow-md transition-shadow bg-white dark:bg-slate-800 relative"
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-base leading-tight pr-2">
                         {tip.title}
                       </h3>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-shrink-0">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(tip.impact)}`}>
                           {tip.impact === "high" ? t("highImpact") : tip.impact === "medium" ? t("mediumImpact") : t("lowImpact")}
                         </span>
@@ -271,11 +297,11 @@ export default function EcoTips() {
                         </span>
                       </div>
                     </div>
-                    <p className="text-gray-600 dark:text-slate-400 text-sm">
+                    <p className="text-gray-600 dark:text-slate-400 text-sm leading-relaxed mb-3">
                       {tip.description}
                     </p>
-                    <div className="mt-2">
-                      <span className="text-xs text-gray-500 dark:text-slate-500">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-gray-500 dark:text-slate-500 font-medium">
                         {tip.category}
                       </span>
                     </div>

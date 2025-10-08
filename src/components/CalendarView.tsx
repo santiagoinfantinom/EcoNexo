@@ -728,17 +728,17 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="bg-white/95 backdrop-blur rounded-lg shadow-lg border p-4 max-w-4xl mx-auto">
+    <div className="bg-white rounded-lg shadow-lg border border-gray-300 p-4 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex flex-col items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800 mb-3">{t("calendar")}</h2>
+        <h2 className="text-xl font-semibold text-slate-900 mb-3">{t("calendar")}</h2>
         <div className="flex gap-2">
           <button
             onClick={() => setViewMode('month')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               viewMode === 'month' 
                 ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
             }`}
           >
             {t("month")}
@@ -748,7 +748,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               viewMode === 'list' 
                 ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
             }`}
           >
             {t("list")}
@@ -772,17 +772,17 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             </select>
           </div>
           {/* Month Navigation */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 text-slate-900">
             <button
               onClick={() => navigateMonth('prev')}
-              className="p-2 hover:bg-gray-100 rounded-md"
+              className="p-2 hover:bg-gray-200 rounded-md"
             >
               ←
             </button>
-            <h3 className="text-lg font-medium">{formatMonthYear(currentMonth)}</h3>
+            <h3 className="text-lg font-semibold">{formatMonthYear(currentMonth)}</h3>
             <button
               onClick={() => navigateMonth('next')}
-              className="p-2 hover:bg-gray-100 rounded-md"
+              className="p-2 hover:bg-gray-200 rounded-md"
             >
               →
             </button>
@@ -792,7 +792,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
           <div className="grid grid-cols-7 gap-1">
             {/* Week day headers */}
             {weekDays.map(day => (
-              <div key={day} className="p-2 text-center text-sm font-medium text-gray-600 bg-gray-50">
+              <div key={day} className="p-2 text-center text-sm font-semibold text-gray-700 bg-gray-100">
                 {day}
               </div>
             ))}
@@ -805,13 +805,13 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
               return (
                 <div
                   key={index}
-                  className={`min-h-[80px] p-1 border border-gray-200 ${
+                  className={`min-h-[80px] p-1 border border-gray-300 ${
                     day ? 'bg-white hover:bg-gray-50' : 'bg-gray-100'
-                  } ${isToday ? 'bg-green-100 border-green-300' : ''}`}
+                  } ${isToday ? 'bg-green-50 border-green-500' : ''}`}
                 >
                   {day && (
                     <>
-                      <div className={`text-sm font-medium ${isToday ? 'text-green-700' : 'text-gray-700'}`}>
+                      <div className={`text-sm font-semibold ${isToday ? 'text-green-700' : 'text-gray-900'}`}>
                         {day.getDate()}
                       </div>
                       <div className="mt-1 space-y-1">
@@ -819,7 +819,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                           <Link
                             key={event.id}
                             href={`/eventos/${event.id}`}
-                            className="text-xs px-1 py-0.5 rounded cursor-pointer truncate block hover:opacity-90"
+                            className="text-xs px-1.5 py-0.5 rounded cursor-pointer truncate block hover:opacity-95 font-medium"
                             title={event.title}
                             style={{
                               backgroundColor: event.category === 'environment' ? '#dcfce7' : event.category === 'education' ? '#dbeafe' : '#f3e8ff',
@@ -831,15 +831,15 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                 event.category === 'environment' ? 'bg-green-600' : event.category === 'education' ? 'bg-blue-700' : 'bg-purple-700'
                               }`} />
                               {event.title}
-                              <span className="ml-1 opacity-80">
+                              <span className="ml-1 opacity-90">
                                 ({event.registered}/{event.spots})
                               </span>
                             </span>
                           </Link>
                         ))}
                         {events.length > 2 && (
-                          <div className="text-xs text-gray-500">
-                            +{events.length - 2} más
+                          <div className="text-xs text-gray-700">
+                            +{events.length - 2} {locale === 'es' ? 'más' : locale === 'de' ? 'mehr' : 'more'}
                           </div>
                         )}
                       </div>
@@ -855,25 +855,25 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                 {viewMode === 'list' && (
                   <>
                     {/* Month Navigation and Filter Toggle */}
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-4 text-slate-900">
                       <div className="flex items-center gap-4">
                         <button
                           onClick={() => navigateMonth('prev')}
-                          className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                          className="p-2 hover:bg-gray-200 rounded-md transition-colors"
                         >
                           ←
                         </button>
-                        <h3 className="text-lg font-medium">{formatMonthYear(currentMonth)}</h3>
+                        <h3 className="text-lg font-semibold">{formatMonthYear(currentMonth)}</h3>
                         <button
                           onClick={() => navigateMonth('next')}
-                          className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                          className="p-2 hover:bg-gray-200 rounded-md transition-colors"
                         >
                           →
                         </button>
                       </div>
                       <button
                         onClick={() => setShowFilters(!showFilters)}
-                        className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                        className="px-3 py-1 bg-blue-700 text-white text-sm rounded-md hover:bg-blue-800 transition-colors"
                       >
                         {showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'}
                       </button>
@@ -881,7 +881,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
                     {/* Filters Panel */}
                     {showFilters && (
-                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                      <div className="bg-gray-100 rounded-lg p-4 mb-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {/* Search */}
                           <div>
@@ -895,7 +895,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                               placeholder={locale === 'es' ? 'Título, ubicación, organizador...' : 
                                          locale === 'de' ? 'Titel, Ort, Organisator...' : 
                                          'Title, location, organizer...'}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-3 py-2 border border-gray-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                             />
                           </div>
 
@@ -907,7 +907,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                             <select
                               value={filters.category}
                               onChange={(e) => setFilters({...filters, category: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-3 py-2 border border-gray-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                             >
                               <option value="">{locale === 'es' ? 'Todas las categorías' : 
                                                locale === 'de' ? 'Alle Kategorien' : 
@@ -937,7 +937,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                             <select
                               value={filters.location}
                               onChange={(e) => setFilters({...filters, location: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-3 py-2 border border-gray-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                             >
                               <option value="">{locale === 'es' ? 'Todas las ubicaciones' : 
                                                locale === 'de' ? 'Alle Standorte' : 
@@ -956,7 +956,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                             <select
                               value={filters.dateRange}
                               onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-3 py-2 border border-gray-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                             >
                               <option value="">{locale === 'es' ? 'Todas las fechas' : 
                                                locale === 'de' ? 'Alle Daten' : 
@@ -992,7 +992,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                           <div className="flex items-end">
                             <button
                               onClick={clearFilters}
-                              className="px-4 py-2 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 transition-colors"
+                              className="px-4 py-2 bg-gray-700 text-white text-sm rounded-md hover:bg-gray-800 transition-colors"
                             >
                               {locale === 'es' ? 'Limpiar Filtros' : 
                                locale === 'de' ? 'Filter löschen' : 
@@ -1062,14 +1062,14 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                       
                       {/* Show message if no events match filters */}
                       {getFilteredEvents().length === 0 && (
-                        <div className="text-center py-8 text-gray-500">
+                          <div className="text-center py-8 text-gray-700">
                           <p className="text-lg mb-2">🔍</p>
                           <p>{locale === 'es' ? 'No se encontraron eventos que coincidan con los filtros' : 
                               locale === 'de' ? 'Keine Veranstaltungen gefunden, die den Filtern entsprechen' : 
                               'No events found matching the filters'}</p>
                           <button
                             onClick={clearFilters}
-                            className="mt-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                            className="mt-2 px-4 py-2 bg-blue-700 text-white text-sm rounded-md hover:bg-blue-800 transition-colors"
                           >
                             {locale === 'es' ? 'Limpiar Filtros' : 
                              locale === 'de' ? 'Filter löschen' : 

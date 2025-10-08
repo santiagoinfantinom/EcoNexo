@@ -2,7 +2,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L, { Map as LeafletMap } from "leaflet";
 import Link from "next/link";
-import { useI18n, categoryLabel, projectNameLabel } from "@/lib/i18n";
+import { useI18n, categoryLabel, projectNameLabel, locationLabel } from "@/lib/i18n";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
 import MapFilters from "./MapFilters";
@@ -79,7 +79,9 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
 
   const handleCenterOnLocation = () => {
     if (!("geolocation" in navigator)) {
-      setGeoError("Geolocation no está disponible en este dispositivo.");
+      setGeoError(locale === 'es' ? "Geolocation no está disponible en este dispositivo." : 
+                 locale === 'de' ? "Geolocation ist auf diesem Gerät nicht verfügbar." : 
+                 "Geolocation is not available on this device.");
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -93,9 +95,13 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       },
       (err) => {
         if (err.code === err.PERMISSION_DENIED) {
-          setGeoError("Para centrar en tu ubicación, concede permiso de localización al navegador.");
+          setGeoError(locale === 'es' ? "Para centrar en tu ubicación, concede permiso de localización al navegador." :
+                     locale === 'de' ? "Um auf deinen Standort zu zentrieren, gewähre dem Browser Standortberechtigung." :
+                     "To center on your location, grant location permission to the browser.");
         } else {
-          setGeoError("No se pudo obtener tu ubicación.");
+          setGeoError(locale === 'es' ? "No se pudo obtener tu ubicación." :
+                     locale === 'de' ? "Dein Standort konnte nicht ermittelt werden." :
+                     "Could not get your location.");
         }
       },
       { enableHighAccuracy: true, timeout: 8000 }
@@ -138,7 +144,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
           <Popup>
             <div className="grid gap-1">
               <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
-              <div className="text-xs text-gray-600">{p.city}, {p.country}</div>
+              <div className="text-xs text-gray-600">{locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}</div>
               <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
               {p.spots !== undefined && (
                 <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
@@ -175,8 +181,12 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <button
         onClick={handleCenterOnLocation}
         className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200"
-        title="Centrar en mi ubicación"
-        aria-label="Centrar en mi ubicación"
+        title={locale === 'es' ? "Centrar en mi ubicación" : 
+               locale === 'de' ? "Auf meinen Standort zentrieren" : 
+               "Center on my location"}
+        aria-label={locale === 'es' ? "Centrar en mi ubicación" : 
+                   locale === 'de' ? "Auf meinen Standort zentrieren" : 
+                   "Center on my location"}
       >
         📍
       </button>
@@ -192,8 +202,12 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <button
         className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
-        title="Arriba"
-        aria-label="Arriba"
+        title={locale === 'es' ? "Arriba" : 
+               locale === 'de' ? "Nach oben" : 
+               "Up"}
+        aria-label={locale === 'es' ? "Arriba" : 
+                   locale === 'de' ? "Nach oben" : 
+                   "Up"}
       >
         ↑
       </button>
@@ -201,16 +215,24 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         <button
           className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
           onClick={() => mapRef.current?.panBy([-100, 0], { animate: true })}
-          title="Izquierda"
-          aria-label="Izquierda"
+          title={locale === 'es' ? "Izquierda" : 
+                 locale === 'de' ? "Nach links" : 
+                 "Left"}
+          aria-label={locale === 'es' ? "Izquierda" : 
+                     locale === 'de' ? "Nach links" : 
+                     "Left"}
         >
           ←
         </button>
         <button
           className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
           onClick={() => mapRef.current?.panBy([100, 0], { animate: true })}
-          title="Derecha"
-          aria-label="Derecha"
+          title={locale === 'es' ? "Derecha" : 
+                 locale === 'de' ? "Nach rechts" : 
+                 "Right"}
+          aria-label={locale === 'es' ? "Derecha" : 
+                     locale === 'de' ? "Nach rechts" : 
+                     "Right"}
         >
           →
         </button>
@@ -218,8 +240,12 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <button
         className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.panBy([0, 100], { animate: true })}
-        title="Abajo"
-        aria-label="Abajo"
+        title={locale === 'es' ? "Abajo" : 
+               locale === 'de' ? "Nach unten" : 
+               "Down"}
+        aria-label={locale === 'es' ? "Abajo" : 
+                   locale === 'de' ? "Nach unten" : 
+                   "Down"}
       >
         ↓
       </button>
@@ -230,16 +256,24 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <button
         className="h-12 w-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-green-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.zoomIn()}
-        title="Acercar"
-        aria-label="Acercar"
+        title={locale === 'es' ? "Acercar" : 
+               locale === 'de' ? "Hineinzoomen" : 
+               "Zoom in"}
+        aria-label={locale === 'es' ? "Acercar" : 
+                   locale === 'de' ? "Hineinzoomen" : 
+                   "Zoom in"}
       >
         +
       </button>
       <button
         className="h-12 w-12 rounded-full bg-red-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-red-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.zoomOut()}
-        title="Alejar"
-        aria-label="Alejar"
+        title={locale === 'es' ? "Alejar" : 
+               locale === 'de' ? "Herauszoomen" : 
+               "Zoom out"}
+        aria-label={locale === 'es' ? "Alejar" : 
+                   locale === 'de' ? "Herauszoomen" : 
+                   "Zoom out"}
       >
         −
       </button>

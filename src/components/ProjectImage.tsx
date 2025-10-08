@@ -8,12 +8,8 @@ type Props = {
 };
 
 export default function ProjectImage({ src, alt, fallbackSrc, className }: Props) {
-  const candidates = [
-    src,
-    // Picsum fallback if Unsplash blocks
-    "https://picsum.photos/1200/600",
-    fallbackSrc,
-  ];
+  // Use deterministic, relevant fallbacks only. Random pics can mismatch the topic.
+  const candidates = [src, fallbackSrc, "/window.svg"];
   let tried = 0;
   return (
     <img
@@ -22,6 +18,8 @@ export default function ProjectImage({ src, alt, fallbackSrc, className }: Props
       loading="lazy"
       className={className}
       referrerPolicy="no-referrer"
+      decoding="async"
+      crossOrigin="anonymous"
       onError={(e) => {
         const img = e.currentTarget as HTMLImageElement;
         tried += 1;

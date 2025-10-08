@@ -1,5 +1,7 @@
 "use client";
+import React from "react";
 import { useI18n } from "@/lib/i18n";
+import { locationLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -264,19 +266,19 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e15b": {
     id: "e15b",
-    title: "Charla sobre consumo responsable",
-    description: "Aprende sobre consumo responsable y cómo tus decisiones de compra pueden impactar positivamente el medio ambiente.",
-    date: "2025-10-29",
-    time: "18:00",
-    duration: 1.5,
-    location: "Biblioteca Central, Berlín",
-    organizer: "Conscious Consumption",
-    category: "education",
-    maxVolunteers: 50,
-    currentVolunteers: 30,
-    requirements: ["Registro previo", "Participación activa"],
-    benefits: ["Guía de consumo", "Certificado", "Red de contactos"],
-    contact: "consumo@conscious.es"
+    title: "Ruta en bici por la ciudad",
+    description: "Explora la ciudad de manera sostenible en nuestra ruta guiada en bicicleta por los puntos verdes más importantes.",
+    date: "2025-10-08",
+    time: "10:00",
+    duration: 2,
+    location: "Centro Histórico, París",
+    organizer: "Green Bikes",
+    category: "community",
+    maxVolunteers: 30,
+    currentVolunteers: 10,
+    requirements: ["Bicicleta propia", "Casco", "Agua"],
+    benefits: ["Guía turística", "Mapa verde", "Descuentos locales"],
+    contact: "bici@green.es"
   },
   "e16": {
     id: "e16",
@@ -296,19 +298,19 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e16b": {
     id: "e16b",
-    title: "Ruta en bici por la ciudad",
-    description: "Explora la ciudad de manera sostenible en nuestra ruta guiada en bicicleta por los puntos verdes más importantes.",
-    date: "2025-10-08",
-    time: "10:00",
+    title: "Taller de compost en casa",
+    description: "Aprende a compostar en casa de forma sencilla y segura. Ideal para principiantes y familias.",
+    date: "2025-10-15",
+    time: "18:00",
     duration: 2,
-    location: "Centro Histórico, París",
-    organizer: "Green Bikes",
-    category: "community",
-    maxVolunteers: 30,
-    currentVolunteers: 10,
-    requirements: ["Bicicleta propia", "Casco", "Agua"],
-    benefits: ["Guía turística", "Mapa verde", "Descuentos locales"],
-    contact: "bici@green.es"
+    location: "Centro Vecinal, Berlín",
+    organizer: "Compost Masters",
+    category: "education",
+    maxVolunteers: 20,
+    currentVolunteers: 11,
+    requirements: ["Residuo orgánico limpio", "Cuaderno"],
+    benefits: ["Kit de compostaje", "Manual práctico", "Soporte online"],
+    contact: "compost@masters.es"
   },
   "e17": {
     id: "e17",
@@ -616,6 +618,208 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   }
 };
 
+// Localized overrides for event strings (progressive coverage)
+const EVENT_I18N: Record<string, { en: Partial<EventDetails>; de: Partial<EventDetails> }> = {
+  e15b: {
+    en: {
+      title: "City bike tour",
+      description: "Explore the city sustainably with a guided bike tour through the main green spots.",
+      location: "Historic Center, Paris",
+      organizer: "Green Bikes",
+      benefits: ["Tour guide", "Green map", "Local discounts"],
+      requirements: ["Own bicycle", "Helmet", "Water"],
+    },
+    de: {
+      title: "Radtour durch die Stadt",
+      description: "Erkunde die Stadt nachhaltig bei einer geführten Fahrradtour zu den wichtigsten grünen Orten.",
+      location: "Historisches Zentrum, Paris",
+      organizer: "Green Bikes",
+      benefits: ["Reiseleitung", "Grüne Karte", "Lokale Rabatte"],
+      requirements: ["Eigenes Fahrrad", "Helm", "Wasser"],
+    },
+  },
+  e16b: {
+    en: {
+      title: "Home composting workshop",
+      description: "Learn to compost at home easily and safely. Ideal for beginners and families.",
+      location: "Community Center, Berlin",
+      organizer: "Compost Masters",
+      benefits: ["Compost kit", "Practical guide", "Online support"],
+      requirements: ["Clean organic waste", "Notebook"],
+    },
+    de: {
+      title: "Workshop: Kompostieren zu Hause",
+      description: "Lerne, zu Hause einfach und sicher zu kompostieren. Ideal für Einsteiger:innen und Familien.",
+      location: "Nachbarschaftszentrum, Berlin",
+      organizer: "Compost Masters",
+      benefits: ["Kompost‑Kit", "Praxisleitfaden", "Online‑Support"],
+      requirements: ["Sauberer Bioabfall", "Notizbuch"],
+    },
+  },
+  e16: {
+    en: {
+      title: "Food preservation workshop",
+      description: "Learn traditional and modern techniques to preserve food and reduce waste.",
+      location: "Green Culinary Center, Milan",
+      organizer: "Sustainable Kitchen",
+    },
+    de: {
+      title: "Workshop: Lebensmittel konservieren",
+      description: "Lerne traditionelle und moderne Techniken, um Lebensmittel zu konservieren und Abfall zu reduzieren.",
+      location: "Grünes Kulinarisches Zentrum, Mailand",
+      organizer: "Nachhaltige Küche",
+    },
+  },
+  e17: {
+    en: {
+      title: "Autumn forest cleanup",
+      description: "Help keep the forest healthy during the season change.",
+      location: "Autumn Forest, Paris",
+      organizer: "Forest Guardians",
+    },
+    de: {
+      title: "Herbstwald‑Reinigung",
+      description: "Hilf mit, den Wald während des Jahreszeitenwechsels gesund zu halten.",
+      location: "Herbstwald, Paris",
+      organizer: "Waldwächter",
+    },
+  },
+  e18: {
+    en: {
+      title: "Seasonal products market",
+      description: "Discover seasonal produce at our market focused on local and sustainable food.",
+      location: "Season Square, London",
+      organizer: "Seasonal Producers",
+    },
+    de: {
+      title: "Saisonprodukt‑Markt",
+      description: "Entdecke saisonale Produkte auf unserem Markt mit Fokus auf lokale, nachhaltige Lebensmittel.",
+      location: "Saisonplatz, London",
+      organizer: "Saisonproduzenten",
+    },
+  },
+};
+
+// Very small phrase dictionaries to automatically translate common words
+// used across our demo events. Unknown words are preserved.
+const ES_EN: Record<string, string> = {
+  "Taller": "Workshop",
+  "Plantación": "Planting",
+  "árboles": "trees",
+  "Limpieza": "Cleanup",
+  "de": "of",
+  "río": "river",
+  "playas": "beaches",
+  "Mercado": "Market",
+  "productos": "products",
+  "locales": "local",
+  "energía": "energy",
+  "solar": "solar",
+  "hidroeléctrica": "hydropower",
+  "Reciclaje": "Recycling",
+  "Huertos": "Gardens",
+  "urbanos": "urban",
+  "Conferencia": "Conference",
+  "cambio climático": "climate change",
+  "Monitoreo": "Monitoring",
+  "calidad del aire": "air quality",
+  "Fiesta": "Festival",
+  "sostenibilidad": "sustainability",
+  // Common requirements/benefits
+  "Bolsa reutilizable": "Reusable bag",
+  "Dinero para compras": "Money for purchases",
+  "Descuentos especiales": "Special discounts",
+  "Degustaciones": "Tastings",
+  "Red de productores": "Producers network",
+  "Entrada gratuita": "Free entry",
+  "Registro previo": "Prior registration",
+  "Guía marina": "Marine guide",
+  "Certificado": "Certificate",
+  "Material educativo": "Educational material",
+};
+
+const ES_DE: Record<string, string> = {
+  "Taller": "Workshop",
+  "Plantación": "Aufforstung",
+  "árboles": "Bäume",
+  "Limpieza": "Reinigung",
+  "de": "von",
+  "río": "Fluss",
+  "playas": "Strände",
+  "Mercado": "Markt",
+  "productos": "Produkte",
+  "locales": "lokal",
+  "energía": "Energie",
+  "solar": "Solar",
+  "hidroeléctrica": "Wasserkraft",
+  "Reciclaje": "Recycling",
+  "Huertos": "Gärten",
+  "urbanos": "urban",
+  "Conferencia": "Konferenz",
+  "cambio climático": "Klimawandel",
+  "Monitoreo": "Überwachung",
+  "calidad del aire": "Luftqualität",
+  "Fiesta": "Fest",
+  "sostenibilidad": "Nachhaltigkeit",
+  // Common requirements/benefits
+  "Bolsa reutilizable": "Wiederverwendbare Tasche",
+  "Dinero para compras": "Geld für Einkäufe",
+  "Descuentos especiales": "Sonderrabatte",
+  "Degustaciones": "Verkostungen",
+  "Red de productores": "Netz der Produzenten",
+  "Entrada gratuita": "Freier Eintritt",
+  "Registro previo": "Vorherige Anmeldung",
+  "Guía marina": "Meeresführer",
+  "Certificado": "Zertifikat",
+  "Material educativo": "Bildungsmaterial",
+};
+
+function autoTranslate(text: string, locale: string): string {
+  if (!text) return text;
+  if (locale === "es") return text;
+  const dict = locale === "en" ? ES_EN : ES_DE;
+  // Replace longer phrases first
+  const entries = Object.entries(dict).sort((a, b) => b[0].length - a[0].length);
+  let out = text;
+  for (const [es, tr] of entries) {
+    // word boundaries break on accents/compound words; do a safer global replace
+    const re = new RegExp(`${es.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")}`, "gi");
+    out = out.replace(re, (m) => {
+      const isCap = m[0] === m[0].toUpperCase();
+      const rep = tr;
+      return isCap ? rep.charAt(0).toUpperCase() + rep.slice(1) : rep;
+    });
+  }
+  return out;
+}
+
+function translateLocationSpan(span: string, locale: string): string {
+  // Try to map standalone city/country tokens via locationLabel
+  return locationLabel(span.trim(), locale as any);
+}
+
+function translateLocation(full: string, locale: string): string {
+  if (!full || locale === "es") return full;
+  // Common format: "Place, City" or "Place, City, Country"
+  const parts = full.split(",").map((s) => s.trim());
+  if (parts.length === 1) return translateLocationSpan(full, locale);
+  const last = translateLocationSpan(parts[parts.length - 1], locale);
+  const rest = parts.slice(0, parts.length - 1).join(", ");
+  return `${rest}, ${last}`;
+}
+
+function autoTranslateEvent(base: EventDetails, locale: string): Partial<EventDetails> {
+  if (locale === "es") return {};
+  return {
+    title: autoTranslate(base.title, locale),
+    description: autoTranslate(base.description, locale),
+    location: translateLocation(base.location, locale),
+    organizer: autoTranslate(base.organizer, locale),
+    benefits: Array.isArray(base.benefits) ? base.benefits.map((b) => autoTranslate(b, locale)) : base.benefits,
+    requirements: Array.isArray(base.requirements) ? base.requirements.map((r) => autoTranslate(r, locale)) : base.requirements,
+  } as Partial<EventDetails>;
+}
+
 // Function to get localized event data
 function getLocalizedEventData(eventId: string, locale: string) {
   const baseEvent = EVENT_DETAILS[eventId];
@@ -623,15 +827,21 @@ function getLocalizedEventData(eventId: string, locale: string) {
 
   // For now, we'll use the base event data and translate the category
   // In a real app, you'd have localized fields in the database
+  const overridesFromMap = (EVENT_I18N as any)[eventId]?.[locale as 'en' | 'de'] || {};
+  const auto = autoTranslateEvent(baseEvent, locale);
+  const translatedCategory = baseEvent.category === 'environment' ? 
+    (locale === 'de' ? 'Umwelt' : locale === 'en' ? 'Environment' : 'Medio ambiente') :
+    baseEvent.category === 'education' ?
+    (locale === 'de' ? 'Bildung' : locale === 'en' ? 'Education' : 'Educación') :
+    baseEvent.category === 'community' ?
+    (locale === 'de' ? 'Gemeinschaft' : locale === 'en' ? 'Community' : 'Comunidad') :
+    baseEvent.category;
+
   return {
     ...baseEvent,
-    category: baseEvent.category === 'environment' ? 
-      (locale === 'de' ? 'Umwelt' : locale === 'en' ? 'Environment' : 'Medio ambiente') :
-      baseEvent.category === 'education' ?
-      (locale === 'de' ? 'Bildung' : locale === 'en' ? 'Education' : 'Educación') :
-      baseEvent.category === 'community' ?
-      (locale === 'de' ? 'Gemeinschaft' : locale === 'en' ? 'Community' : 'Comunidad') :
-      baseEvent.category
+    ...auto,
+    ...overridesFromMap,
+    category: translatedCategory,
   };
 }
 
@@ -644,8 +854,39 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
     notFound();
   }
 
-  const progressPercentage = (event.currentVolunteers / event.maxVolunteers) * 100;
-  const spotsLeft = event.maxVolunteers - event.currentVolunteers;
+  const [currentVolunteers, setCurrentVolunteers] = React.useState<number>(event.currentVolunteers);
+  const progressPercentage = (currentVolunteers / event.maxVolunteers) * 100;
+  const spotsLeft = event.maxVolunteers - currentVolunteers;
+
+  const handleJoin = async () => {
+    if (spotsLeft <= 0) return;
+    setCurrentVolunteers((v: number) => Math.min(event.maxVolunteers, v + 1));
+    try {
+      // In a real app, call API to register participation here
+      // await fetch('/api/events/join', { method: 'POST', body: JSON.stringify({ id: eventId }) })
+      alert(locale === 'de' ? 'Du hast dich für die Veranstaltung angemeldet.' : locale === 'en' ? 'You have joined the event.' : 'Te uniste al evento.');
+    } catch {
+      setCurrentVolunteers((v: number) => Math.max(0, v - 1));
+      alert(locale === 'de' ? 'Fehler beim Beitreten.' : locale === 'en' ? 'Failed to join.' : 'No se pudo unir.');
+    }
+  };
+
+  const handleShare = async () => {
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+    const title = event.title;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url);
+        alert(locale === 'de' ? 'Link kopiert.' : locale === 'en' ? 'Link copied.' : 'Enlace copiado.');
+      } else {
+        alert(url);
+      }
+    } catch {
+      // silently ignore
+    }
+  };
 
   const getCategoryColor = (category: string) => {
     // Check for localized category names
@@ -754,7 +995,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
               {t("requirements")}
             </h2>
             <ul className="space-y-2">
-              {event.requirements.map((req, index) => (
+              {event.requirements.map((req: string, index: number) => (
                 <li key={index} className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                   <span className="text-green-600">✓</span>
                   {req}
@@ -769,7 +1010,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
               {t("benefits")}
             </h2>
             <ul className="space-y-2">
-              {event.benefits.map((benefit, index) => (
+              {event.benefits.map((benefit: string, index: number) => (
                 <li key={index} className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                   <span className="text-blue-600">🎁</span>
                   {benefit}
@@ -782,12 +1023,13 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
         {/* Action Buttons */}
         <div id="join" className="flex gap-4 mt-8 justify-center">
           <button 
-            className="px-8 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-lg"
+            onClick={handleJoin}
+            className="px-8 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={spotsLeft === 0}
           >
             {spotsLeft > 0 ? t("joinEvent") : t("fullyBooked")}
           </button>
-          <button className="px-8 py-3 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+          <button onClick={handleShare} className="px-8 py-3 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
             {t("shareEvent")}
           </button>
         </div>

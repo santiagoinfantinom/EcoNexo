@@ -105,10 +105,6 @@ const DICTS: Record<Locale, Dict> = {
     contact: "Contacto",
     requirements: "Requisitos",
     benefits: "Beneficios",
-    backToEvents: "Volver a eventos",
-    volunteerProgress: "Progreso de voluntarios",
-    spotsLeft: "lugares disponibles",
-    fullyBooked: "Completamente reservado",
   },
   en: {
     app: "EcoNexo",
@@ -209,10 +205,6 @@ const DICTS: Record<Locale, Dict> = {
     contact: "Contact",
     requirements: "Requirements",
     benefits: "Benefits",
-    backToEvents: "Back to events",
-    volunteerProgress: "Volunteer progress",
-    spotsLeft: "spots available",
-    fullyBooked: "Fully booked",
   },
   de: {
     app: "EcoNexo",
@@ -441,6 +433,60 @@ const PROJECT_NAME_MAP: Record<string, { en: string; de: string }> = {
 export function projectNameLabel(projectId: string, original: string, locale: Locale) {
   if (locale === "es") return original;
   const m = PROJECT_NAME_MAP[projectId];
+  if (!m) return original;
+  return (m as any)[locale] || original;
+}
+
+// Location translations
+const LOCATION_MAP: Record<string, { en: string; de: string }> = {
+  // Cities
+  "Berlín": { en: "Berlin", de: "Berlin" },
+  "Madrid": { en: "Madrid", de: "Madrid" },
+  "Barcelona": { en: "Barcelona", de: "Barcelona" },
+  "Milán": { en: "Milan", de: "Mailand" },
+  "París": { en: "Paris", de: "Paris" },
+  "Londres": { en: "London", de: "London" },
+  "Roma": { en: "Rome", de: "Rom" },
+  "Ámsterdam": { en: "Amsterdam", de: "Amsterdam" },
+  "Viena": { en: "Vienna", de: "Wien" },
+  "Praga": { en: "Prague", de: "Prag" },
+  "Varsovia": { en: "Warsaw", de: "Warschau" },
+  "Budapest": { en: "Budapest", de: "Budapest" },
+  "Lisboa": { en: "Lisbon", de: "Lissabon" },
+  "Dublín": { en: "Dublin", de: "Dublin" },
+  "Estocolmo": { en: "Stockholm", de: "Stockholm" },
+  "Oslo": { en: "Oslo", de: "Oslo" },
+  "Copenhague": { en: "Copenhagen", de: "Kopenhagen" },
+  "Helsinki": { en: "Helsinki", de: "Helsinki" },
+  "Atenas": { en: "Athens", de: "Athen" },
+  "Zúrich": { en: "Zurich", de: "Zürich" },
+  
+  // Countries
+  "Alemania": { en: "Germany", de: "Deutschland" },
+  "España": { en: "Spain", de: "Spanien" },
+  "Italia": { en: "Italy", de: "Italien" },
+  "Francia": { en: "France", de: "Frankreich" },
+  "Reino Unido": { en: "United Kingdom", de: "Vereinigtes Königreich" },
+  "Países Bajos": { en: "Netherlands", de: "Niederlande" },
+  "Austria": { en: "Austria", de: "Österreich" },
+  "República Checa": { en: "Czech Republic", de: "Tschechische Republik" },
+  "Polonia": { en: "Poland", de: "Polen" },
+  "Hungría": { en: "Hungary", de: "Ungarn" },
+  "Portugal": { en: "Portugal", de: "Portugal" },
+  "Irlanda": { en: "Ireland", de: "Irland" },
+  "Suecia": { en: "Sweden", de: "Schweden" },
+  "Noruega": { en: "Norway", de: "Norwegen" },
+  "Dinamarca": { en: "Denmark", de: "Dänemark" },
+  "Finlandia": { en: "Finland", de: "Finnland" },
+  "Grecia": { en: "Greece", de: "Griechenland" },
+  "Suiza": { en: "Switzerland", de: "Schweiz" },
+  "Bélgica": { en: "Belgium", de: "Belgien" },
+  "Luxemburgo": { en: "Luxembourg", de: "Luxemburg" },
+};
+
+export function locationLabel(original: string, locale: Locale) {
+  if (locale === "es") return original;
+  const m = LOCATION_MAP[original];
   if (!m) return original;
   return (m as any)[locale] || original;
 }

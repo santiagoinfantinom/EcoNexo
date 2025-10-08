@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
-import { impactTagLabel, projectDescriptionLabel, useI18n } from "@/lib/i18n";
+import ProjectNotFound from "@/components/ProjectNotFound";
+import { impactTagLabel, projectDescriptionLabel } from "@/lib/i18n";
 
 type Project = {
   id: string;
@@ -53,7 +54,7 @@ const FALLBACK_DETAILS: Record<string, ProjectDetails> = {
     volunteers: 58,
     budgetRaisedEur: 8450,
     budgetGoalEur: 15000,
-    image: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1600&q=80",
     description:
       "Programa STEAM para jóvenes en situación de vulnerabilidad con enfoque en prototipado y pensamiento computacional.",
   },
@@ -68,7 +69,7 @@ const FALLBACK_DETAILS: Record<string, ProjectDetails> = {
     volunteers: 74,
     budgetRaisedEur: 19600,
     budgetGoalEur: 40000,
-    image: "https://images.unsplash.com/photo-1580281657527-47f249e8f2c7?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1600&q=80",
     description:
       "Atención primaria itinerante con foco en prevención y chequeos básicos en barrios periféricos.",
   },
@@ -83,7 +84,7 @@ const FALLBACK_DETAILS: Record<string, ProjectDetails> = {
     volunteers: 210,
     budgetRaisedEur: 27200,
     budgetGoalEur: 50000,
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
     description:
       "Limpieza costera, monitoreo de microplásticos y campañas de educación ambiental para turistas y residentes.",
   },
@@ -98,7 +99,7 @@ const FALLBACK_DETAILS: Record<string, ProjectDetails> = {
     volunteers: 89,
     budgetRaisedEur: 15200,
     budgetGoalEur: 28000,
-    image: "https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1600&q=80",
     description:
       "Red de huertos comunitarios para fortalecer la seguridad alimentaria y promover dietas sostenibles.",
   },
@@ -113,7 +114,7 @@ const FALLBACK_DETAILS: Record<string, ProjectDetails> = {
     volunteers: 47,
     budgetRaisedEur: 9300,
     budgetGoalEur: 20000,
-    image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80",
     description:
       "Creación de espacios de encuentro con programación cultural y talleres de integración para nuevos residentes.",
   },
@@ -166,12 +167,7 @@ export default async function ProjectPage({
   const project = (await fetchProject(id)) ?? FALLBACK_DETAILS[id];
 
   if (!project) {
-    return (
-      <div className="grid gap-4">
-        <div className="text-lg font-semibold">Proyecto no encontrado</div>
-        <Link href="/" className="text-green-700 underline w-fit">Volver al mapa</Link>
-      </div>
-    );
+    return <ProjectNotFound />;
   }
 
   const details: ProjectDetails = {

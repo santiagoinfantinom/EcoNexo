@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import { useI18n, categoryLabel } from "@/lib/i18n";
 import { useEffect, useMemo, useState } from "react";
 
+type CategoryKey = "environment" | "education" | "health" | "community" | "oceans" | "food";
+
 type Category =
   | "Medio ambiente"
   | "Educación"
@@ -23,6 +25,16 @@ type Project = {
 };
 
 const Map = dynamic(() => import("../components/EuropeMap"), { ssr: false });
+
+// Category mapping for translations
+const CATEGORY_MAPPING: Record<CategoryKey, Category> = {
+  environment: "Medio ambiente",
+  education: "Educación", 
+  health: "Salud",
+  community: "Comunidad",
+  oceans: "Océanos",
+  food: "Alimentación"
+};
 
 const ALL_CATEGORIES: Category[] = [
   "Medio ambiente",
@@ -95,6 +107,12 @@ export default function Home() {
   const [active, setActive] = useState<Category | "Todas">("Todas");
   const [remote, setRemote] = useState<Project[] | null>(null);
   const { t, locale } = useI18n();
+  
+  // Get translated category labels
+  const getTranslatedCategory = (category: Category) => {
+    return categoryLabel(category, locale);
+  };
+  
   const COLOR_BY_CATEGORY: Record<Category, { bg: string; text: string; border: string }> = {
     "Medio ambiente": { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },
     "Educación": { bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-200" },
@@ -132,7 +150,7 @@ export default function Home() {
           }`}
           onClick={() => setActive("Todas")}
         >
-          {t("all")}
+          {locale === 'es' ? "Todas" : locale === 'de' ? "Alle" : "All"}
         </button>
         {ALL_CATEGORIES.map((c) => (
           <button
@@ -172,20 +190,33 @@ export default function Home() {
             const q = input?.value?.trim();
             if (!q) return;
             try {
-              const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1&addressdetails=1`, { headers: { 'Accept-Language': locale } });
+              const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1&addressdetails=1`, { 
+                headers: { 'Accept-Language': locale },
+                mode: 'cors'
+              });
+              if (!res.ok) {
+                console.warn("Geocoding service not available");
+                return;
+              }
               const data = await res.json();
               const first = Array.isArray(data) ? data[0] : null;
               if (first) {
                 const lat = parseFloat(first.lat); const lon = parseFloat(first.lon);
                 window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat, lon } }));
               }
-            } catch {}
+            } catch (error) {
+              console.warn("Failed to geocode location:", error);
+            }
           }}
           className="bg-white/95 backdrop-blur border rounded-full shadow-lg flex items-center gap-2 px-3 py-2 font-medium"
         >
           <input name="q" placeholder={t('cityPh')} className="outline-none text-sm bg-transparent w-48 text-gray-700 font-medium" />
-          <button className="text-sm bg-green-600 text-white rounded-full px-3 py-1 font-medium hover:bg-green-700 transition-colors">OK</button>
-          <button type="button" className="text-sm border border-gray-300 rounded-full px-3 py-1 font-medium hover:bg-gray-50 transition-colors" onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}>Reset</button>
+          <button className="text-sm bg-green-600 text-white rounded-full px-3 py-1 font-medium hover:bg-green-700 transition-colors">
+            {locale === 'es' ? "OK" : locale === 'de' ? "OK" : "OK"}
+          </button>
+          <button type="button" className="text-sm border border-gray-300 rounded-full px-3 py-1 font-medium hover:bg-gray-50 transition-colors" onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}>
+            {locale === 'es' ? "Reset" : locale === 'de' ? "Zurücksetzen" : "Reset"}
+          </button>
           <button type="button" className="text-sm border border-gray-300 rounded-full px-3 py-1 flex items-center gap-1 font-medium hover:bg-gray-50 transition-colors" onClick={() => {
             if (!('geolocation' in navigator)) return;
             navigator.geolocation.getCurrentPosition((pos) => {
