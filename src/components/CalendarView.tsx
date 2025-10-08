@@ -13,40 +13,46 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
 
-  // Mock events data - in real app this would come from API
+  // Mock events data - localized based on current locale
   const mockEvents = [
     {
       id: 'e1',
       projectId: 'p1',
-      title: 'Plantación de árboles',
+      title: locale === 'es' ? 'Plantación de árboles' : 
+             locale === 'de' ? 'Baumpflanzung' : 'Tree planting',
       date: new Date(2024, 11, 15), // December 15, 2024
       time: '09:00',
       duration: 4,
       spots: 20,
       registered: 15,
-      location: 'Parque Central, Berlín'
+      location: locale === 'es' ? 'Parque Central, Berlín' :
+                locale === 'de' ? 'Zentralpark, Berlin' : 'Central Park, Berlin'
     },
     {
       id: 'e2',
       projectId: 'p2',
-      title: 'Taller de robótica',
+      title: locale === 'es' ? 'Taller de robótica' :
+             locale === 'de' ? 'Robotik-Workshop' : 'Robotics workshop',
       date: new Date(2024, 11, 18),
       time: '14:00',
       duration: 3,
       spots: 15,
       registered: 8,
-      location: 'Centro Comunitario, Madrid'
+      location: locale === 'es' ? 'Centro Comunitario, Madrid' :
+                locale === 'de' ? 'Gemeinschaftszentrum, Madrid' : 'Community Center, Madrid'
     },
     {
       id: 'e3',
       projectId: 'p3',
-      title: 'Clínica móvil',
+      title: locale === 'es' ? 'Clínica móvil' :
+             locale === 'de' ? 'Mobile Klinik' : 'Mobile clinic',
       date: new Date(2024, 11, 22),
       time: '10:00',
       duration: 6,
       spots: 30,
       registered: 25,
-      location: 'Plaza Mayor, Milán'
+      location: locale === 'es' ? 'Plaza Mayor, Milán' :
+                locale === 'de' ? 'Hauptplatz, Mailand' : 'Main Square, Milan'
     }
   ];
 

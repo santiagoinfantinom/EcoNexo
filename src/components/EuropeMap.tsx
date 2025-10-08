@@ -189,15 +189,15 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
               ? 'bg-green-600 text-white hover:bg-green-700' 
               : 'bg-gray-600 text-white hover:bg-gray-700'
           }`}
-          title={useClustering ? t("showAll") : "Agrupar marcadores"}
+          title={useClustering ? t("showAll") : t("clusterMarkers")}
         >
-          {useClustering ? "🔗 Agrupar" : "📍 Individual"}
+          {useClustering ? `🔗 ${t("cluster")}` : `📍 ${t("individual")}`}
         </button>
         <button
           onClick={() => setShowCalendar(!showCalendar)}
           className="px-4 py-2 bg-purple-600 text-white rounded-lg shadow-lg hover:bg-purple-700 transition-colors text-sm font-semibold"
         >
-          📅 Calendario
+          📅 {t("calendar")}
         </button>
       </div>
     </div>

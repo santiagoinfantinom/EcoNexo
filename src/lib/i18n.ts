@@ -79,6 +79,9 @@ const DICTS: Record<Locale, Dict> = {
     // Clustering
     showAll: "Mostrar todos",
     clusterInfo: "proyectos en esta área",
+    clusterMarkers: "Agrupar marcadores",
+    cluster: "Agrupar",
+    individual: "Individual",
   },
   en: {
     app: "EcoNexo",
@@ -153,6 +156,9 @@ const DICTS: Record<Locale, Dict> = {
     // Clustering
     showAll: "Show all",
     clusterInfo: "projects in this area",
+    clusterMarkers: "Cluster markers",
+    cluster: "Cluster",
+    individual: "Individual",
   },
   de: {
     app: "EcoNexo",
@@ -227,6 +233,9 @@ const DICTS: Record<Locale, Dict> = {
     // Clustering
     showAll: "Alle anzeigen",
     clusterInfo: "Projekte in diesem Bereich",
+    clusterMarkers: "Marker gruppieren",
+    cluster: "Gruppieren",
+    individual: "Einzeln",
   },
 };
 
