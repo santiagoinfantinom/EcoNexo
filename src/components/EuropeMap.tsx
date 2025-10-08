@@ -197,8 +197,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </div>
     </div>
 
-    {/* Botón de ubicación (centrado sobre el mapa) - ELEGANTE */}
-    <div className="pointer-events-auto absolute inset-0 z-[1500] flex items-center justify-center">
+    {/* Botón de ubicación (centrado sobre el mapa) - DETRÁS DEL CALENDARIO */}
+    <div className={`pointer-events-auto absolute inset-0 flex items-center justify-center transition-all duration-300 ${showCalendar ? 'z-[1000] opacity-50' : 'z-[1500] opacity-100'}`}>
       <button
         onClick={handleCenterOnLocation}
         className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200"
@@ -214,8 +214,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       )}
     </div>
 
-    {/* Pan Controls - MUY VISIBLES */}
-    <div className="pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 z-[3000] flex flex-col gap-2">
+    {/* Pan Controls - DETRÁS DEL CALENDARIO */}
+    <div className={`pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-2 transition-all duration-300 ${showCalendar ? 'z-[1000] opacity-50' : 'z-[3000] opacity-100'}`}>
       <button
         className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
@@ -252,8 +252,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       </button>
     </div>
 
-    {/* Zoom Controls - MUY VISIBLES */}
-    <div className="pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 z-[3000] flex flex-col gap-3">
+    {/* Zoom Controls - DETRÁS DEL CALENDARIO */}
+    <div className={`pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-3 transition-all duration-300 ${showCalendar ? 'z-[1000] opacity-50' : 'z-[3000] opacity-100'}`}>
       <button
         className="h-12 w-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-green-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
         onClick={() => mapRef.current?.zoomIn()}
