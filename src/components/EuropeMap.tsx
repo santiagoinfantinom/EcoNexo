@@ -115,7 +115,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
 
   return (
     <>
-    <div ref={containerRef} className="relative group" style={{ height: "100%", width: "100%" }}>
+    <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
     <MapContainer
       center={[50.1109, 8.6821]} // centro aproximado de Europa (Frankfurt)
       zoom={4}
@@ -219,51 +219,6 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       )}
     </div>
 
-    {/* Navigation Controls - HIDDEN by default, show on hover */}
-    <div className="pointer-events-none group-hover:pointer-events-auto absolute left-4 top-1/2 -translate-y-1/2 z-[2000] flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-      <button
-        className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
-        onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
-        title="Arriba"
-        aria-label="Arriba"
-      >↑</button>
-      <div className="flex gap-2">
-        <button
-          className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
-          onClick={() => mapRef.current?.panBy([-100, 0], { animate: true })}
-          title="Izquierda"
-          aria-label="Izquierda"
-        >←</button>
-        <button
-          className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
-          onClick={() => mapRef.current?.panBy([100, 0], { animate: true })}
-          title="Derecha"
-          aria-label="Derecha"
-        >→</button>
-      </div>
-      <button
-        className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
-        onClick={() => mapRef.current?.panBy([0, 100], { animate: true })}
-        title="Abajo"
-        aria-label="Abajo"
-      >↓</button>
-    </div>
-
-    {/* Zoom controls (right side) - HIDDEN by default, show on hover */}
-    <div className="pointer-events-none group-hover:pointer-events-auto absolute right-4 top-1/2 -translate-y-1/2 z-[2000] flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-      <button
-        className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
-        onClick={() => mapRef.current?.zoomIn()}
-        title="Acercar"
-        aria-label="Acercar"
-      >+</button>
-      <button
-        className="h-8 w-8 rounded-full bg-white/90 border border-gray-300 shadow-md text-sm leading-none text-gray-700 hover:bg-white hover:shadow-lg transition-all font-medium"
-        onClick={() => mapRef.current?.zoomOut()}
-        title="Alejar"
-        aria-label="Alejar"
-      >−</button>
-    </div>
 
     {/* Asegurar que popups estén por encima de controles */}
     <style jsx>{`
