@@ -4,7 +4,11 @@ import L, { Map as LeafletMap } from "leaflet";
 import Link from "next/link";
 import { useI18n, categoryLabel, projectNameLabel } from "@/lib/i18n";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import MapFilters from "./MapFilters";
+import CalendarView from "./CalendarView";
+import MapLayers from "./MapLayers";
+import MarkerCluster from "./MarkerCluster";
 
 type Project = {
   id: string;
@@ -36,6 +40,11 @@ if (typeof window !== "undefined") {
 export default function EuropeMap({ projects }: { projects: Project[] }) {
   const mapRef = useRef<LeafletMap | null>(null);
   const { t, locale } = useI18n();
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [geoError, setGeoError] = useState<string | null>(null);
+  const [useClustering, setUseClustering] = useState(true);
   // Listen to external center events from the page-level search bar
   useEffect(() => {
     function onCenter(e: Event) {
@@ -71,6 +80,39 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     return () => ro.disconnect();
   }, []);
 
+  const handleCenterOnLocation = () => {
+    if (!("geolocation" in navigator)) {
+      setGeoError("Geolocation no está disponible en este dispositivo.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        mapRef.current?.setView([lat, lon], 13, { animate: true });
+        const circle = L.circle([lat, lon], { radius: 300, color: "#16a34a" }).addTo(mapRef.current!);
+        setTimeout(() => circle.remove(), 2500);
+        setGeoError(null);
+      },
+      (err) => {
+        if (err.code === err.PERMISSION_DENIED) {
+          setGeoError("Para centrar en tu ubicación, concede permiso de localización al navegador.");
+        } else {
+          setGeoError("No se pudo obtener tu ubicación.");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
+  const handleProjectSelect = (project: Project | null) => {
+    setSelectedProject(project);
+    if (project) {
+      mapRef.current?.setView([project.lat, project.lng], 13, { animate: true });
+      setShowCalendar(false);
+    }
+  };
+
   return (
     <>
     <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
@@ -90,113 +132,161 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       {/* Bridge to capture map instance safely */}
       {/** @ts-ignore */}
       <SetMapRef onReady={(m: LeafletMap) => (mapRef.current = m)} />
+      
+      {/* Map Layers */}
+      <MapLayers />
+      
       <TileLayer
         attribution='&copy; OpenStreetMap & CARTO'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
       />
-      {projects.map((p) => (
-        <Marker key={p.id} position={[p.lat, p.lng]}>
-          <Popup>
-            <div className="grid gap-1">
-              <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
-              <div className="text-xs text-gray-600">{p.city}, {p.country}</div>
-              <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
-              {p.spots !== undefined && (
-                <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
-              )}
-              <Link
-                href={`/projects/${p.id}`}
-                className="text-green-700 underline text-sm mt-1"
-              >
-                {t("viewDetails")}
-              </Link>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      
+      {/* Conditional rendering: clustering or individual markers */}
+      {useClustering ? (
+        <MarkerCluster projects={filteredProjects} />
+      ) : (
+        filteredProjects.map((p) => (
+          <Marker key={p.id} position={[p.lat, p.lng]}>
+            <Popup>
+              <div className="grid gap-1">
+                <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
+                <div className="text-xs text-gray-600">{p.city}, {p.country}</div>
+                <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
+                {p.spots !== undefined && (
+                  <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
+                )}
+                <Link
+                  href={`/projects/${p.id}`}
+                  className="text-green-700 underline text-sm mt-1"
+                >
+                  {t("viewDetails")}
+                </Link>
+              </div>
+            </Popup>
+          </Marker>
+        ))
+      )}
     </MapContainer>
-    {/* Controles superpuestos (solo envolvemos cada bloque para no bloquear popups) */}
-      {/* Botón de ubicación (centrado sobre el mapa) */}
-      <div className="pointer-events-auto absolute inset-0 z-[300] flex items-center justify-center">
+    
+    {/* Controles superpuestos */}
+    {/* Top Controls Bar */}
+    <div className="absolute top-2 left-2 right-2 z-[1000] flex justify-between items-start">
+      {/* Map Filters */}
+      <MapFilters 
+        allProjects={projects}
+        onFilterChange={setFilteredProjects}
+        onCenterOnLocation={handleCenterOnLocation}
+      />
+
+      {/* Right Controls */}
+      <div className="flex gap-2">
         <button
-          onClick={() => {
-            if (!("geolocation" in navigator)) {
-              alert("Geolocation no está disponible en este dispositivo.");
-              return;
-            }
-            navigator.geolocation.getCurrentPosition(
-              (pos) => {
-                const lat = pos.coords.latitude;
-                const lon = pos.coords.longitude;
-                mapRef.current?.setView([lat, lon], 13, { animate: true });
-                const circle = L.circle([lat, lon], { radius: 300, color: "#16a34a" }).addTo(mapRef.current!);
-                setTimeout(() => circle.remove(), 2500);
-              },
-              (err) => {
-                if (err.code === err.PERMISSION_DENIED) {
-                  alert("Para centrar en tu ubicación, concede permiso de localización al navegador.");
-                }
-              },
-              { enableHighAccuracy: true, timeout: 8000 }
-            );
-          }}
-          className="h-10 w-10 rounded-full bg-white/95 backdrop-blur border shadow flex items-center justify-center text-xl text-black"
-          title="Ubicación"
-          aria-label="Ubicación"
+          onClick={() => setUseClustering(!useClustering)}
+          className={`px-3 py-2 rounded-lg shadow-lg transition-colors text-sm ${
+            useClustering 
+              ? 'bg-green-600 text-white hover:bg-green-700' 
+              : 'bg-gray-600 text-white hover:bg-gray-700'
+          }`}
+          title={useClustering ? t("showAll") : "Agrupar marcadores"}
         >
-          📍
+          {useClustering ? "🔗" : "📍"}
+        </button>
+        <button
+          onClick={() => setShowCalendar(!showCalendar)}
+          className="px-3 py-2 bg-purple-600 text-white rounded-lg shadow-lg hover:bg-purple-700 transition-colors text-sm"
+        >
+          📅
         </button>
       </div>
+    </div>
 
-      {/* Arrows + zoom controls (top-right) */}
-      {/* Paneo (izquierda, centrado vertical) pegado al borde interno de la burbuja */}
-      <div className="pointer-events-auto absolute left-[20px] top-1/2 -translate-y-1/2 z-[1000] flex flex-col gap-3">
+    {/* Botón de ubicación (centrado sobre el mapa) */}
+    <div className="pointer-events-auto absolute inset-0 z-[300] flex items-center justify-center">
+      <button
+        onClick={handleCenterOnLocation}
+        className="h-10 w-10 rounded-full bg-white/95 backdrop-blur border shadow flex items-center justify-center text-xl text-black"
+        title="Ubicación"
+        aria-label="Ubicación"
+      >
+        📍
+      </button>
+      {geoError && (
+        <div className="absolute top-full mt-2 p-2 bg-red-500 text-white text-xs rounded shadow">
+          {geoError}
+        </div>
+      )}
+    </div>
+
+    {/* Navigation Controls */}
+    {/* Pan controls (left side) */}
+    <div className="pointer-events-auto absolute left-[12px] top-1/2 -translate-y-1/2 z-[1000] flex flex-col gap-2">
+      <button
+        className="h-8 w-8 rounded-full bg-white/95 border shadow text-sm leading-none text-black hover:bg-white transition-colors"
+        onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
+        title="Arriba"
+        aria-label="Arriba"
+      >↑</button>
+      <div className="flex gap-2">
         <button
-          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
-          onClick={() => mapRef.current?.panBy([0, -140], { animate: true })}
-          title="Arriba"
-          aria-label="Arriba"
-        >↑</button>
-        <button
-          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
-          onClick={() => mapRef.current?.panBy([-140, 0], { animate: true })}
+          className="h-8 w-8 rounded-full bg-white/95 border shadow text-sm leading-none text-black hover:bg-white transition-colors"
+          onClick={() => mapRef.current?.panBy([-100, 0], { animate: true })}
           title="Izquierda"
           aria-label="Izquierda"
         >←</button>
         <button
-          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
-          onClick={() => mapRef.current?.panBy([140, 0], { animate: true })}
+          className="h-8 w-8 rounded-full bg-white/95 border shadow text-sm leading-none text-black hover:bg-white transition-colors"
+          onClick={() => mapRef.current?.panBy([100, 0], { animate: true })}
           title="Derecha"
           aria-label="Derecha"
         >→</button>
-        <button
-          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
-          onClick={() => mapRef.current?.panBy([0, 140], { animate: true })}
-          title="Abajo"
-          aria-label="Abajo"
-        >↓</button>
       </div>
-
-      {/* Zoom custom (derecha, centrado) pegado al borde interno de la burbuja */}
-      <div className="pointer-events-auto absolute right-[20px] top-1/2 -translate-y-1/2 z-[1000] flex flex-col gap-3">
-        <button
-          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
-          onClick={() => mapRef.current?.zoomIn()}
-          title="Acercar"
-          aria-label="Acercar"
-        >+</button>
-        <button
-          className="h-10 w-10 rounded-full bg-white/95 border shadow text-lg leading-none text-black"
-          onClick={() => mapRef.current?.zoomOut()}
-          title="Alejar"
-          aria-label="Alejar"
-        >−</button>
-      </div>
-      {/* Asegurar que popups estén por encima de controles */}
-      <style jsx>{`
-        :global(.leaflet-popup) { z-index: 1000; }
-      `}</style>
+      <button
+        className="h-8 w-8 rounded-full bg-white/95 border shadow text-sm leading-none text-black hover:bg-white transition-colors"
+        onClick={() => mapRef.current?.panBy([0, 100], { animate: true })}
+        title="Abajo"
+        aria-label="Abajo"
+      >↓</button>
     </div>
+
+    {/* Zoom controls (right side) */}
+    <div className="pointer-events-auto absolute right-[12px] top-1/2 -translate-y-1/2 z-[1000] flex flex-col gap-2">
+      <button
+        className="h-8 w-8 rounded-full bg-white/95 border shadow text-sm leading-none text-black hover:bg-white transition-colors"
+        onClick={() => mapRef.current?.zoomIn()}
+        title="Acercar"
+        aria-label="Acercar"
+      >+</button>
+      <button
+        className="h-8 w-8 rounded-full bg-white/95 border shadow text-sm leading-none text-black hover:bg-white transition-colors"
+        onClick={() => mapRef.current?.zoomOut()}
+        title="Alejar"
+        aria-label="Alejar"
+      >−</button>
+    </div>
+
+    {/* Asegurar que popups estén por encima de controles */}
+    <style jsx>{`
+      :global(.leaflet-popup) { z-index: 1000; }
+    `}</style>
+    </div>
+
+    {/* Calendar Modal */}
+    {showCalendar && (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[2000] p-4">
+        <div className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <button
+            onClick={() => setShowCalendar(false)}
+            className="absolute top-4 right-4 z-10 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600"
+          >
+            ×
+          </button>
+          <CalendarView 
+            projects={projects}
+            onProjectSelect={handleProjectSelect}
+          />
+        </div>
+      </div>
+    )}
     </>
   );
 }

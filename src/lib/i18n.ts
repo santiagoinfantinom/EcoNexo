@@ -53,6 +53,32 @@ const DICTS: Record<Locale, Dict> = {
     notesPh: "Detalles, requisitos, etc.",
     availabilityPh: "Ej: fines de semana",
     backToProject: "Volver al proyecto",
+    // Map filters
+    filters: "Filtros",
+    search: "Buscar",
+    searchProjects: "Buscar proyectos...",
+    categories: "Categorías",
+    onlyAvailableSpots: "Solo cupos disponibles",
+    maxDistance: "Distancia máxima",
+    anyDistance: "Cualquier distancia",
+    clearFilters: "Limpiar filtros",
+    apply: "Aplicar",
+    myLocation: "Mi ubicación",
+    centerOnLocation: "Centrar en mi ubicación",
+    // Calendar
+    calendar: "Calendario",
+    month: "Mes",
+    week: "Semana",
+    list: "Lista",
+    viewProject: "Ver proyecto",
+    join: "Unirse",
+    // Map layers
+    satellite: "Satélite",
+    traffic: "Tráfico",
+    terrain: "Terreno",
+    // Clustering
+    showAll: "Mostrar todos",
+    clusterInfo: "proyectos en esta área",
   },
   en: {
     app: "EcoNexo",
@@ -101,6 +127,32 @@ const DICTS: Record<Locale, Dict> = {
     notesPh: "Details, requirements, etc.",
     availabilityPh: "e.g., weekends",
     backToProject: "Back to project",
+    // Map filters
+    filters: "Filters",
+    search: "Search",
+    searchProjects: "Search projects...",
+    categories: "Categories",
+    onlyAvailableSpots: "Only available spots",
+    maxDistance: "Max distance",
+    anyDistance: "Any distance",
+    clearFilters: "Clear filters",
+    apply: "Apply",
+    myLocation: "My location",
+    centerOnLocation: "Center on my location",
+    // Calendar
+    calendar: "Calendar",
+    month: "Month",
+    week: "Week",
+    list: "List",
+    viewProject: "View project",
+    join: "Join",
+    // Map layers
+    satellite: "Satellite",
+    traffic: "Traffic",
+    terrain: "Terrain",
+    // Clustering
+    showAll: "Show all",
+    clusterInfo: "projects in this area",
   },
   de: {
     app: "EcoNexo",
@@ -149,6 +201,32 @@ const DICTS: Record<Locale, Dict> = {
     notesPh: "Details, Anforderungen usw.",
     availabilityPh: "z. B. Wochenenden",
     backToProject: "Zurück zum Projekt",
+    // Map filters
+    filters: "Filter",
+    search: "Suchen",
+    searchProjects: "Projekte suchen...",
+    categories: "Kategorien",
+    onlyAvailableSpots: "Nur verfügbare Plätze",
+    maxDistance: "Maximale Entfernung",
+    anyDistance: "Beliebige Entfernung",
+    clearFilters: "Filter löschen",
+    apply: "Anwenden",
+    myLocation: "Mein Standort",
+    centerOnLocation: "Auf meinen Standort zentrieren",
+    // Calendar
+    calendar: "Kalender",
+    month: "Monat",
+    week: "Woche",
+    list: "Liste",
+    viewProject: "Projekt ansehen",
+    join: "Beitreten",
+    // Map layers
+    satellite: "Satellit",
+    traffic: "Verkehr",
+    terrain: "Gelände",
+    // Clustering
+    showAll: "Alle anzeigen",
+    clusterInfo: "Projekte in diesem Bereich",
   },
 };
 
