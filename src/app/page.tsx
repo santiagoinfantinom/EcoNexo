@@ -149,13 +149,13 @@ export default function Home() {
         ))}
       </div>
       <div className="flex justify-center">
-        <div className="relative flex items-center justify-center" style={{ padding: "4px" }}>
+        <div className="relative flex items-center justify-center" style={{ padding: "2px" }}>
           <div
             aria-hidden
             className="absolute -z-10"
             style={{
-              height: "min(92vh, 98vw)",
-              width: "min(92vh, 98vw)",
+              height: "min(95vh, 99vw)",
+              width: "min(95vh, 99vw)",
               borderRadius: "9999px",
               background:
                 "radial-gradient(closest-side, rgba(34,197,94,0.25), rgba(34,197,94,0.05) 60%, transparent 65%)",
@@ -165,8 +165,8 @@ export default function Home() {
           <div
             className="overflow-hidden border-4 border-green-600 shadow-xl"
             style={{
-              height: "min(88vh, 94vw)",
-              width: "min(88vh, 94vw)",
+              height: "min(92vh, 96vw)",
+              width: "min(92vh, 96vw)",
               borderRadius: "9999px",
             }}
           >
