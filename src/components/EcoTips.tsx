@@ -17,7 +17,7 @@ const ECO_TIPS: Record<string, EcoTip[]> = {
       id: "bank",
       category: "Finanzas",
       title: "Cambia a un banco sostenible",
-      description: "Los bancos tradicionales financian proyectos contaminantes. Busca bancos que inviertan en energías renovables y proyectos sostenibles.",
+      description: "Los bancos tradicionales financian proyectos contaminantes. Busca bancos que inviertan en energías renovables y proyectos sostenibles. Ejemplos: GLS Bank, Triodos Bank.",
       impact: "high",
       difficulty: "medium"
     },
@@ -67,7 +67,7 @@ const ECO_TIPS: Record<string, EcoTip[]> = {
       id: "bank",
       category: "Finance",
       title: "Switch to a sustainable bank",
-      description: "Traditional banks finance polluting projects. Look for banks that invest in renewable energy and sustainable projects.",
+      description: "Traditional banks finance polluting projects. Look for banks that invest in renewable energy and sustainable projects. Examples: GLS Bank, Triodos Bank.",
       impact: "high",
       difficulty: "medium"
     },
@@ -117,7 +117,7 @@ const ECO_TIPS: Record<string, EcoTip[]> = {
       id: "bank",
       category: "Finanzen",
       title: "Wechsle zu einer nachhaltigen Bank",
-      description: "Traditionelle Banken finanzieren umweltschädliche Projekte. Suche nach Banken, die in erneuerbare Energien investieren.",
+      description: "Traditionelle Banken finanzieren umweltschädliche Projekte. Suche nach Banken, die in erneuerbare Energien investieren. Beispiele: GLS Bank, Triodos Bank.",
       impact: "high",
       difficulty: "medium"
     },
@@ -214,6 +214,40 @@ export default function EcoTips() {
     ? tips.filter(tip => tip.category === selectedCategory)
     : tips;
 
+  const renderDescriptionWithLinks = (description: string) => {
+    // Split by "GLS Bank" and "Triodos Bank" to create clickable links
+    const parts = description.split(/(GLS Bank|Triodos Bank)/g);
+    
+    return parts.map((part, index) => {
+      if (part === "GLS Bank") {
+        return (
+          <a
+            key={index}
+            href="https://www.gls.de"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 underline font-medium"
+          >
+            GLS Bank
+          </a>
+        );
+      } else if (part === "Triodos Bank") {
+        return (
+          <a
+            key={index}
+            href="https://www.triodos.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 underline font-medium"
+          >
+            Triodos Bank
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   return (
     <>
       <button
@@ -298,7 +332,7 @@ export default function EcoTips() {
                       </div>
                     </div>
                     <p className="text-gray-600 dark:text-slate-400 text-sm leading-relaxed mb-3">
-                      {tip.description}
+                      {renderDescriptionWithLinks(tip.description)}
                     </p>
                     <div className="flex justify-between items-center">
                       <span className="text-xs text-gray-500 dark:text-slate-500 font-medium">

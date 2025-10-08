@@ -1,5 +1,7 @@
 # EcoNexo
 
+[![English](https://img.shields.io/badge/README-English-blue)](./README.en.md) [![Deutsch](https://img.shields.io/badge/README-Deutsch-red)](./README.de.md)
+
 Mapa interactivo de proyectos y eventos sostenibles en Europa.
 
 ## Desarrollo

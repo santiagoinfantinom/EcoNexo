@@ -620,6 +620,26 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
 
 // Localized overrides for event strings (progressive coverage)
 const EVENT_I18N: Record<string, { en: Partial<EventDetails>; de: Partial<EventDetails> }> = {
+  e15: {
+    en: {
+      title: "Autumn planting",
+      description:
+        "Join our planting of autumn species to prepare the ecosystem for winter.",
+      location: "Autumn Park, Barcelona",
+      organizer: "Autumn Planters",
+      requirements: ["Comfortable clothes", "Gloves", "Water"],
+      benefits: ["Plants to take home", "Certificate", "Snack"],
+    },
+    de: {
+      title: "Herbstaufforstung",
+      description:
+        "Schließe dich unserer Pflanzung von Herbstarten an, um das Ökosystem für den Winter vorzubereiten.",
+      location: "Park des Herbstes, Barcelona",
+      organizer: "Autumn Planters",
+      requirements: ["Bequeme Kleidung", "Handschuhe", "Wasser"],
+      benefits: ["Pflanzen zum Mitnehmen", "Zertifikat", "Erfrischung"],
+    },
+  },
   e15b: {
     en: {
       title: "City bike tour",
