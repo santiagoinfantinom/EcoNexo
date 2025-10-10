@@ -2,6 +2,7 @@
 import dynamic from "next/dynamic";
 import { useI18n, categoryLabel } from "@/lib/i18n";
 import { useEffect, useMemo, useState } from "react";
+import WelcomeMessage from "@/components/WelcomeMessage";
 
 type CategoryKey = "environment" | "education" | "health" | "community" | "oceans" | "food";
 
@@ -106,6 +107,7 @@ const DUMMY_PROJECTS: Project[] = [
 export default function Home() {
   const [active, setActive] = useState<Category | "Todas">("Todas");
   const [remote, setRemote] = useState<Project[] | null>(null);
+  const [showWelcome, setShowWelcome] = useState(false);
   const { t, locale } = useI18n();
   
   // Get translated category labels
@@ -132,6 +134,15 @@ export default function Home() {
     }
     load();
   }, []);
+
+  // Mostrar mensaje de bienvenida para nuevos usuarios
+  useEffect(() => {
+    const hasSeenWelcome = localStorage.getItem('econexo-welcome-seen');
+    if (!hasSeenWelcome) {
+      const timer = setTimeout(() => setShowWelcome(true), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
   const filtered = useMemo(
     () =>
       (active === "Todas"
@@ -141,94 +152,166 @@ export default function Home() {
   );
   // TODO: fetch from API when env is set
 
+  const handleCloseWelcome = () => {
+    setShowWelcome(false);
+    localStorage.setItem('econexo-welcome-seen', 'true');
+  };
+
   return (
-    <div className="flex flex-col gap-2 bg-modern rounded-2xl p-1">
-      <div className="flex flex-wrap gap-1 justify-center">
-        <button
-          className={`px-3 py-2 rounded-full border text-sm font-medium transition-all hover:scale-105 ${
-            active === "Todas" ? "bg-green-600 text-white shadow-lg" : "bg-white/90 text-gray-700 hover:bg-white shadow-md"
-          }`}
-          onClick={() => setActive("Todas")}
-        >
-          {locale === 'es' ? "Todas" : locale === 'de' ? "Alle" : "All"}
-        </button>
-        {ALL_CATEGORIES.map((c) => (
-          <button
-            key={c}
-            className={`px-3 py-2 rounded-full border text-sm font-medium transition-all hover:scale-105 ${
-              active === c
-                ? "bg-green-600 text-white shadow-lg"
-                : `${COLOR_BY_CATEGORY[c].bg} ${COLOR_BY_CATEGORY[c].text} ${COLOR_BY_CATEGORY[c].border} hover:shadow-md`
-            }`}
-            onClick={() => setActive(c)}
-          >
-            {categoryLabel(c as any, locale as any)}
-          </button>
-        ))}
-      </div>
-      <div className="flex justify-center">
-        <div className="relative flex items-center justify-center" style={{ padding: "8px" }}>
-          <div
-            className="overflow-hidden border-4 border-green-600 shadow-xl rounded-xl"
-            style={{
-              height: "min(85vh, 90vw)",
-              width: "min(85vh, 90vw)",
-              maxWidth: "1200px",
-              maxHeight: "800px",
-            }}
-          >
-            <Map projects={filtered} />
+    <>
+      {showWelcome && <WelcomeMessage onClose={handleCloseWelcome} />}
+      <div className="layout-gls">
+      {/* Sección izquierda estilo GLS Bank */}
+      <div className="layout-gls-left">
+        <div className="max-w-2xl">
+          <p className="text-sm uppercase tracking-wider text-gls-primary opacity-80 mb-4">
+            PROYECTOS SOSTENIBLES DESDE 2024
+          </p>
+          <h1 className="text-5xl font-bold text-gls-primary mb-6 leading-tight">
+            Conectando Europa.<br />
+            Transformando el futuro.
+          </h1>
+          <p className="text-lg text-gls-primary opacity-90 mb-8">
+            Descubre proyectos ambientales, eventos comunitarios y oportunidades de voluntariado 
+            que están construyendo un futuro más sostenible en toda Europa.
+          </p>
+          
+          {/* Estadísticas de impacto estilo Ecosia */}
+          <div className="impact-stats">
+            <div className="stat-card">
+              <div className="stat-number">1,247</div>
+              <div className="stat-label">Proyectos activos</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-number">15,892</div>
+              <div className="stat-label">Voluntarios conectados</div>
+            </div>
           </div>
         </div>
       </div>
-      {/* Buscador compacto bajo el mapa */}
-      <div className="flex justify-center">
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const input = (e.currentTarget.elements.namedItem('q') as HTMLInputElement);
-            const q = input?.value?.trim();
-            if (!q) return;
-            try {
-              const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1&addressdetails=1`, { 
-                headers: { 'Accept-Language': locale },
-                mode: 'cors'
-              });
-              if (!res.ok) {
-                console.warn("Geocoding service not available");
-                return;
-              }
-              const data = await res.json();
-              const first = Array.isArray(data) ? data[0] : null;
-              if (first) {
-                const lat = parseFloat(first.lat); const lon = parseFloat(first.lon);
-                window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat, lon } }));
-              }
-            } catch (error) {
-              console.warn("Failed to geocode location:", error);
-            }
-          }}
-          className="bg-white/95 backdrop-blur border rounded-full shadow-lg flex items-center gap-2 px-3 py-2 font-medium"
-        >
-          <input name="q" placeholder={t('cityPh')} className="outline-none text-sm bg-transparent w-48 text-gray-700 font-medium" />
-          <button className="text-sm bg-green-600 text-white rounded-full px-3 py-1 font-medium hover:bg-green-700 transition-colors">
-            {locale === 'es' ? "OK" : locale === 'de' ? "OK" : "OK"}
-          </button>
-          <button type="button" className="text-sm border border-gray-300 rounded-full px-3 py-1 font-medium hover:bg-gray-50 transition-colors" onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}>
-            {locale === 'es' ? "Reset" : locale === 'de' ? "Zurücksetzen" : "Reset"}
-          </button>
-          <button type="button" className="text-sm border border-gray-300 rounded-full px-3 py-1 flex items-center gap-1 font-medium hover:bg-gray-50 transition-colors" onClick={() => {
-            if (!('geolocation' in navigator)) return;
-            navigator.geolocation.getCurrentPosition((pos) => {
-              const lat = pos.coords.latitude; const lon = pos.coords.longitude;
-              window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat, lon } }));
-            });
-          }}>
-            <span>📍</span>
-            <span>GPS</span>
-          </button>
-        </form>
+      
+      {/* Sección derecha estilo GLS Bank */}
+      <div className="layout-gls-right">
+        <div className="max-w-sm">
+          <h2 className="text-2xl font-bold text-gls-secondary mb-4">
+            EXPLORA PROYECTOS
+          </h2>
+          <p className="text-gls-secondary mb-6">
+            Filtra por categoría y encuentra tu próxima oportunidad de impacto.
+          </p>
+          
+          <div className="flex flex-col gap-3">
+            <button
+              className={`px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                active === "Todas" ? "btn-gls-primary" : "bg-white/20 text-gls-secondary hover:bg-white/30"
+              }`}
+              onClick={() => setActive("Todas")}
+            >
+              {locale === 'es' ? "Todas" : locale === 'de' ? "Alle" : "All"}
+            </button>
+            {ALL_CATEGORIES.map((c) => (
+              <button
+                key={c}
+                className={`px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                  active === c
+                    ? "btn-gls-primary"
+                    : "bg-white/20 text-gls-secondary hover:bg-white/30"
+                }`}
+                onClick={() => setActive(c)}
+              >
+                {categoryLabel(c as any, locale as any)}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+      
+      {/* Sección del mapa - Full width */}
+      <div className="col-span-2 bg-ecosia-dark p-8">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-gls-primary mb-6 text-center">
+            Mapa de Proyectos Sostenibles
+          </h2>
+          
+          <div className="flex justify-center mb-6">
+            <div className="relative flex items-center justify-center" style={{ padding: "8px" }}>
+              <div
+                className="overflow-hidden border-4 border-ecosia-green shadow-xl rounded-xl"
+                style={{
+                  height: "min(70vh, 80vw)",
+                  width: "min(70vh, 80vw)",
+                  maxWidth: "1000px",
+                  maxHeight: "600px",
+                }}
+              >
+                <Map projects={filtered} />
+              </div>
+            </div>
+          </div>
+          
+          {/* Buscador estilo Ecosia */}
+          <div className="flex justify-center">
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const input = (e.currentTarget.elements.namedItem('q') as HTMLInputElement);
+                const q = input?.value?.trim();
+                if (!q) return;
+                try {
+                  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1&addressdetails=1`, { 
+                    headers: { 'Accept-Language': locale },
+                    mode: 'cors'
+                  });
+                  if (!res.ok) {
+                    console.warn("Geocoding service not available");
+                    return;
+                  }
+                  const data = await res.json();
+                  const first = Array.isArray(data) ? data[0] : null;
+                  if (first) {
+                    const lat = parseFloat(first.lat); const lon = parseFloat(first.lon);
+                    window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat, lon } }));
+                  }
+                } catch (error) {
+                  console.warn("Failed to geocode location:", error);
+                }
+              }}
+              className="card-ecosia flex items-center gap-3"
+            >
+              <input 
+                name="q" 
+                placeholder={t('cityPh')} 
+                className="outline-none text-sm bg-transparent w-48 text-gls-primary font-medium placeholder-opacity-60" 
+              />
+              <button className="btn-gls-primary text-sm">
+                {locale === 'es' ? "Buscar" : locale === 'de' ? "Suchen" : "Search"}
+              </button>
+              <button 
+                type="button" 
+                className="btn-gls-secondary text-sm" 
+                onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}
+              >
+                {locale === 'es' ? "Reset" : locale === 'de' ? "Zurücksetzen" : "Reset"}
+              </button>
+              <button 
+                type="button" 
+                className="btn-gls-secondary text-sm flex items-center gap-1" 
+                onClick={() => {
+                  if (!('geolocation' in navigator)) return;
+                  navigator.geolocation.getCurrentPosition((pos) => {
+                    const lat = pos.coords.latitude; const lon = pos.coords.longitude;
+                    window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat, lon } }));
+                  });
+                }}
+              >
+                <span>📍</span>
+                <span>GPS</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      </div>
+    </>
   );
 }

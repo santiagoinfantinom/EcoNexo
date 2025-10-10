@@ -2,10 +2,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a; /* slate-900 */
-  --accent: #64748b; /* slate-500 - más sutil */
-  --accent-2: #94a3b8; /* slate-400 - más sutil */
+  /* Nueva paleta inspirada en las imágenes */
+  --background: #1F3D3B; /* Dark teal como base (GLS Bank style) */
+  --foreground: #F2F6EB; /* Green tea - texto principal */
+  --accent: #92C3A4; /* Jade - acentos secundarios */
+  --accent-2: #DBF58E; /* Sour apple - acentos vibrantes */
+  
+  /* Colores específicos de la nueva paleta */
+  --green-tea: #F2F6EB;
+  --sunflower: #FFCE55;
+  --vibrant-rose: #FB6E52;
+  --sour-apple: #DBF58E;
+  --jade: #92C3A4;
+  --forest: #668265;
+  --dark-teal: #1F3D3B;
+  --olive: #495B29;
+  --dusty-blue: #5C91A4;
+  --light-beige: #CFCBBA;
 }
 
 @theme inline {
@@ -15,18 +28,18 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-/* Theme override by data attribute */
+/* Theme override by data attribute - Inspirado en Ecosia y GLS Bank */
 [data-theme="dark"] {
-  --background: #0f172a; /* slate-900 */
-  --foreground: #e2e8f0; /* slate-200 */
-  --accent: #64748b; /* slate-500 - sutil */
-  --accent-2: #475569; /* slate-600 - sutil */
+  --background: #1F3D3B; /* Dark teal - estilo Ecosia */
+  --foreground: #F2F6EB; /* Green tea - texto claro */
+  --accent: #92C3A4; /* Jade - acentos */
+  --accent-2: #DBF58E; /* Sour apple - acentos vibrantes */
 }
 [data-theme="light"] {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --accent: #64748b; /* slate-500 - sutil */
-  --accent-2: #94a3b8; /* slate-400 - sutil */
+  --background: #F2F6EB; /* Green tea - fondo claro */
+  --foreground: #1F3D3B; /* Dark teal - texto oscuro */
+  --accent: #668265; /* Forest - acentos */
+  --accent-2: #92C3A4; /* Jade - acentos secundarios */
 }
 
 body {
@@ -82,4 +95,142 @@ body {
   font-family: 'Poppins', 'Inter', system-ui, sans-serif;
   font-weight: 800;
   letter-spacing: -0.02em;
+}
+
+/* Estilos inspirados en GLS Bank y Ecosia */
+.bg-gls-primary {
+  background: var(--dark-teal);
+}
+
+.bg-gls-secondary {
+  background: var(--sunflower);
+}
+
+.bg-gls-accent {
+  background: var(--vibrant-rose);
+}
+
+.bg-ecosia-dark {
+  background: var(--dark-teal);
+}
+
+.bg-ecosia-green {
+  background: var(--sour-apple);
+}
+
+.text-gls-primary {
+  color: var(--green-tea);
+}
+
+.text-gls-secondary {
+  color: var(--dark-teal);
+}
+
+.text-ecosia-green {
+  color: var(--sour-apple);
+}
+
+/* Botones estilo GLS Bank */
+.btn-gls-primary {
+  background: var(--sour-apple);
+  color: var(--dark-teal);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 12px 24px;
+  transition: all 0.2s ease;
+}
+
+.btn-gls-primary:hover {
+  background: var(--jade);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-gls-secondary {
+  background: var(--sunflower);
+  color: var(--dark-teal);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 12px 24px;
+  transition: all 0.2s ease;
+}
+
+.btn-gls-secondary:hover {
+  background: var(--vibrant-rose);
+  color: var(--green-tea);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Cards estilo Ecosia */
+.card-ecosia {
+  background: rgba(31, 61, 59, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(242, 246, 235, 0.1);
+  padding: 24px;
+}
+
+/* Layout dividido estilo GLS Bank */
+.layout-gls {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 0;
+  min-height: 100vh;
+}
+
+.layout-gls-left {
+  background: var(--dark-teal);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.layout-gls-right {
+  background: var(--sunflower);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Estadísticas de impacto estilo Ecosia */
+.impact-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.stat-card {
+  background: rgba(31, 61, 59, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid rgba(242, 246, 235, 0.2);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--sour-apple);
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--green-tea);
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .layout-gls {
+    grid-template-columns: 1fr;
+  }
+  
+  .impact-stats {
+    flex-direction: column;
+  }
 }

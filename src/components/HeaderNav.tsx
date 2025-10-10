@@ -3,83 +3,96 @@ import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import EcoTips from "./EcoTips";
+import { useState } from "react";
+import WelcomeMessage from "./WelcomeMessage";
 
 export default function HeaderNav() {
   const { t } = useI18n();
   const { theme, setTheme } = useTheme();
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  const handleShowWelcome = () => {
+    setShowWelcome(true);
+  };
+
+  const handleCloseWelcome = () => {
+    setShowWelcome(false);
+  };
+
   return (
-    <header className="grid place-items-center gap-6 px-6 py-6 relative bg-gradient-to-b from-transparent via-transparent to-transparent">
-      {/* Brand block with persistent white background */}
-      <div className="rounded-xl bg-white shadow-sm px-4 py-2">
-        <div className="flex items-center gap-3 text-black text-brand font-black">
+    <>
+      {showWelcome && <WelcomeMessage onClose={handleCloseWelcome} />}
+      <header className="bg-gls-primary text-gls-primary px-6 py-4 relative">
+      {/* Brand block estilo GLS Bank */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
           <span className="text-3xl">🌿</span>
-          <span className="text-2xl" style={{ 
-            color: '#000000',
-            textShadow: '0.5px 0.5px 0 white, -0.5px -0.5px 0 white, 0.5px -0.5px 0 white, -0.5px 0.5px 0 white',
-            WebkitTextStroke: '0.5px white'
-          }}>{t("app")}</span>
+          <span className="text-2xl text-brand font-black text-gls-primary">{t("app")}</span>
         </div>
+        
+        {/* Botón principal estilo GLS Bank */}
+        <button className="btn-gls-primary">
+          {t("supportUs")} 💚
+        </button>
       </div>
-      <nav className="flex gap-6 text-base mt-2 md:mt-4">
+      <nav className="flex gap-6 text-base mt-4 justify-center">
         <Link 
-          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/"
         >
           {t("map")}
         </Link>
         <Link 
-          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/calendario"
         >
           {t("calendar")}
         </Link>
         <Link 
-          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/eventos"
         >
           {t("events")}
         </Link>
         <Link 
-          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/trabajos"
         >
           {t("jobs")}
         </Link>
         <Link 
-          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/chat"
         >
           {t("chat")}
         </Link>
         <Link 
-          className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400" 
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/perfil"
         >
           {t("profile")}
         </Link>
         <EcoTips />
+        <button
+          onClick={handleShowWelcome}
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium"
+          title={t("about")}
+        >
+          {t("about")}
+        </button>
       </nav>
       
-      {/* Support Us Button */}
-      <button
-        onClick={() => window.open('https://www.paypal.com/donate/?hosted_button_id=ECONEXO_DONATE_BUTTON', '_blank')}
-        className="absolute right-6 top-6 rounded-full border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm bg-slate-50 dark:bg-slate-800/60 backdrop-blur-sm hover:bg-slate-100 dark:hover:bg-slate-700/80 transition-all duration-200 shadow-sm hover:shadow-md text-slate-600 dark:text-slate-300 font-medium"
-        title={t("supportUs")}
-        aria-label={t("supportUs")}
-      >
-        💚 {t("supportUs")}
-      </button>
-      
-      {/* Theme Toggle */}
+      {/* Theme Toggle estilo Ecosia */}
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="absolute right-6 top-20 rounded-full border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all duration-200 shadow-sm hover:shadow-md text-slate-600 dark:text-slate-300"
+        className="absolute right-6 top-6 btn-gls-secondary text-sm"
         title="Toggle theme"
         aria-label="Toggle theme"
       >
         {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
       </button>
     </header>
+    </>
   );
 }
 
