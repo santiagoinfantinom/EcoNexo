@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "export": "next build && next export",
     "start": "next start",
     "lint": "eslint",
     "db:link": "make supabase-link PROJECT_REF=$PROJECT_REF",

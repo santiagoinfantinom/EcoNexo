@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabaseClient";
 
+// Required for static export
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 type Profile = {
   id: string;
   name: string;

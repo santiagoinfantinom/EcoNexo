@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabaseClient";
 
+// Required for static export
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 type Message = { id: string; from: string; to: string; text: string; ts: string };
 
 export async function GET(req: Request) {

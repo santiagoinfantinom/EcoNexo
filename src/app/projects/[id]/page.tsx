@@ -151,6 +151,19 @@ const IMPACT_TAGS_BY_CATEGORY: Record<string, { label: string; emoji: string; co
   ],
 };
 
+// Required for static export
+export async function generateStaticParams() {
+  // Generate static params for common project IDs
+  return [
+    { id: 'p1' },
+    { id: 'p2' },
+    { id: 'p3' },
+    { id: 'p4' },
+    { id: 'p5' },
+    { id: 'p6' },
+  ];
+}
+
 async function fetchProject(id: string): Promise<Project | null> {
   try {
     const res = await fetch(`/api/projects`, { cache: "no-store" });
