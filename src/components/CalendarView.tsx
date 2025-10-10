@@ -779,7 +779,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             >
               ←
             </button>
-            <h3 className="text-lg font-semibold">{formatMonthYear(currentMonth)}</h3>
+            <h3 className="text-lg font-semibold text-white">{formatMonthYear(currentMonth)}</h3>
             <button
               onClick={() => navigateMonth('next')}
               className="p-2 hover:bg-gray-200 rounded-md"
@@ -863,7 +863,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                         >
                           ←
                         </button>
-                        <h3 className="text-lg font-semibold">{formatMonthYear(currentMonth)}</h3>
+                        <h3 className="text-lg font-semibold text-white">{formatMonthYear(currentMonth)}</h3>
                         <button
                           onClick={() => navigateMonth('next')}
                           className="p-2 hover:bg-gray-200 rounded-md transition-colors"
