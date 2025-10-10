@@ -80,6 +80,23 @@ export default function JobsPage() {
   const [city, setCity] = useState<string>("all");
   const [contract, setContract] = useState<string>("all");
   const [remoteOnly, setRemoteOnly] = useState(false);
+  const [showJobForm, setShowJobForm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  
+  const [jobForm, setJobForm] = useState({
+    title: '',
+    company: '',
+    description: '',
+    location: '',
+    type: 'full-time',
+    salaryRange: '',
+    experienceLevel: 'entry',
+    requiredSkills: '',
+    benefits: '',
+    applicationDeadline: '',
+    contactEmail: ''
+  });
   const filtered = useMemo(() => {
     return JOBS.filter((j) =>
       j.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -93,6 +110,51 @@ export default function JobsPage() {
 
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES', { style: 'currency', currency: 'EUR' }).format(v);
+
+  const handleJobFormChange = (field: string, value: string) => {
+    setJobForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleJobSubmit = async (isDraft: boolean = false) => {
+    setIsSubmitting(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Save to localStorage
+      const jobs = JSON.parse(localStorage.getItem('econexo:jobs') || '[]');
+      const newJob = {
+        id: `job_${Date.now()}`,
+        ...jobForm,
+        createdAt: new Date().toISOString(),
+        status: isDraft ? 'draft' : 'published'
+      };
+      jobs.push(newJob);
+      localStorage.setItem('econexo:jobs', JSON.stringify(jobs));
+      
+      setShowSuccess(true);
+      setShowJobForm(false);
+      setJobForm({
+        title: '',
+        company: '',
+        description: '',
+        location: '',
+        type: 'full-time',
+        salaryRange: '',
+        experienceLevel: 'entry',
+        requiredSkills: '',
+        benefits: '',
+        applicationDeadline: '',
+        contactEmail: ''
+      });
+      
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error) {
+      console.error('Error creating job:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const [savedJobs, setSavedJobs] = useState<Record<string, boolean>>({});
   const [applyFor, setApplyFor] = useState<Job | null>(null);
@@ -254,13 +316,226 @@ export default function JobsPage() {
 
         <div className="flex justify-center">
           <button 
-            onClick={() => alert(t("createJobOffer") + " - " + (locale === 'de' ? 'Funktion wird bald verfügbar sein!' : locale === 'en' ? 'Feature coming soon!' : '¡Función próximamente disponible!'))}
+            onClick={() => setShowJobForm(true)}
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-lg shadow-md hover:shadow-lg"
           >
             {t("createJobOffer")}
           </button>
         </div>
       </div>
+
+      {/* Job Creation Form Modal */}
+      {showJobForm && (
+        <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                {t("createJobOffer")}
+              </h2>
+              <button 
+                onClick={() => setShowJobForm(false)}
+                className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left Column */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("jobTitle")} *
+                  </label>
+                  <input
+                    type="text"
+                    value={jobForm.title}
+                    onChange={(e) => handleJobFormChange('title', e.target.value)}
+                    placeholder={t("jobTitlePlaceholder")}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("companyName")} *
+                  </label>
+                  <input
+                    type="text"
+                    value={jobForm.company}
+                    onChange={(e) => handleJobFormChange('company', e.target.value)}
+                    placeholder={t("companyNamePlaceholder")}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("jobLocation")} *
+                  </label>
+                  <input
+                    type="text"
+                    value={jobForm.location}
+                    onChange={(e) => handleJobFormChange('location', e.target.value)}
+                    placeholder={t("jobLocationPlaceholder")}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("jobType")} *
+                  </label>
+                  <select
+                    value={jobForm.type}
+                    onChange={(e) => handleJobFormChange('type', e.target.value)}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  >
+                    <option value="full-time">{t("jobTypeFullTime")}</option>
+                    <option value="part-time">{t("jobTypePartTime")}</option>
+                    <option value="contract">{t("jobTypeContract")}</option>
+                    <option value="internship">{t("jobTypeInternship")}</option>
+                    <option value="remote">{t("jobTypeRemote")}</option>
+                    <option value="hybrid">{t("jobTypeHybrid")}</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("salaryRange")}
+                  </label>
+                  <input
+                    type="text"
+                    value={jobForm.salaryRange}
+                    onChange={(e) => handleJobFormChange('salaryRange', e.target.value)}
+                    placeholder={t("salaryRangePlaceholder")}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("experienceLevel")} *
+                  </label>
+                  <select
+                    value={jobForm.experienceLevel}
+                    onChange={(e) => handleJobFormChange('experienceLevel', e.target.value)}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  >
+                    <option value="entry">{t("experienceEntry")}</option>
+                    <option value="mid">{t("experienceMid")}</option>
+                    <option value="senior">{t("experienceSenior")}</option>
+                    <option value="expert">{t("experienceExpert")}</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("jobDescription")} *
+                  </label>
+                  <textarea
+                    value={jobForm.description}
+                    onChange={(e) => handleJobFormChange('description', e.target.value)}
+                    placeholder={t("jobDescriptionPlaceholder")}
+                    rows={4}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("requiredSkills")}
+                  </label>
+                  <input
+                    type="text"
+                    value={jobForm.requiredSkills}
+                    onChange={(e) => handleJobFormChange('requiredSkills', e.target.value)}
+                    placeholder={t("requiredSkillsPlaceholder")}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("benefits")}
+                  </label>
+                  <textarea
+                    value={jobForm.benefits}
+                    onChange={(e) => handleJobFormChange('benefits', e.target.value)}
+                    placeholder={t("benefitsPlaceholder")}
+                    rows={3}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("applicationDeadline")}
+                  </label>
+                  <input
+                    type="date"
+                    value={jobForm.applicationDeadline}
+                    onChange={(e) => handleJobFormChange('applicationDeadline', e.target.value)}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {t("contactEmail")} *
+                  </label>
+                  <input
+                    type="email"
+                    value={jobForm.contactEmail}
+                    onChange={(e) => handleJobFormChange('contactEmail', e.target.value)}
+                    placeholder={t("contactEmailPlaceholder")}
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700 dark:text-slate-100 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 justify-end mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
+              <button
+                onClick={() => setShowJobForm(false)}
+                className="px-6 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+              >
+                {t("cancel")}
+              </button>
+              <button
+                onClick={() => handleJobSubmit(true)}
+                disabled={isSubmitting}
+                className="px-6 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50"
+              >
+                {isSubmitting ? '...' : t("saveDraft")}
+              </button>
+              <button
+                onClick={() => handleJobSubmit(false)}
+                disabled={isSubmitting || !jobForm.title || !jobForm.company || !jobForm.description || !jobForm.location || !jobForm.contactEmail}
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+              >
+                {isSubmitting ? '...' : t("publishJob")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Message */}
+      {showSuccess && (
+        <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-[10000]">
+          ✅ {t("jobCreated")}
+        </div>
+      )}
     </div>
   );
 }

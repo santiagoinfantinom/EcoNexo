@@ -738,7 +738,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               viewMode === 'month' 
                 ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
-                : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
+                : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-500'
             }`}
           >
             {t("month")}
@@ -748,7 +748,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               viewMode === 'list' 
                 ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
-                : 'bg-gray-300 text-gray-800 hover:bg-gray-400'
+                : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-500'
             }`}
           >
             {t("list")}
@@ -763,7 +763,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             <select
               value={monthCategory}
               onChange={(e) => setMonthCategory(e.target.value as any)}
-              className="px-3 py-2 border border-gray-300 rounded-md text-sm font-semibold text-gray-900"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-700"
             >
               <option value="">{locale === 'es' ? 'Todas las categorías' : locale === 'de' ? 'Alle Kategorien' : 'All categories'}</option>
               <option value="environment">{locale === 'es' ? 'Medio Ambiente' : locale === 'de' ? 'Umwelt' : 'Environment'}</option>
