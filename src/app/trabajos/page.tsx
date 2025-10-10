@@ -220,15 +220,15 @@ export default function JobsPage() {
           placeholder={t("searchJobsPlaceholder")}
         />
         <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("minSalary")}</label>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("minSalary")}</label>
           <input type="number" value={minSalary} onChange={(e)=>setMinSalary(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
         </div>
         <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("minExperience")}</label>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("minExperience")}</label>
           <input type="number" value={minExperience} onChange={(e)=>setMinExperience(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
         </div>
         <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("cityLabel")}</label>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("cityLabel")}</label>
           <select value={city} onChange={(e)=>setCity(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
             <option value="all">Todas</option>
             {Array.from(new Set(JOBS.map(j=>j.city))).map(c => (
@@ -237,7 +237,7 @@ export default function JobsPage() {
           </select>
         </div>
         <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("contractLabel")}</label>
+          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("contractLabel")}</label>
           <select value={contract} onChange={(e)=>setContract(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
             <option value="all">All</option>
             <option value="full-time">{t("contract_full_time")}</option>
