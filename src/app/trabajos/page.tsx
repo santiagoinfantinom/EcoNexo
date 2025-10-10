@@ -158,12 +158,26 @@ export default function JobsPage() {
 
   const [savedJobs, setSavedJobs] = useState<Record<string, boolean>>({});
   const [applyFor, setApplyFor] = useState<Job | null>(null);
-  const [applicant, setApplicant] = useState({ name: "", email: "", cv: "" });
+  const [applicant, setApplicant] = useState({ 
+    name: "", 
+    email: "", 
+    cv: "", 
+    motivations: "", 
+    expertiseAreas: "", 
+    motivationLetter: null as File | null 
+  });
   const toggleSave = (id: string) => setSavedJobs((s)=> ({ ...s, [id]: !s[id] }));
   const submitApplication = async () => {
     setApplyFor(null);
     alert(t("applicationSent"));
-    setApplicant({ name: "", email: "", cv: "" });
+    setApplicant({ 
+      name: "", 
+      email: "", 
+      cv: "", 
+      motivations: "", 
+      expertiseAreas: "", 
+      motivationLetter: null 
+    });
   };
 
   // Simple ES->DE term mapping for demo data to keep German UI fully localized
@@ -269,24 +283,129 @@ export default function JobsPage() {
 
       {applyFor && (
         <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg p-6">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">{t("applyForJob")}: {applyFor.title}</h2>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-sm mb-1">{t("yourName")}</label>
-                <input value={applicant.name} onChange={(e)=>setApplicant({...applicant,name:e.target.value})} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+            <div className="space-y-4">
+              {/* Información Personal */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("yourName")} *</label>
+                  <input 
+                    value={applicant.name} 
+                    onChange={(e)=>setApplicant({...applicant,name:e.target.value})} 
+                    className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" 
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("yourEmail")} *</label>
+                  <input 
+                    type="email"
+                    value={applicant.email} 
+                    onChange={(e)=>setApplicant({...applicant,email:e.target.value})} 
+                    className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" 
+                    required
+                  />
+                </div>
               </div>
+
+              {/* CV Link */}
               <div>
-                <label className="block text-sm mb-1">{t("yourEmail")}</label>
-                <input value={applicant.email} onChange={(e)=>setApplicant({...applicant,email:e.target.value})} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+                <label className="block text-sm font-medium mb-1">{t("cvLink")} ({t("optional")})</label>
+                <input 
+                  value={applicant.cv} 
+                  onChange={(e)=>setApplicant({...applicant,cv:e.target.value})} 
+                  className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" 
+                  placeholder="https://linkedin.com/in/tu-perfil"
+                />
               </div>
+
+              {/* Motivaciones */}
               <div>
-                <label className="block text-sm mb-1">{t("cvLink")}</label>
-                <input value={applicant.cv} onChange={(e)=>setApplicant({...applicant,cv:e.target.value})} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+                <label className="block text-sm font-medium mb-1">{t("motivations")} *</label>
+                <textarea 
+                  value={applicant.motivations} 
+                  onChange={(e)=>setApplicant({...applicant,motivations:e.target.value})} 
+                  className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 min-h-24" 
+                  placeholder={t("motivationsPlaceholder")}
+                  required
+                />
               </div>
-              <div className="flex gap-2 pt-2">
-                <button onClick={()=>setApplyFor(null)} className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded">{t("cancel")}</button>
-                <button onClick={submitApplication} className="px-4 py-2 bg-green-600 text-white rounded">{t("sendApplication")}</button>
+
+              {/* Áreas de Expertise */}
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("expertiseAreas")} *</label>
+                <textarea 
+                  value={applicant.expertiseAreas} 
+                  onChange={(e)=>setApplicant({...applicant,expertiseAreas:e.target.value})} 
+                  className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 min-h-20" 
+                  placeholder={t("expertiseAreasPlaceholder")}
+                  required
+                />
+              </div>
+
+              {/* Carta de Motivación PDF */}
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("motivationLetter")} ({t("optional")})</label>
+                <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-4">
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file && file.type === 'application/pdf') {
+                        setApplicant({...applicant, motivationLetter: file});
+                      } else {
+                        alert(t("onlyPdfFiles"));
+                      }
+                    }}
+                    className="hidden"
+                    id="motivation-letter-upload"
+                  />
+                  <label 
+                    htmlFor="motivation-letter-upload" 
+                    className="cursor-pointer flex flex-col items-center justify-center text-center"
+                  >
+                    <div className="text-4xl mb-2">📄</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      {applicant.motivationLetter ? (
+                        <span className="text-green-600 dark:text-green-400">
+                          ✅ {applicant.motivationLetter.name}
+                        </span>
+                      ) : (
+                        <>
+                          <span className="font-medium">{t("clickToUpload")}</span><br/>
+                          {t("pdfOnly")} (Max. 5MB)
+                        </>
+                      )}
+                    </div>
+                  </label>
+                </div>
+                {applicant.motivationLetter && (
+                  <button
+                    type="button"
+                    onClick={() => setApplicant({...applicant, motivationLetter: null})}
+                    className="mt-2 text-sm text-red-600 dark:text-red-400 hover:underline"
+                  >
+                    {t("removeFile")}
+                  </button>
+                )}
+              </div>
+
+              {/* Botones */}
+              <div className="flex gap-2 pt-4">
+                <button 
+                  onClick={()=>setApplyFor(null)} 
+                  className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                >
+                  {t("cancel")}
+                </button>
+                <button 
+                  onClick={submitApplication} 
+                  className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors font-medium"
+                >
+                  {t("sendApplication")}
+                </button>
               </div>
             </div>
           </div>

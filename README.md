@@ -1,247 +1,226 @@
-# 🌿 EcoNexo - Plataforma de Comunidad Ecológica
+# 🌿 EcoNexo - Plataforma de Sostenibilidad Comunitaria
 
-EcoNexo es una plataforma web moderna que conecta a personas apasionadas por la sostenibilidad y el medio ambiente. Nuestra misión es crear una comunidad global donde los usuarios puedan descubrir proyectos ecológicos, participar en eventos sostenibles, encontrar trabajos verdes y conectarse con otros activistas ambientales.
+[![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-38B2AC)](https://tailwindcss.com/)
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000)](https://vercel.com/)
 
-## ✨ Características Principales
+EcoNexo es una plataforma integral que conecta comunidades sostenibles, facilita la participación en eventos ecológicos, y promueve empleos verdes. Nuestra misión es crear un ecosistema digital que impulse la acción ambiental colectiva.
 
-### 🗺️ **Mapa Interactivo**
-- Visualización de proyectos ecológicos en Europa
-- Filtros por categorías (Medio ambiente, Educación, Salud, etc.)
-- Información detallada de cada proyecto
-- Sistema de donaciones integrado
+## 🚀 Características Principales
 
-### 📅 **Calendario de Eventos**
-- Vista mensual y de lista de eventos
-- Filtros por categorías y ubicación
-- Registro para eventos de voluntariado
-- Seguimiento de eventos participados
+### 📅 **Gestión de Eventos**
+- Creación y participación en eventos sostenibles
+- Calendario interactivo con vista mensual, semanal y lista
+- Categorización por temas (Medio ambiente, Educación, Salud, Comunidad, Océanos, Alimentación)
+- Sistema de registro con formularios detallados
+- Geolocalización de eventos
 
-### 💼 **Trabajos Verdes**
-- Ofertas de empleo en sostenibilidad
-- Filtros por ubicación y tipo de trabajo
-- Información detallada de empresas
-- Sistema de aplicación integrado
+### 💼 **Portal de Empleos Verdes**
+- Búsqueda avanzada de trabajos sostenibles
+- Filtros por ubicación, salario, experiencia y modalidad
+- Formulario de aplicación completo con:
+  - Motivaciones y áreas de expertise
+  - Upload de carta de motivación en PDF
+  - Enlaces a CV y portafolio
+- Sistema de guardado de trabajos favoritos
 
-### 💬 **Chat de Comunidad**
-- Chat en tiempo real para la comunidad
-- Reglas de conducta basadas en valores positivos
-- Moderación automática
-- Conexión entre miembros
+### 💬 **Chat Comunitario**
+- Foros temáticos organizados por categorías
+- Chat en tiempo real con usuarios en línea
+- Sistema de recomendaciones personalizadas
+- Moderación automática y directrices de comunidad
 
-### 👤 **Perfil de Usuario**
-- Información personal completa
-- Pasiones y áreas de experiencia
-- Hobbies e intereses
-- Redes sociales y contacto
+### 🌍 **Internacionalización**
+- Soporte completo para Español, Inglés y Alemán
+- Traducción automática de contenido
+- Adaptación cultural de interfaces
 
-## 🚀 Tecnologías Utilizadas
+### 🎨 **Diseño Responsivo**
+- Interfaz moderna con modo claro y oscuro
+- Diseño mobile-first
+- Accesibilidad mejorada
+- Experiencia de usuario optimizada
 
-- **Frontend:** Next.js 14, React 18, TypeScript
-- **Styling:** Tailwind CSS
-- **Mapas:** Leaflet, React-Leaflet
+## 🛠️ Tecnologías Utilizadas
+
+- **Frontend:** Next.js 15.5.4, React 18, TypeScript
+- **Styling:** Tailwind CSS, CSS Modules
+- **Estado:** React Hooks, Context API
 - **Internacionalización:** Sistema personalizado i18n
 - **Deployment:** Vercel
-- **Base de datos:** Supabase (configuración incluida)
-
-## 🌍 Idiomas Soportados
-
-- 🇪🇸 **Español** (predeterminado)
-- 🇬🇧 **Inglés**
-- 🇩🇪 **Alemán**
+- **Control de Versiones:** Git, GitHub
 
 ## 📦 Instalación y Configuración
 
 ### Prerrequisitos
 - Node.js 18+ 
 - npm o yarn
-- Cuenta de Supabase (opcional)
+- Git
 
-### Instalación Local
+### Pasos de Instalación
 
-1. **Clona el repositorio**
+1. **Clonar el repositorio**
 ```bash
 git clone https://github.com/tu-usuario/econexo.git
 cd econexo
 ```
 
-2. **Instala las dependencias**
+2. **Instalar dependencias**
 ```bash
 npm install
 # o
 yarn install
 ```
 
-3. **Configura las variables de entorno**
+3. **Configurar variables de entorno**
 ```bash
 cp .env.example .env.local
+# Editar .env.local con tus configuraciones
 ```
 
-Edita `.env.local` con tus configuraciones:
-```env
-# Supabase (opcional)
-NEXT_PUBLIC_SUPABASE_URL=tu_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
-
-# PayPal (opcional)
-NEXT_PUBLIC_PAYPAL_LINK=https://www.paypal.com/donate/?hosted_button_id=TU_BOTON_ID
-
-# Stripe (opcional)
-NEXT_PUBLIC_STRIPE_LINK=https://stripe.com/payments/checkout
-```
-
-4. **Ejecuta el servidor de desarrollo**
+4. **Ejecutar en modo desarrollo**
 ```bash
 npm run dev
 # o
 yarn dev
 ```
 
-5. **Abre tu navegador**
-Visita [http://localhost:3000](http://localhost:3000)
-
-## 🎯 Scripts Disponibles
-
-```bash
-# Desarrollo
-npm run dev          # Servidor de desarrollo con Turbopack
-npm run build        # Construcción para producción
-npm run start        # Servidor de producción
-npm run lint         # Verificación de código
-
-# Base de datos (Supabase)
-npm run db:reset     # Resetear base de datos
-npm run db:seed      # Poblar con datos de ejemplo
+5. **Abrir en el navegador**
+```
+http://localhost:3000
 ```
 
-## 🗂️ Estructura del Proyecto
+## 🏗️ Estructura del Proyecto
 
 ```
 src/
 ├── app/                    # App Router de Next.js
-│   ├── page.tsx           # Página principal (Mapa)
-│   ├── calendario/        # Página de calendario
-│   ├── eventos/           # Página de eventos
-│   ├── trabajos/          # Página de trabajos verdes
-│   ├── chat/              # Página de chat
-│   ├── perfil/            # Página de perfil
-│   └── projects/[id]/     # Páginas dinámicas de proyectos
+│   ├── eventos/           # Páginas de eventos
+│   ├── trabajos/          # Portal de empleos
+│   ├── chat/              # Chat comunitario
+│   └── proyectos/         # Gestión de proyectos
 ├── components/            # Componentes reutilizables
-│   ├── HeaderNav.tsx      # Navegación principal
-│   ├── EuropeMap.tsx      # Mapa de Europa
 │   ├── CalendarView.tsx   # Vista de calendario
-│   ├── ChatComponent.tsx  # Componente de chat
-│   ├── ProfileComponent.tsx # Componente de perfil
-│   └── ...
-├── lib/                   # Utilidades y configuración
-│   ├── i18n.ts           # Sistema de internacionalización
-│   └── theme.ts           # Gestión de temas
-└── supabase/              # Configuración de Supabase
-    ├── schema.sql         # Esquema de base de datos
-    └── migrations/        # Migraciones
+│   ├── EventDetailClient.tsx # Detalles de eventos
+│   └── ChatComponent.tsx  # Chat comunitario
+├── lib/                  # Utilidades y configuraciones
+│   └── i18n.ts          # Sistema de internacionalización
+└── styles/              # Estilos globales
 ```
 
-## 🌱 Características Ecológicas
+## 🌐 Páginas Principales
 
-### Proyectos Sostenibles
-- **Reforestación urbana** en Berlín
-- **Talleres de robótica educativa** en Madrid
-- **Clínicas móviles comunitarias** en Milán
-- **Recuperación de playas** en Marsella
-- **Huertos urbanos** en Londres
-- **Centros vecinales inclusivos** en Estocolmo
+### `/eventos` - Gestión de Eventos
+- Formulario de creación de eventos
+- Lista de eventos existentes
+- Sistema de categorización
 
-### Categorías de Impacto
-- 🌳 **Medio Ambiente:** Reforestación, calidad del aire
-- 🧪 **Educación:** STEM, inclusión
-- 🩺 **Salud:** Prevención, acceso
-- 🤗 **Comunidad:** Integración, cultura
-- 🏖️ **Océanos:** Playas limpias, biodiversidad
-- 🌱 **Alimentación:** Huertos urbanos, comunidad
+### `/trabajos` - Portal de Empleos
+- Búsqueda y filtrado de trabajos
+- Formulario de aplicación mejorado
+- Sistema de guardado de favoritos
 
-## 💡 Funcionalidades Avanzadas
+### `/chat` - Comunidad
+- Foros temáticos organizados
+- Chat en tiempo real
+- Recomendaciones personalizadas
 
-### Sistema de Chat
-- **Reglas de conducta** basadas en valores positivos
-- **Moderación automática** de contenido
-- **Conexión en tiempo real** entre usuarios
-- **Historial de mensajes** persistente
+### `/proyectos` - Proyectos Sostenibles
+- Gestión de proyectos comunitarios
+- Seguimiento de progreso
+- Colaboración en equipo
 
-### Perfil de Usuario
-- **Información personal** completa
-- **Pasiones y experiencia** detalladas
-- **Redes sociales** integradas
-- **Foto de perfil** personalizable
+## 🎯 Funcionalidades Destacadas
 
-### Internacionalización
-- **3 idiomas** completamente soportados
-- **Traducción automática** de contenido
-- **Persistencia** de preferencias de idioma
-- **Localización** de fechas y números
+### Sistema de Eventos Avanzado
+- **Creación intuitiva:** Formulario completo con validación
+- **Categorización inteligente:** 6 categorías principales + subcategorías
+- **Geolocalización:** Integración con ubicaciones específicas
+- **Gestión de capacidad:** Control de participantes
+
+### Portal de Empleos Completo
+- **Búsqueda avanzada:** Múltiples filtros combinables
+- **Aplicación profesional:** Formulario con motivaciones, expertise y documentos
+- **Guardado inteligente:** Sistema de favoritos persistente
+- **Internacionalización:** Trabajos en múltiples idiomas
+
+### Chat Comunitario Temático
+- **Foros organizados:** 6 categorías temáticas principales
+- **Chat en tiempo real:** Conexión instantánea
+- **Recomendaciones:** Sistema de sugerencias personalizadas
+- **Moderación:** Directrices claras de comunidad
 
 ## 🚀 Deployment
 
 ### Vercel (Recomendado)
+1. Conectar repositorio a Vercel
+2. Configurar variables de entorno
+3. Deploy automático en cada push
 
-1. **Conecta tu repositorio a Vercel**
-2. **Configura las variables de entorno** en el dashboard de Vercel
-3. **Deploy automático** en cada push a main
-
-### Variables de Entorno para Producción
-```env
-NEXT_PUBLIC_SUPABASE_URL=tu_supabase_url_produccion
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key_produccion
-NEXT_PUBLIC_PAYPAL_LINK=tu_paypal_donate_link
-NEXT_PUBLIC_STRIPE_LINK=tu_stripe_checkout_link
-```
+### Otros Proveedores
+- **Netlify:** Compatible con Next.js
+- **Railway:** Deploy con base de datos incluida
+- **DigitalOcean:** VPS personalizado
 
 ## 🤝 Contribución
 
 ¡Las contribuciones son bienvenidas! Por favor:
 
-1. **Fork** el proyecto
-2. **Crea** una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. **Commit** tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** a la rama (`git push origin feature/AmazingFeature`)
-5. **Abre** un Pull Request
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
 ### Guías de Contribución
 - Sigue las convenciones de código existentes
 - Añade tests para nuevas funcionalidades
 - Actualiza la documentación según sea necesario
-- Respeta los valores ecológicos del proyecto
+- Respeta los principios de accesibilidad
+
+## 📝 Roadmap
+
+### Próximas Funcionalidades
+- [ ] Sistema de notificaciones push
+- [ ] Integración con redes sociales
+- [ ] Dashboard de analytics
+- [ ] Sistema de badges y gamificación
+- [ ] API pública para desarrolladores
+- [ ] App móvil nativa
+
+### Mejoras Planificadas
+- [ ] Optimización de rendimiento
+- [ ] Mejoras de accesibilidad
+- [ ] Tests automatizados completos
+- [ ] Documentación de API
+- [ ] Sistema de backup automático
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
-## 🌟 Valores del Proyecto
+## 👥 Equipo
 
-### Misión
-Conectar a personas apasionadas por la sostenibilidad para crear un impacto positivo en el medio ambiente.
-
-### Valores
-- 🌱 **Sostenibilidad:** Promovemos prácticas ecológicas
-- 🤝 **Comunidad:** Construimos conexiones significativas
-- 💚 **Amor:** Tratamos a todos con respeto y comprensión
-- 🌍 **Impacto:** Buscamos generar cambios positivos
-- ✨ **Inspiración:** Motivamos a otros en su camino verde
+- **Desarrollo Frontend:** Santiago
+- **Diseño UX/UI:** Equipo de diseño
+- **Internacionalización:** Equipo de traducción
 
 ## 📞 Contacto
 
-- **Proyecto:** [EcoNexo](https://github.com/tu-usuario/econexo)
-- **Issues:** [GitHub Issues](https://github.com/tu-usuario/econexo/issues)
-- **Discusiones:** [GitHub Discussions](https://github.com/tu-usuario/econexo/discussions)
+- **Email:** contacto@econexo.org
+- **Website:** [econexo.org](https://econexo.org)
+- **GitHub:** [github.com/econexo](https://github.com/econexo)
 
 ## 🙏 Agradecimientos
 
-- **Next.js** por el framework increíble
-- **Tailwind CSS** por el sistema de diseño
-- **Supabase** por la infraestructura de base de datos
-- **Vercel** por el hosting y deployment
-- **Comunidad open source** por las librerías utilizadas
+- Comunidad de Next.js por la excelente documentación
+- Tailwind CSS por el sistema de diseño
+- Vercel por la plataforma de deployment
+- Todos los contribuidores y usuarios de EcoNexo
 
 ---
 
-**Hecho con 💚 para un futuro más sostenible**
+**¡Únete a la revolución sostenible! 🌱**
 
-*Únete a la revolución verde con EcoNexo* 🌿
+*EcoNexo - Conectando comunidades para un futuro más verde*

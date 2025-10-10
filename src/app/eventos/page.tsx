@@ -162,10 +162,10 @@ export default function EventosPage() {
       <h1 className="text-3xl font-semibold">{t("createEvent")}</h1>
       <form onSubmit={submit} className="grid gap-4 mx-auto text-left max-w-xl">
         <div className="grid gap-1">
-          <label className="text-sm">{t("title")} ({t("required")})</label>
+          <label className="text-sm text-slate-700 dark:text-slate-300">{t("title")} ({t("required")})</label>
           <input
             required
-            className="border rounded px-3 py-2"
+            className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
             value={form.title}
             onChange={(e) => update("title", e.target.value)}
             placeholder={t("titlePh")}
@@ -173,19 +173,19 @@ export default function EventosPage() {
         </div>
         <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
           <div className="grid gap-1">
-            <label className="text-sm">{t("date")} ({t("required")})</label>
+            <label className="text-sm text-slate-700 dark:text-slate-300">{t("date")} ({t("required")})</label>
             <input
               required
               type="date"
-              className="border rounded px-3 py-2"
+              className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
               value={form.date}
               onChange={(e) => update("date", e.target.value)}
             />
           </div>
           <div className="grid gap-1">
-            <label className="text-sm">{t("mainCategory")} ({t("required")})</label>
+            <label className="text-sm text-slate-700 dark:text-slate-300">{t("mainCategory")} ({t("required")})</label>
             <select
-              className="border rounded px-3 py-2"
+              className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
               value={form.category}
               onChange={(e) => update("category", e.target.value as Category)}
             >
@@ -199,20 +199,20 @@ export default function EventosPage() {
         </div>
         <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
           <div className="grid gap-1">
-            <label className="text-sm">{t("city")} ({t("required")})</label>
+            <label className="text-sm text-slate-700 dark:text-slate-300">{t("city")} ({t("required")})</label>
             <input
               required
-              className="border rounded px-3 py-2"
+              className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
               value={form.city}
               onChange={(e) => update("city", e.target.value)}
               placeholder={t("cityPh")}
             />
           </div>
           <div className="grid gap-1">
-            <label className="text-sm">{t("country")} ({t("required")})</label>
+            <label className="text-sm text-slate-700 dark:text-slate-300">{t("country")} ({t("required")})</label>
             <input
               required
-              className="border rounded px-3 py-2"
+              className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
               value={form.country}
               onChange={(e) => update("country", e.target.value)}
               placeholder={t("countryPh")}
@@ -221,7 +221,7 @@ export default function EventosPage() {
         </div>
 
         <div className="grid gap-2">
-          <div className="text-sm">{t("optionalCategories")}</div>
+          <div className="text-sm text-slate-700 dark:text-slate-300">{t("optionalCategories")}</div>
           <div className="flex flex-wrap gap-2 justify-center">
             {CATEGORIES.map((c) => (
               <button
@@ -242,11 +242,11 @@ export default function EventosPage() {
 
         <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
           <div className="grid gap-1">
-            <label className="text-sm">{t("capacity")} ({t("optional")})</label>
+            <label className="text-sm text-slate-700 dark:text-slate-300">{t("capacity")} ({t("optional")})</label>
             <input
               type="number"
               min={1}
-              className="border rounded px-3 py-2"
+              className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
               value={form.capacity ?? ""}
               onChange={(e) => update("capacity", Number(e.target.value) || undefined)}
               placeholder={t("capacityPh")}
@@ -255,9 +255,9 @@ export default function EventosPage() {
         </div>
 
         <div className="grid gap-1">
-          <label className="text-sm">{t("notes")} ({t("optional")})</label>
+          <label className="text-sm text-slate-700 dark:text-slate-300">{t("notes")} ({t("optional")})</label>
           <textarea
-            className="border rounded px-3 py-2 min-h-24"
+            className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 min-h-24 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
             value={form.notes ?? ""}
             onChange={(e) => update("notes", e.target.value)}
             placeholder={t("notesPh")}
@@ -289,32 +289,32 @@ export default function EventosPage() {
             {locale === 'de' ? 'Aktualisieren' : locale === 'en' ? 'Refresh' : 'Actualizar'}
           </button>
         </div>
-        <div className="overflow-auto border rounded">
+        <div className="overflow-auto border border-gray-300 dark:border-slate-600 rounded">
           <table className="min-w-full text-sm">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-slate-700">
               <tr>
-                <th className="text-left p-2 border-b">{t("title")}</th>
-                <th className="text-left p-2 border-b">{t("date")}</th>
-                <th className="text-left p-2 border-b">{t("city")}</th>
-                <th className="text-left p-2 border-b">{t("country")}</th>
-                <th className="text-left p-2 border-b">{t("category")}</th>
-                <th className="text-left p-2 border-b">{t("capacity")}</th>
+                <th className="text-left p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{t("title")}</th>
+                <th className="text-left p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{t("date")}</th>
+                <th className="text-left p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{t("city")}</th>
+                <th className="text-left p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{t("country")}</th>
+                <th className="text-left p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{t("category")}</th>
+                <th className="text-left p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{t("capacity")}</th>
               </tr>
             </thead>
             <tbody>
               {list.length === 0 ? (
                 <tr>
-                  <td className="p-3 text-gray-500" colSpan={6}>{t("noParticipatedEvents")}</td>
+                  <td className="p-3 text-slate-500 dark:text-slate-400" colSpan={6}>{t("noParticipatedEvents")}</td>
                 </tr>
               ) : (
                 list.map((ev, idx) => (
-                  <tr key={idx} className="odd:bg-white even:bg-gray-50">
-                    <td className="p-2 border-b">{ev.title}</td>
-                    <td className="p-2 border-b">{ev.date}</td>
-                    <td className="p-2 border-b">{ev.city}</td>
-                    <td className="p-2 border-b">{ev.country}</td>
-                    <td className="p-2 border-b">{categoryLabel(ev.category as Category, locale)}</td>
-                    <td className="p-2 border-b">{ev.capacity ?? "-"}</td>
+                  <tr key={idx} className="odd:bg-white even:bg-gray-50 dark:odd:bg-slate-800 dark:even:bg-slate-700">
+                    <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.title}</td>
+                    <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.date}</td>
+                    <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.city}</td>
+                    <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.country}</td>
+                    <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{categoryLabel(ev.category as Category, locale)}</td>
+                    <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.capacity ?? "-"}</td>
                   </tr>
                 ))
               )}
