@@ -212,45 +212,58 @@ export default function JobsPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">{t("jobs")}</h1>
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow p-4 mb-6 mt-8 grid grid-cols-1 md:grid-cols-6 gap-4">
-        <input
-          value={query}
-          onChange={(e)=>setQuery(e.target.value)}
-          className="border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
-          placeholder={t("searchJobsPlaceholder")}
-        />
-        <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("minSalary")}</label>
-          <input type="number" value={minSalary} onChange={(e)=>setMinSalary(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow p-4 mb-6 mt-8">
+        {/* Primera fila: Barra de búsqueda grande */}
+        <div className="mb-4">
+          <input
+            value={query}
+            onChange={(e)=>setQuery(e.target.value)}
+            className="w-full border rounded px-4 py-3 text-lg dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
+            placeholder={locale === 'es' ? "Buscar por título, experiencia, áreas, etc..." : 
+                       locale === 'de' ? "Suche nach Titel, Erfahrung, Bereichen, etc..." : 
+                       "Search by title, experience, areas, etc..."}
+          />
         </div>
-        <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("minExperience")}</label>
-          <input type="number" value={minExperience} onChange={(e)=>setMinExperience(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+        
+        {/* Segunda fila: Parámetros de búsqueda */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div>
+            <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("minSalary")}</label>
+            <input type="number" value={minSalary} onChange={(e)=>setMinSalary(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+          </div>
+          <div>
+            <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("minExperience")}</label>
+            <input type="number" value={minExperience} onChange={(e)=>setMinExperience(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
+          </div>
+          <div>
+            <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("cityLabel")}</label>
+            <select value={city} onChange={(e)=>setCity(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
+              <option value="all">Todas</option>
+              {Array.from(new Set(JOBS.map(j=>j.city))).map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("contractLabel")}</label>
+            <select value={contract} onChange={(e)=>setContract(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
+              <option value="all">All</option>
+              <option value="full-time">{t("contract_full_time")}</option>
+              <option value="part-time">{t("contract_part_time")}</option>
+              <option value="contract">{t("contract_contract")}</option>
+              <option value="internship">{t("contract_internship")}</option>
+            </select>
+          </div>
+          <div className="flex items-end">
+            <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 h-10">
+              <input type="checkbox" checked={remoteOnly} onChange={(e)=>setRemoteOnly(e.target.checked)} className="h-4 w-4" />
+              {t("remoteOnly")}
+            </label>
+          </div>
         </div>
-        <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("cityLabel")}</label>
-          <select value={city} onChange={(e)=>setCity(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
-            <option value="all">Todas</option>
-            {Array.from(new Set(JOBS.map(j=>j.city))).map(c => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("contractLabel")}</label>
-          <select value={contract} onChange={(e)=>setContract(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
-            <option value="all">All</option>
-            <option value="full-time">{t("contract_full_time")}</option>
-            <option value="part-time">{t("contract_part_time")}</option>
-            <option value="contract">{t("contract_contract")}</option>
-            <option value="internship">{t("contract_internship")}</option>
-          </select>
-        </div>
-        <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-          <input type="checkbox" checked={remoteOnly} onChange={(e)=>setRemoteOnly(e.target.checked)} className="h-4 w-4" />
-          {t("remoteOnly")}
-        </label>
-        <div className="text-sm text-slate-500 dark:text-slate-400 flex items-end">{filtered.length} {t("results")}</div>
+        
+        {/* Contador de resultados */}
+        <div className="mt-4 text-sm text-slate-500 dark:text-slate-400">{filtered.length} {t("results")}</div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
