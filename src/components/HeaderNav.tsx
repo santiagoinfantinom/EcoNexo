@@ -1,14 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import { useTheme } from "@/lib/theme";
 import EcoTips from "./EcoTips";
 import { useState } from "react";
 import WelcomeMessage from "./WelcomeMessage";
 
 export default function HeaderNav() {
   const { t } = useI18n();
-  const { theme, setTheme } = useTheme();
   const [showWelcome, setShowWelcome] = useState(false);
 
   const handleShowWelcome = () => {
@@ -81,16 +79,6 @@ export default function HeaderNav() {
           {t("about")}
         </button>
       </nav>
-      
-      {/* Theme Toggle estilo Ecosia */}
-      <button
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="absolute right-6 top-6 btn-gls-secondary text-sm"
-        title="Toggle theme"
-        aria-label="Toggle theme"
-      >
-        {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
-      </button>
     </header>
     </>
   );
