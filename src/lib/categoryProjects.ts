@@ -1,124 +1,268 @@
 export interface CategoryProject {
   id: string;
-  title: string;
-  description: string;
+  title: {
+    es: string;
+    en: string;
+    de: string;
+  };
+  description: {
+    es: string;
+    en: string;
+    de: string;
+  };
   category: 'Medio ambiente' | 'Educación' | 'Salud' | 'Comunidad' | 'Océanos' | 'Alimentación';
   imageUrl: string;
-  location: string;
+  location: {
+    es: string;
+    en: string;
+    de: string;
+  };
   city: string;
   country: string;
   spots?: number;
   volunteers?: number;
-  impact: string;
+  impact: {
+    es: string;
+    en: string;
+    de: string;
+  };
 }
 
 export const categoryProjects: Record<string, CategoryProject[]> = {
   'Medio ambiente': [
     {
       id: 'env-1',
-      title: 'Reforestación Urbana Berlín',
-      description: 'Proyecto de plantación de árboles nativos en parques urbanos para mejorar la calidad del aire y crear corredores verdes.',
+      title: {
+        es: 'Reforestación Urbana Berlín',
+        en: 'Urban Reforestation Berlin',
+        de: 'Städtische Aufforstung Berlin'
+      },
+      description: {
+        es: 'Proyecto de plantación de árboles nativos en parques urbanos para mejorar la calidad del aire y crear corredores verdes.',
+        en: 'Native tree planting project in urban parks to improve air quality and create green corridors.',
+        de: 'Projekt zur Pflanzung einheimischer Bäume in Stadtparks zur Verbesserung der Luftqualität und Schaffung grüner Korridore.'
+      },
       category: 'Medio ambiente',
       imageUrl: '/images/projects/reforestacion-berlin.jpg',
-      location: 'Berlín, Alemania',
+      location: {
+        es: 'Berlín, Alemania',
+        en: 'Berlin, Germany',
+        de: 'Berlin, Deutschland'
+      },
       city: 'Berlín',
       country: 'Alemania',
       spots: 25,
       volunteers: 150,
-      impact: '2,500 árboles plantados'
+      impact: {
+        es: '2,500 árboles plantados',
+        en: '2,500 trees planted',
+        de: '2.500 Bäume gepflanzt'
+      }
     },
     {
       id: 'env-2',
-      title: 'Limpieza del Río Sena',
-      description: 'Campaña de limpieza para eliminar plásticos y contaminantes del emblemático río parisino.',
+      title: {
+        es: 'Limpieza del Río Sena',
+        en: 'Seine River Cleanup',
+        de: 'Seine-Reinigung'
+      },
+      description: {
+        es: 'Campaña de limpieza para eliminar plásticos y contaminantes del emblemático río parisino.',
+        en: 'Cleanup campaign to eliminate plastics and pollutants from the emblematic Parisian river.',
+        de: 'Säuberungskampagne zur Beseitigung von Plastik und Schadstoffen aus dem emblematischen Pariser Fluss.'
+      },
       category: 'Medio ambiente',
       imageUrl: '/images/projects/limpieza-sena.jpg',
-      location: 'París, Francia',
+      location: {
+        es: 'París, Francia',
+        en: 'Paris, France',
+        de: 'Paris, Frankreich'
+      },
       city: 'París',
       country: 'Francia',
       spots: 40,
       volunteers: 200,
-      impact: '5 toneladas de residuos recogidos'
+      impact: {
+        es: '5 toneladas de residuos recogidos',
+        en: '5 tons of waste collected',
+        de: '5 Tonnen Abfall gesammelt'
+      }
     },
     {
       id: 'env-3',
-      title: 'Huertos Comunitarios Madrid',
-      description: 'Creación de espacios verdes urbanos para agricultura sostenible y educación ambiental.',
+      title: {
+        es: 'Huertos Comunitarios Madrid',
+        en: 'Community Gardens Madrid',
+        de: 'Gemeinschaftsgärten Madrid'
+      },
+      description: {
+        es: 'Creación de espacios verdes urbanos para agricultura sostenible y educación ambiental.',
+        en: 'Creation of urban green spaces for sustainable agriculture and environmental education.',
+        de: 'Schaffung städtischer Grünflächen für nachhaltige Landwirtschaft und Umweltbildung.'
+      },
       category: 'Medio ambiente',
       imageUrl: '/images/projects/huertos-madrid.jpg',
-      location: 'Madrid, España',
+      location: {
+        es: 'Madrid, España',
+        en: 'Madrid, Spain',
+        de: 'Madrid, Spanien'
+      },
       city: 'Madrid',
       country: 'España',
       spots: 30,
       volunteers: 80,
-      impact: '15 huertos comunitarios activos'
+      impact: {
+        es: '15 huertos comunitarios activos',
+        en: '15 active community gardens',
+        de: '15 aktive Gemeinschaftsgärten'
+      }
     },
     {
       id: 'env-4',
-      title: 'Protección de Aves Migratorias',
-      description: 'Monitoreo y protección de rutas migratorias de aves en el norte de Europa.',
+      title: {
+        es: 'Protección de Aves Migratorias',
+        en: 'Migratory Bird Protection',
+        de: 'Zugvogelschutz'
+      },
+      description: {
+        es: 'Monitoreo y protección de rutas migratorias de aves en el norte de Europa.',
+        en: 'Monitoring and protection of bird migration routes in northern Europe.',
+        de: 'Überwachung und Schutz von Vogelzugrouten in Nordeuropa.'
+      },
       category: 'Medio ambiente',
       imageUrl: '/images/projects/aves-migratorias.jpg',
-      location: 'Copenhague, Dinamarca',
+      location: {
+        es: 'Copenhague, Dinamarca',
+        en: 'Copenhagen, Denmark',
+        de: 'Kopenhagen, Dänemark'
+      },
       city: 'Copenhague',
       country: 'Dinamarca',
       spots: 15,
       volunteers: 60,
-      impact: '500 especies protegidas'
+      impact: {
+        es: '500 especies protegidas',
+        en: '500 protected species',
+        de: '500 geschützte Arten'
+      }
     }
   ],
   'Educación': [
     {
       id: 'edu-1',
-      title: 'Talleres de Robótica Educativa',
-      description: 'Programa educativo para enseñar robótica y programación a niños y jóvenes usando materiales reciclados.',
+      title: {
+        es: 'Talleres de Robótica Educativa',
+        en: 'Educational Robotics Workshops',
+        de: 'Bildungsrobotik-Workshops'
+      },
+      description: {
+        es: 'Programa educativo para enseñar robótica y programación a niños y jóvenes usando materiales reciclados.',
+        en: 'Educational program to teach robotics and programming to children and youth using recycled materials.',
+        de: 'Bildungsprogramm zur Vermittlung von Robotik und Programmierung an Kinder und Jugendliche mit recycelten Materialien.'
+      },
       category: 'Educación',
       imageUrl: '/images/projects/robotica-educativa.jpg',
-      location: 'Madrid, España',
+      location: {
+        es: 'Madrid, España',
+        en: 'Madrid, Spain',
+        de: 'Madrid, Spanien'
+      },
       city: 'Madrid',
       country: 'España',
       spots: 20,
       volunteers: 45,
-      impact: '300 estudiantes capacitados'
+      impact: {
+        es: '300 estudiantes capacitados',
+        en: '300 students trained',
+        de: '300 Schüler ausgebildet'
+      }
     },
     {
       id: 'edu-2',
-      title: 'Educación Ambiental Escolar',
-      description: 'Programa de sensibilización ambiental en escuelas primarias y secundarias.',
+      title: {
+        es: 'Educación Ambiental Escolar',
+        en: 'School Environmental Education',
+        de: 'Schulische Umweltbildung'
+      },
+      description: {
+        es: 'Programa de sensibilización ambiental en escuelas primarias y secundarias.',
+        en: 'Environmental awareness program in primary and secondary schools.',
+        de: 'Umweltbewusstseinsprogramm in Grund- und weiterführenden Schulen.'
+      },
       category: 'Educación',
       imageUrl: '/images/projects/educacion-ambiental.jpg',
-      location: 'Milán, Italia',
+      location: {
+        es: 'Milán, Italia',
+        en: 'Milan, Italy',
+        de: 'Mailand, Italien'
+      },
       city: 'Milán',
       country: 'Italia',
       spots: 35,
       volunteers: 90,
-      impact: '1,200 estudiantes educados'
+      impact: {
+        es: '1,200 estudiantes educados',
+        en: '1,200 students educated',
+        de: '1.200 Schüler unterrichtet'
+      }
     },
     {
       id: 'edu-3',
-      title: 'Bibliotecas Digitales Rurales',
-      description: 'Instalación de puntos de acceso digital en comunidades rurales para reducir la brecha tecnológica.',
+      title: {
+        es: 'Bibliotecas Digitales Rurales',
+        en: 'Rural Digital Libraries',
+        de: 'Ländliche Digitale Bibliotheken'
+      },
+      description: {
+        es: 'Instalación de puntos de acceso digital en comunidades rurales para reducir la brecha tecnológica.',
+        en: 'Installation of digital access points in rural communities to reduce the technology gap.',
+        de: 'Installation digitaler Zugangspunkte in ländlichen Gemeinden zur Verringerung der Technologielücke.'
+      },
       category: 'Educación',
       imageUrl: '/images/projects/bibliotecas-digitales.jpg',
-      location: 'Lisboa, Portugal',
+      location: {
+        es: 'Lisboa, Portugal',
+        en: 'Lisbon, Portugal',
+        de: 'Lissabon, Portugal'
+      },
       city: 'Lisboa',
       country: 'Portugal',
       spots: 25,
       volunteers: 70,
-      impact: '50 comunidades conectadas'
+      impact: {
+        es: '50 comunidades conectadas',
+        en: '50 communities connected',
+        de: '50 Gemeinden verbunden'
+      }
     },
     {
       id: 'edu-4',
-      title: 'Cursos de Sostenibilidad Online',
-      description: 'Plataforma educativa gratuita sobre prácticas sostenibles y economía circular.',
+      title: {
+        es: 'Cursos de Sostenibilidad Online',
+        en: 'Online Sustainability Courses',
+        de: 'Online-Nachhaltigkeitskurse'
+      },
+      description: {
+        es: 'Plataforma educativa gratuita sobre prácticas sostenibles y economía circular.',
+        en: 'Free educational platform on sustainable practices and circular economy.',
+        de: 'Kostenlose Bildungsplattform für nachhaltige Praktiken und Kreislaufwirtschaft.'
+      },
       category: 'Educación',
       imageUrl: '/images/projects/cursos-sostenibilidad.jpg',
-      location: 'Ámsterdam, Países Bajos',
+      location: {
+        es: 'Ámsterdam, Países Bajos',
+        en: 'Amsterdam, Netherlands',
+        de: 'Amsterdam, Niederlande'
+      },
       city: 'Ámsterdam',
       country: 'Países Bajos',
       spots: 50,
       volunteers: 120,
-      impact: '5,000 usuarios registrados'
+      impact: {
+        es: '5,000 usuarios registrados',
+        en: '5,000 registered users',
+        de: '5.000 registrierte Nutzer'
+      }
     }
   ],
   'Salud': [

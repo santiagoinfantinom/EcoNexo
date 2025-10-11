@@ -56,26 +56,26 @@ export default function OceanosPage() {
               </div>
               
               {/* Project Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gls-primary mb-2">{project.title}</h3>
-                <p className="text-gls-primary opacity-80 mb-4 text-sm">{project.description}</p>
+              <div className="p-6 bg-black">
+                <h3 className="text-xl font-bold text-white mb-2">{project.title[locale]}</h3>
+                <p className="text-white opacity-80 mb-4 text-sm">{project.description[locale]}</p>
                 
                 {/* Location */}
-                <div className="flex items-center text-gls-primary opacity-70 text-sm mb-3">
+                <div className="flex items-center text-white opacity-70 text-sm mb-3">
                   <span className="mr-2">📍</span>
-                  <span>{project.location}</span>
+                  <span>{project.location[locale]}</span>
                 </div>
                 
                 {/* Impact */}
-                <div className="flex items-center text-cyan-600 text-sm mb-4">
+                <div className="flex items-center text-cyan-400 text-sm mb-4">
                   <span className="mr-2">🎯</span>
-                  <span className="font-medium">{project.impact}</span>
+                  <span className="font-medium">{project.impact[locale]}</span>
                 </div>
                 
                 {/* Stats */}
-                <div className="flex justify-between text-sm text-gls-primary opacity-70 mb-4">
-                  <span>👥 {project.volunteers} voluntarios</span>
-                  <span>🆓 {project.spots} cupos</span>
+                <div className="flex justify-between text-sm text-white opacity-70 mb-4">
+                  <span>👥 {project.volunteers} {locale === 'es' ? 'voluntarios' : locale === 'de' ? 'Freiwillige' : 'volunteers'}</span>
+                  <span>🆓 {project.spots} {locale === 'es' ? 'cupos' : locale === 'de' ? 'Plätze' : 'spots'}</span>
                 </div>
                 
                 {/* Action Button */}
