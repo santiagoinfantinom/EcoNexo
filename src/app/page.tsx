@@ -4,6 +4,7 @@ import { useI18n, categoryLabel } from "@/lib/i18n";
 import { useEffect, useMemo, useState } from "react";
 import WelcomeMessage from "@/components/WelcomeMessage";
 import MobileFeatures from "@/components/MobileFeatures";
+import Link from "next/link";
 
 type CategoryKey = "environment" | "education" | "health" | "community" | "oceans" | "food";
 
@@ -36,6 +37,16 @@ const CATEGORY_MAPPING: Record<CategoryKey, Category> = {
   community: "Comunidad",
   oceans: "Océanos",
   food: "Alimentación"
+};
+
+// Category to URL mapping
+const CATEGORY_URLS: Record<Category, string> = {
+  "Medio ambiente": "/categorias/medio-ambiente",
+  "Educación": "/categorias/educacion",
+  "Salud": "/categorias/salud",
+  "Comunidad": "/categorias/comunidad",
+  "Océanos": "/categorias/oceanos",
+  "Alimentación": "/categorias/alimentacion"
 };
 
 const ALL_CATEGORIES: Category[] = [
@@ -185,26 +196,25 @@ export default function Home() {
             onImageCapture={handleImageCapture}
           />
           <p className="text-sm uppercase tracking-wider text-gls-primary opacity-80 mb-4">
-            PROYECTOS SOSTENIBLES DESDE 2024
+            {t('sustainableProjectsSince2024')}
           </p>
           <h1 className="text-5xl font-bold text-gls-primary mb-6 leading-tight">
-            Conectando Europa.<br />
-            Transformando el futuro.
+            {t('connectingEurope')}<br />
+            {t('transformingFuture')}
           </h1>
           <p className="text-lg text-gls-primary opacity-90 mb-8">
-            Descubre proyectos ambientales, eventos comunitarios y oportunidades de voluntariado 
-            que están construyendo un futuro más sostenible en toda Europa.
+            {t('discoverEnvironmentalProjects')}
           </p>
           
           {/* Estadísticas de impacto estilo Ecosia */}
           <div className="impact-stats">
             <div className="stat-card">
               <div className="stat-number">1,247</div>
-              <div className="stat-label">Proyectos activos</div>
+              <div className="stat-label">{t('activeProjects')}</div>
             </div>
             <div className="stat-card">
               <div className="stat-number">15,892</div>
-              <div className="stat-label">Voluntarios conectados</div>
+              <div className="stat-label">{t('connectedVolunteers')}</div>
             </div>
           </div>
         </div>
@@ -214,10 +224,10 @@ export default function Home() {
       <div className="layout-gls-right">
         <div className="max-w-sm">
           <h2 className="text-2xl font-bold text-gls-secondary mb-4">
-            EXPLORA PROYECTOS
+            {t('exploreProjects')}
           </h2>
           <p className="text-gls-secondary mb-6">
-            Filtra por categoría y encuentra tu próxima oportunidad de impacto.
+            {t('filterByCategoryAndFind')}
           </p>
           
           <div className="flex flex-col gap-3">
@@ -230,17 +240,17 @@ export default function Home() {
               {locale === 'es' ? "Todas" : locale === 'de' ? "Alle" : "All"}
             </button>
             {ALL_CATEGORIES.map((c) => (
-              <button
+              <Link
                 key={c}
-                className={`px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                href={CATEGORY_URLS[c]}
+                className={`px-4 py-3 rounded-lg text-sm font-medium transition-all text-center block ${
                   active === c
                     ? "btn-gls-primary"
                     : "bg-white/20 text-gls-secondary hover:bg-white/30"
                 }`}
-                onClick={() => setActive(c)}
               >
                 {categoryLabel(c as any, locale as any)}
-              </button>
+              </Link>
             ))}
           </div>
         </div>
@@ -250,7 +260,7 @@ export default function Home() {
       <div className="col-span-2 bg-ecosia-dark p-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-gls-primary mb-6 text-center">
-            Mapa de Proyectos Sostenibles
+            {t('sustainableProjectsMap')}
           </h2>
           
           <div className="flex justify-center mb-6">
@@ -304,14 +314,14 @@ export default function Home() {
                 className="outline-none text-sm bg-transparent w-48 text-gls-primary font-medium placeholder-opacity-60" 
               />
               <button className="btn-gls-primary text-sm">
-                {locale === 'es' ? "Buscar" : locale === 'de' ? "Suchen" : "Search"}
+                {t('search')}
               </button>
               <button 
                 type="button" 
                 className="btn-gls-secondary text-sm" 
                 onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}
               >
-                {locale === 'es' ? "Reset" : locale === 'de' ? "Zurücksetzen" : "Reset"}
+                {t('reset')}
               </button>
               <button 
                 type="button" 
