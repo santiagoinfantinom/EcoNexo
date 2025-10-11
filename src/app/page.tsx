@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { useI18n, categoryLabel } from "@/lib/i18n";
 import { useEffect, useMemo, useState } from "react";
 import WelcomeMessage from "@/components/WelcomeMessage";
+import MobileFeatures from "@/components/MobileFeatures";
 
 type CategoryKey = "environment" | "education" | "health" | "community" | "oceans" | "food";
 
@@ -108,6 +109,7 @@ export default function Home() {
   const [active, setActive] = useState<Category | "Todas">("Todas");
   const [remote, setRemote] = useState<Project[] | null>(null);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [mobileLocation, setMobileLocation] = useState<{lat: number, lng: number} | null>(null);
   const { t, locale } = useI18n();
   
   // Get translated category labels
@@ -157,6 +159,20 @@ export default function Home() {
     localStorage.setItem('econexo-welcome-seen', 'true');
   };
 
+  const handleLocationUpdate = (location: {latitude: number, longitude: number, accuracy: number}) => {
+    setMobileLocation({lat: location.latitude, lng: location.longitude});
+    // Centrar el mapa en la ubicación móvil
+    window.dispatchEvent(new CustomEvent('econexo:center', { 
+      detail: { lat: location.latitude, lon: location.longitude } 
+    }));
+  };
+
+  const handleImageCapture = (imageUrl: string) => {
+    // Aquí podrías implementar lógica para subir la imagen
+    console.log('Image captured:', imageUrl);
+    // Por ejemplo, mostrar un modal para usar la imagen en un evento
+  };
+
   return (
     <>
       {showWelcome && <WelcomeMessage onClose={handleCloseWelcome} />}
@@ -164,6 +180,10 @@ export default function Home() {
       {/* Sección izquierda estilo GLS Bank */}
       <div className="layout-gls-left">
         <div className="max-w-2xl">
+          <MobileFeatures 
+            onLocationUpdate={handleLocationUpdate}
+            onImageCapture={handleImageCapture}
+          />
           <p className="text-sm uppercase tracking-wider text-gls-primary opacity-80 mb-4">
             PROYECTOS SOSTENIBLES DESDE 2024
           </p>

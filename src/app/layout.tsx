@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/lib/theme";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CreateEventFAB from "@/components/CreateEventFAB";
 import HeaderNav from "@/components/HeaderNav";
+import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,6 +24,14 @@ const interTight = Inter_Tight({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "EcoNexo",
   description: "Mapa de proyectos y eventos sostenibles en Europa",
+  manifest: "/manifest.json",
+  themeColor: "#1a5f3f",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "EcoNexo",
+  },
 };
 
 export default function RootLayout({
@@ -37,6 +46,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <I18nProvider>
+            <ServiceWorkerRegistration />
             <LanguageSwitcher />
             <HeaderNav />
             <main className="min-h-screen">{children}</main>
