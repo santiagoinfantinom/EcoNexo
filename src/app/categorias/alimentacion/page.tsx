@@ -28,21 +28,21 @@ export default function AlimentacionPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-gls-secondary rounded-lg p-6 text-center">
-            <div className="text-3xl font-bold text-gls-primary mb-2">{projects.length}</div>
-            <div className="text-gls-primary opacity-80">{t('activeProjects')}</div>
+          <div className="bg-black rounded-lg p-6 text-center">
+            <div className="text-3xl font-bold text-white mb-2">{projects.length}</div>
+            <div className="text-white opacity-80">{t('activeProjects')}</div>
           </div>
-          <div className="bg-gls-secondary rounded-lg p-6 text-center">
-            <div className="text-3xl font-bold text-gls-primary mb-2">
+          <div className="bg-black rounded-lg p-6 text-center">
+            <div className="text-3xl font-bold text-white mb-2">
               {projects.reduce((sum, p) => sum + (p.volunteers || 0), 0)}
             </div>
-            <div className="text-gls-primary opacity-80">{t('connectedVolunteers')}</div>
+            <div className="text-white opacity-80">{t('connectedVolunteers')}</div>
           </div>
-          <div className="bg-gls-secondary rounded-lg p-6 text-center">
-            <div className="text-3xl font-bold text-gls-primary mb-2">
+          <div className="bg-black rounded-lg p-6 text-center">
+            <div className="text-3xl font-bold text-white mb-2">
               {projects.reduce((sum, p) => sum + (p.spots || 0), 0)}
             </div>
-            <div className="text-gls-primary opacity-80">{t('availableSpots')}</div>
+            <div className="text-white opacity-80">{t('availableSpots')}</div>
           </div>
         </div>
 
