@@ -204,7 +204,7 @@ body {
 }
 
 .stat-card {
-  background: rgba(31, 61, 59, 0.9);
+  background: rgba(0, 0, 0, 0.9);
   border-radius: 12px;
   padding: 20px;
   text-align: center;
