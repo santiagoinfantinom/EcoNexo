@@ -180,32 +180,97 @@ export default function JobsPage() {
     });
   };
 
-  // Simple ES->DE term mapping for demo data to keep German UI fully localized
-  const ES_DE: Record<string, string> = {
-    "Especialista en Reforestación Urbana": "Spezialist/in für Urbane Aufforstung",
-    "Especialista": "Spezialist/in",
-    "Reforestación Urbana": "Urbane Aufforstung",
-    "Analista de Datos de Calidad del Aire": "Datenanalyst/in für Luftqualität",
-    "Educador/a ambiental (STEM)": "Umweltpädagog/in (STEM)",
-    "Coordinador/a de Limpiezas de Ríos": "Koordinator/in Flussreinigung",
-    "Planificación y ejecución de proyectos de reforestación en barrios con déficit de áreas verdes.": "Planung und Durchführung von Aufforstungsprojekten in Vierteln mit wenig Grünflächen.",
-    "Procesamiento y visualización de datos de sensores urbanos para políticas de aire limpio.": "Verarbeitung und Visualisierung von Sensordaten für saubere‑Luft‑Politiken.",
-    "Talleres prácticos de energía renovable para escuelas y centros comunitarios.": "Praxisworkshops zu erneuerbarer Energie für Schulen und Gemeinschaftszentren.",
-    "Organización de jornadas de limpieza, logística de equipos y reportes de impacto.": "Organisation von Reinigungstagen, Logistik der Teams und Wirkungsberichten.",
-    "Silvicultura": "Forstwirtschaft",
-    "Biodiversidad": "Biodiversität",
-    "Gestión de proyectos": "Projektmanagement",
-    "Sensores": "Sensorik",
-    "Energía solar": "Solarenergie",
-    "Robótica educativa": "Bildungsrobotik",
-    "Gestión de voluntariado": "Freiwilligenmanagement",
-    "Residuos": "Abfall",
-    "Seguridad": "Sicherheit",
+  // Translation mapping for job titles and descriptions
+  const translations: Record<string, Record<string, string>> = {
+    "Especialista en Reforestación Urbana": {
+      en: "Urban Reforestation Specialist",
+      de: "Spezialist/in für Urbane Aufforstung"
+    },
+    "Analista de Datos de Calidad del Aire": {
+      en: "Air Quality Data Analyst", 
+      de: "Datenanalyst/in für Luftqualität"
+    },
+    "Educador/a ambiental (STEM)": {
+      en: "Environmental Educator (STEM)",
+      de: "Umweltpädagog/in (STEM)"
+    },
+    "Coordinador/a de Limpiezas de Ríos": {
+      en: "River Clean-up Coordinator",
+      de: "Koordinator/in Flussreinigung"
+    },
+    "Planificación y ejecución de proyectos de reforestación en barrios con déficit de áreas verdes.": {
+      en: "Planning and execution of reforestation projects in neighborhoods with a deficit of green areas.",
+      de: "Planung und Durchführung von Aufforstungsprojekten in Vierteln mit wenig Grünflächen."
+    },
+    "Procesamiento y visualización de datos de sensores urbanos para políticas de aire limpio.": {
+      en: "Processing and visualization of urban sensor data for clean air policies.",
+      de: "Verarbeitung und Visualisierung von Sensordaten für saubere‑Luft‑Politiken."
+    },
+    "Talleres prácticos de energía renovable para escuelas y centros comunitarios.": {
+      en: "Practical renewable energy workshops for schools and community centers.",
+      de: "Praxisworkshops zu erneuerbarer Energie für Schulen und Gemeinschaftszentren."
+    },
+    "Organización de jornadas de limpieza, logística de equipos y reportes de impacto.": {
+      en: "Organization of clean-up days, team logistics and impact reports.",
+      de: "Organisation von Reinigungstagen, Logistik der Teams und Wirkungsberichten."
+    },
+    "Silvicultura": {
+      en: "Silviculture",
+      de: "Forstwirtschaft"
+    },
+    "Biodiversidad": {
+      en: "Biodiversity", 
+      de: "Biodiversität"
+    },
+    "Gestión de proyectos": {
+      en: "Project Management",
+      de: "Projektmanagement"
+    },
+    "Python": {
+      en: "Python",
+      de: "Python"
+    },
+    "Sensores": {
+      en: "Sensors",
+      de: "Sensorik"
+    },
+    "GIS": {
+      en: "GIS",
+      de: "GIS"
+    },
+    "Didáctica": {
+      en: "Didactics",
+      de: "Didaktik"
+    },
+    "Energía solar": {
+      en: "Solar Energy",
+      de: "Solarenergie"
+    },
+    "Robótica educativa": {
+      en: "Educational Robotics",
+      de: "Bildungsrobotik"
+    },
+    "Gestión de voluntariado": {
+      en: "Volunteer Management",
+      de: "Freiwilligenmanagement"
+    },
+    "Residuos": {
+      en: "Waste Management",
+      de: "Abfall"
+    },
+    "Seguridad": {
+      en: "Safety",
+      de: "Sicherheit"
+    }
   };
 
   const tr = (text: string) => {
-    if (locale !== 'de') return text;
-    return ES_DE[text] || text;
+    if (locale === 'es') return text;
+    const translation = translations[text];
+    if (translation && translation[locale]) {
+      return translation[locale];
+    }
+    return text;
   };
 
   return (

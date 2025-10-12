@@ -65,6 +65,18 @@ const DICTS: Record<Locale, Dict> = {
     discoverEnvironmentalProjects: "Descubre proyectos ambientales, eventos comunitarios y oportunidades de voluntariado que están construyendo un futuro más sostenible en toda Europa.",
     activeProjects: "Proyectos activos",
     connectedVolunteers: "Voluntarios conectados",
+    // Project titles
+    urbanReforestationBerlin: "Reforestación Urbana Berlín",
+    seineRiverCleanup: "Limpieza del Río Sena",
+    communityGardensMadrid: "Huertos Comunitarios Madrid",
+    // Project descriptions
+    urbanReforestationDesc: "Proyecto de plantación de árboles nativos en parques urbanos para mejorar la calidad del aire y crear corredores verdes.",
+    seineRiverCleanupDesc: "Campaña de limpieza para eliminar plásticos y contaminantes del emblemático río parisino.",
+    communityGardensDesc: "Creación de espacios verdes urbanos para agricultura sostenible y educación ambiental.",
+    // Project metrics
+    treesPlanted: "árboles plantados",
+    wasteCollected: "toneladas de residuos recogidos",
+    communityGardensActive: "huertos comunitarios activos",
     exploreProjects: "EXPLORA PROYECTOS",
     filterByCategoryAndFind: "Filtra por categoría y encuentra tu próxima oportunidad de impacto.",
     sustainableProjectsMap: "Mapa de Proyectos Sostenibles",
@@ -103,7 +115,7 @@ const DICTS: Record<Locale, Dict> = {
     medium: "Medio",
     hard: "Difícil",
     jobs: "Trabajos verdes",
-    searchJobsPlaceholder: "Buscar por título, empresa o área",
+    searchJobsPlaceholder: "Buscar por título, experiencia, áreas, etc...",
     minSalary: "Salario mínimo (€)",
     minExperience: "Años de experiencia (mín.)",
     results: "resultados",
@@ -167,6 +179,7 @@ const DICTS: Record<Locale, Dict> = {
     employerGuidelines: "Directrices para empleadores",
     noParticipatedEvents: "No has participado en ningún evento aún",
     supportUs: "Apóyanos",
+    about: "Acerca de",
     // Job Application Form
     motivations: "Motivaciones",
     motivationsPlaceholder: "Explica por qué te interesa este trabajo y cómo contribuirías a la misión de la empresa...",
@@ -341,6 +354,18 @@ const DICTS: Record<Locale, Dict> = {
     discoverEnvironmentalProjects: "Discover environmental projects, community events and volunteer opportunities that are building a more sustainable future across Europe.",
     activeProjects: "Active projects",
     connectedVolunteers: "Connected volunteers",
+    // Project titles
+    urbanReforestationBerlin: "Urban Reforestation Berlin",
+    seineRiverCleanup: "Seine River Cleanup",
+    communityGardensMadrid: "Community Gardens Madrid",
+    // Project descriptions
+    urbanReforestationDesc: "Project for planting native trees in urban parks to improve air quality and create green corridors.",
+    seineRiverCleanupDesc: "Cleanup campaign to remove plastics and pollutants from the emblematic Parisian river.",
+    communityGardensDesc: "Creation of urban green spaces for sustainable agriculture and environmental education.",
+    // Project metrics
+    treesPlanted: "trees planted",
+    wasteCollected: "tons of waste collected",
+    communityGardensActive: "active community gardens",
     exploreProjects: "EXPLORE PROJECTS",
     filterByCategoryAndFind: "Filter by category and find your next impact opportunity.",
     sustainableProjectsMap: "Sustainable Projects Map",
@@ -379,7 +404,7 @@ const DICTS: Record<Locale, Dict> = {
     medium: "Medium",
     hard: "Hard",
     jobs: "Green jobs",
-    searchJobsPlaceholder: "Search by title, company or area",
+    searchJobsPlaceholder: "Search by title, experience, areas, etc...",
     minSalary: "Minimum salary (€)",
     minExperience: "Years of experience (min)",
     results: "results",
@@ -443,6 +468,7 @@ const DICTS: Record<Locale, Dict> = {
     employerGuidelines: "Employer guidelines",
     noParticipatedEvents: "You haven't participated in any events yet",
     supportUs: "Support Us",
+    about: "About",
     // Job Application Form
     motivations: "Motivations",
     motivationsPlaceholder: "Explain why you're interested in this job and how you would contribute to the company's mission...",
@@ -623,6 +649,18 @@ const DICTS: Record<Locale, Dict> = {
     discoverEnvironmentalProjects: "Entdecke Umweltprojekte, Gemeinschaftsveranstaltungen und Freiwilligenmöglichkeiten, die eine nachhaltigere Zukunft in ganz Europa aufbauen.",
     activeProjects: "Aktive Projekte",
     connectedVolunteers: "Verbundene Freiwillige",
+    // Project titles
+    urbanReforestationBerlin: "Urbane Aufforstung Berlin",
+    seineRiverCleanup: "Seine-Flussreinigung",
+    communityGardensMadrid: "Gemeinschaftsgärten Madrid",
+    // Project descriptions
+    urbanReforestationDesc: "Projekt zur Pflanzung einheimischer Bäume in Stadtparks zur Verbesserung der Luftqualität und Schaffung grüner Korridore.",
+    seineRiverCleanupDesc: "Reinigungskampagne zur Entfernung von Plastik und Schadstoffen aus dem emblematischen Pariser Fluss.",
+    communityGardensDesc: "Schaffung städtischer Grünflächen für nachhaltige Landwirtschaft und Umweltbildung.",
+    // Project metrics
+    treesPlanted: "Bäume gepflanzt",
+    wasteCollected: "Tonnen Abfall gesammelt",
+    communityGardensActive: "aktive Gemeinschaftsgärten",
     exploreProjects: "PROJEKTE ERKUNDEN",
     filterByCategoryAndFind: "Nach Kategorie filtern und deine nächste Impact-Möglichkeit finden.",
     sustainableProjectsMap: "Karte der Nachhaltigen Projekte",
@@ -661,7 +699,7 @@ const DICTS: Record<Locale, Dict> = {
     medium: "Mittel",
     hard: "Schwer",
     jobs: "Grüne Jobs",
-    searchJobsPlaceholder: "Suche nach Titel, Unternehmen oder Bereich",
+    searchJobsPlaceholder: "Suche nach Titel, Erfahrung, Bereichen, etc...",
     minSalary: "Mindestgehalt (€)",
     minExperience: "Jahre Erfahrung (min.)",
     results: "Ergebnisse",
@@ -725,6 +763,7 @@ const DICTS: Record<Locale, Dict> = {
     employerGuidelines: "Richtlinien für Arbeitgeber",
     noParticipatedEvents: "Du hast noch an keiner Veranstaltung teilgenommen",
     supportUs: "Unterstütze uns",
+    about: "Über uns",
     // Job Application Form
     motivations: "Motivationen",
     motivationsPlaceholder: "Erkläre, warum dich diese Stelle interessiert und wie du zur Mission des Unternehmens beitragen würdest...",
