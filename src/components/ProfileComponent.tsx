@@ -70,15 +70,33 @@ export default function ProfileComponent() {
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. Por favor selecciona una imagen menor a 5MB');
+        return;
+      }
+      
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        const updatedProfile = { ...profileData, profilePhoto: result };
-        setProfileData(updatedProfile);
-        // Save immediately when photo is changed
-        localStorage.setItem('econexo:profile', JSON.stringify(updatedProfile));
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 2000);
+        if (result) {
+          const updatedProfile = { ...profileData, profilePhoto: result };
+          setProfileData(updatedProfile);
+          // Save immediately when photo is changed
+          localStorage.setItem('econexo:profile', JSON.stringify(updatedProfile));
+          setShowSuccess(true);
+          setTimeout(() => setShowSuccess(false), 3000);
+          console.log('Photo uploaded and saved successfully');
+        }
+      };
+      reader.onerror = () => {
+        alert('Error al cargar la imagen. Por favor intenta de nuevo.');
       };
       reader.readAsDataURL(file);
     }
@@ -212,7 +230,14 @@ export default function ProfileComponent() {
               </button>
               {profileData.profilePhoto && profileData.profilePhoto !== "/logo-econexo.png" && (
                 <button
-                  onClick={() => handleInputChange('profilePhoto', '/logo-econexo.png')}
+                  onClick={() => {
+                    const updatedProfile = { ...profileData, profilePhoto: '/logo-econexo.png' };
+                    setProfileData(updatedProfile);
+                    localStorage.setItem('econexo:profile', JSON.stringify(updatedProfile));
+                    setShowSuccess(true);
+                    setTimeout(() => setShowSuccess(false), 2000);
+                    console.log('Switched back to EcoNexo logo');
+                  }}
                   className="text-sm text-gray-500 hover:text-gray-700 font-medium"
                 >
                   Usar Logo
