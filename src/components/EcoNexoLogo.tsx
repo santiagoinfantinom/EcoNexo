@@ -10,7 +10,7 @@ export default function EcoNexoLogo({ className = "", size = 150 }: EcoNexoLogoP
   return (
     <div className={`flex items-center justify-center ${className}`}>
       <div 
-        className="rounded-full bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300"
+        className="rounded-full bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-white/20"
         style={{ 
           width: size, 
           height: size,
