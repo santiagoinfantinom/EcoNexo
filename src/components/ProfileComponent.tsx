@@ -199,7 +199,7 @@ export default function ProfileComponent() {
               />
             ) : (
               <EcoNexoLogo 
-                className="w-32 h-32 border-4 border-green-200 dark:border-green-700" 
+                className="w-32 h-32" 
                 size={128}
               />
             )}
