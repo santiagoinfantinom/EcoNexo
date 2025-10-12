@@ -890,7 +890,7 @@ const DICTS: Record<Locale, Dict> = {
 const I18nContext = createContext<{ t: (k: string) => string; locale: Locale; setLocale: (l: Locale) => void } | null>(null);
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("de");
+  const [locale, setLocaleState] = useState<Locale>("en");
   useEffect(() => {
     try {
       if (typeof window !== "undefined") {
@@ -900,7 +900,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     } catch {}
   }, []);
   const t = useMemo(() => {
-    const dict = DICTS[locale] || DICTS.de;
+    const dict = DICTS[locale] || DICTS.en;
     return (k: string) => dict[k] ?? k;
   }, [locale]);
   const value = useMemo(

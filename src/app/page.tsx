@@ -237,7 +237,7 @@ export default function Home() {
               }`}
               onClick={() => setActive("Todas")}
             >
-              {locale === 'es' ? "Todas" : locale === 'de' ? "Alle" : "All"}
+              {t('all')}
             </button>
             {ALL_CATEGORIES.map((c) => (
               <Link
