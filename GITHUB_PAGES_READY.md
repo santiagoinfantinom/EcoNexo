@@ -121,3 +121,4 @@ Every time you push to the `main` branch, GitHub Pages will automatically rebuil
 ---
 
 **🎉 Your EcoNexo platform is now ready for the world!**
+

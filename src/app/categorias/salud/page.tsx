@@ -2,6 +2,7 @@
 import React from 'react';
 import { useI18n } from '@/lib/i18n';
 import { categoryProjects } from '@/lib/categoryProjects';
+import CategoryImage from '@/components/CategoryImage';
 import Link from 'next/link';
 
 export default function SaludPage() {
@@ -51,8 +52,8 @@ export default function SaludPage() {
           {projects.map((project) => (
             <div key={project.id} className="bg-gls-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               {/* Project Image */}
-              <div className="h-48 bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center">
-                <div className="text-white text-6xl">🏥</div>
+              <div className="h-48">
+                <CategoryImage category="salud" className="w-full h-full" />
               </div>
               
               {/* Project Content */}
@@ -67,13 +68,13 @@ export default function SaludPage() {
                 </div>
                 
                 {/* Impact */}
-                <div className="flex items-center text-rose-400 text-sm mb-4">
+                <div className="flex items-center text-red-400 text-sm mb-4">
                   <span className="mr-2">🎯</span>
                   <span className="font-medium">{project.impact[locale]}</span>
                 </div>
                 
                 {/* Stats */}
-                <div className="flex justify-between text-sm text-white opacity-70 mb-4">
+                <div className="flex justify-between text-sm text-white mb-4">
                   <span>👥 {project.volunteers} {locale === 'es' ? 'voluntarios' : locale === 'de' ? 'Freiwillige' : 'volunteers'}</span>
                   <span>🆓 {project.spots} {locale === 'es' ? 'cupos' : locale === 'de' ? 'Plätze' : 'spots'}</span>
                 </div>

@@ -2,6 +2,7 @@
 import React from 'react';
 import { useI18n } from '@/lib/i18n';
 import { categoryProjects } from '@/lib/categoryProjects';
+import CategoryImage from '@/components/CategoryImage';
 import Link from 'next/link';
 
 export default function MedioAmbientePage() {
