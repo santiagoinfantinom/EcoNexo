@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
+import EcoNexoLogo from "./EcoNexoLogo";
 
 interface ProfileData {
   firstName: string;
@@ -48,7 +49,7 @@ export default function ProfileComponent() {
     twitter: "",
     instagram: "",
     website: "",
-    profilePhoto: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80"
+    profilePhoto: "/logo-econexo.png"
   });
 
   // Load profile data from localStorage on component mount
@@ -167,10 +168,9 @@ export default function ProfileComponent() {
         {/* Profile Photo Section */}
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
-            <img
-              src={profileData.profilePhoto}
-              alt="Profile"
-              className="w-32 h-32 rounded-full object-cover border-4 border-green-200 dark:border-green-700"
+            <EcoNexoLogo 
+              className="w-32 h-32 border-4 border-green-200 dark:border-green-700" 
+              size={128}
             />
             {isEditing && (
               <button
