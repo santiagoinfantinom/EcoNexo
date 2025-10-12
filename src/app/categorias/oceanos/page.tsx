@@ -2,7 +2,7 @@
 import React from 'react';
 import { useI18n } from '@/lib/i18n';
 import { categoryProjects } from '@/lib/categoryProjects';
-import CategoryImage from '@/components/CategoryImage';
+import ProjectSpecificImage from '@/components/ProjectSpecificImage';
 import Link from 'next/link';
 
 export default function OceanosPage() {
@@ -53,7 +53,7 @@ export default function OceanosPage() {
             <div key={project.id} className="bg-gls-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               {/* Project Image */}
               <div className="h-48">
-                <CategoryImage category="oceanos" className="w-full h-full" />
+                <ProjectSpecificImage project={project} className="w-full h-full" />
               </div>
               
               {/* Project Content */}
