@@ -73,7 +73,12 @@ export default function ProfileComponent() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        handleInputChange('profilePhoto', result);
+        const updatedProfile = { ...profileData, profilePhoto: result };
+        setProfileData(updatedProfile);
+        // Save immediately when photo is changed
+        localStorage.setItem('econexo:profile', JSON.stringify(updatedProfile));
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 2000);
       };
       reader.readAsDataURL(file);
     }
@@ -168,10 +173,18 @@ export default function ProfileComponent() {
         {/* Profile Photo Section */}
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
-            <EcoNexoLogo 
-              className="w-32 h-32 border-4 border-green-200 dark:border-green-700" 
-              size={128}
-            />
+            {profileData.profilePhoto && profileData.profilePhoto !== "/logo-econexo.png" ? (
+              <img
+                src={profileData.profilePhoto}
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover border-4 border-green-200 dark:border-green-700"
+              />
+            ) : (
+              <EcoNexoLogo 
+                className="w-32 h-32 border-4 border-green-200 dark:border-green-700" 
+                size={128}
+              />
+            )}
             {isEditing && (
               <button
                 onClick={triggerFileInput}
@@ -190,12 +203,22 @@ export default function ProfileComponent() {
             className="hidden"
           />
           {isEditing && (
-            <button
-              onClick={triggerFileInput}
-              className="mt-3 text-sm text-green-600 hover:text-green-700 font-medium"
-            >
-              {t("changePhoto")}
-            </button>
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={triggerFileInput}
+                className="text-sm text-green-600 hover:text-green-700 font-medium"
+              >
+                {t("changePhoto")}
+              </button>
+              {profileData.profilePhoto && profileData.profilePhoto !== "/logo-econexo.png" && (
+                <button
+                  onClick={() => handleInputChange('profilePhoto', '/logo-econexo.png')}
+                  className="text-sm text-gray-500 hover:text-gray-700 font-medium"
+                >
+                  Usar Logo
+                </button>
+              )}
+            </div>
           )}
         </div>
 

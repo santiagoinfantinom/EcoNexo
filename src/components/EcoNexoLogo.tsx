@@ -21,8 +21,8 @@ export default function EcoNexoLogo({ className = "", size = 150 }: EcoNexoLogoP
         <div 
           className="rounded-full bg-gradient-to-br from-white/20 to-transparent"
           style={{ 
-            width: size * 0.8, 
-            height: size * 0.8 
+            width: size * 0.6, 
+            height: size * 0.6 
           }}
         />
       </div>
