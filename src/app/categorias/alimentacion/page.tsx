@@ -2,6 +2,7 @@
 import React from 'react';
 import { useI18n } from '@/lib/i18n';
 import { categoryProjects } from '@/lib/categoryProjects';
+import CategoryImage from '@/components/CategoryImage';
 import Link from 'next/link';
 
 export default function AlimentacionPage() {
@@ -51,8 +52,8 @@ export default function AlimentacionPage() {
           {projects.map((project) => (
             <div key={project.id} className="bg-gls-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               {/* Project Image */}
-              <div className="h-48 bg-gradient-to-br from-lime-400 to-lime-600 flex items-center justify-center">
-                <div className="text-white text-6xl">🌾</div>
+              <div className="h-48">
+                <CategoryImage category="alimentacion" className="w-full h-full" />
               </div>
               
               {/* Project Content */}

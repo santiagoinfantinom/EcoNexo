@@ -22,14 +22,14 @@ export default function HeaderNav() {
       {showWelcome && <WelcomeMessage onClose={handleCloseWelcome} />}
       <header className="bg-gls-primary text-gls-primary px-6 py-4 relative">
       {/* Brand block estilo GLS Bank */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-center relative">
         <div className="flex items-center gap-3">
           <span className="text-3xl">🌿</span>
           <span className="text-2xl text-brand font-black text-gls-primary">{t("app")}</span>
         </div>
         
         {/* Botón principal estilo GLS Bank */}
-        <button className="btn-gls-primary">
+        <button className="btn-gls-primary absolute right-0">
           {t("supportUs")} 💚
         </button>
       </div>
