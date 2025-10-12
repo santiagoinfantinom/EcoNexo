@@ -2,12 +2,12 @@
 import { useI18n, Locale } from "@/lib/i18n";
 import { useState, useEffect } from "react";
 
-const FLAGS: Record<Locale, string> = { es: "🇪🇸", en: "🇬🇧", de: "🇩🇪" };
+const FLAGS: Record<Locale, string> = { es: "🇪🇸", en: "🇬🇧", de: "🇩🇪", fr: "🇫🇷" };
 
 export default function LanguageSwitcher() {
   const { locale, setLocale } = useI18n();
   const [mounted, setMounted] = useState(false);
-  const order: Locale[] = ["es", "en", "de"];
+  const order: Locale[] = ["es", "en", "de", "fr"];
   const next = order[(order.indexOf(locale) + 1) % order.length];
 
   useEffect(() => {

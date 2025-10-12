@@ -4,6 +4,7 @@ import { useI18n, categoryLabel } from "@/lib/i18n";
 import { useEffect, useMemo, useState } from "react";
 import WelcomeMessage from "@/components/WelcomeMessage";
 import MobileFeatures from "@/components/MobileFeatures";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Link from "next/link";
 
 type CategoryKey = "environment" | "education" | "health" | "community" | "oceans" | "food";
@@ -186,6 +187,7 @@ export default function Home() {
 
   return (
     <>
+      <LanguageSwitcher />
       {showWelcome && <WelcomeMessage onClose={handleCloseWelcome} />}
       <div className="layout-gls">
       {/* Sección izquierda estilo GLS Bank */}
@@ -237,7 +239,7 @@ export default function Home() {
               }`}
               onClick={() => setActive("Todas")}
             >
-              {t('all')}
+              {locale === 'es' ? "Todas" : locale === 'de' ? "Alle" : "All"}
             </button>
             {ALL_CATEGORIES.map((c) => (
               <Link

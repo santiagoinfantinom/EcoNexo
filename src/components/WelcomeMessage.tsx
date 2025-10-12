@@ -143,30 +143,19 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
             </p>
             <div className="flex gap-4 justify-center">
               <button
-                onClick={() => {
-                  handleClose();
-                  // Scroll to the main content area to start exploring
-                  setTimeout(() => {
-                    const mainContent = document.querySelector('.layout-gls-left');
-                    if (mainContent) {
-                      mainContent.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }, 100);
-                }}
+                onClick={handleClose}
                 className="btn-gls-primary px-8 py-3 text-lg"
               >
                 {locale === 'es' ? "¡Empezar!" : locale === 'de' ? "Los geht's!" : "Let's Go!"}
               </button>
               <button
                 onClick={() => {
+                  // Scroll to map section
+                  const mapSection = document.querySelector('.layout-gls');
+                  if (mapSection) {
+                    mapSection.scrollIntoView({ behavior: 'smooth' });
+                  }
                   handleClose();
-                  // Scroll to the map section
-                  setTimeout(() => {
-                    const mapSection = document.querySelector('.col-span-2');
-                    if (mapSection) {
-                      mapSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }, 100);
                 }}
                 className="btn-gls-secondary px-8 py-3 text-lg"
               >
