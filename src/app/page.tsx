@@ -257,7 +257,7 @@ export default function Home() {
       </div>
       
       {/* Sección del mapa - Full width */}
-      <div className="col-span-2 bg-ecosia-dark p-8">
+      <div id="map-section" className="col-span-2 bg-ecosia-dark p-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-gls-primary mb-6 text-center">
             {t('sustainableProjectsMap')}

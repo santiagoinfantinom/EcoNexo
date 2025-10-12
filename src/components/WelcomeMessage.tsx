@@ -160,13 +160,33 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
               <button
                 onClick={() => {
                   handleClose();
-                  // Scroll to the map section
+                  // Scroll to the map section with better targeting
                   setTimeout(() => {
-                    const mapSection = document.querySelector('.col-span-2');
+                    // Use the specific ID for the map section
+                    const mapSection = document.getElementById('map-section');
+                    
                     if (mapSection) {
-                      mapSection.scrollIntoView({ behavior: 'smooth' });
+                      mapSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start',
+                        inline: 'nearest'
+                      });
+                    } else {
+                      // Fallback: try other selectors
+                      const fallbackSection = document.querySelector('.col-span-2') || 
+                                            document.querySelector('.layout-gls-right');
+                      if (fallbackSection) {
+                        fallbackSection.scrollIntoView({ 
+                          behavior: 'smooth',
+                          block: 'start',
+                          inline: 'nearest'
+                        });
+                      } else {
+                        // Final fallback: scroll to top of page
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
                     }
-                  }, 100);
+                  }, 200);
                 }}
                 className="btn-gls-secondary px-8 py-3 text-lg"
               >
