@@ -28,54 +28,61 @@ interface ProjectSpecificImageProps {
 
 export default function ProjectSpecificImage({ project, className = "" }: ProjectSpecificImageProps) {
   const getProjectSpecificContent = () => {
-    const title = project.title?.es?.toLowerCase() || '';
-    const description = project.description?.es?.toLowerCase() || '';
+    const titleEs = project.title?.es?.toLowerCase() || '';
+    const titleEn = project.title?.en?.toLowerCase() || '';
+    const titleDe = project.title?.de?.toLowerCase() || '';
+    const descriptionEs = project.description?.es?.toLowerCase() || '';
+    const descriptionEn = project.description?.en?.toLowerCase() || '';
+    const descriptionDe = project.description?.de?.toLowerCase() || '';
     const city = project.city?.toLowerCase() || '';
     const country = project.country?.toLowerCase() || '';
+    
+    // Combine all language versions for better matching
+    const allText = `${titleEs} ${titleEn} ${titleDe} ${descriptionEs} ${descriptionEn} ${descriptionDe}`;
     
     // Determine project-specific visual elements based on content
     let emoji = "🌱";
     let gradientColors = "from-emerald-400 via-green-500 to-emerald-600";
     let accentColor = "emerald-400";
     
-    // Project-specific logic based on title and description
-    if (title.includes('reforestación') || title.includes('árbol') || title.includes('baum') || title.includes('tree')) {
+    // Project-specific logic based on title and description (multi-language)
+    if (allText.includes('reforestación') || allText.includes('árbol') || allText.includes('baum') || allText.includes('tree') || allText.includes('aufforstung')) {
       emoji = "🌳";
       gradientColors = "from-green-400 via-emerald-500 to-green-600";
       accentColor = "green-400";
-    } else if (title.includes('limpieza') || title.includes('cleanup') || title.includes('reinigung')) {
+    } else if (allText.includes('limpieza') || allText.includes('cleanup') || allText.includes('reinigung') || allText.includes('säuberung')) {
       emoji = "🧹";
       gradientColors = "from-blue-400 via-cyan-500 to-blue-600";
       accentColor = "blue-400";
-    } else if (title.includes('río') || title.includes('river') || title.includes('fluss') || title.includes('seine')) {
+    } else if (allText.includes('río') || allText.includes('river') || allText.includes('fluss') || allText.includes('seine')) {
       emoji = "🌊";
       gradientColors = "from-cyan-400 via-blue-500 to-cyan-600";
       accentColor = "cyan-400";
-    } else if (title.includes('jardín') || title.includes('garden') || title.includes('garten') || title.includes('huerto')) {
+    } else if (allText.includes('jardín') || allText.includes('garden') || allText.includes('garten') || allText.includes('huerto') || allText.includes('gemeinschaftsgärten')) {
       emoji = "🌿";
       gradientColors = "from-lime-400 via-green-500 to-lime-600";
       accentColor = "lime-400";
-    } else if (title.includes('energía') || title.includes('energy') || title.includes('energie') || title.includes('solar')) {
+    } else if (allText.includes('energía') || allText.includes('energy') || allText.includes('energie') || allText.includes('solar')) {
       emoji = "☀️";
       gradientColors = "from-yellow-400 via-orange-500 to-yellow-600";
       accentColor = "yellow-400";
-    } else if (title.includes('reciclaje') || title.includes('recycling') || title.includes('recycling')) {
+    } else if (allText.includes('reciclaje') || allText.includes('recycling') || allText.includes('recycling')) {
       emoji = "♻️";
       gradientColors = "from-green-400 via-lime-500 to-green-600";
       accentColor = "green-400";
-    } else if (title.includes('biodiversidad') || title.includes('biodiversity') || title.includes('biodiversität')) {
+    } else if (allText.includes('biodiversidad') || allText.includes('biodiversity') || allText.includes('biodiversität')) {
       emoji = "🦋";
       gradientColors = "from-purple-400 via-pink-500 to-purple-600";
       accentColor = "purple-400";
-    } else if (title.includes('agua') || title.includes('water') || title.includes('wasser')) {
+    } else if (allText.includes('agua') || allText.includes('water') || allText.includes('wasser')) {
       emoji = "💧";
       gradientColors = "from-blue-400 via-cyan-500 to-blue-600";
       accentColor = "blue-400";
-    } else if (title.includes('aire') || title.includes('air') || title.includes('luft')) {
+    } else if (allText.includes('aire') || allText.includes('air') || allText.includes('luft')) {
       emoji = "💨";
       gradientColors = "from-sky-400 via-blue-500 to-sky-600";
       accentColor = "sky-400";
-    } else if (title.includes('marino') || title.includes('marine') || title.includes('meer')) {
+    } else if (allText.includes('marino') || allText.includes('marine') || allText.includes('meer')) {
       emoji = "🐠";
       gradientColors = "from-blue-400 via-indigo-500 to-blue-600";
       accentColor = "blue-400";
