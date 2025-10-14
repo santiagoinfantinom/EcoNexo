@@ -171,6 +171,28 @@ export default function HeaderNav() {
               <button type="button" onClick={()=>setShowSignup(false)} className="btn-gls-secondary px-3 py-2">Cancelar</button>
               <button type="submit" className="btn-gls-primary px-3 py-2">Guardar</button>
             </div>
+
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">O continúa con</div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={async ()=>{ await signInWithOAuth('google'); }}
+                  className="flex-1 btn-gls-secondary px-3 py-2"
+                  title="Google"
+                >
+                  Google
+                </button>
+                <button
+                  type="button"
+                  onClick={async ()=>{ await signInWithOAuth('azure'); }}
+                  className="flex-1 btn-gls-secondary px-3 py-2"
+                  title="Outlook / Microsoft"
+                >
+                  Outlook
+                </button>
+              </div>
+            </div>
           </form>
         </div>
       </div>
