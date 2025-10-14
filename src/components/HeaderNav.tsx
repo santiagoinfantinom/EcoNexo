@@ -35,12 +35,12 @@ export default function HeaderNav() {
         
         {/* Input email a la izquierda, junto al selector de idioma */}
         {!loading && !user && (
-          <div className="absolute left-4 sm:left-8 md:left-12 top-0 h-full flex items-center gap-2">
+          <div className="absolute left-2 sm:left-6 md:left-10 top-0 h-full flex items-center gap-2">
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="email@ejemplo.com"
-              className="px-2 py-1 rounded bg-white/80 text-slate-800 text-sm w-36 sm:w-44"
+              className="px-2 py-1 rounded bg-white/80 text-slate-800 text-sm w-32 sm:w-40"
             />
             <button
               onClick={async () => {
