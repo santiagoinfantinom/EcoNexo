@@ -21,6 +21,7 @@ type EventInput = {
   date: string;
   city: string;
   country: string;
+  address?: string;
   category: Category; // obligatorio
   optionalCategories: Category[]; // opcionales
   capacity?: number; // opcional
@@ -43,6 +44,7 @@ export default function EventosPage() {
     date: "",
     city: "",
     country: "",
+    address: "",
     category: "Medio ambiente",
     optionalCategories: [],
     capacity: undefined,
@@ -106,6 +108,7 @@ export default function EventosPage() {
           date: form.date,
           city: form.city,
           country: form.country,
+          address: form.address,
           category: form.category,
           optional_categories: form.optionalCategories,
           capacity: form.capacity,
@@ -121,7 +124,7 @@ export default function EventosPage() {
         };
         setCreated(mockEvent);
         setList((prev) => [mockEvent, ...prev]);
-        setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", capacity: undefined, notes: "" }));
+        setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", address: "", capacity: undefined, notes: "" }));
         return;
       }
       const saved = await res.json();
@@ -137,7 +140,7 @@ export default function EventosPage() {
         });
       } catch {}
       // reset parcial
-      setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", capacity: undefined, notes: "" }));
+      setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", address: "", capacity: undefined, notes: "" }));
     } catch (err) {
       console.error(err);
       setCreated(form); // fallback en memoria
@@ -226,6 +229,16 @@ export default function EventosPage() {
           </div>
         </div>
 
+        <div className="grid gap-1">
+          <label className="text-sm text-slate-700 dark:text-slate-300">{t("address")} ({t("optional")})</label>
+          <input
+            className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
+            value={form.address ?? ""}
+            onChange={(e) => update("address", e.target.value)}
+            placeholder={t("addressPh")}
+          />
+        </div>
+
         <div className="grid gap-2">
           <div className="text-sm text-slate-700 dark:text-slate-300">{t("optionalCategories")}</div>
           <div className="flex flex-wrap gap-2 justify-center">
@@ -279,7 +292,7 @@ export default function EventosPage() {
         <div className="border rounded p-4 bg-gray-900 text-white">
           <div className="font-semibold mb-2">{t("createdEvent")}</div>
           <div className="text-sm">
-            <span className="font-semibold">{created.title}</span> se realizará el <span className="font-semibold">{created.date}</span> en <span className="font-semibold">{created.city}, {created.country}</span>.
+            <span className="font-semibold">{created.title}</span> se realizará el <span className="font-semibold">{created.date}</span> en <span className="font-semibold">{created.city}, {created.country}</span>{created.address ? `, ${created.address}` : ""}.
           </div>
         </div>
       )}

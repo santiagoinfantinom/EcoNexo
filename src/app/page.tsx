@@ -190,12 +190,11 @@ export default function Home() {
     load();
   }, []);
 
-  // Mostrar mensaje de bienvenida para nuevos usuarios
+  // Mostrar mensaje de bienvenida INMEDIATAMENTE para nuevos usuarios
   useEffect(() => {
     const hasSeenWelcome = localStorage.getItem('econexo-welcome-seen');
     if (!hasSeenWelcome) {
-      const timer = setTimeout(() => setShowWelcome(true), 1000);
-      return () => clearTimeout(timer);
+      setShowWelcome(true);
     }
   }, []);
   const filtered = useMemo(
@@ -231,7 +230,7 @@ export default function Home() {
       {showWelcome && <WelcomeMessage onClose={handleCloseWelcome} />}
       <div className="layout-gls">
       {/* Sección izquierda estilo GLS Bank */}
-      <div className="layout-gls-left">
+      <div className="layout-gls-left relative z-10">
         <div className="max-w-2xl">
           <MobileFeatures 
             onLocationUpdate={handleLocationUpdate}
@@ -263,7 +262,7 @@ export default function Home() {
       </div>
       
       {/* Sección derecha estilo GLS Bank */}
-      <div className="layout-gls-right">
+      <div className="layout-gls-right relative z-10">
         <div className="max-w-sm">
           <h2 className="text-2xl font-bold text-gls-secondary mb-4">
             {t('exploreProjects')}
@@ -299,7 +298,7 @@ export default function Home() {
       </div>
       
       {/* Sección del mapa - Full width */}
-      <div id="map-section" className="col-span-2 bg-ecosia-dark p-8">
+      <div id="map-section" className="col-span-2 bg-ecosia-dark p-8 relative z-0 overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-gls-primary mb-6 text-center">
             {t('sustainableProjectsMap')}

@@ -18,6 +18,7 @@ type Project = {
   lng: number;
   city: string;
   country: string;
+  address?: string;
   spots?: number;
 };
 
@@ -145,6 +146,9 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
             <div className="grid gap-1">
               <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
               <div className="text-xs text-gray-600">{locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}</div>
+              {p.address && (
+                <div className="text-xs text-gray-600">{p.address}</div>
+              )}
               <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
               {p.spots !== undefined && (
                 <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
