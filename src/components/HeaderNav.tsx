@@ -49,9 +49,8 @@ export default function HeaderNav() {
         {/* Input email a la izquierda, junto al selector de idioma */}
         {!loading && !user && (
           <div className="absolute left-2 sm:left-6 md:left-10 top-0 h-full flex items-center gap-2">
-            <button onClick={() => setShowSignup(true)} className="btn-gls-secondary px-3 py-1 text-sm order-1 flex items-center gap-2">
-              <span aria-hidden>👤</span>
-              <span>Sign In / Sign Up</span>
+            <button onClick={() => setShowSignup(true)} className="btn-gls-secondary px-2 py-1 text-xs order-1">
+              Sign In / Sign Up
             </button>
             <input
               value={email}
