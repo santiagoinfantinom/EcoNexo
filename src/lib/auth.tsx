@@ -11,7 +11,7 @@ type AuthContextValue = {
   user: AuthUser | null;
   loading: boolean;
   signInWithMagicLink: (email: string) => Promise<{ error?: string }>;
-  signInWithOAuth: (provider: "google" | "github" | "gitlab" | "bitbucket") => Promise<{ error?: string }>;
+  signInWithOAuth: (provider: "google" | "github" | "gitlab" | "bitbucket" | "azure" | "azure_ad" | "azuread" | "azure_b2c") => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 };
 
@@ -40,9 +40,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     };
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const sessionUser = session?.user ?? null;
       setUser(sessionUser ? { id: sessionUser.id, email: sessionUser.email ?? null } : null);
+      if (sessionUser) {
+        // Upsert profile on login
+        try {
+          const fullName = (sessionUser.user_metadata?.full_name || sessionUser.user_metadata?.name || null) as string | null;
+          const birthdateRaw = (sessionUser.user_metadata?.birthdate || sessionUser.user_metadata?.dob || null) as string | null;
+          const birthdate = birthdateRaw ? new Date(birthdateRaw).toISOString().slice(0,10) : null;
+          const avatarUrl = (sessionUser.user_metadata?.avatar_url || sessionUser.user_metadata?.picture || null) as string | null;
+          await supabase
+            .from('profiles')
+            .upsert({ id: sessionUser.id, full_name: fullName ?? undefined, birthdate: birthdate ?? undefined, avatar_url: avatarUrl ?? undefined }, { onConflict: 'id' });
+        } catch {}
+      }
     });
 
     init();

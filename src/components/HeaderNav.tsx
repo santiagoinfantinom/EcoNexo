@@ -58,6 +58,13 @@ export default function HeaderNav() {
               >
                 G
               </button>
+              <button
+                onClick={async () => { await signInWithOAuth("azure"); }}
+                className="btn-gls-secondary"
+                title="Outlook / Microsoft"
+              >
+                MS
+              </button>
             </div>
           )}
           {!loading && user && (
