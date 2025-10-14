@@ -49,14 +49,14 @@ export default function HeaderNav() {
         {/* Input email a la izquierda, junto al selector de idioma */}
         {!loading && !user && (
           <div className="absolute left-0 sm:left-3 md:left-6 top-0 h-full flex items-center gap-1">
-            <button onClick={() => setShowSignup(true)} className="btn-gls-secondary px-2 py-1 text-xs order-1">
+            <button onClick={() => setShowSignup(true)} className="btn-gls-secondary px-2 py-[6px] text-xs order-1 leading-none">
               Sign In / Sign Up
             </button>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="email@ejemplo.com"
-              className="px-2 py-1 rounded bg-white/80 text-slate-800 text-sm w-32 sm:w-40 order-2"
+              className="px-2 py-[6px] rounded bg-white/80 text-slate-800 text-sm w-32 sm:w-40 order-2 leading-none"
             />
           </div>
         )}
