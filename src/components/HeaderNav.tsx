@@ -32,14 +32,14 @@ export default function HeaderNav() {
         </div>
         
         {/* Área de auth y CTA */}
-        <div className="absolute right-0 flex items-center gap-2">
+        <div className="absolute right-2 md:right-4 flex items-center gap-2">
           {!loading && !user && (
             <div className="flex items-center gap-2">
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="email@ejemplo.com"
-                className="px-2 py-1 rounded bg-white/80 text-slate-800 text-sm"
+                className="px-2 py-1 rounded bg-white/80 text-slate-800 text-sm w-44 md:w-56"
               />
               <button
                 onClick={async () => {
@@ -51,20 +51,35 @@ export default function HeaderNav() {
               >
                 {t("login")}
               </button>
-              <button
-                onClick={async () => { await signInWithOAuth("google"); }}
-                className="btn-gls-secondary"
+              <a
+                href="https://accounts.google.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-gls-secondary flex items-center justify-center"
                 title="Google"
+                aria-label="Google"
               >
-                Google
-              </button>
-              <button
-                onClick={async () => { await signInWithOAuth("azure"); }}
-                className="btn-gls-secondary"
+                {/* Simple Google G */}
+                <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+                  <path fill="#EA4335" d="M24 9.5c3.54 0 6.72 1.23 9.23 3.64l6.9-6.9C35.88 2.16 30.58 0 24 0 14.62 0 6.51 5.38 2.56 13.22l8.04 6.24C12.44 13.1 17.74 9.5 24 9.5z"/>
+                  <path fill="#4285F4" d="M46.5 24.5c0-1.64-.15-3.2-.43-4.7H24v9.02h12.7c-.55 2.97-2.22 5.49-4.74 7.19l7.27 5.64C43.9 37.6 46.5 31.5 46.5 24.5z"/>
+                  <path fill="#FBBC05" d="M10.6 19.46l-8.04-6.24C.9 16.2 0 20 0 24s.9 7.8 2.56 10.78l8.04-6.24C10.2 27.1 10 25.58 10 24s.2-3.1.6-4.54z"/>
+                  <path fill="#34A853" d="M24 48c6.48 0 11.94-2.14 15.92-5.85l-7.27-5.64C30.54 38.45 27.5 39.5 24 39.5c-6.26 0-11.56-3.6-13.4-8.96l-8.04 6.24C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+              </a>
+              <a
+                href="https://outlook.live.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-gls-secondary flex items-center justify-center"
                 title="Outlook / Microsoft"
+                aria-label="Outlook"
               >
-                Outlook
-              </button>
+                {/* Simple Outlook envelope */}
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#0078D4" d="M3 4h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm0 2v.2l9 6.3 9-6.3V6H3zm18 12V8.5l-9 6.3-9-6.3V18h18z"/>
+                </svg>
+              </a>
             </div>
           )}
           {!loading && user && (
