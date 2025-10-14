@@ -31,26 +31,32 @@ export default function HeaderNav() {
           <span className="text-2xl text-brand font-black text-gls-primary">{t("app")}</span>
         </div>
         
-        {/* Área de auth y CTA */}
+        {/* Input email a la izquierda, junto al selector de idioma */}
+        {!loading && !user && (
+          <div className="absolute left-16 sm:left-20 md:left-24 top-0 h-full flex items-center gap-2">
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="email@ejemplo.com"
+              className="px-2 py-1 rounded bg-white/80 text-slate-800 text-sm w-40 sm:w-48"
+            />
+            <button
+              onClick={async () => {
+                if (!email) return;
+                const { error } = await signInWithMagicLink(email);
+                alert(error ? t("emailInvalid") : t("checkYourEmail"));
+              }}
+              className="btn-gls-primary"
+            >
+              {t("login")}
+            </button>
+          </div>
+        )}
+
+        {/* Área de auth social y CTA a la derecha */}
         <div className="absolute right-2 md:right-4 flex items-center gap-2">
           {!loading && !user && (
             <div className="flex items-center gap-2">
-              <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="email@ejemplo.com"
-                className="px-2 py-1 rounded bg-white/80 text-slate-800 text-sm w-44 md:w-56"
-              />
-              <button
-                onClick={async () => {
-                  if (!email) return;
-                  const { error } = await signInWithMagicLink(email);
-                  alert(error ? t("emailInvalid") : t("checkYourEmail"));
-                }}
-                className="btn-gls-primary"
-              >
-                {t("login")}
-              </button>
               <a
                 href="https://accounts.google.com/"
                 target="_blank"
@@ -59,7 +65,6 @@ export default function HeaderNav() {
                 title="Google"
                 aria-label="Google"
               >
-                {/* Simple Google G */}
                 <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
                   <path fill="#EA4335" d="M24 9.5c3.54 0 6.72 1.23 9.23 3.64l6.9-6.9C35.88 2.16 30.58 0 24 0 14.62 0 6.51 5.38 2.56 13.22l8.04 6.24C12.44 13.1 17.74 9.5 24 9.5z"/>
                   <path fill="#4285F4" d="M46.5 24.5c0-1.64-.15-3.2-.43-4.7H24v9.02h12.7c-.55 2.97-2.22 5.49-4.74 7.19l7.27 5.64C43.9 37.6 46.5 31.5 46.5 24.5z"/>
@@ -75,7 +80,6 @@ export default function HeaderNav() {
                 title="Outlook / Microsoft"
                 aria-label="Outlook"
               >
-                {/* Simple Outlook envelope */}
                 <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                   <path fill="#0078D4" d="M3 4h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm0 2v.2l9 6.3 9-6.3V6H3zm18 12V8.5l-9 6.3-9-6.3V18h18z"/>
                 </svg>
