@@ -12,6 +12,12 @@ type Category =
 
 type EventInput = {
   title: string;
+  title_en?: string;
+  title_de?: string;
+  description?: string;
+  description_en?: string;
+  description_de?: string;
+  image_url?: string;
   date: string;
   city: string;
   country: string;

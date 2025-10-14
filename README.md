@@ -1,4 +1,6 @@
-# 🌿 EcoNexo - Plataforma de Sostenibilidad Comunitaria
+[English](README.md) | [Español](README.es.md) | [Deutsch](README.de.md)
+
+# 🌿 EcoNexo - Community Sustainability Platform
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
@@ -6,324 +8,324 @@
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000)](https://vercel.com/)
 [![Capacitor](https://img.shields.io/badge/Capacitor-7.4.3-119EFF)](https://capacitorjs.com/)
 
-🌍 **EcoNexo está ahora en producción:** https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app
+🌍 **EcoNexo is now in production:** https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app
 
-EcoNexo es una plataforma integral que conecta comunidades sostenibles, facilita la participación en eventos ecológicos, y promueve empleos verdes. Nuestra misión es crear un ecosistema digital que impulse la acción ambiental colectiva en Europa.
+EcoNexo is a comprehensive platform that connects sustainable communities, facilitates participation in ecological events, and promotes green jobs. Our mission is to create a digital ecosystem that drives collective environmental action across Europe.
 
-## 🚀 Estado Actual: LISTO PARA DEPLOYMENT ✅
+## 🚀 Current Status: READY FOR DEPLOYMENT ✅
 
-### ✅ **Funcionalidades Implementadas**
-- 🌐 **Web App completa** con Next.js 15.5.4
-- 📱 **PWA instalable** con Service Worker
-- 📱 **App móvil nativa** con Capacitor (Android/iOS)
-- 🔌 **APIs REST** funcionando con fallbacks
-- 🌍 **Internacionalización** completa (ES/EN/DE)
-- 📱 **Responsive design** mobile-first
-- 📍 **Funcionalidades nativas** (GPS, Cámara, Notificaciones)
+### ✅ **Implemented Features**
+- 🌐 **Complete Web App** with Next.js 15.5.4
+- 📱 **Installable PWA** with Service Worker
+- 📱 **Native mobile app** with Capacitor (Android/iOS)
+- 🔌 **REST APIs** working with fallbacks
+- 🌍 **Complete internationalization** (ES/EN/DE)
+- 📱 **Mobile-first responsive design**
+- 📍 **Native features** (GPS, Camera, Notifications)
 
-### ✅ **Deploy Automático Configurado**
-- 🚀 **Vercel** - Deploy automático en cada push
-- 📱 **GitHub Actions** - CI/CD completo
-- 🔄 **Build automático** - Web + Móvil
-- 📦 **APK generation** - Para Android
+### ✅ **Automatic Deploy Configured**
+- 🚀 **Vercel** - Automatic deploy on each push
+- 📱 **GitHub Actions** - Complete CI/CD
+- 🔄 **Automatic build** - Web + Mobile
+- 📦 **APK generation** - For Android
 
-## 🛠️ Tecnologías Utilizadas
+## 🛠️ Technologies Used
 
 - **Frontend:** Next.js 15.5.4, React 19, TypeScript
 - **Styling:** Tailwind CSS 4, CSS Modules
 - **Mobile:** Capacitor 7.4.3 (Android/iOS)
 - **PWA:** Service Worker, Manifest
-- **Estado:** React Hooks, Context API
-- **Internacionalización:** Sistema personalizado i18n
+- **State:** React Hooks, Context API
+- **Internationalization:** Custom i18n system
 - **Deployment:** Vercel, GitHub Actions
-- **Control de Versiones:** Git, GitHub
+- **Version Control:** Git, GitHub
 
-## 📦 Instalación y Configuración
+## 📦 Installation and Configuration
 
-### Prerrequisitos
+### Prerequisites
 - Node.js 18+ 
-- npm o yarn
+- npm or yarn
 - Git
-- Android Studio (para desarrollo móvil)
-- Xcode (para iOS, opcional)
+- Android Studio (for mobile development)
+- Xcode (for iOS, optional)
 
-### Pasos de Instalación
+### Installation Steps
 
-1. **Clonar el repositorio**
+1. **Clone the repository**
 ```bash
 git clone https://github.com/santiagoinfantinom/EcoNexo.git
 cd EcoNexo
 ```
 
-2. **Instalar dependencias**
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Configurar variables de entorno**
+3. **Configure environment variables**
 ```bash
 cp env.example .env.local
-# Editar .env.local con tus configuraciones
+# Edit .env.local with your configurations
 ```
 
-4. **Ejecutar en modo desarrollo**
+4. **Run in development mode**
 ```bash
 npm run dev
 ```
 
-5. **Abrir en el navegador**
+5. **Open in browser**
 ```
 http://localhost:3000
 ```
 
-## 🚀 Deploy y Lanzamiento
+## 🚀 Deploy and Launch
 
-### 🌐 **Deploy Web (Automático)**
+### 🌐 **Web Deploy (Automatic)**
 ```bash
-# Deploy manual
+# Manual deploy
 npm run deploy
 
-# O usar el script automático
+# Or use the automatic script
 ./deploy.sh
 ```
 
-**URL de Producción:** https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app
+**Production URL:** https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app
 
-### 📱 **Deploy Móvil**
+### 📱 **Mobile Deploy**
 ```bash
-# Generar APK para Android
+# Generate APK for Android
 npm run mobile:build
 npm run mobile:sync
 cd android && ./gradlew assembleDebug
 
-# Generar IPA para iOS (requiere Xcode)
+# Generate IPA for iOS (requires Xcode)
 cd ios && pod install
-# Abrir en Xcode y generar IPA
+# Open in Xcode and generate IPA
 ```
 
-### 🔄 **Deploy Automático**
-- **Push a main** → Deploy automático a Vercel
-- **GitHub Actions** → Build y test automático
-- **APK generation** → Artifact disponible para descarga
+### 🔄 **Automatic Deploy**
+- **Push to main** → Automatic deploy to Vercel
+- **GitHub Actions** → Automatic build and test
+- **APK generation** → Artifact available for download
 
-## 🏗️ Estructura del Proyecto
+## 🏗️ Project Structure
 
 ```
 src/
-├── app/                    # App Router de Next.js
-│   ├── eventos/           # Páginas de eventos
-│   ├── trabajos/          # Portal de empleos
-│   ├── chat/              # Chat comunitario
-│   ├── proyectos/         # Gestión de proyectos
-│   └── api/               # APIs REST
-├── components/            # Componentes reutilizables
-│   ├── MobileFeatures.tsx # Funcionalidades móviles
-│   ├── CalendarView.tsx   # Vista de calendario
-│   └── EuropeMap.tsx     # Mapa interactivo
-├── lib/                  # Utilidades y configuraciones
-│   ├── i18n.ts          # Sistema de internacionalización
-│   └── supabaseClient.ts # Cliente de base de datos
-└── styles/              # Estilos globales
+├── app/                    # Next.js App Router
+│   ├── eventos/           # Event pages
+│   ├── trabajos/          # Jobs portal
+│   ├── chat/              # Community chat
+│   ├── proyectos/         # Project management
+│   └── api/               # REST APIs
+├── components/            # Reusable components
+│   ├── MobileFeatures.tsx # Mobile features
+│   ├── CalendarView.tsx   # Calendar view
+│   └── EuropeMap.tsx     # Interactive map
+├── lib/                  # Utilities and configurations
+│   ├── i18n.ts          # Internationalization system
+│   └── supabaseClient.ts # Database client
+└── styles/              # Global styles
 
-android/                 # Proyecto Android (Capacitor)
-ios/                     # Proyecto iOS (Capacitor)
+android/                 # Android project (Capacitor)
+ios/                     # iOS project (Capacitor)
 .github/workflows/       # GitHub Actions
 ```
 
-## 🌐 Páginas Principales
+## 🌐 Main Pages
 
-### `/` - Página Principal
-- Mapa interactivo de Europa
-- Filtros por categoría
-- Búsqueda geográfica
-- Estadísticas de impacto
+### `/` - Home Page
+- Interactive Europe map
+- Category filters
+- Geographic search
+- Impact statistics
 
-### `/eventos` - Gestión de Eventos
-- Lista de eventos existentes
-- Formulario de creación
-- Sistema de categorización
-- Registro de voluntarios
+### `/eventos` - Event Management
+- List of existing events
+- Creation form
+- Categorization system
+- Volunteer registration
 
-### `/trabajos` - Portal de Empleos
-- Búsqueda avanzada con filtros
-- Formulario de aplicación completo
-- Sistema de favoritos
-- Upload de documentos
+### `/trabajos` - Jobs Portal
+- Advanced search with filters
+- Complete application form
+- Favorites system
+- Document upload
 
-### `/chat` - Comunidad
-- Foros temáticos organizados
-- Chat en tiempo real
-- Recomendaciones personalizadas
-- Moderación automática
+### `/chat` - Community
+- Thematic organized forums
+- Real-time chat
+- Personalized recommendations
+- Automatic moderation
 
-### `/proyectos` - Proyectos Sostenibles
-- Gestión de proyectos comunitarios
-- Seguimiento de progreso
-- Sistema de voluntariado
-- Colaboración en equipo
+### `/proyectos` - Sustainable Projects
+- Community project management
+- Progress tracking
+- Volunteer system
+- Team collaboration
 
-## 📱 App Móvil
+## 📱 Mobile App
 
-### ✅ **Funcionalidades Nativas**
-- 📍 **GPS** - Ubicación precisa para mapas
-- 📷 **Cámara** - Captura de fotos para eventos
-- 🔔 **Notificaciones** - Push notifications
-- 📱 **PWA** - Instalable desde navegador
+### ✅ **Native Features**
+- 📍 **GPS** - Precise location for maps
+- 📷 **Camera** - Photo capture for events
+- 🔔 **Notifications** - Push notifications
+- 📱 **PWA** - Installable from browser
 
-### 📱 **Comandos Móviles**
+### 📱 **Mobile Commands**
 ```bash
-# Build móvil
+# Mobile build
 npm run mobile:build
 
-# Sincronizar con plataformas
+# Sync with platforms
 npm run mobile:sync
 
-# Abrir proyecto Android
+# Open Android project
 npm run mobile:android
 
-# Ejecutar en Android
+# Run on Android
 npm run mobile:run:android
 ```
 
-## 🌍 Internacionalización
+## 🌍 Internationalization
 
-### ✅ **Idiomas Soportados**
-- 🇪🇸 **Español** (es) - Idioma principal
-- 🇬🇧 **Inglés** (en) - Internacional
-- 🇩🇪 **Alemán** (de) - Mercado europeo
+### ✅ **Supported Languages**
+- 🇪🇸 **Spanish** (es) - Primary language
+- 🇬🇧 **English** (en) - International
+- 🇩🇪 **German** (de) - European market
 
-### 🔄 **Cambio de Idioma**
-- Switcher dinámico en la interfaz
-- Persistencia en localStorage
-- Traducción automática de contenido
-- Adaptación cultural de interfaces
+### 🔄 **Language Switching**
+- Dynamic switcher in interface
+- Persistence in localStorage
+- Automatic content translation
+- Cultural interface adaptation
 
 ## 🧪 Testing
 
-### ✅ **Testing Implementado**
-- **Scripts automatizados** de testing
-- **Testing de APIs** con fallbacks
-- **Testing de PWA** y funcionalidades móviles
-- **Testing de internacionalización**
-- **Testing de rendimiento** y accesibilidad
+### ✅ **Implemented Testing**
+- **Automated scripts** for testing
+- **API testing** with fallbacks
+- **PWA testing** and mobile features
+- **Internationalization testing**
+- **Performance and accessibility testing**
 
-### 🧪 **Ejecutar Tests**
+### 🧪 **Run Tests**
 ```bash
-# Testing completo
+# Complete testing
 ./test-deployment.sh
 
-# Testing de APIs
+# API testing
 ./test-apis.sh
 
-# Testing de linting
+# Linting testing
 npm run lint
 ```
 
 ## 🚀 Deployment
 
-### ✅ **Configuración Lista**
-- **Vercel** configurado con deploy automático
-- **GitHub Actions** para CI/CD
-- **Variables de entorno** definidas
-- **Build estático** optimizado
-- **PWA** completamente funcional
+### ✅ **Ready Configuration**
+- **Vercel** configured with automatic deploy
+- **GitHub Actions** for CI/CD
+- **Environment variables** defined
+- **Static build** optimized
+- **PWA** fully functional
 
-### 🌐 **URLs de Producción**
+### 🌐 **Production URLs**
 - **Web:** https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app
 - **GitHub:** https://github.com/santiagoinfantinom/EcoNexo
 - **Vercel Dashboard:** https://vercel.com/santiagoinfantinoms-projects/eco-nexo
 
-## 📊 Métricas de Calidad
+## 📊 Quality Metrics
 
-### ⚡ **Rendimiento**
-- **Tiempo de carga:** <3 segundos
-- **Bundle size:** 3.1MB optimizado
+### ⚡ **Performance**
+- **Load time:** <3 seconds
+- **Bundle size:** 3.1MB optimized
 - **First Contentful Paint:** <1.5s
 - **Largest Contentful Paint:** <2.5s
 
-### 🔒 **Seguridad**
-- **Validación** de inputs
-- **Sanitización** de datos
-- **CORS** configurado
-- **Variables de entorno** seguras
+### 🔒 **Security**
+- **Input validation**
+- **Data sanitization**
+- **CORS configured**
+- **Secure environment variables**
 
-### ♿ **Accesibilidad**
-- **Navegación por teclado**
-- **Contraste** adecuado
-- **Alt text** en imágenes
-- **ARIA labels** implementados
+### ♿ **Accessibility**
+- **Keyboard navigation**
+- **Adequate contrast**
+- **Alt text** on images
+- **ARIA labels** implemented
 
 ## 🎯 Roadmap
 
-### ✅ **Completado**
-- [x] Web app completa
-- [x] PWA instalable
-- [x] App móvil nativa
-- [x] APIs funcionando
-- [x] Internacionalización
-- [x] Testing completo
-- [x] Deploy automático
+### ✅ **Completed**
+- [x] Complete web app
+- [x] Installable PWA
+- [x] Native mobile app
+- [x] Working APIs
+- [x] Internationalization
+- [x] Complete testing
+- [x] Automatic deploy
 
-### 🚀 **Próximas Funcionalidades**
-- [ ] Sistema de notificaciones push avanzado
-- [ ] Integración con redes sociales
-- [ ] Dashboard de analytics
-- [ ] Sistema de badges y gamificación
-- [ ] API pública para desarrolladores
-- [ ] App móvil nativa optimizada
+### 🚀 **Upcoming Features**
+- [ ] Advanced push notification system
+- [ ] Social media integration
+- [ ] Analytics dashboard
+- [ ] Badge and gamification system
+- [ ] Public API for developers
+- [ ] Optimized native mobile app
 
-### 📈 **Mejoras Planificadas**
-- [ ] Optimización de rendimiento
-- [ ] Mejoras de accesibilidad
-- [ ] Tests automatizados completos
-- [ ] Documentación de API
-- [ ] Sistema de backup automático
+### 📈 **Planned Improvements**
+- [ ] Performance optimization
+- [ ] Accessibility improvements
+- [ ] Complete automated tests
+- [ ] API documentation
+- [ ] Automatic backup system
 
-## 🤝 Contribución
+## 🤝 Contributing
 
-¡Las contribuciones son bienvenidas! Por favor:
+Contributions are welcome! Please:
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+1. Fork the project
+2. Create a branch for your feature (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Guías de Contribución
-- Sigue las convenciones de código existentes
-- Añade tests para nuevas funcionalidades
-- Actualiza la documentación según sea necesario
-- Respeta los principios de accesibilidad
+### Contribution Guidelines
+- Follow existing code conventions
+- Add tests for new features
+- Update documentation as needed
+- Respect accessibility principles
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+This project is under the MIT License. See the `LICENSE` file for more details.
 
-## 👥 Equipo
+## 👥 Team
 
-- **Desarrollo Frontend:** Santiago
-- **Diseño UX/UI:** Equipo de diseño
-- **Internacionalización:** Equipo de traducción
+- **Frontend Development:** Santiago
+- **UX/UI Design:** Design team
+- **Internationalization:** Translation team
 
-## 📞 Contacto
+## 📞 Contact
 
 - **Email:** contacto@econexo.org
 - **Website:** [EcoNexo](https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app)
 - **GitHub:** [github.com/santiagoinfantinom/EcoNexo](https://github.com/santiagoinfantinom/EcoNexo)
 
-## 🙏 Agradecimientos
+## 🙏 Acknowledgments
 
-- Comunidad de Next.js por la excelente documentación
-- Tailwind CSS por el sistema de diseño
-- Vercel por la plataforma de deployment
-- Capacitor por las funcionalidades móviles nativas
-- Todos los contribuidores y usuarios de EcoNexo
+- Next.js community for excellent documentation
+- Tailwind CSS for the design system
+- Vercel for the deployment platform
+- Capacitor for native mobile features
+- All EcoNexo contributors and users
 
 ---
 
-## 🎉 **¡EcoNexo está listo para conquistar Europa!**
+## 🎉 **EcoNexo is ready to conquer Europe!**
 
-**Estado:** ✅ **LISTO PARA DEPLOYMENT**  
-**Próximo paso:** 🚀 **LANZAMIENTO EN TIENDAS DE APPS**
+**Status:** ✅ **READY FOR DEPLOYMENT**  
+**Next step:** 🚀 **LAUNCH IN APP STORES**
 
-*EcoNexo - Conectando comunidades para un futuro más verde* 🌱🌍
+*EcoNexo - Connecting communities for a greener future* 🌱🌍

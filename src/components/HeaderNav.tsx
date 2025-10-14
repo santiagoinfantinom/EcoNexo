@@ -7,7 +7,7 @@ import WelcomeMessage from "./WelcomeMessage";
 import { useAuth } from "@/lib/auth";
 
 export default function HeaderNav() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [showWelcome, setShowWelcome] = useState(false);
   const { user, loading, signInWithMagicLink, signInWithOAuth, signOut } = useAuth();
   const [email, setEmail] = useState("");
@@ -55,7 +55,7 @@ export default function HeaderNav() {
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="email@ejemplo.com"
+              placeholder={locale === 'en' ? 'email@example.com' : (locale === 'de' ? 'email@beispiel.de' : 'email@ejemplo.com')}
               className="px-2 py-[6px] rounded bg-white/80 text-slate-800 text-sm w-32 sm:w-40 order-2 leading-none"
             />
           </div>
@@ -127,7 +127,7 @@ export default function HeaderNav() {
       <div className="fixed inset-0 bg-black/50 z-[10000] flex items-center justify-center p-4">
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md">
           <div className="p-5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Crear perfil</h3>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("createProfile")}</h3>
             <button onClick={() => setShowSignup(false)} className="text-slate-500 hover:text-slate-700">✕</button>
           </div>
           <form
@@ -136,60 +136,60 @@ export default function HeaderNav() {
               e.preventDefault();
               // Si ya hay email, intentamos iniciar magic link; si no, solo guardamos el perfil
               localStorage.setItem('econexo:pendingProfile', JSON.stringify(signup));
-              const emailInputLeft = (document.querySelector('input[placeholder=\"email@ejemplo.com\"]') as HTMLInputElement | null)?.value;
+              const emailInputLeft = (document.querySelector('input[placeholder="email@ejemplo.com"], input[placeholder="email@example.com"]') as HTMLInputElement | null)?.value;
               const chosenEmail = signup.email && signup.email.trim() ? signup.email.trim() : (emailInputLeft || "");
               if (chosenEmail) {
                 // también sincroniza el email del header para consistencia visual
                 setEmail(chosenEmail);
                 // disparar magic link para verificar cuenta e iniciar sesión
                 window.dispatchEvent(new CustomEvent('econexo:signup:magic', { detail: { email: chosenEmail } }));
-                alert('Te enviamos un correo para verificar tu cuenta. Revisa tu bandeja.');
+                alert(t("checkYourEmail"));
               } else {
-                alert('Perfil guardado. Ingresa tu correo y presiona login para verificar.');
+                alert(locale === 'en' ? 'Profile saved. Enter your email and press login to verify.' : locale === 'de' ? 'Profil gespeichert. Gib deine E‑Mail ein und klicke auf Login, um zu verifizieren.' : 'Perfil guardado. Ingresa tu correo y presiona login para verificar.');
               }
               setShowSignup(false);
             }}
           >
             <div>
-              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Correo electrónico</label>
+              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("email")}</label>
               <input type="email" value={signup.email} onChange={(e)=>setSignup({...signup, email:e.target.value})} placeholder="email@ejemplo.com" className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
-              <p className="text-xs text-slate-500 mt-1">Usaremos este correo para enviarte el enlace de verificación.</p>
+              <p className="text-xs text-slate-500 mt-1">{t("emailNote")}</p>
             </div>
             <div>
-              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Nombre completo</label>
+              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("fullName")}</label>
               <input value={signup.name} onChange={(e)=>setSignup({...signup, name:e.target.value})} className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" required />
             </div>
             <div>
-              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Fecha de nacimiento</label>
+              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("birthdate")}</label>
               <input type="date" value={signup.birthdate} onChange={(e)=>setSignup({...signup, birthdate:e.target.value})} className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" required />
             </div>
             <div>
-              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Lugar de nacimiento</label>
+              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("birthPlace")}</label>
               <input value={signup.birthPlace} onChange={(e)=>setSignup({...signup, birthPlace:e.target.value})} className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" required />
             </div>
-            <div className="flex justify-end gap-2 pt-2">
-              <button type="button" onClick={()=>setShowSignup(false)} className="btn-gls-secondary px-3 py-2">Cancelar</button>
-              <button type="submit" className="btn-gls-primary px-3 py-2">Guardar</button>
+            <div className="flex justify-center gap-3 pt-2">
+              <button type="button" onClick={()=>setShowSignup(false)} className="btn-gls-secondary px-3 py-2">{t("cancel")}</button>
+              <button type="submit" className="btn-gls-primary px-3 py-2">{t("save")}</button>
             </div>
 
             <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-              <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">O continúa con</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">{t("continueWith")}</div>
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={async ()=>{ await signInWithOAuth('google'); }}
+                  onClick={()=>{ window.location.href = 'https://accounts.google.com/signin'; }}
                   className="flex-1 btn-gls-secondary px-3 py-2"
                   title="Google"
                 >
-                  Google
+                  {t("google")}
                 </button>
                 <button
                   type="button"
-                  onClick={async ()=>{ await signInWithOAuth('azure'); }}
+                  onClick={()=>{ window.location.href = 'https://login.live.com/'; }}
                   className="flex-1 btn-gls-secondary px-3 py-2"
                   title="Outlook / Microsoft"
                 >
-                  Outlook
+                  {t("outlook")}
                 </button>
               </div>
             </div>

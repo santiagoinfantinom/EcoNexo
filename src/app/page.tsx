@@ -19,6 +19,12 @@ type Category =
 type Project = {
   id: string;
   name: string;
+  name_en?: string;
+  name_de?: string;
+  description?: string;
+  description_en?: string;
+  description_de?: string;
+  image_url?: string;
   category: Category;
   lat: number;
   lng: number;
@@ -62,6 +68,12 @@ const DUMMY_PROJECTS: Project[] = [
   {
     id: "p1",
     name: "Reforestación Urbana Berlín",
+    name_en: "Berlin Urban Reforestation",
+    name_de: "Urbane Aufforstung Berlin",
+    description: "Proyecto de plantación de árboles nativos en parques urbanos para mejorar la calidad del aire y crear corredores verdes en la ciudad.",
+    description_en: "Native tree planting project in urban parks to improve air quality and create green corridors in the city.",
+    description_de: "Projekt zur Pflanzung einheimischer Bäume in Stadtparks zur Verbesserung der Luftqualität und Schaffung grüner Korridore.",
+    image_url: "/leaflet/marker-icon.png",
     category: "Medio ambiente",
     lat: 52.52,
     lng: 13.405,
@@ -72,6 +84,12 @@ const DUMMY_PROJECTS: Project[] = [
   {
     id: "p2",
     name: "Taller de Robótica Educativa",
+    name_en: "Educational Robotics Workshop",
+    name_de: "Bildungsrobotik-Workshop",
+    description: "Talleres prácticos de programación y construcción de robots para jóvenes, promoviendo habilidades STEM y pensamiento crítico.",
+    description_en: "Practical workshops on programming and robot building for youth, promoting STEM skills and critical thinking.",
+    description_de: "Praktische Workshops zu Programmierung und Roboterbau für Jugendliche, Förderung von MINT-Fähigkeiten und kritischem Denken.",
+    image_url: "/next.svg",
     category: "Educación",
     lat: 40.4168,
     lng: -3.7038,
@@ -81,6 +99,12 @@ const DUMMY_PROJECTS: Project[] = [
   {
     id: "p3",
     name: "Clínica móvil comunitaria",
+    name_en: "Community Mobile Clinic",
+    name_de: "Mobile Gemeinschaftsklinik",
+    description: "Servicio médico itinerante que lleva atención sanitaria básica a comunidades desatendidas y zonas rurales.",
+    description_en: "Mobile medical service bringing basic healthcare to underserved communities and rural areas.",
+    description_de: "Mobiler medizinischer Dienst, der grundlegende Gesundheitsversorgung in unterversorgte Gemeinden und ländliche Gebiete bringt.",
+    image_url: "/vercel.svg",
     category: "Salud",
     lat: 45.4642,
     lng: 9.19,
@@ -90,6 +114,12 @@ const DUMMY_PROJECTS: Project[] = [
   {
     id: "p4",
     name: "Recuperación de playas",
+    name_en: "Beach Recovery",
+    name_de: "Strandwiederherstellung",
+    description: "Campaña de limpieza y restauración de ecosistemas costeros, eliminando contaminación y protegiendo la vida marina.",
+    description_en: "Beach cleanup and coastal ecosystem restoration campaign, removing pollution and protecting marine life.",
+    description_de: "Strandreinigung und Küstenökosystem-Restaurierungskampagne zur Entfernung von Verschmutzung und zum Schutz des Meereslebens.",
+    image_url: "/file.svg",
     category: "Océanos",
     lat: 43.2965,
     lng: 5.3698,
@@ -99,6 +129,12 @@ const DUMMY_PROJECTS: Project[] = [
   {
     id: "p5",
     name: "Huertos urbanos",
+    name_en: "Urban Gardens",
+    name_de: "Städtische Gärten",
+    description: "Creación de espacios verdes comunitarios para agricultura sostenible y educación ambiental en entornos urbanos.",
+    description_en: "Creation of community green spaces for sustainable agriculture and environmental education in urban settings.",
+    description_de: "Schaffung von Gemeinschaftsgrünflächen für nachhaltige Landwirtschaft und Umweltbildung in städtischen Umgebungen.",
+    image_url: "/globe.svg",
     category: "Alimentación",
     lat: 51.5072,
     lng: -0.1276,
@@ -108,6 +144,12 @@ const DUMMY_PROJECTS: Project[] = [
   {
     id: "p6",
     name: "Centros vecinales inclusivos",
+    name_en: "Inclusive Neighborhood Centers",
+    name_de: "Inklusive Nachbarschaftszentren",
+    description: "Espacios comunitarios que fomentan la inclusión social, el intercambio cultural y el apoyo mutuo entre vecinos.",
+    description_en: "Community spaces that promote social inclusion, cultural exchange and mutual support among neighbors.",
+    description_de: "Gemeinschaftsräume, die soziale Inklusion, kulturellen Austausch und gegenseitige Unterstützung unter Nachbarn fördern.",
+    image_url: "/window.svg",
     category: "Comunidad",
     lat: 59.3293,
     lng: 18.0686,

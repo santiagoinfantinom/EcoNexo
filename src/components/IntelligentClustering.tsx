@@ -6,6 +6,12 @@ import L from 'leaflet';
 interface Event {
   id: string;
   title: string;
+  title_en?: string;
+  title_de?: string;
+  description?: string;
+  description_en?: string;
+  description_de?: string;
+  image_url?: string;
   lat: number;
   lng: number;
   category: string;
