@@ -13,6 +13,7 @@ export default function HeaderNav() {
   const [email, setEmail] = useState("");
   const [showSignup, setShowSignup] = useState(false);
   const [signup, setSignup] = useState<{name:string; birthdate:string; birthPlace:string; email?: string}>({ name: "", birthdate: "", birthPlace: "", email: "" });
+  const [profile, setProfile] = useState<any | null>(null);
 
   useEffect(() => {
     const handler = async (e: any) => {
@@ -34,6 +35,37 @@ export default function HeaderNav() {
   const handleCloseWelcome = () => {
     setShowWelcome(false);
   };
+
+  // Fetch profile from API (Supabase-backed) once logged in
+  useEffect(() => {
+    let aborted = false;
+    (async () => {
+      if (!user) { setProfile(null); return; }
+      try {
+        const res = await fetch(`/api/profiles?id=${encodeURIComponent(user.id)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!aborted) setProfile(data);
+      } catch {}
+    })();
+    return () => { aborted = true; };
+  }, [user]);
+
+  // When opening signup, prefill with known data
+  useEffect(() => {
+    if (!showSignup) return;
+    const name = (profile?.full_name || profile?.name || "") as string;
+    const birthdate = (profile?.birthdate || "") as string;
+    const birthPlace = (profile?.birth_place || "") as string;
+    const mail = (signup.email && signup.email.trim()) ? signup.email : (email || user?.email || "");
+    setSignup((s) => ({
+      ...s,
+      name: s.name || name,
+      birthdate: s.birthdate || birthdate,
+      birthPlace: s.birthPlace || birthPlace,
+      email: mail || s.email,
+    }));
+  }, [showSignup, profile, user, email]);
 
   return (
     <>
@@ -64,8 +96,20 @@ export default function HeaderNav() {
         {/* CTA a la derecha */}
         <div className="absolute right-2 md:right-4 flex items-center gap-2">
           {!loading && user && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm">{user.email}</span>
+            <div className="flex items-center gap-3">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="avatar" className="h-8 w-8 rounded-full border border-white/30" />
+              ) : (
+                <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">
+                  {(profile?.full_name || user.email || "").slice(0,2).toUpperCase()}
+                </div>
+              )}
+              <div className="flex flex-col leading-tight">
+                <span className="text-sm font-semibold">{profile?.full_name || user.email}</span>
+                {profile?.birthdate && (
+                  <span className="text-[11px] opacity-80">{profile.birthdate}</span>
+                )}
+              </div>
               <button onClick={async () => { await signOut(); }} className="btn-gls-secondary">
                 {t("logout")}
               </button>
@@ -177,7 +221,7 @@ export default function HeaderNav() {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={()=>{ window.location.href = 'https://accounts.google.com/signin'; }}
+                  onClick={async ()=>{ await signInWithOAuth('google'); }}
                   className="flex-1 btn-gls-secondary px-3 py-2"
                   title="Google"
                 >
@@ -185,7 +229,7 @@ export default function HeaderNav() {
                 </button>
                 <button
                   type="button"
-                  onClick={()=>{ window.location.href = 'https://login.live.com/'; }}
+                  onClick={async ()=>{ await signInWithOAuth('azure'); }}
                   className="flex-1 btn-gls-secondary px-3 py-2"
                   title="Outlook / Microsoft"
                 >

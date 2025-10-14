@@ -162,6 +162,7 @@ export default function Home() {
   const [active, setActive] = useState<Category | "Todas">("Todas");
   const [remote, setRemote] = useState<Project[] | null>(null);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
   const [mobileLocation, setMobileLocation] = useState<{lat: number, lng: number} | null>(null);
   const { t, locale } = useI18n();
   
@@ -196,6 +197,10 @@ export default function Home() {
     if (!hasSeenWelcome) {
       setShowWelcome(true);
     }
+    try {
+      const dismissed = localStorage.getItem('econexo:intro-dismissed');
+      if (dismissed === 'true') setShowIntro(false);
+    } catch {}
   }, []);
   const filtered = useMemo(
     () =>
@@ -228,6 +233,23 @@ export default function Home() {
   return (
     <>
       {showWelcome && <WelcomeMessage onClose={handleCloseWelcome} />}
+      {showIntro && (
+        <section className="bg-ecosia-green text-gls-secondary px-6 py-6">
+          <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-6 items-start">
+            <div className="flex-1">
+              <p className="text-xs uppercase tracking-wider opacity-80 mb-2">{t('sustainableProjectsSince2024')}</p>
+              <h1 className="text-3xl md:text-4xl font-extrabold leading-tight mb-3">{t('connectingEurope')}<br />{t('transformingFuture')}</h1>
+              <p className="text-base md:text-lg opacity-90">{t('discoverEnvironmentalProjects')}</p>
+            </div>
+            <button
+              onClick={() => { setShowIntro(false); try { localStorage.setItem('econexo:intro-dismissed','true'); } catch {} }}
+              className="btn-gls-primary whitespace-nowrap"
+            >
+              {locale === 'de' ? 'Weiter' : locale === 'en' ? 'Continue' : 'Continuar'}
+            </button>
+          </div>
+        </section>
+      )}
       <div className="layout-gls">
       {/* Sección izquierda estilo GLS Bank */}
       <div className="layout-gls-left relative z-10">
