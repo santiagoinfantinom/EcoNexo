@@ -11,6 +11,12 @@ import SocialMediaDetection from './SocialMediaDetection';
 interface Event {
   id: string;
   title: string;
+  title_en?: string;
+  title_de?: string;
+  description: string;
+  description_en?: string;
+  description_de?: string;
+  image_url?: string;
   lat: number;
   lng: number;
   category: string;
@@ -18,7 +24,6 @@ interface Event {
   maxVolunteers: number;
   currentVolunteers: number;
   impact: 'low' | 'medium' | 'high';
-  description: string;
   time: string;
   duration: number;
   location: {

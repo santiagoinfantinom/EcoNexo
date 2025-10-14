@@ -1,7 +1,10 @@
 "use client";
+import React from "react";
 import Link from "next/link";
 import { useI18n, categoryLabel, impactTagLabel, projectDescriptionLabel, projectNameLabel, locationLabel } from "@/lib/i18n";
 import ProjectImage from "@/components/ProjectImage";
+import { useAuth } from "@/lib/auth";
+import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 
 type ProjectDetails = {
   id: string;
@@ -31,6 +34,51 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
   stripeLink: string;
 }) {
   const { t, locale } = useI18n();
+  const { user } = useAuth();
+  const [favorite, setFavorite] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchFav = async () => {
+      if (!user) return setFavorite(false);
+      if (!isSupabaseConfigured()) return setFavorite(false);
+      const supabase = getSupabase();
+      const { data } = await supabase
+        .from('favorites')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('item_type', 'project')
+        .eq('item_id', id)
+        .maybeSingle();
+      setFavorite(!!data);
+    };
+    fetchFav();
+  }, [user, id]);
+
+  const toggleFavorite = async () => {
+    if (!user) {
+      alert(locale === 'de' ? 'Bitte zuerst anmelden' : locale === 'en' ? 'Please sign in first' : 'Por favor inicia sesión primero');
+      return;
+    }
+    if (!isSupabaseConfigured()) {
+      alert(locale === 'de' ? 'Supabase ist nicht konfiguriert' : locale === 'en' ? 'Supabase not configured' : 'Supabase no está configurado');
+      return;
+    }
+    const supabase = getSupabase();
+    if (favorite) {
+      await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('item_type', 'project')
+        .eq('item_id', id);
+      setFavorite(false);
+    } else {
+      const { error } = await supabase
+        .from('favorites')
+        .insert({ user_id: user.id, item_type: 'project', item_id: id });
+      if (!error) setFavorite(true);
+    }
+  };
   const progress = Math.min(100, Math.round((details.budgetRaisedEur / details.budgetGoalEur) * 100));
 
   return (
@@ -95,6 +143,9 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
             <Link href={`/projects/${details.id}/voluntariado`} className="bg-green-700 text-white rounded px-4 py-2 font-medium">{t("beVolunteer")}</Link>
             <a href={paypalLink} target="_blank" rel="noopener noreferrer" className="border rounded px-4 py-2 font-medium hover:bg-gray-50">{t("donatePaypal")}</a>
             <a href={stripeLink} target="_blank" rel="noopener noreferrer" className="border rounded px-4 py-2 font-medium hover:bg-gray-50">{t("donateStripe")}</a>
+            <button onClick={toggleFavorite} className={`rounded px-4 py-2 font-medium ${favorite ? 'bg-amber-200' : 'border hover:bg-gray-50'}`}>
+              {favorite ? '★ ' + t('saved') : '☆ ' + t('save')}
+            </button>
           </div>
         </div>
       </div>

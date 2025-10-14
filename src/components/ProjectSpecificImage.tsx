@@ -4,31 +4,55 @@ import React from 'react';
 interface ProjectSpecificImageProps {
   project: {
     id: string;
-    title: {
+    title?: {
       es: string;
       en: string;
       de: string;
     };
-    description: {
+    name?: string;
+    description?: {
       es: string;
       en: string;
       de: string;
     };
     category: string;
-    location: {
+    location?: {
       es: string;
       en: string;
       de: string;
     };
     city: string;
     country: string;
+    image_url?: string;
+    imageUrl?: string;
   };
   className?: string;
 }
 
 export default function ProjectSpecificImage({ project, className = "" }: ProjectSpecificImageProps) {
+  // If project has an image url, use it directly (supports image_url and imageUrl)
+  const directImage = project.image_url || project.imageUrl;
+  if (directImage) {
+    return (
+      <div className={`relative w-full h-full overflow-hidden ${className}`}>
+        <img 
+          src={directImage} 
+          alt={project.title?.es || project.name || 'Project image'} 
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        {/* Project title overlay */}
+        <div className="absolute bottom-2 left-2 right-2">
+          <div className="bg-black bg-opacity-60 text-white text-sm font-bold px-2 py-1 rounded">
+            {project.title?.es || project.name || 'Proyecto'}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const getProjectSpecificContent = () => {
-    const titleEs = project.title?.es?.toLowerCase() || '';
+    const titleEs = project.title?.es?.toLowerCase() || project.name?.toLowerCase() || '';
     const titleEn = project.title?.en?.toLowerCase() || '';
     const titleDe = project.title?.de?.toLowerCase() || '';
     const descriptionEs = project.description?.es?.toLowerCase() || '';

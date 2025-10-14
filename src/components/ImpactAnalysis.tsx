@@ -15,6 +15,12 @@ interface ImpactMetrics {
 interface Event {
   id: string;
   title: string;
+  title_en?: string;
+  title_de?: string;
+  description?: string;
+  description_en?: string;
+  description_de?: string;
+  image_url?: string;
   category: string;
   maxVolunteers: number;
   currentVolunteers: number;

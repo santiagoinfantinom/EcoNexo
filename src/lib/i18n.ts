@@ -294,6 +294,14 @@ const DICTS: Record<Locale, Dict> = {
     newMessage: "Nuevo mensaje",
     send: "Enviar",
     startChat: "Iniciar chat",
+    // Signup modal
+    createProfile: "Crear perfil",
+    emailNote: "Usaremos este correo para enviarte el enlace de verificación.",
+    birthdate: "Fecha de nacimiento",
+    birthPlace: "Lugar de nacimiento",
+    continueWith: "O continúa con",
+    google: "Google",
+    outlook: "Outlook",
   },
   en: {
     app: "EcoNexo",
@@ -589,6 +597,14 @@ const DICTS: Record<Locale, Dict> = {
     newMessage: "New message",
     send: "Send",
     startChat: "Start chat",
+    // Signup modal
+    createProfile: "Create profile",
+    emailNote: "We'll use this email to send you the verification link.",
+    birthdate: "Birth date",
+    birthPlace: "Place of birth",
+    continueWith: "Or continue with",
+    google: "Google",
+    outlook: "Outlook",
   },
   de: {
     app: "EcoNexo",
@@ -884,6 +900,14 @@ const DICTS: Record<Locale, Dict> = {
     newMessage: "Neue Nachricht",
     send: "Senden",
     startChat: "Chat starten",
+    // Signup modal
+    createProfile: "Profil erstellen",
+    emailNote: "Wir verwenden diese E‑Mail, um dir den Verifikationslink zu senden.",
+    birthdate: "Geburtsdatum",
+    birthPlace: "Geburtsort",
+    continueWith: "Oder fortfahren mit",
+    google: "Google",
+    outlook: "Outlook",
   },
 };
 

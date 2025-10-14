@@ -5,11 +5,18 @@ import { locationLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import EventRegistrationForm from "./EventRegistrationForm";
+import { useAuth } from "@/lib/auth";
+import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 
 type EventDetails = {
   id: string;
   title: string;
+  title_en?: string;
+  title_de?: string;
   description: string;
+  description_en?: string;
+  description_de?: string;
+  image_url?: string;
   date: string;
   time: string;
   duration: number;
@@ -28,7 +35,12 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   "e1": {
     id: "e1",
     title: "Plantación de árboles nativos",
+    title_en: "Native Tree Planting",
+    title_de: "Pflanzung einheimischer Bäume",
     description: "Únete a nuestra plantación comunitaria de especies nativas para restaurar el ecosistema local. Aprenderás sobre las especies autóctonas y su importancia para la biodiversidad urbana.",
+    description_en: "Join our community planting of native species to restore the local ecosystem. You will learn about native species and their importance for urban biodiversity.",
+    description_de: "Schließe dich unserer Gemeinschaftspflanzung einheimischer Arten an, um das lokale Ökosystem wiederherzustellen. Du wirst über einheimische Arten und ihre Bedeutung für die städtische Biodiversität lernen.",
+    image_url: "/leaflet/marker-icon.png",
     date: "2025-01-15",
     time: "09:00",
     duration: 3,
@@ -44,7 +56,12 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   "e2": {
     id: "e2",
     title: "Taller de energía solar",
+    title_en: "Solar Energy Workshop",
+    title_de: "Solar-Energie-Workshop",
     description: "Aprende sobre instalación y beneficios de paneles solares residenciales. Incluye demostración práctica y cálculo de ahorro energético.",
+    description_en: "Learn about installation and benefits of residential solar panels. Includes practical demonstration and energy savings calculation.",
+    description_de: "Lerne über Installation und Vorteile von Wohnsolarpanelen. Beinhaltet praktische Demonstration und Energiesparberechnung.",
+    image_url: "/next.svg",
     date: "2025-01-22",
     time: "14:00",
     duration: 3,
@@ -60,7 +77,12 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   "e3": {
     id: "e3",
     title: "Mercado de productos locales",
+    title_en: "Local Products Market",
+    title_de: "Lokaler Produktmarkt",
     description: "Feria de productos orgánicos y artesanías locales sostenibles. Conoce productores locales y sus prácticas ecológicas.",
+    description_en: "Fair of organic products and sustainable local crafts. Meet local producers and their ecological practices.",
+    description_de: "Messe für Bio-Produkte und nachhaltige lokale Handwerkskunst. Lerne lokale Produzenten und ihre ökologischen Praktiken kennen.",
+    image_url: "/globe.svg",
     date: "2025-02-08",
     time: "10:00",
     duration: 6,
@@ -890,6 +912,7 @@ function getLocalizedEventData(eventId: string, locale: string) {
 
 export default function EventDetailClient({ eventId }: { eventId: string }) {
   const { t, locale } = useI18n();
+  const { user } = useAuth();
   
   const event = getLocalizedEventData(eventId, locale);
   
@@ -904,6 +927,10 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
 
   const handleJoin = async () => {
     if (spotsLeft <= 0) return;
+    if (!user) {
+      alert(locale === 'de' ? 'Bitte zuerst anmelden' : locale === 'en' ? 'Please sign in first' : 'Por favor inicia sesión primero');
+      return;
+    }
     setShowRegistrationForm(true);
   };
 
@@ -921,14 +948,27 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
     agreeToPhotos: boolean;
   }) => {
     try {
-      // In a real app, call API to register participation here
-      // await fetch('/api/events/join', { 
-      //   method: 'POST', 
-      //   body: JSON.stringify({ 
-      //     eventId, 
-      //     ...registrationData 
-      //   }) 
-      // })
+      if (!isSupabaseConfigured()) throw new Error('Supabase not configured');
+      const supabase = getSupabase();
+      if (!user) throw new Error('Not authenticated');
+      const { error } = await supabase
+        .from('event_registrations')
+        .insert({
+          event_id: event.id,
+          user_id: user.id,
+          name: registrationData.name,
+          email: registrationData.email,
+          phone: registrationData.phone,
+          emergency_contact: registrationData.emergencyContact,
+          emergency_phone: registrationData.emergencyPhone,
+          dietary_restrictions: registrationData.dietaryRestrictions,
+          accessibility_needs: registrationData.accessibilityNeeds,
+          experience: registrationData.experience,
+          motivation: registrationData.motivation,
+          agree_to_terms: registrationData.agreeToTerms,
+          agree_to_photos: registrationData.agreeToPhotos,
+        });
+      if (error) throw error;
       
       setCurrentVolunteers((v: number) => Math.min(event.maxVolunteers, v + 1));
       setShowRegistrationForm(false);
@@ -1018,6 +1058,18 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
 
         {/* Event Header */}
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 mb-6">
+          {/* Event Image */}
+          {event.image_url && (
+            <div className="mb-6">
+              <img 
+                src={event.image_url} 
+                alt={event.title} 
+                className="w-full h-64 object-cover rounded-lg"
+                loading="lazy"
+              />
+            </div>
+          )}
+          
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">

@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Inter_Tight } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
+import { AuthProvider } from "@/lib/auth";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CreateEventFAB from "@/components/CreateEventFAB";
 import HeaderNav from "@/components/HeaderNav";
@@ -46,11 +47,13 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <I18nProvider>
-            <ServiceWorkerRegistration />
-            <LanguageSwitcher />
-            <HeaderNav />
-            <main className="min-h-screen">{children}</main>
-            <CreateEventFAB />
+            <AuthProvider>
+              <ServiceWorkerRegistration />
+              <LanguageSwitcher />
+              <HeaderNav />
+              <main className="min-h-screen">{children}</main>
+              <CreateEventFAB />
+            </AuthProvider>
           </I18nProvider>
         </ThemeProvider>
       </body>

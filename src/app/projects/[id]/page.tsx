@@ -8,6 +8,10 @@ type Project = {
   name: string;
   name_en?: string;
   name_de?: string;
+  description?: string;
+  description_en?: string;
+  description_de?: string;
+  image_url?: string;
   category: string;
   lat: number;
   lng: number;
@@ -21,9 +25,6 @@ type ProjectDetails = Project & {
   budgetRaisedEur: number;
   budgetGoalEur: number;
   image: string; // path under /public or URL
-  description: string;
-  description_en?: string;
-  description_de?: string;
 };
 
 const FALLBACK_DETAILS: Record<string, ProjectDetails> = {

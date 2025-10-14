@@ -1,3 +1,5 @@
+[English](README.md) | [Español](README.es.md) | [Deutsch](README.de.md)
+
 # 🌿 EcoNexo - Plattform für nachhaltige Gemeinschaften
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black)](https://nextjs.org/)

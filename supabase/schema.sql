@@ -14,6 +14,7 @@ create table if not exists public.projects (
   description text,
   description_en text,
   description_de text,
+  image_url text,
   created_at timestamptz default now()
 );
 
@@ -21,6 +22,12 @@ create table if not exists public.projects (
 create table if not exists public.events (
   id uuid primary key default gen_random_uuid(),
   title text not null,
+  title_en text,
+  title_de text,
+  description text,
+  description_en text,
+  description_de text,
+  image_url text,
   date date not null,
   city text not null,
   country text not null,
