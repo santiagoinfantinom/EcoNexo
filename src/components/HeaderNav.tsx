@@ -59,16 +59,8 @@ export default function HeaderNav() {
           </div>
         )}
 
-        {/* CTA a la derecha: Sign In/Sign Up unificado */}
+        {/* CTA a la derecha */}
         <div className="absolute right-2 md:right-4 flex items-center gap-2">
-          {!loading && !user && (
-            <button
-              onClick={() => setShowSignup(true)}
-              className="btn-gls-secondary px-4 py-2"
-            >
-              Sign In / Sign Up
-            </button>
-          )}
           {!loading && user && (
             <div className="flex items-center gap-2">
               <span className="text-sm">{user.email}</span>
