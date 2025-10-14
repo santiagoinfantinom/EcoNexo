@@ -52,18 +52,11 @@ export default function HeaderNav() {
                 {t("login")}
               </button>
               <button
-                onClick={async () => { await signInWithOAuth("google"); }}
-                className="btn-gls-secondary"
-                title="Google"
-              >
-                G
-              </button>
-              <button
                 onClick={async () => { await signInWithOAuth("azure"); }}
                 className="btn-gls-secondary"
                 title="Outlook / Microsoft"
               >
-                MS
+                Outlook
               </button>
             </div>
           )}
