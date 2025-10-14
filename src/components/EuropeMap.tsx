@@ -19,6 +19,7 @@ type Project = {
   city: string;
   country: string;
   address?: string;
+  participants?: number;
   spots?: number;
 };
 
@@ -144,10 +145,19 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         <Marker key={p.id} position={[p.lat, p.lng]}>
           <Popup>
             <div className="grid gap-1">
+              {p && (p as any).image_url && (
+                <img src={(p as any).image_url} alt="project" className="mb-2 rounded w-full max-w-[220px] h-auto" />
+              )}
               <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
               <div className="text-xs text-gray-600">{locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}</div>
               {p.address && (
                 <div className="text-xs text-gray-600">{p.address}</div>
+              )}
+              {(p.participants !== undefined || p.spots !== undefined) && (
+                <div className="text-xs">
+                  {p.participants !== undefined && (<span className="mr-2">👥 {p.participants}</span>)}
+                  {p.spots !== undefined && (<span>🪑 {p.spots}</span>)}
+                </div>
               )}
               <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
               {p.spots !== undefined && (
