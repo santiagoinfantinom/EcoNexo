@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: error?.message };
   }, []);
 
-  const signInWithOAuth = useCallback(async (provider: "google" | "github" | "gitlab" | "bitbucket") => {
+  const signInWithOAuth = useCallback(async (provider: "google" | "github" | "gitlab" | "bitbucket" | "azure" | "azure_ad" | "azuread" | "azure_b2c") => {
     if (!isSupabaseConfigured()) return { error: "Supabase not configured" };
     const supabase = getSupabase();
     const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: typeof window !== "undefined" ? window.location.origin : undefined } });
