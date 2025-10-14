@@ -11,6 +11,8 @@ export default function HeaderNav() {
   const [showWelcome, setShowWelcome] = useState(false);
   const { user, loading, signInWithMagicLink, signInWithOAuth, signOut } = useAuth();
   const [email, setEmail] = useState("");
+  const [showSignup, setShowSignup] = useState(false);
+  const [signup, setSignup] = useState<{name:string; birthdate:string; birthPlace:string}>({ name: "", birthdate: "", birthPlace: "" });
 
   const handleShowWelcome = () => {
     setShowWelcome(true);
@@ -46,10 +48,11 @@ export default function HeaderNav() {
                 const { error } = await signInWithMagicLink(email);
                 alert(error ? t("emailInvalid") : t("checkYourEmail"));
               }}
-              className="btn-gls-primary"
+              className="btn-gls-primary px-3 py-1 text-sm"
             >
               {t("login")}
             </button>
+            <button onClick={() => setShowSignup(true)} className="btn-gls-secondary px-3 py-1 text-sm">Sign Up</button>
           </div>
         )}
 
@@ -146,6 +149,42 @@ export default function HeaderNav() {
         </button>
       </nav>
     </header>
+    {showSignup && (
+      <div className="fixed inset-0 bg-black/50 z-[10000] flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md">
+          <div className="p-5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Crear perfil</h3>
+            <button onClick={() => setShowSignup(false)} className="text-slate-500 hover:text-slate-700">✕</button>
+          </div>
+          <form
+            className="p-5 space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              localStorage.setItem('econexo:pendingProfile', JSON.stringify(signup));
+              alert('Perfil preliminar guardado. Inicia sesión para completar el registro.');
+              setShowSignup(false);
+            }}
+          >
+            <div>
+              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Nombre completo</label>
+              <input value={signup.name} onChange={(e)=>setSignup({...signup, name:e.target.value})} className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" required />
+            </div>
+            <div>
+              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Fecha de nacimiento</label>
+              <input type="date" value={signup.birthdate} onChange={(e)=>setSignup({...signup, birthdate:e.target.value})} className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" required />
+            </div>
+            <div>
+              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Lugar de nacimiento</label>
+              <input value={signup.birthPlace} onChange={(e)=>setSignup({...signup, birthPlace:e.target.value})} className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" required />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <button type="button" onClick={()=>setShowSignup(false)} className="btn-gls-secondary px-3 py-2">Cancelar</button>
+              <button type="submit" className="btn-gls-primary px-3 py-2">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    )}
     </>
   );
 }

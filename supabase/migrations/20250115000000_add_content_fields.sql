@@ -4,6 +4,7 @@ create table if not exists public.profiles (
   email text generated always as (lower((auth.jwt() ->> 'email')::text)) stored,
   full_name text,
   birthdate date,
+  birth_place text,
   avatar_url text,
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now()

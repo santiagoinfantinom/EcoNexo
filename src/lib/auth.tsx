@@ -50,9 +50,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const birthdateRaw = (sessionUser.user_metadata?.birthdate || sessionUser.user_metadata?.dob || null) as string | null;
           const birthdate = birthdateRaw ? new Date(birthdateRaw).toISOString().slice(0,10) : null;
           const avatarUrl = (sessionUser.user_metadata?.avatar_url || sessionUser.user_metadata?.picture || null) as string | null;
+          const pending = typeof window !== 'undefined' ? localStorage.getItem('econexo:pendingProfile') : null;
+          let overrides: any = {};
+          if (pending) {
+            try { overrides = JSON.parse(pending); } catch {}
+            localStorage.removeItem('econexo:pendingProfile');
+          }
           await supabase
             .from('profiles')
-            .upsert({ id: sessionUser.id, full_name: fullName ?? undefined, birthdate: birthdate ?? undefined, avatar_url: avatarUrl ?? undefined }, { onConflict: 'id' });
+            .upsert({ id: sessionUser.id, full_name: overrides.name ?? fullName ?? undefined, birthdate: overrides.birthdate ?? birthdate ?? undefined, birth_place: overrides.birthPlace ?? undefined, avatar_url: avatarUrl ?? undefined }, { onConflict: 'id' });
         } catch {}
       }
     });
