@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import EcoTips from "./EcoTips";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WelcomeMessage from "./WelcomeMessage";
 import { useAuth } from "@/lib/auth";
 
@@ -13,6 +13,19 @@ export default function HeaderNav() {
   const [email, setEmail] = useState("");
   const [showSignup, setShowSignup] = useState(false);
   const [signup, setSignup] = useState<{name:string; birthdate:string; birthPlace:string}>({ name: "", birthdate: "", birthPlace: "" });
+
+  useEffect(() => {
+    const handler = async (e: any) => {
+      const targetEmail = e?.detail?.email as string | undefined;
+      if (!targetEmail) return;
+      try {
+        const { error } = await signInWithMagicLink(targetEmail);
+        if (!error) alert(t("checkYourEmail"));
+      } catch {}
+    };
+    window.addEventListener('econexo:signup:magic', handler as any);
+    return () => window.removeEventListener('econexo:signup:magic', handler as any);
+  }, [signInWithMagicLink, t]);
 
   const handleShowWelcome = () => {
     setShowWelcome(true);
