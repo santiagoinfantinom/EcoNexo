@@ -55,16 +55,6 @@ export default function HeaderNav() {
               placeholder="email@ejemplo.com"
               className="px-2 py-1 rounded bg-white/80 text-slate-800 text-sm w-32 sm:w-40"
             />
-            <button
-              onClick={async () => {
-                if (!email) return;
-                const { error } = await signInWithMagicLink(email);
-                alert(error ? t("emailInvalid") : t("checkYourEmail"));
-              }}
-              className="btn-gls-primary px-3 py-1 text-sm"
-            >
-              {t("login")}
-            </button>
             <button onClick={() => setShowSignup(true)} className="btn-gls-secondary px-3 py-1 text-sm">Sign In / Sign Up</button>
           </div>
         )}
