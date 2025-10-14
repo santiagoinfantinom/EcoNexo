@@ -197,10 +197,13 @@ export default function Home() {
     if (!hasSeenWelcome) {
       setShowWelcome(true);
     }
+    // Show intro once per session regardless of prior dismissals
     try {
-      const dismissed = localStorage.getItem('econexo:intro-dismissed');
-      if (dismissed === 'true') setShowIntro(false);
-    } catch {}
+      const sessionSeen = sessionStorage.getItem('econexo:intro-seen');
+      setShowIntro(!sessionSeen);
+    } catch {
+      setShowIntro(true);
+    }
   }, []);
   const filtered = useMemo(
     () =>
@@ -242,7 +245,7 @@ export default function Home() {
               <p className="text-base md:text-lg opacity-90">{t('discoverEnvironmentalProjects')}</p>
             </div>
             <button
-              onClick={() => { setShowIntro(false); try { localStorage.setItem('econexo:intro-dismissed','true'); } catch {} }}
+              onClick={() => { setShowIntro(false); try { sessionStorage.setItem('econexo:intro-seen','true'); } catch {} }}
               className="btn-gls-primary whitespace-nowrap"
             >
               {locale === 'de' ? 'Weiter' : locale === 'en' ? 'Continue' : 'Continuar'}
