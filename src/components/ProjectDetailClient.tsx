@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useI18n, categoryLabel, impactTagLabel, projectDescriptionLabel, projectNameLabel, locationLabel } from "@/lib/i18n";
 import ProjectImage from "@/components/ProjectImage";
 import { useAuth } from "@/lib/auth";
-import { getSupabase } from "@/lib/supabaseClient";
+import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 
 type ProjectDetails = {
   id: string;
@@ -40,6 +40,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
   React.useEffect(() => {
     const fetchFav = async () => {
       if (!user) return setFavorite(false);
+      if (!isSupabaseConfigured()) return setFavorite(false);
       const supabase = getSupabase();
       const { data } = await supabase
         .from('favorites')
@@ -56,6 +57,10 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
   const toggleFavorite = async () => {
     if (!user) {
       alert(locale === 'de' ? 'Bitte zuerst anmelden' : locale === 'en' ? 'Please sign in first' : 'Por favor inicia sesión primero');
+      return;
+    }
+    if (!isSupabaseConfigured()) {
+      alert(locale === 'de' ? 'Supabase ist nicht konfiguriert' : locale === 'en' ? 'Supabase not configured' : 'Supabase no está configurado');
       return;
     }
     const supabase = getSupabase();

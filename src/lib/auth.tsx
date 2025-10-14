@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { getSupabase } from "./supabaseClient";
+import { getSupabase, isSupabaseConfigured } from "./supabaseClient";
 
 type AuthUser = {
   id: string;
@@ -47,18 +47,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signInWithMagicLink = useCallback(async (email: string) => {
+    if (!isSupabaseConfigured()) return { error: "Supabase not configured" };
     const supabase = getSupabase();
     const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined } });
     return { error: error?.message };
   }, []);
 
   const signInWithOAuth = useCallback(async (provider: "google" | "github" | "gitlab" | "bitbucket") => {
+    if (!isSupabaseConfigured()) return { error: "Supabase not configured" };
     const supabase = getSupabase();
     const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: typeof window !== "undefined" ? window.location.origin : undefined } });
     return { error: error?.message };
   }, []);
 
   const signOut = useCallback(async () => {
+    if (!isSupabaseConfigured()) return;
     const supabase = getSupabase();
     await supabase.auth.signOut();
   }, []);

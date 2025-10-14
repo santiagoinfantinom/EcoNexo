@@ -6,7 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import EventRegistrationForm from "./EventRegistrationForm";
 import { useAuth } from "@/lib/auth";
-import { getSupabase } from "@/lib/supabaseClient";
+import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 
 type EventDetails = {
   id: string;
@@ -948,6 +948,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
     agreeToPhotos: boolean;
   }) => {
     try {
+      if (!isSupabaseConfigured()) throw new Error('Supabase not configured');
       const supabase = getSupabase();
       if (!user) throw new Error('Not authenticated');
       const { error } = await supabase
