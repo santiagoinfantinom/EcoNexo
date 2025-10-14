@@ -12,7 +12,7 @@ export default function HeaderNav() {
   const { user, loading, signInWithMagicLink, signInWithOAuth, signOut } = useAuth();
   const [email, setEmail] = useState("");
   const [showSignup, setShowSignup] = useState(false);
-  const [signup, setSignup] = useState<{name:string; birthdate:string; birthPlace:string}>({ name: "", birthdate: "", birthPlace: "" });
+  const [signup, setSignup] = useState<{name:string; birthdate:string; birthPlace:string; email?: string}>({ name: "", birthdate: "", birthPlace: "", email: "" });
 
   useEffect(() => {
     const handler = async (e: any) => {
@@ -152,10 +152,13 @@ export default function HeaderNav() {
               e.preventDefault();
               // Si ya hay email, intentamos iniciar magic link; si no, solo guardamos el perfil
               localStorage.setItem('econexo:pendingProfile', JSON.stringify(signup));
-              const emailInput = (document.querySelector('input[placeholder="email@ejemplo.com"]') as HTMLInputElement | null)?.value;
-              if (emailInput) {
+              const emailInputLeft = (document.querySelector('input[placeholder=\"email@ejemplo.com\"]') as HTMLInputElement | null)?.value;
+              const chosenEmail = signup.email && signup.email.trim() ? signup.email.trim() : (emailInputLeft || "");
+              if (chosenEmail) {
+                // también sincroniza el email del header para consistencia visual
+                setEmail(chosenEmail);
                 // disparar magic link para verificar cuenta e iniciar sesión
-                window.dispatchEvent(new CustomEvent('econexo:signup:magic', { detail: { email: emailInput } }));
+                window.dispatchEvent(new CustomEvent('econexo:signup:magic', { detail: { email: chosenEmail } }));
                 alert('Te enviamos un correo para verificar tu cuenta. Revisa tu bandeja.');
               } else {
                 alert('Perfil guardado. Ingresa tu correo y presiona login para verificar.');
@@ -163,6 +166,11 @@ export default function HeaderNav() {
               setShowSignup(false);
             }}
           >
+            <div>
+              <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Correo electrónico</label>
+              <input type="email" value={signup.email} onChange={(e)=>setSignup({...signup, email:e.target.value})} placeholder="email@ejemplo.com" className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
+              <p className="text-xs text-slate-500 mt-1">Usaremos este correo para enviarte el enlace de verificación.</p>
+            </div>
             <div>
               <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Nombre completo</label>
               <input value={signup.name} onChange={(e)=>setSignup({...signup, name:e.target.value})} className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" required />
