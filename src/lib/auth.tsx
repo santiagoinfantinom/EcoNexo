@@ -22,6 +22,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isSupabaseConfigured()) {
+      // No Supabase in this environment (e.g., Vercel preview without envs)
+      setUser(null);
+      setLoading(false);
+      return;
+    }
     const supabase = getSupabase();
     let mounted = true;
 
