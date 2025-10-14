@@ -8,7 +8,7 @@
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000)](https://vercel.com/)
 [![Capacitor](https://img.shields.io/badge/Capacitor-7.4.3-119EFF)](https://capacitorjs.com/)
 
-🌍 **EcoNexo está ahora en producción:** https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app
+🌍 **EcoNexo está ahora en producción:** https://eco-nexo-j62lzrpdd-santiagoinfantinoms-projects.vercel.app
 
 EcoNexo es una plataforma integral que conecta comunidades sostenibles, facilita la participación en eventos ecológicos, y promueve empleos verdes. Nuestra misión es crear un ecosistema digital que impulse la acción ambiental colectiva en Europa.
 
@@ -89,7 +89,7 @@ npm run deploy
 ./deploy.sh
 ```
 
-**URL de Producción:** https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app
+**URL de Producción:** https://eco-nexo-j62lzrpdd-santiagoinfantinoms-projects.vercel.app
 
 ### 📱 **Deploy Móvil**
 ```bash
@@ -231,7 +231,7 @@ npm run lint
 - **PWA** completamente funcional
 
 ### 🌐 **URLs de Producción**
-- **Web:** https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app
+- **Web:** https://eco-nexo-j62lzrpdd-santiagoinfantinoms-projects.vercel.app
 - **GitHub:** https://github.com/santiagoinfantinom/EcoNexo
 - **Vercel Dashboard:** https://vercel.com/santiagoinfantinoms-projects/eco-nexo
 
