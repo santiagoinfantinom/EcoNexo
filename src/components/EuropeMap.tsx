@@ -217,13 +217,13 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
         />
         {/* Events toggle */}
         <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
-          <button className={`px-2 py-1 rounded text-xs ${filterMode==='all' ? 'bg-emerald-600 text-white' : ''}`} onClick={() => setFilterMode('all')}>
+          <button className={`px-2 py-1 rounded text-xs border ${filterMode==='all' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('all')}>
             {locale==='de'?'Alle':locale==='en'?'All':'Todos'}
           </button>
-          <button className={`px-2 py-1 rounded text-xs ${filterMode==='today' ? 'bg-emerald-600 text-white' : ''}`} onClick={() => setFilterMode('today')}>
+          <button className={`px-2 py-1 rounded text-xs border ${filterMode==='today' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('today')}>
             {locale==='de'?'Heute':locale==='en'?'Today':'Hoy'}
           </button>
-          <button className={`px-2 py-1 rounded text-xs ${filterMode==='permanent' ? 'bg-emerald-600 text-white' : ''}`} onClick={() => setFilterMode('permanent')}>
+          <button className={`px-2 py-1 rounded text-xs border ${filterMode==='permanent' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('permanent')}>
             {locale==='de'?'Dauerhaft':locale==='en'?'Permanent':'Permanentes'}
           </button>
         </div>
