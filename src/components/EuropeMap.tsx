@@ -21,6 +21,9 @@ type Project = {
   address?: string;
   participants?: number;
   spots?: number;
+  startsAt?: string;
+  endsAt?: string;
+  isPermanent?: boolean;
 };
 
 // Fix default marker icons in Leaflet when used with bundlers
@@ -41,6 +44,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
   const mapRef = useRef<LeafletMap | null>(null);
   const { t, locale } = useI18n();
   const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
+  const [filterMode, setFilterMode] = useState<'all' | 'today' | 'permanent'>('all');
   // Calendar overlay removed; calendar lives on its own page now
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
@@ -117,6 +121,28 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     }
   };
 
+  // Recompute filtered list when filter mode changes
+  useEffect(() => {
+    const now = new Date();
+    const isToday = (p: Project) => {
+      if (p.isPermanent) return false;
+      if (!p.startsAt && !p.endsAt) return false;
+      const start = p.startsAt ? new Date(p.startsAt) : now;
+      const end = p.endsAt ? new Date(p.endsAt) : now;
+      const startDay = new Date(now); startDay.setHours(0,0,0,0);
+      const endDay = new Date(now); endDay.setHours(23,59,59,999);
+      return (start <= endDay) && (end >= startDay);
+    };
+    const isPermanent = (p: Project) => Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
+
+    const next = projects.filter((p) => {
+      if (filterMode === 'all') return true;
+      if (filterMode === 'today') return isToday(p);
+      return isPermanent(p);
+    });
+    setFilteredProjects(next);
+  }, [projects, filterMode]);
+
   return (
     <>
     <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
@@ -183,12 +209,24 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     {/* Top Controls Bar */}
     <div className="absolute top-4 left-4 right-4 z-[5000] flex justify-between items-start pointer-events-none">
       {/* Map Filters */}
-      <div className="pointer-events-auto">
+      <div className="pointer-events-auto flex items-center gap-2">
         <MapFilters 
           allProjects={projects}
           onFilterChange={setFilteredProjects}
           onCenterOnLocation={handleCenterOnLocation}
         />
+        {/* Events toggle */}
+        <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
+          <button className={`px-2 py-1 rounded text-xs ${filterMode==='all' ? 'bg-emerald-600 text-white' : ''}`} onClick={() => setFilterMode('all')}>
+            {locale==='de'?'Alle':locale==='en'?'All':'Todos'}
+          </button>
+          <button className={`px-2 py-1 rounded text-xs ${filterMode==='today' ? 'bg-emerald-600 text-white' : ''}`} onClick={() => setFilterMode('today')}>
+            {locale==='de'?'Heute':locale==='en'?'Today':'Hoy'}
+          </button>
+          <button className={`px-2 py-1 rounded text-xs ${filterMode==='permanent' ? 'bg-emerald-600 text-white' : ''}`} onClick={() => setFilterMode('permanent')}>
+            {locale==='de'?'Dauerhaft':locale==='en'?'Permanent':'Permanentes'}
+          </button>
+        </div>
       </div>
       {/* Right Controls (calendar button removed) */}
       <div className="flex gap-2 pointer-events-auto" />
