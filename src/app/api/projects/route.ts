@@ -1,3 +1,4 @@
+import PROJECTS from "@/data/projects";
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabaseClient";
 
@@ -7,20 +8,21 @@ export const revalidate = false;
 
 export async function GET() {
   try {
-    let data: unknown = [];
+    // Try Supabase first
     try {
       const supabase = getSupabase();
       const res = await supabase
         .from("projects")
         .select("*")
         .order("created_at", { ascending: false });
-      if (res.error) throw res.error;
-      data = res.data;
+      if (!res.error && Array.isArray(res.data) && res.data.length) {
+        return NextResponse.json(res.data);
+      }
     } catch {
-      // fallback: no env or table → return empty list to avoid 500s in dev
-      data = [];
+      // ignore and fall back to local dataset
     }
-    return NextResponse.json(data);
+    // Fallback to in-repo dataset so the app always works
+    return NextResponse.json(PROJECTS);
   } catch (e) {
     const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
@@ -38,6 +40,26 @@ export async function POST(req: NextRequest) {
       .single();
     if (error) throw error;
     return NextResponse.json(data, { status: 201 });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const supabase = getSupabase();
+    const body = await req.json();
+    const { id, ...rest } = body;
+    if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
+    const { data, error } = await supabase
+      .from("projects")
+      .update(rest)
+      .eq('id', id)
+      .select("*")
+      .maybeSingle();
+    if (error) throw error;
+    return NextResponse.json(data);
   } catch (e) {
     const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });

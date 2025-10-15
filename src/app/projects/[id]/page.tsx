@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PROJECTS from "@/data/projects";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 import ProjectNotFound from "@/components/ProjectNotFound";
 import { impactTagLabel, projectDescriptionLabel } from "@/lib/i18n";
@@ -154,15 +155,7 @@ const IMPACT_TAGS_BY_CATEGORY: Record<string, { label: string; emoji: string; co
 
 // Required for static export
 export async function generateStaticParams() {
-  // Generate static params for common project IDs
-  return [
-    { id: 'p1' },
-    { id: 'p2' },
-    { id: 'p3' },
-    { id: 'p4' },
-    { id: 'p5' },
-    { id: 'p6' },
-  ];
+  return PROJECTS.map((p) => ({ id: String(p.id) }));
 }
 
 async function fetchProject(id: string): Promise<Project | null> {
@@ -182,28 +175,53 @@ export default async function ProjectPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const project = (await fetchProject(id)) ?? FALLBACK_DETAILS[id];
+  const project = (await fetchProject(id)) ?? (PROJECTS.find((p) => String(p.id) === String(id)) as any) ?? FALLBACK_DETAILS[id];
 
   if (!project) {
     return <ProjectNotFound />;
   }
 
-  const details: ProjectDetails = {
-    ...(FALLBACK_DETAILS[id] ?? (project as ProjectDetails)),
-    // If API provided values, prefer them
-    id: project.id,
-    name: project.name,
-    name_en: (project as any).name_en,
-    name_de: (project as any).name_de,
-    category: project.category,
-    lat: project.lat,
-    lng: project.lng,
-    city: project.city,
-    country: project.country,
-    spots: project.spots,
-    description_en: (project as any).description_en,
-    description_de: (project as any).description_de,
-  } as ProjectDetails;
+  const base: ProjectDetails = (FALLBACK_DETAILS[id] as ProjectDetails) ?? {
+    id: String(project?.id ?? id),
+    name: project?.name ?? "",
+    category: (project as any)?.category ?? "Comunidad",
+    lat: (project as any)?.lat ?? 52.52,
+    lng: (project as any)?.lng ?? 13.405,
+    city: (project as any)?.city ?? "Berlín",
+    country: (project as any)?.country ?? "Alemania",
+    spots: (project as any)?.spots,
+    volunteers: 0,
+    budgetRaisedEur: 0,
+    budgetGoalEur: 10000,
+    image: (project as any)?.image_url ?? "/window.svg",
+    description: (project as any)?.description ?? "",
+    name_en: (project as any)?.name_en,
+    name_de: (project as any)?.name_de,
+    description_en: (project as any)?.description_en,
+    description_de: (project as any)?.description_de,
+  };
+
+  const details = {
+    ...base,
+    // Prefer API/project values when present
+    id: String((project as any)?.id ?? base.id),
+    name: (project as any)?.name ?? base.name,
+    name_en: (project as any)?.name_en ?? base.name_en,
+    name_de: (project as any)?.name_de ?? base.name_de,
+    category: (project as any)?.category ?? base.category,
+    lat: (project as any)?.lat ?? base.lat,
+    lng: (project as any)?.lng ?? base.lng,
+    city: (project as any)?.city ?? base.city,
+    country: (project as any)?.country ?? base.country,
+    spots: (project as any)?.spots ?? base.spots,
+    description: (project as any)?.description ?? (base.description ?? ""),
+    description_en: (project as any)?.description_en ?? base.description_en,
+    description_de: (project as any)?.description_de ?? base.description_de,
+    image: (project as any)?.image_url ?? base.image,
+    volunteers: (base as any).volunteers ?? 0,
+    budgetRaisedEur: (base as any).budgetRaisedEur ?? 0,
+    budgetGoalEur: (base as any).budgetGoalEur ?? 10000,
+  } as unknown as ProjectDetails;
 
   const progress = Math.min(
     100,
@@ -217,7 +235,7 @@ export default async function ProjectPage({
   return (
     <ProjectDetailClient
       id={id}
-      details={details}
+      details={details as any}
       impactTags={(IMPACT_TAGS_BY_CATEGORY[details.category] ?? [])}
       paypalLink={paypalLink}
       stripeLink={stripeLink}
