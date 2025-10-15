@@ -25,6 +25,7 @@ type ProjectDetails = {
   description_en?: string;
   description_de?: string;
   info_url?: string;
+  address?: string;
 };
 
 export default function ProjectDetailClient({ id, details, impactTags, paypalLink, stripeLink }: {
@@ -89,6 +90,9 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
         <div className="text-sm text-gray-400">
           {locationLabel(details.city, locale)}, {locationLabel(details.country, locale)} · {t("category")}: {categoryLabel(details.category, locale)}
         </div>
+        {details.address && (
+          <div className="text-xs text-gray-500">{details.address}</div>
+        )}
       </div>
 
       <div className="grid lg:grid-cols-[2fr,3fr] gap-6 items-start">

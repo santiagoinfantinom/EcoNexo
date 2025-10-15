@@ -22,6 +22,7 @@ export type Project = {
   city: string;
   country: string;
   spots?: number;
+  address?: string;
 };
 
 // Canonical in-repo dataset used by map, API, and static params
@@ -113,6 +114,7 @@ export const PROJECTS: Project[] = [
     spots: 10,
     image_url: "/leaflet/marker-icon.png",
     info_url: "https://www.citylab-berlin.org/",
+    address: "Platz der Luftbrücke 4, 12101 Berlin, Germany",
   },
   {
     id: "b2",
@@ -127,6 +129,7 @@ export const PROJECTS: Project[] = [
     spots: 5,
     image_url: "/leaflet/marker-icon.png",
     info_url: "https://re-fresh.global/",
+    address: "Luckenwalder Str. 6b, 10963 Berlin, Germany",
   },
   {
     id: "b3",
@@ -140,6 +143,7 @@ export const PROJECTS: Project[] = [
     country: "Alemania",
     image_url: "/leaflet/marker-icon.png",
     info_url: "http://kunstquartier-bethanien.de/",
+     address: "Mariannenplatz 2, 10997 Berlin, Germany",
   },
   {
     id: "b4",
@@ -153,6 +157,7 @@ export const PROJECTS: Project[] = [
     country: "Alemania",
     image_url: "/leaflet/marker-icon.png",
     info_url: "https://www.nachbarschaftsgarten-prinzenallee.de/",
+    address: "Prinzenallee 58, 13359 Berlin, Germany",
   },
   {
     id: "b5",
@@ -166,6 +171,7 @@ export const PROJECTS: Project[] = [
     country: "Alemania",
     image_url: "/leaflet/marker-icon.png",
     info_url: "https://repaircafe.org/",
+    address: "Karl-Marx-Str. 75, 12043 Berlin, Germany",
   },
   // Paris
   { id: "par1", name: "Repair Café Paris", category: "Medio ambiente", lat: 48.8566, lng: 2.3522, city: "París", country: "Francia", info_url: "https://repaircafe.org/en/visit/repair-cafe-paris/" },
