@@ -163,12 +163,16 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
               {p.spots !== undefined && (
                 <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
               )}
-              <Link
-                href={`/projects/${p.id}`}
-                className="text-green-700 underline text-sm mt-1"
-              >
-                {t("viewDetails")}
-              </Link>
+              <div className="flex gap-2 mt-1">
+                <Link href={`/projects/${p.id}`} className="text-green-700 underline text-sm">
+                  {t("viewDetails")}
+                </Link>
+                {(p as any).info_url && (
+                  <a href={(p as any).info_url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline text-sm">
+                    {locale === 'de' ? 'Mehr Info' : locale === 'en' ? 'More info' : 'Más info'}
+                  </a>
+                )}
+              </div>
             </div>
           </Popup>
         </Marker>

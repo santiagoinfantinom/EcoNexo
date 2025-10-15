@@ -24,6 +24,7 @@ type ProjectDetails = {
   description: string;
   description_en?: string;
   description_de?: string;
+  info_url?: string;
 };
 
 export default function ProjectDetailClient({ id, details, impactTags, paypalLink, stripeLink }: {
@@ -143,6 +144,11 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
             <Link href={`/projects/${details.id}/voluntariado`} className="bg-green-700 text-white rounded px-4 py-2 font-medium">{t("beVolunteer")}</Link>
             <a href={paypalLink} target="_blank" rel="noopener noreferrer" className="border rounded px-4 py-2 font-medium hover:bg-gray-50">{t("donatePaypal")}</a>
             <a href={stripeLink} target="_blank" rel="noopener noreferrer" className="border rounded px-4 py-2 font-medium hover:bg-gray-50">{t("donateStripe")}</a>
+            {details.info_url && (
+              <a href={details.info_url} target="_blank" rel="noopener noreferrer" className="border rounded px-4 py-2 font-medium hover:bg-gray-50">
+                {locale === 'de' ? 'Mehr Info' : locale === 'en' ? 'More info' : 'Más info'}
+              </a>
+            )}
             <button onClick={toggleFavorite} className={`rounded px-4 py-2 font-medium ${favorite ? 'bg-amber-200' : 'border hover:bg-gray-50'}`}>
               {favorite ? '★ ' + t('saved') : '☆ ' + t('save')}
             </button>

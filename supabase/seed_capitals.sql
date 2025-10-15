@@ -1,15 +1,41 @@
 -- Seed: minimal initiatives in EU capitals
 insert into public.projects (id,name,category,lat,lng,city,country)
 values
+  -- Berlin (ya existentes)
   ('b1','CityLAB Berlin','Comunidad',52.4851,13.3950,'Berlín','Alemania'),
   ('b2','Re-Fresh Global (Textile Recycling)','Medio ambiente',52.4973,13.3768,'Berlín','Alemania'),
   ('b3','Kunstquartier Bethanien','Comunidad',52.5030,13.4260,'Berlín','Alemania'),
   ('b4','Prinzenallee Community Garden','Alimentación',52.5534,13.3858,'Berlín','Alemania'),
   ('b5','Repair Café Neukölln','Medio ambiente',52.4794,13.4328,'Berlín','Alemania'),
+  -- Paris (5)
   ('par1','Repair Café Paris','Medio ambiente',48.8566,2.3522,'París','Francia'),
+  ('par2','La REcyclerie','Medio ambiente',48.8934,2.3294,'París','Francia'),
+  ('par3','Les Grands Voisins','Comunidad',48.8418,2.3293,'París','Francia'),
+  ('par4','Ferme urbaine de Paris - Nature Urbaine','Alimentación',48.8331,2.2882,'París','Francia'),
+  ('par5','Zero Waste Paris','Medio ambiente',48.8667,2.3333,'París','Francia'),
+  -- Madrid (5)
   ('mad1','Huerto Urbano Madrid','Alimentación',40.4168,-3.7038,'Madrid','España'),
+  ('mad2','Madrid Agrocomposta','Medio ambiente',40.4310,-3.7000,'Madrid','España'),
+  ('mad3','La Casa Encendida · Programación verde','Comunidad',40.4066,-3.7025,'Madrid','España'),
+  ('mad4','Medialab Matadero · Ciudad Prototipo','Educación',40.3909,-3.6984,'Madrid','España'),
+  ('mad5','Repair Café Madrid','Medio ambiente',40.4380,-3.7007,'Madrid','España'),
+  -- Rome (5)
   ('rom1','Roma Circular Center','Comunidad',41.9028,12.4964,'Roma','Italia'),
+  ('rom2','Orti Urbani Garbatella','Alimentación',41.8629,12.4828,'Roma','Italia'),
+  ('rom3','Mercato Circolare Testaccio','Medio ambiente',41.8762,12.4768,'Roma','Italia'),
+  ('rom4','Retake Roma','Comunidad',41.8986,12.4769,'Roma','Italia'),
+  ('rom5','Riparazioni Solidali Roma','Medio ambiente',41.9135,12.5113,'Roma','Italia'),
+  -- London (5)
   ('lon1','London Community Garden','Alimentación',51.5072,-0.1276,'Londres','Reino Unido'),
-  ('sto1','Stockholm Makerspace Repair','Medio ambiente',59.3293,18.0686,'Estocolmo','Suecia');
+  ('lon2','Circular Economy Club London','Medio ambiente',51.5155,-0.1410,'Londres','Reino Unido'),
+  ('lon3','The Restart Project (Repair)','Medio ambiente',51.5237,-0.1040,'Londres','Reino Unido'),
+  ('lon4','Incredible Edible Lambeth','Alimentación',51.4625,-0.1160,'Londres','Reino Unido'),
+  ('lon5','Impact Hub London (Sustainability)','Comunidad',51.5203,-0.0866,'Londres','Reino Unido'),
+  -- Stockholm (5)
+  ('sto1','Stockholm Makerspace Repair','Medio ambiente',59.3293,18.0686,'Estocolmo','Suecia'),
+  ('sto2','Stadsodling Stockholm (Urban Farming)','Alimentación',59.3340,18.0510,'Estocolmo','Suecia'),
+  ('sto3','Stockholm Resilience Centre outreach','Educación',59.3620,18.0550,'Estocolmo','Suecia'),
+  ('sto4','Återbruket Stockholm','Medio ambiente',59.3135,18.0215,'Estocolmo','Suecia'),
+  ('sto5','OpenLab Stockholm · Sustainable City','Comunidad',59.3472,18.0735,'Estocolmo','Suecia');
 
 
