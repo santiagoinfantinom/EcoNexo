@@ -17,6 +17,7 @@ type EventDetails = {
   description_en?: string;
   description_de?: string;
   image_url?: string;
+  website?: string; // Optional website for deriving a preview image
   date: string;
   time: string;
   duration: number;
@@ -913,6 +914,7 @@ function getLocalizedEventData(eventId: string, locale: string) {
 export default function EventDetailClient({ eventId }: { eventId: string }) {
   const { t, locale } = useI18n();
   const { user } = useAuth();
+  const [saved, setSaved] = React.useState<boolean>(false);
   
   const event = getLocalizedEventData(eventId, locale);
   
@@ -925,6 +927,10 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
   const spotsLeft = event.maxVolunteers - currentVolunteers;
   const [showRegistrationForm, setShowRegistrationForm] = React.useState(false);
 
+  // Prefer explicit image_url; otherwise, if website exists, use a live screenshot preview (WordPress mShots)
+  const websitePreview = event.website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(event.website)}?w=1600` : undefined;
+  const headerImageSrc = event.image_url || websitePreview;
+
   const handleJoin = async () => {
     if (spotsLeft <= 0) return;
     if (!user) {
@@ -932,6 +938,86 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
       return;
     }
     setShowRegistrationForm(true);
+  };
+
+  // Load saved state (guest/local + Supabase)
+  React.useEffect(() => {
+    const loadSaved = async () => {
+      try {
+        const raw = typeof window !== 'undefined' ? localStorage.getItem('econexo:saved') : null;
+        if (raw) {
+          const list: { type: 'project' | 'event'; id: string }[] = JSON.parse(raw);
+          const existsLocal = list.some((i) => i.type === 'event' && i.id === eventId);
+          if (!user || !isSupabaseConfigured()) {
+            setSaved(existsLocal);
+            return;
+          }
+        }
+      } catch {}
+
+      if (!user || !isSupabaseConfigured()) return;
+      const supabase = getSupabase();
+
+      // Reconcile guest saved into DB on login
+      try {
+        const raw = typeof window !== 'undefined' ? localStorage.getItem('econexo:saved') : null;
+        if (raw) {
+          const list: { type: 'project' | 'event'; id: string }[] = JSON.parse(raw);
+          const toInsert = list.map((i) => ({ user_id: user.id, item_type: i.type, item_id: i.id }));
+          if (toInsert.length) {
+            await supabase.from('favorites').upsert(toInsert as any, { onConflict: 'user_id,item_type,item_id' } as any);
+            localStorage.removeItem('econexo:saved');
+          }
+        }
+      } catch {}
+
+      const { data } = await supabase
+        .from('favorites')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('item_type', 'event')
+        .eq('item_id', eventId)
+        .maybeSingle();
+      setSaved(!!data);
+    };
+    loadSaved();
+  }, [user, eventId]);
+
+  const toggleSaved = async () => {
+    // Guest/local mode
+    if (!user || !isSupabaseConfigured()) {
+      try {
+        const raw = typeof window !== 'undefined' ? localStorage.getItem('econexo:saved') : null;
+        const list: { type: 'project' | 'event'; id: string }[] = raw ? JSON.parse(raw) : [];
+        const idx = list.findIndex((i) => i.type === 'event' && i.id === eventId);
+        if (idx >= 0) {
+          list.splice(idx, 1);
+          setSaved(false);
+        } else {
+          list.push({ type: 'event', id: eventId });
+          setSaved(true);
+        }
+        if (typeof window !== 'undefined') localStorage.setItem('econexo:saved', JSON.stringify(list));
+      } catch {}
+      return;
+    }
+
+    // Authenticated via Supabase
+    const supabase = getSupabase();
+    if (saved) {
+      await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('item_type', 'event')
+        .eq('item_id', eventId);
+      setSaved(false);
+    } else {
+      const { error } = await supabase
+        .from('favorites')
+        .insert({ user_id: user.id, item_type: 'event', item_id: eventId });
+      if (!error) setSaved(true);
+    }
   };
 
   const handleRegistration = async (registrationData: {
@@ -1058,14 +1144,17 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
 
         {/* Event Header */}
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 mb-6">
-          {/* Event Image */}
-          {event.image_url && (
+          {/* Event Image: show only if we have either an explicit image or a website preview */}
+          {headerImageSrc && (
             <div className="mb-6">
               <img 
-                src={event.image_url} 
-                alt={event.title} 
+                src={headerImageSrc}
+                alt={event.title}
                 className="w-full h-64 object-cover rounded-lg"
                 loading="lazy"
+                referrerPolicy="no-referrer"
+                decoding="async"
+                crossOrigin="anonymous"
               />
             </div>
           )}
@@ -1181,6 +1270,9 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
           </button>
           <button onClick={handleShare} className="px-8 py-3 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
             {t("shareEvent")}
+          </button>
+          <button onClick={toggleSaved} className={`px-8 py-3 rounded-lg font-semibold transition-colors ${saved ? 'bg-amber-200 text-slate-900' : 'border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}`}>
+            {saved ? (locale === 'de' ? 'Gespeichert' : locale === 'en' ? 'Saved' : 'Guardado') : (locale === 'de' ? 'Speichern' : locale === 'en' ? 'Save' : 'Guardar')}
           </button>
         </div>
       </div>

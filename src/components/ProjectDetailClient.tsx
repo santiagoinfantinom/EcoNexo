@@ -42,9 +42,36 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
 
   React.useEffect(() => {
     const fetchFav = async () => {
-      if (!user) return setFavorite(false);
-      if (!isSupabaseConfigured()) return setFavorite(false);
+      // 1) Check localStorage (guest mode)
+      try {
+        const raw = typeof window !== 'undefined' ? localStorage.getItem('econexo:saved') : null;
+        if (raw) {
+          const list: { type: 'project' | 'event'; id: string }[] = JSON.parse(raw);
+          const existsLocal = list.some((i) => i.type === 'project' && i.id === id);
+          if (!user || !isSupabaseConfigured()) {
+            setFavorite(existsLocal);
+            return;
+          }
+        }
+      } catch {}
+
+      // 2) If logged in + Supabase, reconcile and fetch from DB
+      if (!user || !isSupabaseConfigured()) return;
       const supabase = getSupabase();
+
+      // Reconcile: push guest saved items to DB once after login
+      try {
+        const raw = typeof window !== 'undefined' ? localStorage.getItem('econexo:saved') : null;
+        if (raw) {
+          const list: { type: 'project' | 'event'; id: string }[] = JSON.parse(raw);
+          const toInsert = list.map((i) => ({ user_id: user.id, item_type: i.type, item_id: i.id }));
+          if (toInsert.length) {
+            await supabase.from('favorites').upsert(toInsert as any, { onConflict: 'user_id,item_type,item_id' } as any);
+            localStorage.removeItem('econexo:saved');
+          }
+        }
+      } catch {}
+
       const { data } = await supabase
         .from('favorites')
         .select('id')
@@ -58,14 +85,25 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
   }, [user, id]);
 
   const toggleFavorite = async () => {
-    if (!user) {
-      alert(locale === 'de' ? 'Bitte zuerst anmelden' : locale === 'en' ? 'Please sign in first' : 'Por favor inicia sesión primero');
+    // Guest mode: localStorage
+    if (!user || !isSupabaseConfigured()) {
+      try {
+        const raw = typeof window !== 'undefined' ? localStorage.getItem('econexo:saved') : null;
+        const list: { type: 'project' | 'event'; id: string }[] = raw ? JSON.parse(raw) : [];
+        const idx = list.findIndex((i) => i.type === 'project' && i.id === id);
+        if (idx >= 0) {
+          list.splice(idx, 1);
+          setFavorite(false);
+        } else {
+          list.push({ type: 'project', id });
+          setFavorite(true);
+        }
+        if (typeof window !== 'undefined') localStorage.setItem('econexo:saved', JSON.stringify(list));
+      } catch {}
       return;
     }
-    if (!isSupabaseConfigured()) {
-      alert(locale === 'de' ? 'Supabase ist nicht konfiguriert' : locale === 'en' ? 'Supabase not configured' : 'Supabase no está configurado');
-      return;
-    }
+
+    // Authenticated: Supabase
     const supabase = getSupabase();
     if (favorite) {
       await supabase
