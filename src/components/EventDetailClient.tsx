@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import EventRegistrationForm from "./EventRegistrationForm";
 import { useAuth } from "@/lib/auth";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { trackEvent } from "@/lib/analytics";
 
 type EventDetails = {
   id: string;
@@ -993,9 +994,11 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
         if (idx >= 0) {
           list.splice(idx, 1);
           setSaved(false);
+          try { trackEvent('save_item', { type: 'event', id: eventId, action: 'remove', auth: 0 }); } catch {}
         } else {
           list.push({ type: 'event', id: eventId });
           setSaved(true);
+          try { trackEvent('save_item', { type: 'event', id: eventId, action: 'add', auth: 0 }); } catch {}
         }
         if (typeof window !== 'undefined') localStorage.setItem('econexo:saved', JSON.stringify(list));
       } catch {}
@@ -1012,11 +1015,13 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
         .eq('item_type', 'event')
         .eq('item_id', eventId);
       setSaved(false);
+      try { trackEvent('save_item', { type: 'event', id: eventId, action: 'remove', auth: 1 }); } catch {}
     } else {
       const { error } = await supabase
         .from('favorites')
         .insert({ user_id: user.id, item_type: 'event', item_id: eventId });
       if (!error) setSaved(true);
+      try { trackEvent('save_item', { type: 'event', id: eventId, action: 'add', auth: 1 }); } catch {}
     }
   };
 
@@ -1058,6 +1063,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
       
       setCurrentVolunteers((v: number) => Math.min(event.maxVolunteers, v + 1));
       setShowRegistrationForm(false);
+      try { trackEvent('register_event', { id: event.id }); } catch {}
       
       // Add event to user's participated events list
       const participatedEvents = JSON.parse(localStorage.getItem('econexo:participatedEvents') || '[]');

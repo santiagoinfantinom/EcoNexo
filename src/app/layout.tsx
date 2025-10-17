@@ -9,6 +9,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CreateEventFAB from "@/components/CreateEventFAB";
 import HeaderNav from "@/components/HeaderNav";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,14 @@ export default function RootLayout({
       <body
         className={`${interTight.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-gls-primary`}
       >
+        {/* Plausible Analytics */}
+        {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
+          <Script
+            defer
+            data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+            src="https://plausible.io/js/script.js"
+          />
+        )}
         <ThemeProvider>
           <I18nProvider>
             <AuthProvider>

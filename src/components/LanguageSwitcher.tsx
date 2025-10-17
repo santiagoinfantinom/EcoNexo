@@ -1,6 +1,7 @@
 "use client";
 import { useI18n, Locale } from "@/lib/i18n";
 import { useState, useEffect } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 const FLAGS: Record<Locale, string> = { es: "🇪🇸", en: "🇬🇧", de: "🇩🇪" };
 
@@ -30,7 +31,7 @@ export default function LanguageSwitcher() {
   return (
     <button
       aria-label="Change language"
-      onClick={() => setLocale(next)}
+      onClick={() => { setLocale(next); try { trackEvent('language_change', { to: next }); } catch {} }}
       className="fixed left-4 top-4 z-50 h-10 w-10 rounded-full bg-white/90 backdrop-blur border shadow flex items-center justify-center text-xl"
       title={next.toUpperCase()}
     >

@@ -6,6 +6,7 @@ import { useI18n, categoryLabel, impactTagLabel, projectDescriptionLabel, projec
 import ProjectImage from "@/components/ProjectImage";
 import { useAuth } from "@/lib/auth";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { trackEvent } from "@/lib/analytics";
 
 type ProjectDetails = {
   id: string;
@@ -94,9 +95,11 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
         if (idx >= 0) {
           list.splice(idx, 1);
           setFavorite(false);
+          try { trackEvent('save_item', { type: 'project', id, action: 'remove', auth: 0 }); } catch {}
         } else {
           list.push({ type: 'project', id });
           setFavorite(true);
+          try { trackEvent('save_item', { type: 'project', id, action: 'add', auth: 0 }); } catch {}
         }
         if (typeof window !== 'undefined') localStorage.setItem('econexo:saved', JSON.stringify(list));
       } catch {}
@@ -113,11 +116,13 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
         .eq('item_type', 'project')
         .eq('item_id', id);
       setFavorite(false);
+      try { trackEvent('save_item', { type: 'project', id, action: 'remove', auth: 1 }); } catch {}
     } else {
       const { error } = await supabase
         .from('favorites')
         .insert({ user_id: user.id, item_type: 'project', item_id: id });
       if (!error) setFavorite(true);
+      try { trackEvent('save_item', { type: 'project', id, action: 'add', auth: 1 }); } catch {}
     }
   };
   const progress = Math.min(100, Math.round((details.budgetRaisedEur / details.budgetGoalEur) * 100));

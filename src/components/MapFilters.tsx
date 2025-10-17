@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useI18n, categoryLabel } from "@/lib/i18n";
+import { trackEvent } from "@/lib/analytics";
 
 type FilterState = {
   categories: string[];
@@ -56,6 +57,14 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
     }
 
     onFilterChange(filtered);
+    try {
+      trackEvent('map_filter', {
+        categories: filters.categories.join(','),
+        query: filters.searchQuery || '',
+        available: filters.showOnlyAvailable ? 1 : 0,
+        distance: filters.distance || 0,
+      });
+    } catch {}
   }, [filters, allProjects, onFilterChange]);
 
   const toggleCategory = (category: string) => {
