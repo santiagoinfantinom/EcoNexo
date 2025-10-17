@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import BackButton from "@/components/BackButton";
 import { useI18n, categoryLabel, impactTagLabel, projectDescriptionLabel, projectNameLabel, locationLabel } from "@/lib/i18n";
 import ProjectImage from "@/components/ProjectImage";
 import { useAuth } from "@/lib/auth";
@@ -161,7 +162,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
       </div>
 
       <div>
-        <Link href="/" className="text-green-700 underline">{t("backToMap")}</Link>
+        <BackButton href="/" label={t("backToMap") as string} />
       </div>
     </div>
   );
