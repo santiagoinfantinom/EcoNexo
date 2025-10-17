@@ -24,13 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const title = `Evento ${id} | EcoNexo`;
   const description = "Evento de la comunidad en EcoNexo.";
   const image = `${SITE_URL}/leaflet/marker-icon.png`;
-  const url = `${SITE_URL}/eventos/${id}`;
+  const url = `${SITE_URL}/eventos/${id}/`;
   return {
     title,
     description,
     alternates: { canonical: url },
     openGraph: {
-      type: "event",
+      type: "website",
       url,
       title,
       description,

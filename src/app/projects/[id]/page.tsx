@@ -169,7 +169,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const description = project?.description || "Proyecto de impacto en EcoNexo.";
   const image = (project?.image_url as string | undefined) || 
     `${SITE_URL}/vercel.svg`;
-  const url = `${SITE_URL}/projects/${id}`;
+  const url = `${SITE_URL}/projects/${id}/`;
 
   return {
     title,

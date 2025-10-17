@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { PROJECTS } from "@/src/data/projects";
+import { PROJECTS } from "@/data/projects";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.org";
 
