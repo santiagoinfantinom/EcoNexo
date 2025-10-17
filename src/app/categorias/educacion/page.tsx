@@ -58,25 +58,25 @@ export default function EducacionPage() {
               
               {/* Project Content */}
               <div className="p-6 bg-black">
-                <h3 className="text-xl font-bold text-white mb-2">{project.title[locale]}</h3>
-                <p className="text-white opacity-80 mb-4 text-sm">{project.description[locale]}</p>
+                <h3 className="text-xl font-bold text-white mb-2">{project.title.en}</h3>
+                <p className="text-white opacity-80 mb-4 text-sm">{project.description.en}</p>
                 
                 {/* Location */}
                 <div className="flex items-center text-white opacity-70 text-sm mb-3">
                   <span className="mr-2">📍</span>
-                  <span>{project.location[locale]}</span>
+                  <span>{project.location.en}</span>
                 </div>
                 
                 {/* Impact */}
                 <div className="flex items-center text-indigo-400 text-sm mb-4">
                   <span className="mr-2">🎯</span>
-                  <span className="font-medium">{project.impact[locale]}</span>
+                  <span className="font-medium">{project.impact.en}</span>
                 </div>
                 
                 {/* Stats */}
                 <div className="flex justify-between text-sm text-white opacity-70 mb-4">
-                  <span>👥 {project.volunteers} {locale === 'es' ? 'voluntarios' : locale === 'de' ? 'Freiwillige' : 'volunteers'}</span>
-                  <span>🆓 {project.spots} {locale === 'es' ? 'cupos' : locale === 'de' ? 'Plätze' : 'spots'}</span>
+                  <span>👥 {project.volunteers} volunteers</span>
+                  <span>🆓 {project.spots} spots</span>
                 </div>
                 
                 {/* Action Button */}
