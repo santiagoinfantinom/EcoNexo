@@ -45,6 +45,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
   const { t, locale } = useI18n();
   const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
   const [filterMode, setFilterMode] = useState<'all' | 'today' | 'permanent'>('all');
+  const [heatOn, setHeatOn] = useState<boolean>(false);
+  const heatLayerRef = useRef<any | null>(null);
   // Calendar overlay removed; calendar lives on its own page now
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
@@ -143,6 +145,40 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     setFilteredProjects(next);
   }, [projects, filterMode]);
 
+  // Heatmap toggle effect
+  useEffect(() => {
+    if (!mapRef.current) return;
+    if (!heatOn) {
+      if (heatLayerRef.current) {
+        mapRef.current.removeLayer(heatLayerRef.current);
+        heatLayerRef.current = null;
+      }
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      // Load leaflet.heat dynamically from CDN to keep bundle small
+      if (!(L as any).heatLayer) {
+        await new Promise<void>((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://unpkg.com/leaflet.heat/dist/leaflet-heat.js';
+          s.async = true;
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error('Failed to load heatmap lib'));
+          document.head.appendChild(s);
+        });
+      }
+      if (cancelled) return;
+      const points = filteredProjects.map((p) => [p.lat, p.lng, 0.6]);
+      const layer = (L as any).heatLayer(points, { radius: 22, blur: 15, maxZoom: 12, minOpacity: 0.25 });
+      layer.addTo(mapRef.current!);
+      heatLayerRef.current = layer;
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [heatOn, filteredProjects]);
+
   return (
     <>
     <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
@@ -225,6 +261,12 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
           </button>
           <button className={`px-2 py-1 rounded text-xs border ${filterMode==='permanent' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('permanent')}>
             {locale==='de'?'Dauerhaft':locale==='en'?'Permanent':'Permanentes'}
+          </button>
+        </div>
+        {/* Heatmap toggle */}
+        <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1 ml-2">
+          <button className={`px-2 py-1 rounded text-xs border ${heatOn ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setHeatOn((v)=>!v)}>
+            {heatOn ? (locale==='de'?'Heatmap an':'Heatmap On') : (locale==='de'?'Heatmap aus':'Heatmap Off')}
           </button>
         </div>
       </div>
