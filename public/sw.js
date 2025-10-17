@@ -68,3 +68,31 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+
+// Push notifications
+self.addEventListener('push', (event) => {
+  try {
+    const data = event.data ? event.data.json() : {};
+    const title = data.title || 'EcoNexo';
+    const body = data.body || 'Nueva actualización';
+    const url = data.url || '/';
+    const icon = '/manifest.json';
+    event.waitUntil(self.registration.showNotification(title, { body, icon, data: { url } }));
+  } catch (e) {
+    event.waitUntil(self.registration.showNotification('EcoNexo', { body: 'Nueva notificación' }));
+  }
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = event.notification?.data?.url || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        // @ts-ignore
+        if (client.url === url && 'focus' in client) return client.focus();
+      }
+      if (clients.openWindow) return clients.openWindow(url);
+    })
+  );
+});

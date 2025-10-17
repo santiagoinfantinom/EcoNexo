@@ -4,12 +4,15 @@ import { useI18n } from "@/lib/i18n";
 import EcoTips from "./EcoTips";
 import { useEffect, useState } from "react";
 import WelcomeMessage from "./WelcomeMessage";
+import NotificationConsent from "./NotificationConsent";
 import { useAuth } from "@/lib/auth";
+import { isSupabaseConfigured } from "@/lib/supabaseClient";
 
 export default function HeaderNav() {
   const { t, locale } = useI18n();
   const [showWelcome, setShowWelcome] = useState(false);
   const { user, loading, signInWithMagicLink, signInWithOAuth, signOut } = useAuth();
+  const supaReady = isSupabaseConfigured();
   const [email, setEmail] = useState("");
   const [showSignup, setShowSignup] = useState(false);
   const [signup, setSignup] = useState<{name:string; birthdate:string; birthPlace:string; email?: string}>({ name: "", birthdate: "", birthPlace: "", email: "" });
@@ -158,6 +161,7 @@ export default function HeaderNav() {
           {t("profile")}
         </Link>
         <EcoTips />
+        <NotificationConsent />
         <button
           onClick={handleShowWelcome}
           className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium"
@@ -221,17 +225,29 @@ export default function HeaderNav() {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={async ()=>{ await signInWithOAuth('google'); }}
-                  className="flex-1 btn-gls-secondary px-3 py-2"
+                  onClick={async ()=>{
+                    const res = await signInWithOAuth('google');
+                    if (res?.error) {
+                      alert(locale === 'de' ? 'Anmeldung nicht konfiguriert' : locale === 'en' ? 'Sign-in not configured' : 'Inicio de sesión no configurado');
+                    }
+                  }}
+                  className={`flex-1 btn-gls-secondary px-3 py-2 ${!supaReady ? 'opacity-50 cursor-not-allowed' : ''}`}
                   title="Google"
+                  disabled={!supaReady}
                 >
                   {t("google")}
                 </button>
                 <button
                   type="button"
-                  onClick={async ()=>{ await signInWithOAuth('azure'); }}
-                  className="flex-1 btn-gls-secondary px-3 py-2"
+                  onClick={async ()=>{
+                    const res = await signInWithOAuth('azure');
+                    if (res?.error) {
+                      alert(locale === 'de' ? 'Anmeldung nicht konfiguriert' : locale === 'en' ? 'Sign-in not configured' : 'Inicio de sesión no configurado');
+                    }
+                  }}
+                  className={`flex-1 btn-gls-secondary px-3 py-2 ${!supaReady ? 'opacity-50 cursor-not-allowed' : ''}`}
                   title="Outlook / Microsoft"
+                  disabled={!supaReady}
                 >
                   {t("outlook")}
                 </button>
