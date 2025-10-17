@@ -9,6 +9,7 @@ interface WelcomeMessageProps {
 export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
   const { t, locale } = useI18n();
   const [isVisible, setIsVisible] = useState(false);
+  const paypalUrl = process.env.NEXT_PUBLIC_PAYPAL_URL || '#';
 
   useEffect(() => {
     // Mostrar el mensaje después de un pequeño delay para mejor UX
@@ -192,6 +193,21 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
               >
                 {locale === 'es' ? "Ver Mapa" : locale === 'de' ? "Karte anzeigen" : "View Map"}
               </button>
+            <button
+              onClick={() => {
+                if (!paypalUrl || paypalUrl === '#') return;
+                window.open(paypalUrl, '_blank', 'noopener');
+              }}
+              className={`px-8 py-3 text-lg rounded-lg font-semibold transition-colors ${
+                paypalUrl && paypalUrl !== '#'
+                  ? 'bg-amber-500 hover:bg-amber-600 text-white'
+                  : 'bg-gray-400 text-white cursor-not-allowed'
+              }`}
+              title={paypalUrl && paypalUrl !== '#' ? '' : (locale === 'de' ? 'Demnächst verfügbar' : locale === 'en' ? 'Coming soon' : 'Próximamente')}
+              disabled={!paypalUrl || paypalUrl === '#'}
+            >
+              {locale === 'de' ? 'Unterstütze uns' : locale === 'en' ? 'Support us' : 'Apóyanos'}
+            </button>
             </div>
           </div>
         </div>

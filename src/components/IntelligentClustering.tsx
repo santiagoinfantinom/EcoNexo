@@ -12,6 +12,7 @@ interface Event {
   description_en?: string;
   description_de?: string;
   image_url?: string;
+  website?: string;
   lat: number;
   lng: number;
   category: string;
@@ -352,6 +353,23 @@ export default function IntelligentClustering({
                 <h3 className="font-semibold text-slate-900 mb-1">
                   {event.title}
                 </h3>
+                {(() => {
+                  const websitePreview = event.website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(event.website)}?w=560` : undefined;
+                  const headerImageSrc = event.image_url || websitePreview;
+                  return headerImageSrc ? (
+                    <div className="w-full h-28 overflow-hidden rounded mb-2 border border-gray-200">
+                      <img
+                        src={headerImageSrc}
+                        alt={event.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                        decoding="async"
+                        crossOrigin="anonymous"
+                      />
+                    </div>
+                  ) : null;
+                })()}
                 <div className="text-sm text-slate-600 space-y-1">
                   <div>📅 {new Date(event.date).toLocaleDateString()}</div>
                   <div>👥 {event.currentVolunteers}/{event.maxVolunteers} voluntarios</div>

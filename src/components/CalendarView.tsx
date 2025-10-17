@@ -1009,8 +1009,8 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                         const project = projects.find(p => p.id === event.projectId);
                         return (
                           <div key={event.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1 min-w-0">
                                 <Link 
                                   href={`/eventos/${event.id}`}
                                   className="font-medium text-gray-800 hover:text-blue-600 transition-colors"
@@ -1041,7 +1041,25 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   </span>
                                 </div>
                               </div>
-                              <div className="flex gap-2">
+                              {/* Optional website/image preview */}
+                              {(() => {
+                                const websitePreview = (event as any).website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent((event as any).website)}?w=480` : undefined;
+                                const headerImageSrc = (event as any).image_url || websitePreview;
+                                return headerImageSrc ? (
+                                  <div className="w-32 h-20 overflow-hidden rounded-md border border-gray-200">
+                                    <img
+                                      src={headerImageSrc}
+                                      alt={event.title}
+                                      className="w-full h-full object-cover"
+                                      loading="lazy"
+                                      referrerPolicy="no-referrer"
+                                      decoding="async"
+                                      crossOrigin="anonymous"
+                                    />
+                                  </div>
+                                ) : null;
+                              })()}
+                              <div className="flex gap-2 shrink-0">
                                 <Link
                                   href={`/eventos/${event.id}`}
                                   className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"

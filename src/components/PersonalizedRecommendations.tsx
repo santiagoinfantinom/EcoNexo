@@ -32,6 +32,7 @@ interface Event {
   description_en?: string;
   description_de?: string;
   image_url?: string;
+  website?: string;
   category: string;
   date: string;
   time: string;
@@ -334,11 +335,13 @@ export default function PersonalizedRecommendations({
               className="p-4 border border-gray-200 dark:border-slate-600 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
               onClick={() => onEventClick?.(event)}
             >
-              <div className="flex items-start justify-between mb-2">
-                <h4 className="font-medium text-slate-900 dark:text-slate-100">
-                  {event.title}
-                </h4>
-                <div className="flex items-center gap-2">
+              <div className="flex items-start justify-between mb-2 gap-4">
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                    {event.title}
+                  </h4>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getScoreColor(85)}`}>
                     {getScoreLabel(85)}
                   </span>
@@ -347,6 +350,25 @@ export default function PersonalizedRecommendations({
                   </span>
                 </div>
               </div>
+
+              {/* Optional website/image preview */}
+              {(() => {
+                const websitePreview = event.website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(event.website)}?w=640` : undefined;
+                const headerImageSrc = event.image_url || websitePreview;
+                return headerImageSrc ? (
+                  <div className="w-full h-36 overflow-hidden rounded-md border border-gray-200 mb-3">
+                    <img
+                      src={headerImageSrc}
+                      alt={event.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      decoding="async"
+                      crossOrigin="anonymous"
+                    />
+                  </div>
+                ) : null;
+              })()}
 
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
                 {event.description.substring(0, 120)}...

@@ -18,6 +18,7 @@ type EventInput = {
   description_en?: string;
   description_de?: string;
   image_url?: string;
+  website?: string;
   date: string;
   city: string;
   country: string;
@@ -45,6 +46,8 @@ export default function EventosPage() {
     city: "",
     country: "",
     address: "",
+    website: "",
+    image_url: "",
     category: "Medio ambiente",
     optionalCategories: [],
     capacity: undefined,
@@ -109,6 +112,8 @@ export default function EventosPage() {
           city: form.city,
           country: form.country,
           address: form.address,
+          website: form.website || undefined,
+          image_url: form.image_url || undefined,
           category: form.category,
           optional_categories: form.optionalCategories,
           capacity: form.capacity,
@@ -124,7 +129,7 @@ export default function EventosPage() {
         };
         setCreated(mockEvent);
         setList((prev) => [mockEvent, ...prev]);
-        setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", address: "", capacity: undefined, notes: "" }));
+        setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", address: "", website: "", image_url: "", capacity: undefined, notes: "" }));
         return;
       }
       const saved = await res.json();
@@ -140,7 +145,7 @@ export default function EventosPage() {
         });
       } catch {}
       // reset parcial
-      setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", address: "", capacity: undefined, notes: "" }));
+      setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", address: "", website: "", image_url: "", capacity: undefined, notes: "" }));
     } catch (err) {
       console.error(err);
       setCreated(form); // fallback en memoria
@@ -237,6 +242,66 @@ export default function EventosPage() {
             onChange={(e) => update("address", e.target.value)}
             placeholder={t("addressPh")}
           />
+        </div>
+
+        {/* Website URL (optional) */}
+        <div className="grid gap-1">
+          <label className="text-sm text-slate-700 dark:text-slate-300">Website ({t("optional")})</label>
+          <input
+            type="url"
+            className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
+            value={form.website ?? ""}
+            onChange={(e) => update("website", e.target.value)}
+            placeholder={locale === 'de' ? 'https://beispiel.de' : locale === 'en' ? 'https://example.com' : 'https://ejemplo.com'}
+          />
+        </div>
+
+        {/* Image URL (optional) */}
+        <div className="grid gap-1">
+          <label className="text-sm text-slate-700 dark:text-slate-300">{t("image")} URL ({t("optional")})</label>
+          <input
+            type="url"
+            className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
+            value={form.image_url ?? ""}
+            onChange={(e) => update("image_url", e.target.value)}
+            placeholder={locale === 'de' ? 'Bild-URL (optional)' : locale === 'en' ? 'Image URL (optional)' : 'URL de imagen (opcional)'}
+          />
+        </div>
+
+        {/* JPG Upload (optional) */}
+        <div className="grid gap-1">
+          <label className="text-sm text-slate-700 dark:text-slate-300">{t("image")} JPG ({t("optional")})</label>
+          <input
+            type="file"
+            accept="image/jpeg"
+            className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = () => {
+                const result = typeof reader.result === 'string' ? reader.result : '';
+                update('image_url', result);
+              };
+              reader.readAsDataURL(file);
+            }}
+          />
+          {form.image_url && (
+            <div className="mt-2">
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">{locale === 'de' ? 'Vorschau' : locale === 'en' ? 'Preview' : 'Vista previa'}</div>
+              <div className="w-full h-40 overflow-hidden rounded border border-gray-300 dark:border-slate-600">
+                <img
+                  src={form.image_url}
+                  alt="preview"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  decoding="async"
+                  crossOrigin="anonymous"
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="grid gap-2">
