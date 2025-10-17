@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import Script from "next/script";
 import PROJECTS from "@/data/projects";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 import ProjectNotFound from "@/components/ProjectNotFound";
@@ -158,6 +160,39 @@ export async function generateStaticParams() {
   return PROJECTS.map((p) => ({ id: String(p.id) }));
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.org";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const project = PROJECTS.find((p) => String(p.id) === String(id)) as any;
+  const title = project?.name ? `${project.name} | EcoNexo` : `Proyecto ${id} | EcoNexo`;
+  const description = project?.description || "Proyecto de impacto en EcoNexo.";
+  const image = (project?.image_url as string | undefined) || 
+    `${SITE_URL}/vercel.svg`;
+  const url = `${SITE_URL}/projects/${id}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      url,
+      title,
+      description,
+      images: [{ url: image, width: 1200, height: 630, alt: project?.name || `Proyecto ${id}` }],
+      siteName: "EcoNexo",
+      locale: "es_ES",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
+
 async function fetchProject(id: string): Promise<Project | null> {
   try {
     const res = await fetch(`/api/projects`, { cache: "no-store" });
@@ -233,13 +268,27 @@ export default async function ProjectPage({
 
   // Translate impact tags based on current locale on the client, so pass raw labels
   return (
-    <ProjectDetailClient
-      id={id}
-      details={details as any}
-      impactTags={(IMPACT_TAGS_BY_CATEGORY[details.category] ?? [])}
-      paypalLink={paypalLink}
-      stripeLink={stripeLink}
-    />
+    <>
+      <Script id="jsonld-project" type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: details.name,
+          description: details.description,
+          image: details.image,
+          url: `${SITE_URL}/projects/${id}`,
+          areaServed: details.city ? `${details.city}, ${details.country}` : details.country,
+          about: details.category,
+        })}
+      </Script>
+      <ProjectDetailClient
+        id={id}
+        details={details as any}
+        impactTags={(IMPACT_TAGS_BY_CATEGORY[details.category] ?? [])}
+        paypalLink={paypalLink}
+        stripeLink={stripeLink}
+      />
+    </>
   );
 }
 
