@@ -8,7 +8,7 @@ const FLAGS: Record<Locale, string> = { es: "🇪🇸", en: "🇬🇧", de: "�
 export default function LanguageSwitcher() {
   const { locale, setLocale } = useI18n();
   const [mounted, setMounted] = useState(false);
-  const order: Locale[] = ["en", "es", "de"];
+  const order: Locale[] = ["es", "en", "de"];
   const next = order[(order.indexOf(locale) + 1) % order.length];
 
   useEffect(() => {
