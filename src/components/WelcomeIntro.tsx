@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 
@@ -18,7 +18,7 @@ export default function WelcomeIntro() {
     return () => clearTimeout(timer);
   }, []);
 
-  const features = [
+  const features = useMemo(() => [
     {
       icon: '🌍',
       title: t('welcomeIntroLanguageTitle'),
@@ -55,7 +55,7 @@ export default function WelcomeIntro() {
       description: t('welcomeIntroProfileDescription'),
       action: 'profile'
     }
-  ];
+  ], [t]);
 
   const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
     setLocale(selectedLocale);

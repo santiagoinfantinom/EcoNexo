@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { trackEvent } from '@/lib/analytics';
 import { useI18n } from '@/lib/i18n';
 
@@ -61,7 +61,7 @@ export function OnboardingModal() {
     trackEvent('Language Selected', { language: selectedLocale });
   };
 
-  const steps: OnboardingStep[] = [
+  const steps: OnboardingStep[] = useMemo(() => [
     {
       id: 'welcome',
       title: t('onboardingWelcome'),
@@ -108,7 +108,7 @@ export function OnboardingModal() {
       action: 'join-chat',
       actionText: t('onboardingJoinChat')
     }
-  ];
+  ], [t]);
 
   const handleNext = () => {
     const currentStepData = steps[currentStep];
