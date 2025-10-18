@@ -72,13 +72,13 @@ export default function ProfileComponent() {
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        alert('Por favor selecciona un archivo de imagen válido');
+        alert(t('pleaseSelectValidImage' + locale.charAt(0).toUpperCase() + locale.slice(1)));
         return;
       }
       
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert('La imagen es demasiado grande. Por favor selecciona una imagen menor a 5MB');
+        alert(t('imageTooLarge' + locale.charAt(0).toUpperCase() + locale.slice(1)));
         return;
       }
       
@@ -96,7 +96,7 @@ export default function ProfileComponent() {
         }
       };
       reader.onerror = () => {
-        alert('Error al cargar la imagen. Por favor intenta de nuevo.');
+        alert(t('errorLoadingImage' + locale.charAt(0).toUpperCase() + locale.slice(1)));
       };
       reader.readAsDataURL(file);
     }
@@ -163,7 +163,7 @@ export default function ProfileComponent() {
                   className="bg-white hover:bg-green-50 text-green-600 px-4 py-2 rounded-lg transition-colors text-sm font-medium disabled:opacity-50"
                 >
                   {isLoading ? 
-                    (locale === 'de' ? "Speichern..." : locale === 'en' ? "Saving..." : "Guardando...") : 
+                    (t('saving' + locale.charAt(0).toUpperCase() + locale.slice(1))) : 
                     t("saveChanges")
                   }
                 </button>
@@ -240,7 +240,7 @@ export default function ProfileComponent() {
                   }}
                   className="text-sm text-gray-500 hover:text-gray-700 font-medium"
                 >
-                  Usar Logo
+{t("useLogo")}
                 </button>
               )}
             </div>

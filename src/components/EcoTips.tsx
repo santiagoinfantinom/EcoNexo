@@ -11,159 +11,6 @@ type EcoTip = {
   difficulty: "easy" | "medium" | "hard";
 };
 
-const ECO_TIPS: Record<string, EcoTip[]> = {
-  es: [
-    {
-      id: "bank",
-      category: "Finanzas",
-      title: "Cambia a un banco sostenible",
-      description: "Los bancos tradicionales financian proyectos contaminantes. Busca bancos que inviertan en energías renovables y proyectos sostenibles. Ejemplos: GLS Bank, Triodos Bank.",
-      impact: "high",
-      difficulty: "medium"
-    },
-    {
-      id: "transport",
-      category: "Transporte",
-      title: "Usa transporte público",
-      description: "Reduce tu huella de carbono usando autobús, metro o tren en lugar del coche privado.",
-      impact: "high",
-      difficulty: "easy"
-    },
-    {
-      id: "vegetarian",
-      category: "Alimentación",
-      title: "Reduce el consumo de carne",
-      description: "La producción de carne genera más emisiones que el transporte. Prueba opciones vegetarianas o veganas.",
-      impact: "high",
-      difficulty: "medium"
-    },
-    {
-      id: "energy",
-      category: "Energía",
-      title: "Cambia a energías renovables",
-      description: "Contrata electricidad de fuentes renovables como solar o eólica para tu hogar.",
-      impact: "high",
-      difficulty: "easy"
-    },
-    {
-      id: "waste",
-      category: "Residuos",
-      title: "Reduce, reutiliza, recicla",
-      description: "Minimiza los residuos comprando productos con menos embalaje y reutilizando lo que puedas.",
-      impact: "medium",
-      difficulty: "easy"
-    },
-    {
-      id: "water",
-      category: "Agua",
-      title: "Ahorra agua",
-      description: "Instala dispositivos de ahorro de agua y reduce el tiempo en la ducha.",
-      impact: "medium",
-      difficulty: "easy"
-    }
-  ],
-  en: [
-    {
-      id: "bank",
-      category: "Finance",
-      title: "Switch to a sustainable bank",
-      description: "Traditional banks finance polluting projects. Look for banks that invest in renewable energy and sustainable projects. Examples: GLS Bank, Triodos Bank.",
-      impact: "high",
-      difficulty: "medium"
-    },
-    {
-      id: "transport",
-      category: "Transport",
-      title: "Use public transportation",
-      description: "Reduce your carbon footprint by using bus, metro or train instead of private car.",
-      impact: "high",
-      difficulty: "easy"
-    },
-    {
-      id: "vegetarian",
-      category: "Food",
-      title: "Reduce meat consumption",
-      description: "Meat production generates more emissions than transport. Try vegetarian or vegan options.",
-      impact: "high",
-      difficulty: "medium"
-    },
-    {
-      id: "energy",
-      category: "Energy",
-      title: "Switch to renewable energy",
-      description: "Contract electricity from renewable sources like solar or wind for your home.",
-      impact: "high",
-      difficulty: "easy"
-    },
-    {
-      id: "waste",
-      category: "Waste",
-      title: "Reduce, reuse, recycle",
-      description: "Minimize waste by buying products with less packaging and reusing what you can.",
-      impact: "medium",
-      difficulty: "easy"
-    },
-    {
-      id: "water",
-      category: "Water",
-      title: "Save water",
-      description: "Install water-saving devices and reduce shower time.",
-      impact: "medium",
-      difficulty: "easy"
-    }
-  ],
-  de: [
-    {
-      id: "bank",
-      category: "Finanzen",
-      title: "Wechsle zu einer nachhaltigen Bank",
-      description: "Traditionelle Banken finanzieren umweltschädliche Projekte. Suche nach Banken, die in erneuerbare Energien investieren. Beispiele: GLS Bank, Triodos Bank.",
-      impact: "high",
-      difficulty: "medium"
-    },
-    {
-      id: "transport",
-      category: "Transport",
-      title: "Nutze öffentliche Verkehrsmittel",
-      description: "Reduziere deinen CO2-Fußabdruck durch die Nutzung von Bus, U-Bahn oder Zug statt dem privaten Auto.",
-      impact: "high",
-      difficulty: "easy"
-    },
-    {
-      id: "vegetarian",
-      category: "Ernährung",
-      title: "Reduziere den Fleischkonsum",
-      description: "Die Fleischproduktion verursacht mehr Emissionen als der Transport. Probiere vegetarische oder vegane Optionen.",
-      impact: "high",
-      difficulty: "medium"
-    },
-    {
-      id: "energy",
-      category: "Energie",
-      title: "Wechsle zu erneuerbaren Energien",
-      description: "Beziehe Strom aus erneuerbaren Quellen wie Solar- oder Windenergie für dein Zuhause.",
-      impact: "high",
-      difficulty: "easy"
-    },
-    {
-      id: "waste",
-      category: "Abfall",
-      title: "Reduziere, wiederverwende, recycel",
-      description: "Minimiere Abfälle, indem du Produkte mit weniger Verpackung kaufst und wiederverwendest.",
-      impact: "medium",
-      difficulty: "easy"
-    },
-    {
-      id: "water",
-      category: "Wasser",
-      title: "Spare Wasser",
-      description: "Installiere wassersparende Geräte und reduziere die Duschzeit.",
-      impact: "medium",
-      difficulty: "easy"
-    }
-  ]
-};
-
 export default function EcoTips() {
   const { t, locale } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
@@ -189,7 +36,62 @@ export default function EcoTips() {
     };
   }, [isOpen]);
 
-  const tips = ECO_TIPS[locale] || ECO_TIPS["es"];
+  // Helper function to get translated eco tips
+  const getEcoTips = (): EcoTip[] => {
+    const tips: EcoTip[] = [
+      {
+        id: "bank",
+        category: t('ecoTipCategoryFinance'),
+        title: t('ecoTipBankTitle'),
+        description: t('ecoTipBankDescription'),
+        impact: "high",
+        difficulty: "medium"
+      },
+      {
+        id: "transport",
+        category: t('ecoTipCategoryTransport'),
+        title: t('ecoTipTransportTitle'),
+        description: t('ecoTipTransportDescription'),
+        impact: "high",
+        difficulty: "easy"
+      },
+      {
+        id: "vegetarian",
+        category: t('ecoTipCategoryFood'),
+        title: t('ecoTipVegetarianTitle'),
+        description: t('ecoTipVegetarianDescription'),
+        impact: "high",
+        difficulty: "medium"
+      },
+      {
+        id: "energy",
+        category: t('ecoTipCategoryEnergy'),
+        title: t('ecoTipEnergyTitle'),
+        description: t('ecoTipEnergyDescription'),
+        impact: "high",
+        difficulty: "easy"
+      },
+      {
+        id: "waste",
+        category: t('ecoTipCategoryWaste'),
+        title: t('ecoTipWasteTitle'),
+        description: t('ecoTipWasteDescription'),
+        impact: "medium",
+        difficulty: "easy"
+      },
+      {
+        id: "water",
+        category: t('ecoTipCategoryWater'),
+        title: t('ecoTipWaterTitle'),
+        description: t('ecoTipWaterDescription'),
+        impact: "medium",
+        difficulty: "easy"
+      }
+    ];
+    return tips;
+  };
+
+  const tips = getEcoTips();
   const categories = [...new Set(tips.map(tip => tip.category))];
 
   const getImpactColor = (impact: string) => {
@@ -252,7 +154,7 @@ export default function EcoTips() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-nav hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200 text-slate-500 dark:text-slate-400"
+        className="text-white hover:text-green-300 transition-colors duration-200 font-medium px-2 py-1"
       >
         {t("ecoTips")}
       </button>

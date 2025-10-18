@@ -1,323 +1,199 @@
 "use client";
-import dynamic from "next/dynamic";
-import PROJECTS, { Project as SharedProject, Category as SharedCategory } from "@/data/projects";
-import { useI18n, categoryLabel } from "@/lib/i18n";
-import { useEffect, useMemo, useState } from "react";
-import WelcomeMessage from "@/components/WelcomeMessage";
-import MobileFeatures from "@/components/MobileFeatures";
+
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
-
-type CategoryKey = "environment" | "education" | "health" | "community" | "oceans" | "food";
-
-type Category =
-  | "Medio ambiente"
-  | "Educación"
-  | "Salud"
-  | "Comunidad"
-  | "Océanos"
-  | "Alimentación";
-
-type Project = {
-  id: string;
-  name: string;
-  name_en?: string;
-  name_de?: string;
-  description?: string;
-  description_en?: string;
-  description_de?: string;
-  image_url?: string;
-  category: Category;
-  lat: number;
-  lng: number;
-  city: string;
-  country: string;
-  spots?: number;
-};
-
-const Map = dynamic(() => import("../components/EuropeMap"), { ssr: false });
-
-// Category mapping for translations
-const CATEGORY_MAPPING: Record<CategoryKey, Category> = {
-  environment: "Medio ambiente",
-  education: "Educación", 
-  health: "Salud",
-  community: "Comunidad",
-  oceans: "Océanos",
-  food: "Alimentación"
-};
-
-// Category to URL mapping
-const CATEGORY_URLS: Record<Category, string> = {
-  "Medio ambiente": "/categorias/medio-ambiente",
-  "Educación": "/categorias/educacion",
-  "Salud": "/categorias/salud",
-  "Comunidad": "/categorias/comunidad",
-  "Océanos": "/categorias/oceanos",
-  "Alimentación": "/categorias/alimentacion"
-};
-
-const ALL_CATEGORIES: Category[] = [
-  "Medio ambiente",
-  "Educación",
-  "Salud",
-  "Comunidad",
-  "Océanos",
-  "Alimentación",
-];
-
-// Use canonical dataset
-const DUMMY_PROJECTS: Project[] = PROJECTS as unknown as Project[];
+import { useAuth } from "@/lib/auth";
+import WelcomeMessage from "@/components/WelcomeMessage";
+import DashboardProjectCards from "@/components/DashboardProjectCards";
+import EcoTips from "@/components/EcoTips";
+import { useState } from "react";
 
 export default function Home() {
-  const [active, setActive] = useState<Category | "Todas">("Todas");
-  const [remote, setRemote] = useState<Project[] | null>(null);
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [showIntro, setShowIntro] = useState(true);
-  const [mobileLocation, setMobileLocation] = useState<{lat: number, lng: number} | null>(null);
   const { t, locale } = useI18n();
-  
-  // Get translated category labels
-  const getTranslatedCategory = (category: Category) => {
-    return categoryLabel(category, locale);
-  };
-  
-  const COLOR_BY_CATEGORY: Record<Category, { bg: string; text: string; border: string }> = {
-    "Medio ambiente": { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },
-    "Educación": { bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-200" },
-    "Salud": { bg: "bg-rose-100", text: "text-rose-800", border: "border-rose-200" },
-    "Comunidad": { bg: "bg-amber-100", text: "text-amber-900", border: "border-amber-200" },
-    "Océanos": { bg: "bg-cyan-100", text: "text-cyan-800", border: "border-cyan-200" },
-    "Alimentación": { bg: "bg-lime-100", text: "text-lime-800", border: "border-lime-200" },
-  };
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch("/api/projects");
-        if (!res.ok) return; // fallback a DUMMY_PROJECTS
-        const data: Project[] = await res.json();
-        if (Array.isArray(data) && data.length) setRemote(data);
-      } catch {}
-    }
-    load();
-  }, []);
-
-  // Mostrar mensaje de bienvenida INMEDIATAMENTE para nuevos usuarios
-  useEffect(() => {
-    const hasSeenWelcome = localStorage.getItem('econexo-welcome-seen');
-    if (!hasSeenWelcome) {
-      setShowWelcome(true);
-    }
-    // Show intro once per session regardless of prior dismissals
-    try {
-      const sessionSeen = sessionStorage.getItem('econexo:intro-seen');
-      setShowIntro(!sessionSeen);
-    } catch {
-      setShowIntro(true);
-    }
-  }, []);
-  const filtered = useMemo(
-    () =>
-      (active === "Todas"
-        ? (remote ?? DUMMY_PROJECTS)
-        : (remote ?? DUMMY_PROJECTS).filter((p) => p.category === active)),
-    [active, remote]
-  );
-  // TODO: fetch from API when env is set
-
-  const handleCloseWelcome = () => {
-    setShowWelcome(false);
-    localStorage.setItem('econexo-welcome-seen', 'true');
-  };
-
-  const handleLocationUpdate = (location: {latitude: number, longitude: number, accuracy: number}) => {
-    setMobileLocation({lat: location.latitude, lng: location.longitude});
-    // Centrar el mapa en la ubicación móvil
-    window.dispatchEvent(new CustomEvent('econexo:center', { 
-      detail: { lat: location.latitude, lon: location.longitude } 
-    }));
-  };
-
-  const handleImageCapture = (imageUrl: string) => {
-    // Aquí podrías implementar lógica para subir la imagen
-    console.log('Image captured:', imageUrl);
-    // Por ejemplo, mostrar un modal para usar la imagen en un evento
-  };
+  const { user } = useAuth();
+  const [showWelcome, setShowWelcome] = useState(false);
 
   return (
-    <>
-      {showWelcome && <WelcomeMessage onClose={handleCloseWelcome} />}
-      {showIntro && (
-        <section className="bg-ecosia-green text-gls-secondary px-6 py-6">
-          <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-6 items-start">
-            <div className="flex-1">
-              <p className="text-xs uppercase tracking-wider opacity-80 mb-2">{t('sustainableProjectsSince2024')}</p>
-              <h1 className="text-3xl md:text-4xl font-extrabold leading-tight mb-3">{t('connectingEurope')}<br />{t('transformingFuture')}</h1>
-              <p className="text-base md:text-lg opacity-90">{t('discoverEnvironmentalProjects')}</p>
-            </div>
-            <button
-              onClick={() => { setShowIntro(false); try { sessionStorage.setItem('econexo:intro-seen','true'); } catch {} }}
-              className="btn-gls-primary whitespace-nowrap"
-            >
-              {locale === 'de' ? 'Weiter' : locale === 'en' ? 'Continue' : 'Continuar'}
-            </button>
-          </div>
-        </section>
-      )}
-      <div className="layout-gls">
-      {/* Sección izquierda estilo GLS Bank */}
-      <div className="layout-gls-left relative z-10">
-        <div className="max-w-2xl">
-          <MobileFeatures 
-            onLocationUpdate={handleLocationUpdate}
-            onImageCapture={handleImageCapture}
-          />
-          <p className="text-sm uppercase tracking-wider text-gls-primary opacity-80 mb-4">
-            {t('sustainableProjectsSince2024')}
-          </p>
-          <h1 className="text-5xl font-bold text-gls-primary mb-6 leading-tight">
-            {t('connectingEurope')}<br />
-            {t('transformingFuture')}
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+      {/* Hero Section */}
+      <section className="relative py-20 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-5xl md:text-6xl font-bold text-gls-secondary mb-6">
+            {t('welcomeMessageTitle')}
           </h1>
-          <p className="text-lg text-gls-primary opacity-90 mb-8">
-            {t('discoverEnvironmentalProjects')}
+          <p className="text-xl md:text-2xl text-gls-secondary opacity-90 max-w-4xl mx-auto mb-8">
+            {t('welcomeMessageDescription')}
           </p>
           
-          {/* Estadísticas de impacto estilo Ecosia */}
-          <div className="impact-stats">
-            <div className="stat-card">
-              <div className="stat-number">1,247</div>
-              <div className="stat-label">{t('activeProjects')}</div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Link 
+              href="/eventos"
+              className="btn-gls-primary text-lg px-8 py-4"
+            >
+              {t('exploreEvents')}
+            </Link>
+            <Link 
+              href="/trabajos"
+              className="btn-gls-secondary text-lg px-8 py-4"
+            >
+              {t('findJobs')}
+            </Link>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
+              <div className="text-3xl font-bold text-green-600 mb-2">500+</div>
+              <div className="text-gls-secondary font-medium">{t('activeProjects')}</div>
             </div>
-            <div className="stat-card">
-              <div className="stat-number">15,892</div>
-              <div className="stat-label">{t('connectedVolunteers')}</div>
+            <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
+              <div className="text-3xl font-bold text-blue-600 mb-2">2,500+</div>
+              <div className="text-gls-secondary font-medium">{t('volunteers')}</div>
+            </div>
+            <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
+              <div className="text-3xl font-bold text-purple-600 mb-2">50+</div>
+              <div className="text-gls-secondary font-medium">{t('cities')}</div>
             </div>
           </div>
         </div>
-      </div>
-      
-      {/* Sección derecha estilo GLS Bank */}
-      <div className="layout-gls-right relative z-10">
-        <div className="max-w-sm">
-          <h2 className="text-2xl font-bold text-gls-secondary mb-4">
-            {t('exploreProjects')}
+      </section>
+
+      {/* Featured Projects */}
+      <section className="py-16 px-4 bg-white/50 dark:bg-slate-800/50">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gls-secondary text-center mb-12">
+            {t('featuredProjects')}
           </h2>
-          <p className="text-gls-secondary mb-6">
-            {t('filterByCategoryAndFind')}
-          </p>
-          
-          <div className="flex flex-col gap-3">
-            <button
-              className={`px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                active === "Todas" ? "btn-gls-primary" : "bg-white/20 text-gls-secondary hover:bg-white/30"
-              }`}
-              onClick={() => setActive("Todas")}
+          <DashboardProjectCards />
+        </div>
+      </section>
+
+      {/* Categories */}
+      <section className="py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gls-secondary text-center mb-12">
+            {t('exploreCategories')}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Link 
+              href="/categorias/medio-ambiente"
+              className="group bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
             >
-              {t('all')}
+              <div className="text-4xl mb-4">🌱</div>
+              <h3 className="text-xl font-bold text-green-800 dark:text-green-200 mb-2">
+                {t('environmentTitle')}
+              </h3>
+              <p className="text-green-700 dark:text-green-300">
+                {t('environmentDescription')}
+              </p>
+            </Link>
+
+            <Link 
+              href="/categorias/educacion"
+              className="group bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
+            >
+              <div className="text-4xl mb-4">📚</div>
+              <h3 className="text-xl font-bold text-blue-800 dark:text-blue-200 mb-2">
+                {t('educationTitle')}
+              </h3>
+              <p className="text-blue-700 dark:text-blue-300">
+                {t('educationDescription')}
+              </p>
+            </Link>
+
+            <Link 
+              href="/categorias/comunidad"
+              className="group bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
+            >
+              <div className="text-4xl mb-4">🤝</div>
+              <h3 className="text-xl font-bold text-purple-800 dark:text-purple-200 mb-2">
+                {t('communityTitle')}
+              </h3>
+              <p className="text-purple-700 dark:text-purple-300">
+                {t('communityDescription')}
+              </p>
+            </Link>
+
+            <Link 
+              href="/categorias/salud"
+              className="group bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900 dark:to-red-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
+            >
+              <div className="text-4xl mb-4">🏥</div>
+              <h3 className="text-xl font-bold text-red-800 dark:text-red-200 mb-2">
+                {t('healthTitle')}
+              </h3>
+              <p className="text-red-700 dark:text-red-300">
+                {t('healthDescription')}
+              </p>
+            </Link>
+
+            <Link 
+              href="/categorias/oceanos"
+              className="group bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-900 dark:to-cyan-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
+            >
+              <div className="text-4xl mb-4">🌊</div>
+              <h3 className="text-xl font-bold text-cyan-800 dark:text-cyan-200 mb-2">
+                {t('oceansTitle')}
+              </h3>
+              <p className="text-cyan-700 dark:text-cyan-300">
+                {t('oceansDescription')}
+              </p>
+            </Link>
+
+            <Link 
+              href="/categorias/alimentacion"
+              className="group bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
+            >
+              <div className="text-4xl mb-4">🍎</div>
+              <h3 className="text-xl font-bold text-orange-800 dark:text-orange-200 mb-2">
+                {t('foodTitle')}
+              </h3>
+              <p className="text-orange-700 dark:text-orange-300">
+                {t('foodDescription')}
+              </p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Eco Tips */}
+      <section className="py-16 px-4 bg-green-50 dark:bg-slate-800/50">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gls-secondary text-center mb-12">
+            {t('ecoTipsTitle')}
+          </h2>
+          <EcoTips />
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-green-600 to-blue-600 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            {t('readyToMakeDifference')}
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            {t('readyDescription')}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button 
+              onClick={() => setShowWelcome(true)}
+              className="bg-white text-green-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              {t('letsGo')}
             </button>
-            {ALL_CATEGORIES.map((c) => (
-              <Link
-                key={c}
-                href={CATEGORY_URLS[c]}
-                className={`px-4 py-3 rounded-lg text-sm font-medium transition-all text-center block ${
-                  active === c
-                    ? "btn-gls-primary"
-                    : "bg-white/20 text-gls-secondary hover:bg-white/30"
-                }`}
-              >
-                {categoryLabel(c as any, locale as any)}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-      
-      {/* Sección del mapa - Full width */}
-      <div id="map-section" className="col-span-2 bg-ecosia-dark p-8 relative z-0 overflow-hidden">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-gls-primary mb-6 text-center">
-            {t('sustainableProjectsMap')}
-          </h2>
-          
-          <div className="flex justify-center mb-6">
-            <div className="relative flex items-center justify-center" style={{ padding: "8px" }}>
-              <div
-                className="overflow-hidden border-4 border-ecosia-green shadow-xl rounded-xl"
-                style={{
-                  height: "min(70vh, 80vw)",
-                  width: "min(70vh, 80vw)",
-                  maxWidth: "1000px",
-                  maxHeight: "600px",
-                }}
-              >
-                <Map projects={filtered} />
-              </div>
-            </div>
-          </div>
-          
-          {/* Buscador estilo Ecosia */}
-          <div className="flex justify-center">
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                const input = (e.currentTarget.elements.namedItem('q') as HTMLInputElement);
-                const q = input?.value?.trim();
-                if (!q) return;
-                try {
-                  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1&addressdetails=1`, { 
-                    headers: { 'Accept-Language': locale },
-                    mode: 'cors'
-                  });
-                  if (!res.ok) {
-                    console.warn("Geocoding service not available");
-                    return;
-                  }
-                  const data = await res.json();
-                  const first = Array.isArray(data) ? data[0] : null;
-                  if (first) {
-                    const lat = parseFloat(first.lat); const lon = parseFloat(first.lon);
-                    window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat, lon } }));
-                  }
-                } catch (error) {
-                  console.warn("Failed to geocode location:", error);
-                }
-              }}
-              className="card-ecosia flex items-center gap-3"
+            <Link 
+              href="/chat"
+              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors"
             >
-              <input 
-                name="q" 
-                placeholder={t('cityPh')} 
-                className="outline-none text-sm bg-transparent w-48 text-gls-primary font-medium placeholder-opacity-60" 
-              />
-              <button className="btn-gls-primary text-sm">
-                {t('search')}
-              </button>
-              <button 
-                type="button" 
-                className="btn-gls-secondary text-sm" 
-                onClick={() => window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat: 50.1109, lon: 8.6821 } }))}
-              >
-                {t('reset')}
-              </button>
-              <button 
-                type="button" 
-                className="btn-gls-secondary text-sm flex items-center gap-1" 
-                onClick={() => {
-                  if (!('geolocation' in navigator)) return;
-                  navigator.geolocation.getCurrentPosition((pos) => {
-                    const lat = pos.coords.latitude; const lon = pos.coords.longitude;
-                    window.dispatchEvent(new CustomEvent('econexo:center', { detail: { lat, lon } }));
-                  });
-                }}
-              >
-                <span>📍</span>
-                <span>GPS</span>
-              </button>
-            </form>
+              {t('joinCommunity')}
+            </Link>
           </div>
         </div>
-      </div>
-      </div>
-    </>
+      </section>
+
+      {/* Welcome Modal */}
+      {showWelcome && <WelcomeMessage onClose={() => setShowWelcome(false)} />}
+    </div>
   );
 }

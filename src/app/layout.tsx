@@ -9,7 +9,13 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CreateEventFAB from "@/components/CreateEventFAB";
 import HeaderNav from "@/components/HeaderNav";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import { OnboardingModal } from "@/components/OnboardingModal";
+import WelcomeIntro from "@/components/WelcomeIntro";
+import SimpleIntro from "@/components/SimpleIntro";
+import TestModal from "@/components/TestModal";
 import PlausibleProvider from "next-plausible";
+import DynamicManifest from "@/components/DynamicManifest";
+import { generateMetadata } from "@/lib/metadata";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,18 +29,7 @@ const geistMono = Geist_Mono({
 
 const interTight = Inter_Tight({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "EcoNexo",
-  description: "Mapa de proyectos y eventos sostenibles en Europa",
-  manifest: "/manifest.json",
-  themeColor: "#1a5f3f",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "EcoNexo",
-  },
-};
+export const metadata: Metadata = generateMetadata("en");
 
 export default function RootLayout({
   children,
@@ -42,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" data-theme="dark">
+    <html lang="en" data-theme="dark">
       <body
         className={`${interTight.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-gls-primary`}
       >
@@ -51,10 +46,14 @@ export default function RootLayout({
             <I18nProvider>
               <AuthProvider>
                 <ServiceWorkerRegistration />
+                <DynamicManifest />
+                <SimpleIntro />
+<OnboardingModal />
                 <LanguageSwitcher />
                 <HeaderNav />
                 <main className="min-h-screen">{children}</main>
                 <CreateEventFAB />
+                <TestModal />
               </AuthProvider>
             </I18nProvider>
           </ThemeProvider>

@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import BackButton from "@/components/BackButton";
-import { useI18n, categoryLabel, impactTagLabel, projectDescriptionLabel, projectNameLabel, locationLabel } from "@/lib/i18n";
+import { useI18n, projectNameLabel, locationLabel, categoryLabel, projectDescriptionLabel, impactTagLabel } from "@/lib/i18n";
 import ProjectImage from "@/components/ProjectImage";
 import { useAuth } from "@/lib/auth";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";

@@ -204,7 +204,7 @@ export default function SustainableMonetization({
         'Analytics de eventos detallados',
         'Herramientas de marketing sostenible',
         'Integración con redes sociales',
-        'Gestión de voluntarios',
+        'Gestión de voluntarixs',
         'Reportes de impacto automáticos'
       ]
     }

@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { useI18n } from "@/lib/i18n";
-import { locationLabel } from "@/lib/i18n";
+import { useI18n, locationLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import EventRegistrationForm from "./EventRegistrationForm";
@@ -897,11 +896,11 @@ function getLocalizedEventData(eventId: string, locale: string) {
   const overridesFromMap = (EVENT_I18N as Record<string, Record<string, Partial<EventDetails>>>)[eventId]?.[locale as 'en' | 'de'] || {};
   const auto = autoTranslateEvent(baseEvent, locale);
   const translatedCategory = baseEvent.category === 'environment' ? 
-    (locale === 'de' ? 'Umwelt' : locale === 'en' ? 'Environment' : 'Medio ambiente') :
+    t('categoryEnvironment') :
     baseEvent.category === 'education' ?
-    (locale === 'de' ? 'Bildung' : locale === 'en' ? 'Education' : 'Educación') :
+    t('categoryEducation') :
     baseEvent.category === 'community' ?
-    (locale === 'de' ? 'Gemeinschaft' : locale === 'en' ? 'Community' : 'Comunidad') :
+    t('categoryCommunity') :
     baseEvent.category;
 
   return {
@@ -935,7 +934,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
   const handleJoin = async () => {
     if (spotsLeft <= 0) return;
     if (!user) {
-      alert(locale === 'de' ? 'Bitte zuerst anmelden' : locale === 'en' ? 'Please sign in first' : 'Por favor inicia sesión primero');
+      alert(t('pleaseSignInFirst' + locale.charAt(0).toUpperCase() + locale.slice(1)));
       return;
     }
     setShowRegistrationForm(true);
@@ -1109,7 +1108,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
         await navigator.share({ title, url });
       } else if (navigator.clipboard) {
         await navigator.clipboard.writeText(url);
-        alert(locale === 'de' ? 'Link kopiert.' : locale === 'en' ? 'Link copied.' : 'Enlace copiado.');
+        alert(t('linkCopied' + locale.charAt(0).toUpperCase() + locale.slice(1)));
       } else {
         alert(url);
       }
@@ -1278,7 +1277,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
             {t("shareEvent")}
           </button>
           <button onClick={toggleSaved} className={`px-8 py-3 rounded-lg font-semibold transition-colors ${saved ? 'bg-amber-200 text-slate-900' : 'border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}`}>
-            {saved ? (locale === 'de' ? 'Gespeichert' : locale === 'en' ? 'Saved' : 'Guardado') : (locale === 'de' ? 'Speichern' : locale === 'en' ? 'Save' : 'Guardar')}
+            {saved ? t('saved' + locale.charAt(0).toUpperCase() + locale.slice(1)) : t('save' + locale.charAt(0).toUpperCase() + locale.slice(1))}
           </button>
         </div>
       </div>

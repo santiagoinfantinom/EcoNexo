@@ -15,15 +15,10 @@ export default function MedioAmbientePage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gls-secondary mb-4">
-            {locale === 'es' ? 'Medio Ambiente' : locale === 'de' ? 'Umwelt' : 'Environment'}
+            {t('environmentTitle')}
           </h1>
           <p className="text-xl text-gls-secondary opacity-90 max-w-3xl mx-auto">
-            {locale === 'es' 
-              ? 'Proyectos dedicados a la protección del medio ambiente, conservación de la biodiversidad y lucha contra el cambio climático.'
-              : locale === 'de'
-              ? 'Projekte zur Umweltschutz, Erhaltung der biologischen Vielfalt und Bekämpfung des Klimawandels.'
-              : 'Projects dedicated to environmental protection, biodiversity conservation and climate change mitigation.'
-            }
+            {t('environmentDescription')}
           </p>
         </div>
 
@@ -58,25 +53,25 @@ export default function MedioAmbientePage() {
               
               {/* Project Content */}
               <div className="p-6 bg-black">
-                <h3 className="text-xl font-bold text-white mb-2">{project.title.en}</h3>
-                <p className="text-white opacity-80 mb-4 text-sm">{project.description.en}</p>
+                <h3 className="text-xl font-bold text-white mb-2">{project.title[locale] || project.title.es}</h3>
+                <p className="text-white opacity-80 mb-4 text-sm">{project.description[locale] || project.description.es}</p>
                 
                 {/* Location */}
                 <div className="flex items-center text-white opacity-70 text-sm mb-3">
                   <span className="mr-2">📍</span>
-                  <span>{project.location.en}</span>
+                  <span>{project.location[locale] || project.location.es}</span>
                 </div>
                 
                 {/* Impact */}
                 <div className="flex items-center text-emerald-400 text-sm mb-4">
                   <span className="mr-2">🎯</span>
-                  <span className="font-medium">{project.impact.en}</span>
+                  <span className="font-medium">{project.impact[locale] || project.impact.es}</span>
                 </div>
                 
                 {/* Stats */}
                 <div className="flex justify-between text-sm text-white opacity-70 mb-4">
-                  <span>👥 {project.volunteers} volunteers</span>
-                  <span>🆓 {project.spots} spots</span>
+                  <span>👥 {project.volunteers} {t('volunteersLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}</span>
+                  <span>🆓 {project.spots} {t('spotsLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}</span>
                 </div>
                 
                 {/* Action Button */}

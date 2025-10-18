@@ -9,25 +9,25 @@ export default function DashboardProjectCards() {
       id: "p1",
       title: t('urbanReforestationBerlin'),
       description: t('urbanReforestationDesc'),
-      location: locale === 'es' ? "Berlín, Alemania" : locale === 'de' ? "Berlin, Deutschland" : "Berlin, Germany",
+      location: t('locationBerlin'),
       metric: `2,500 ${t('treesPlanted')}`,
-      volunteers: locale === 'es' ? "150 voluntarios" : locale === 'de' ? "150 Freiwillige" : "150 volunteers"
+      volunteers: `150 ${t('volunteersLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}`
     },
     {
       id: "p2", 
       title: t('seineRiverCleanup'),
       description: t('seineRiverCleanupDesc'),
-      location: locale === 'es' ? "París, Francia" : locale === 'de' ? "Paris, Frankreich" : "Paris, France",
+      location: t('locationParis'),
       metric: `5 ${t('wasteCollected')}`,
-      volunteers: locale === 'es' ? "200 voluntarios" : locale === 'de' ? "200 Freiwillige" : "200 volunteers"
+      volunteers: `200 ${t('volunteersLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}`
     },
     {
       id: "p3",
       title: t('communityGardensMadrid'),
       description: t('communityGardensDesc'),
-      location: locale === 'es' ? "Madrid, España" : locale === 'de' ? "Madrid, Spanien" : "Madrid, Spain",
+      location: t('locationMadrid'),
       metric: `15 ${t('communityGardensActive')}`,
-      volunteers: locale === 'es' ? "80 voluntarios" : locale === 'de' ? "80 Freiwillige" : "80 volunteers"
+      volunteers: `80 ${t('volunteersLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}`
     }
   ];
 

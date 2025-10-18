@@ -308,7 +308,7 @@ export default function IntelligentClustering({
                     onClick={() => handleClusterClick(cluster)}
                     className="mt-2 px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
                   >
-                    Ver todos
+                    Ver todo
                   </button>
                 </div>
               </Popup>
@@ -372,7 +372,7 @@ export default function IntelligentClustering({
                 })()}
                 <div className="text-sm text-slate-600 space-y-1">
                   <div>📅 {new Date(event.date).toLocaleDateString()}</div>
-                  <div>👥 {event.currentVolunteers}/{event.maxVolunteers} voluntarios</div>
+                  <div>👥 {event.currentVolunteers}/{event.maxVolunteers} voluntarixs</div>
                   <div>🎯 Impacto: {event.impact}</div>
                 </div>
                 <button

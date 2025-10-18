@@ -44,6 +44,8 @@ export const PROJECTS: Project[] = [
     spots: 50,
     image_url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1280&auto=format&fit=crop",
     description: "Plantación de árboles nativos y creación de corredores verdes para mejorar calidad del aire y hábitats urbanos en Berlín.",
+    description_en: "Planting native trees and creating green corridors to improve air quality and urban habitats in Berlin.",
+    description_de: "Pflanzung einheimischer Bäume und Schaffung grüner Korridore zur Verbesserung der Luftqualität und städtischen Lebensräume in Berlin.",
   },
   {
     id: "p2",
@@ -57,6 +59,8 @@ export const PROJECTS: Project[] = [
     country: "España",
     image_url: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1280&auto=format&fit=crop",
     description: "Talleres prácticos de programación y robótica para jóvenes con enfoque STEM e inclusión digital.",
+    description_en: "Practical programming and robotics workshops for young people with STEM focus and digital inclusion.",
+    description_de: "Praktische Programmier- und Robotik-Workshops für Jugendliche mit MINT-Fokus und digitaler Inklusion.",
   },
   {
     id: "p3",
@@ -70,6 +74,8 @@ export const PROJECTS: Project[] = [
     country: "Italia",
     image_url: "https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=1280&auto=format&fit=crop",
     description: "Unidad móvil que ofrece chequeos básicos y prevención en barrios con menor acceso sanitario.",
+    description_en: "Mobile unit offering basic checkups and prevention in neighborhoods with limited healthcare access.",
+    description_de: "Mobile Einheit, die grundlegende Untersuchungen und Prävention in Stadtteilen mit eingeschränktem Gesundheitszugang anbietet.",
   },
   {
     id: "p4",
@@ -83,6 +89,8 @@ export const PROJECTS: Project[] = [
     country: "Francia",
     image_url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1280&auto=format&fit=crop",
     description: "Limpieza de costas, monitoreo de microplásticos y restauración de ecosistemas marinos en el litoral mediterráneo.",
+    description_en: "Coastal cleanup, microplastics monitoring and marine ecosystem restoration on the Mediterranean coast.",
+    description_de: "Küstenreinigung, Mikroplastik-Überwachung und Wiederherstellung mariner Ökosysteme an der Mittelmeerküste.",
   },
   {
     id: "p5",
@@ -96,6 +104,8 @@ export const PROJECTS: Project[] = [
     country: "Reino Unido",
     image_url: "https://images.unsplash.com/photo-1498654200943-1088dd4438ae?q=80&w=1280&auto=format&fit=crop",
     description: "Creación de huertos comunitarios para promover soberanía alimentaria y educación ambiental en barrios urbanos.",
+    description_en: "Creating community gardens to promote food sovereignty and environmental education in urban neighborhoods.",
+    description_de: "Schaffung von Gemeinschaftsgärten zur Förderung der Ernährungssouveränität und Umweltbildung in städtischen Vierteln.",
   },
   {
     id: "p6",
@@ -109,6 +119,8 @@ export const PROJECTS: Project[] = [
     country: "Suecia",
     image_url: "https://images.unsplash.com/photo-1520975922215-230d2d38f5a4?q=80&w=1280&auto=format&fit=crop",
     description: "Espacios comunitarios que ofrecen actividades culturales y apoyo mutuo para fortalecer la cohesión social.",
+    description_en: "Community spaces offering cultural activities and mutual support to strengthen social cohesion.",
+    description_de: "Gemeinschaftsräume, die kulturelle Aktivitäten und gegenseitige Unterstützung zur Stärkung des sozialen Zusammenhalts anbieten.",
   },
   // Berlin real initiatives
   {
@@ -116,6 +128,9 @@ export const PROJECTS: Project[] = [
     name: "CityLAB Berlin",
     name_en: "CityLAB Berlin",
     name_de: "CityLAB Berlin",
+    description: "Laboratorio de innovación urbana que desarrolla soluciones digitales para ciudades más sostenibles y habitables.",
+    description_en: "Urban innovation laboratory developing digital solutions for more sustainable and livable cities.",
+    description_de: "Städtisches Innovationslabor, das digitale Lösungen für nachhaltigere und lebenswertere Städte entwickelt.",
     category: "Comunidad",
     lat: 52.4851,
     lng: 13.3950,
@@ -141,6 +156,9 @@ export const PROJECTS: Project[] = [
     image_url: "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1280&auto=format&fit=crop",
     info_url: "https://re-fresh.global/",
     address: "Luckenwalder Str. 6b, 10963 Berlin, Germany",
+    description: "Iniciativa de reciclaje textil que transforma residuos de ropa en nuevos productos sostenibles.",
+    description_en: "Textile recycling initiative that transforms clothing waste into new sustainable products.",
+    description_de: "Textilrecycling-Initiative, die Kleidungsabfälle in neue nachhaltige Produkte verwandelt.",
     isPermanent: true,
   },
   {
@@ -156,6 +174,9 @@ export const PROJECTS: Project[] = [
     image_url: "https://images.unsplash.com/photo-1524592714635-5f1343f1d2f1?q=80&w=1280&auto=format&fit=crop",
     info_url: "http://kunstquartier-bethanien.de/",
      address: "Mariannenplatz 2, 10997 Berlin, Germany",
+     description: "Centro cultural y artístico que promueve la creatividad comunitaria y el intercambio cultural.",
+     description_en: "Cultural and artistic center promoting community creativity and cultural exchange.",
+     description_de: "Kultur- und Kunstzentrum, das Gemeinschaftskreativität und kulturellen Austausch fördert.",
      isPermanent: true,
   },
   {
@@ -171,6 +192,9 @@ export const PROJECTS: Project[] = [
     image_url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1280&auto=format&fit=crop",
     info_url: "https://www.nachbarschaftsgarten-prinzenallee.de/",
     address: "Prinzenallee 58, 13359 Berlin, Germany",
+    description: "Jardín comunitario que fomenta la agricultura urbana y la conexión vecinal en Berlín.",
+    description_en: "Community garden promoting urban agriculture and neighborhood connection in Berlin.",
+    description_de: "Gemeinschaftsgarten, der urbane Landwirtschaft und nachbarschaftliche Verbindung in Berlin fördert.",
     isPermanent: true,
   },
   {
@@ -186,12 +210,15 @@ export const PROJECTS: Project[] = [
     image_url: "/leaflet/marker-icon.png",
     info_url: "https://repaircafe.org/",
     address: "Karl-Marx-Str. 75, 12043 Berlin, Germany",
+    description: "Café de reparación donde voluntarios ayudan a arreglar electrodomésticos y reducir residuos.",
+    description_en: "Repair café where volunteers help fix appliances and reduce waste.",
+    description_de: "Reparatur-Café, in dem Freiwillige beim Reparieren von Geräten helfen und Abfall reduzieren.",
     // Event hoy (demo)
     startsAt: "2025-10-15T18:00:00+02:00",
     endsAt: "2025-10-15T21:00:00+02:00",
   },
   // Paris
-  { id: "par1", name: "Repair Café Paris", name_de: "Repair Café Paris", category: "Medio ambiente", lat: 48.8566, lng: 2.3522, city: "París", country: "Francia", info_url: "https://repaircafe.org/en/visit/repair-cafe-paris/", image_url: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1280&auto=format&fit=crop", description: "Encuentros de reparación colaborativa donde voluntariado y vecinos arreglan aparatos para evitar residuos.", description_de: "Gemeinsame Reparaturtreffen, bei denen Geräte instand gesetzt und Abfall vermieden wird.", startsAt: "2025-10-15T17:30:00+02:00", endsAt: "2025-10-15T20:30:00+02:00" },
+  { id: "par1", name: "Repair Café Paris", name_en: "Repair Café Paris", name_de: "Repair Café Paris", category: "Medio ambiente", lat: 48.8566, lng: 2.3522, city: "París", country: "Francia", info_url: "https://repaircafe.org/en/visit/repair-cafe-paris/", image_url: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1280&auto=format&fit=crop", description: "Encuentros de reparación colaborativa donde voluntariado y vecinos arreglan aparatos para evitar residuos.", description_en: "Collaborative repair meetings where volunteers and neighbors fix appliances to avoid waste.", description_de: "Gemeinsame Reparaturtreffen, bei denen Geräte instand gesetzt und Abfall vermieden wird.", startsAt: "2025-10-15T17:30:00+02:00", endsAt: "2025-10-15T20:30:00+02:00" },
   { id: "par2", name: "La REcyclerie", name_de: "La REcyclerie", category: "Medio ambiente", lat: 48.8934, lng: 2.3294, city: "París", country: "Francia", info_url: "https://www.larecyclerie.com/", image_url: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1280&auto=format&fit=crop", description: "Tercer lugar en antigua estación con talleres de reparación, compostaje y consumo responsable.", description_de: "Dritter Ort in einem alten Bahnhof mit Reparatur‑, Kompost‑ und Zero‑Waste‑Workshops.", isPermanent: true },
   { id: "par3", name: "Les Grands Voisins", name_de: "Les Grands Voisins", category: "Comunidad", lat: 48.8418, lng: 2.3293, city: "París", country: "Francia", info_url: "https://www.lesgrandsvoisins.org/", image_url: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1280&auto=format&fit=crop", description: "Ecosistema social y cultural que reactivó un complejo hospitalario con proyectos inclusivos y comunitarios.", description_de: "Soziales und kulturelles Ökosystem, das einen alten Krankenhauskomplex für inklusive Projekte reaktivierte." },
   { id: "par4", name: "Nature Urbaine (Rooftop Farm)", name_de: "Nature Urbaine (Dachfarm)", category: "Alimentación", lat: 48.8331, lng: 2.2882, city: "París", country: "Francia", info_url: "https://natureurbaine.paris/", image_url: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1280&auto=format&fit=crop", description: "Gran granja en azotea dedicada a agricultura urbana, formación y alimentos de kilómetro cero.", description_de: "Große Dachfarm mit urbaner Landwirtschaft, Bildungsangeboten und lokaler Produktion." },
@@ -199,7 +226,7 @@ export const PROJECTS: Project[] = [
   // Madrid
   { id: "mad1", name: "Huerto Urbano Madrid", name_de: "Städtische Gemeinschaftsgärten Madrid", category: "Alimentación", lat: 40.4168, lng: -3.7038, city: "Madrid", country: "España", info_url: "https://redhuertourbanoslareti.org/", image_url: "https://images.unsplash.com/photo-1519003300449-41f31b720d5a?q=80&w=1280&auto=format&fit=crop", description: "Red de huertos comunitarios que impulsa agroecología, formación y vida de barrio en Madrid.", description_de: "Netzwerk von Gemeinschaftsgärten für Agrarökologie, Bildung und Nachbarschaftsleben in Madrid." },
   { id: "mad2", name: "Madrid Agrocomposta", name_de: "Madrid Agrocomposta", category: "Medio ambiente", lat: 40.4310, lng: -3.7000, city: "Madrid", country: "España", info_url: "https://www.madrid.es/Agrocomposta", image_url: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1280&auto=format&fit=crop", description: "Programa municipal que convierte biorresiduos urbanos en compost para huertos locales.", description_de: "Kommunales Programm, das Bioabfälle zu Kompost für städtische Gärten verarbeitet." },
-  { id: "mad3", name: "La Casa Encendida · Programación verde", name_de: "La Casa Encendida · Grünes Programm", category: "Comunidad", lat: 40.4066, lng: -3.7025, city: "Madrid", country: "España", info_url: "https://www.lacasaencendida.es/", image_url: "https://images.unsplash.com/photo-1451976426598-a7593bd6d0b2?q=80&w=1280&auto=format&fit=crop", description: "Centro cultural con ciclos de sostenibilidad, talleres y actividades ambientales para todos los públicos.", description_de: "Kulturzentrum mit Nachhaltigkeitsreihen, Workshops und Umweltaktivitäten für alle." },
+  { id: "mad3", name: "La Casa Encendida · Programación verde", name_de: "La Casa Encendida · Grünes Programm", category: "Comunidad", lat: 40.4066, lng: -3.7025, city: "Madrid", country: "España", info_url: "https://www.lacasaencendida.es/", image_url: "https://images.unsplash.com/photo-1451976426598-a7593bd6d0b2?q=80&w=1280&auto=format&fit=crop", description: "Centro cultural con ciclos de sostenibilidad, talleres y actividades ambientales para todo el público.", description_de: "Kulturzentrum mit Nachhaltigkeitsreihen, Workshops und Umweltaktivitäten für alle." },
   { id: "mad4", name: "Medialab Matadero · Ciudad Prototipo", name_de: "Medialab Matadero · Stadtprototyp", category: "Educación", lat: 40.3909, lng: -3.6984, city: "Madrid", country: "España", info_url: "https://www.medialabmatadero.es/", image_url: "https://images.unsplash.com/photo-1518081461904-9ac6e9602d9a?q=80&w=1280&auto=format&fit=crop", description: "Laboratorio de innovación ciudadana que explora prototipos para una ciudad más sostenible y abierta.", description_de: "Labor für bürgernahe Innovation, das Prototypen für eine nachhaltige, offene Stadt erprobt." },
   { id: "mad5", name: "Repair Café Madrid", name_de: "Repair Café Madrid", category: "Medio ambiente", lat: 40.4380, lng: -3.7007, city: "Madrid", country: "España", info_url: "https://repaircafe.org/", image_url: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1280&auto=format&fit=crop", description: "Punto de encuentro para reparar objetos con ayuda de voluntariado, alargando su vida útil.", description_de: "Treffen zur gemeinschaftlichen Reparatur von Gegenständen, um deren Lebensdauer zu verlängern.", startsAt: "2025-10-15T18:00:00+02:00", endsAt: "2025-10-15T21:00:00+02:00" },
   // Roma

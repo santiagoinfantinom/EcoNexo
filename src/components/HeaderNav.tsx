@@ -54,18 +54,52 @@ export default function HeaderNav() {
     return () => { aborted = true; };
   }, [user]);
 
-  // When opening signup, prefill with known data
+  // When opening signup, prefill with known data from OAuth or existing profile
   useEffect(() => {
     if (!showSignup) return;
+    
+    // Extract data from profile (which includes OAuth data)
     const name = (profile?.full_name || profile?.name || "") as string;
     const birthdate = (profile?.birthdate || "") as string;
     const birthPlace = (profile?.birth_place || "") as string;
     const mail = (signup.email && signup.email.trim()) ? signup.email : (email || user?.email || "");
+    
+    // Check if we have OAuth data to prefill
+    const oauthData = profile?.oauth_data || {};
+    const oauthProvider = profile?.oauth_provider;
+    
+    // Additional OAuth-specific data extraction
+    let oauthName = name;
+    let oauthBirthdate = birthdate;
+    let oauthBirthPlace = birthPlace;
+    
+    if (oauthProvider === 'google' && oauthData.raw_metadata) {
+      const metadata = oauthData.raw_metadata;
+      oauthName = metadata.given_name && metadata.family_name ? 
+        `${metadata.given_name} ${metadata.family_name}` : 
+        metadata.name || metadata.full_name || name;
+      
+      // Google doesn't typically provide birthdate, but we can try
+      oauthBirthdate = metadata.birthdate || metadata.dob || birthdate;
+      
+      // Use locale as birth place if available
+      oauthBirthPlace = metadata.locale || birthPlace;
+    }
+    
+    if (oauthProvider === 'azure' && oauthData.raw_metadata) {
+      const metadata = oauthData.raw_metadata;
+      oauthName = metadata.name || metadata.display_name || name;
+      
+      // Azure/Outlook might have different field names
+      oauthBirthdate = metadata.birthdate || metadata.date_of_birth || birthdate;
+      oauthBirthPlace = metadata.location || metadata.locale || birthPlace;
+    }
+    
     setSignup((s) => ({
       ...s,
-      name: s.name || name,
-      birthdate: s.birthdate || birthdate,
-      birthPlace: s.birthPlace || birthPlace,
+      name: s.name || oauthName,
+      birthdate: s.birthdate || oauthBirthdate,
+      birthPlace: s.birthPlace || oauthBirthPlace,
       email: mail || s.email,
     }));
   }, [showSignup, profile, user, email]);
@@ -84,13 +118,13 @@ export default function HeaderNav() {
         {/* Input email a la izquierda, junto al selector de idioma */}
         {!loading && !user && (
           <div className="absolute left-0 sm:left-3 md:left-6 top-0 h-full flex items-center gap-1">
-            <button onClick={() => setShowSignup(true)} className="btn-gls-secondary px-2 py-[6px] text-xs order-1 leading-none">
-              Sign In / Sign Up
+            <button onClick={() => setShowSignup(true)} className="btn-signin order-1">
+              {t("signIn")} / {t("signUp")}
             </button>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={locale === 'en' ? 'email@example.com' : (locale === 'de' ? 'email@beispiel.de' : 'email@ejemplo.com')}
+              placeholder={t('emailPlaceholder' + locale.charAt(0).toUpperCase() + locale.slice(1))}
               className="px-2 py-[6px] rounded bg-white/80 text-slate-800 text-sm w-32 sm:w-40 order-2 leading-none"
             />
           </div>
@@ -132,12 +166,6 @@ export default function HeaderNav() {
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
-          href="/calendario"
-        >
-          {t("calendar")}
-        </Link>
-        <Link 
-          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/eventos"
         >
           {t("events")}
@@ -160,15 +188,6 @@ export default function HeaderNav() {
         >
           {t("profile")}
         </Link>
-        <EcoTips />
-        <NotificationConsent />
-        <button
-          onClick={handleShowWelcome}
-          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium"
-          title={t("about")}
-        >
-          {t("about")}
-        </button>
       </nav>
     </header>
     {showSignup && (
@@ -193,14 +212,14 @@ export default function HeaderNav() {
                 window.dispatchEvent(new CustomEvent('econexo:signup:magic', { detail: { email: chosenEmail } }));
                 alert(t("checkYourEmail"));
               } else {
-                alert(locale === 'en' ? 'Profile saved. Enter your email and press login to verify.' : locale === 'de' ? 'Profil gespeichert. Gib deine E‑Mail ein und klicke auf Login, um zu verifizieren.' : 'Perfil guardado. Ingresa tu correo y presiona login para verificar.');
+                alert(t('profileSavedMessage' + locale.charAt(0).toUpperCase() + locale.slice(1)));
               }
               setShowSignup(false);
             }}
           >
             <div>
               <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("email")}</label>
-              <input type="email" value={signup.email} onChange={(e)=>setSignup({...signup, email:e.target.value})} placeholder="email@ejemplo.com" className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
+              <input type="email" value={signup.email} onChange={(e)=>setSignup({...signup, email:e.target.value})} placeholder={t('emailPlaceholder' + locale.charAt(0).toUpperCase() + locale.slice(1))} className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
               <p className="text-xs text-slate-500 mt-1">{t("emailNote")}</p>
             </div>
             <div>
@@ -215,26 +234,30 @@ export default function HeaderNav() {
               <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1">{t("birthPlace")}</label>
               <input value={signup.birthPlace} onChange={(e)=>setSignup({...signup, birthPlace:e.target.value})} className="w-full px-3 py-2 border rounded dark:bg-slate-700 dark:border-slate-600" required />
             </div>
-            <div className="flex justify-center gap-3 pt-2">
-              <button type="button" onClick={()=>setShowSignup(false)} className="btn-gls-secondary px-3 py-2">{t("cancel")}</button>
-              <button type="submit" className="btn-gls-primary px-3 py-2">{t("save")}</button>
-            </div>
-
-            <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
+            <div className="pt-4">
               <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">{t("continueWith")}</div>
-              <div className="flex gap-2">
+              <div className="text-xs text-slate-400 dark:text-slate-500 mb-3">
+                {t('oauthExtractMessage' + locale.charAt(0).toUpperCase() + locale.slice(1))}
+              </div>
+              <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={async ()=>{
                     const res = await signInWithOAuth('google');
                     if (res?.error) {
-                      alert(locale === 'de' ? 'Anmeldung nicht konfiguriert' : locale === 'en' ? 'Sign-in not configured' : 'Inicio de sesión no configurado');
+                      alert(t('signinNotConfigured' + locale.charAt(0).toUpperCase() + locale.slice(1)));
                     }
                   }}
-                  className={`flex-1 btn-gls-secondary px-3 py-2 ${!supaReady ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  title="Google"
+                  className={`btn-oauth btn-oauth-google ${!supaReady ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  title={t('googleOAuthTitle' + locale.charAt(0).toUpperCase() + locale.slice(1))}
                   disabled={!supaReady}
                 >
+                  <svg width="18" height="18" viewBox="0 0 24 24" className="mr-1">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
                   {t("google")}
                 </button>
                 <button
@@ -242,15 +265,52 @@ export default function HeaderNav() {
                   onClick={async ()=>{
                     const res = await signInWithOAuth('azure');
                     if (res?.error) {
-                      alert(locale === 'de' ? 'Anmeldung nicht konfiguriert' : locale === 'en' ? 'Sign-in not configured' : 'Inicio de sesión no configurado');
+                      alert(t('signinNotConfigured' + locale.charAt(0).toUpperCase() + locale.slice(1)));
                     }
                   }}
-                  className={`flex-1 btn-gls-secondary px-3 py-2 ${!supaReady ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  title="Outlook / Microsoft"
+                  className={`btn-oauth btn-oauth-outlook ${!supaReady ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  title={t('outlookOAuthTitle' + locale.charAt(0).toUpperCase() + locale.slice(1))}
                   disabled={!supaReady}
                 >
+                  <svg width="18" height="18" viewBox="0 0 24 24" className="mr-1">
+                    <path fill="currentColor" d="M7.5 2h9a1.5 1.5 0 0 1 1.5 1.5v17a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20.5v-17A1.5 1.5 0 0 1 7.5 2zM8 4v16h8V4H8zm1 2h6v2H9V6zm0 3h6v2H9V9zm0 3h6v2H9v-2zm0 3h4v2H9v-2z"/>
+                  </svg>
                   {t("outlook")}
                 </button>
+              </div>
+              
+              {/* Enlaces directos a Gmail y Outlook */}
+              <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+                <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">
+                  {t('orGoDirectlyTo' + locale.charAt(0).toUpperCase() + locale.slice(1))}
+                </div>
+                <div className="flex gap-2">
+                  <a
+                    href="https://mail.google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-oauth btn-oauth-google text-xs px-3 py-2"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" className="mr-1">
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Gmail
+                  </a>
+                  <a
+                    href="https://outlook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-oauth btn-oauth-outlook text-xs px-3 py-2"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" className="mr-1">
+                      <path fill="currentColor" d="M7.5 2h9a1.5 1.5 0 0 1 1.5 1.5v17a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 20.5v-17A1.5 1.5 0 0 1 7.5 2zM8 4v16h8V4H8zm1 2h6v2H9V6zm0 3h6v2H9V9zm0 3h6v2H9v-2zm0 3h4v2H9v-2z"/>
+                    </svg>
+                    Outlook.com
+                  </a>
+                </div>
               </div>
             </div>
           </form>

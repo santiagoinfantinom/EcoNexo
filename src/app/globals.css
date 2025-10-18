@@ -162,6 +162,70 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Botones OAuth modernos */
+.btn-oauth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: white;
+  color: #333;
+  min-width: 120px;
+}
+
+.btn-oauth:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: #f8f9fa;
+}
+
+.btn-oauth-google {
+  background: #fff;
+  color: #333;
+  border-color: #dadce0;
+}
+
+.btn-oauth-google:hover {
+  background: #f8f9fa;
+  border-color: #c1c1c1;
+}
+
+.btn-oauth-outlook {
+  background: #0078d4;
+  color: white;
+  border-color: #0078d4;
+}
+
+.btn-oauth-outlook:hover {
+  background: #106ebe;
+  border-color: #106ebe;
+}
+
+/* Botón Sign In/Sign Up mejorado */
+.btn-signin {
+  background: linear-gradient(135deg, var(--sunflower) 0%, var(--vibrant-rose) 100%);
+  color: var(--dark-teal);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-signin:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, var(--vibrant-rose) 0%, var(--sunflower) 100%);
+}
+
 /* Cards estilo Ecosia */
 .card-ecosia {
   background: rgba(31, 61, 59, 0.8);

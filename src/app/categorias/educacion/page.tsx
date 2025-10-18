@@ -15,15 +15,10 @@ export default function EducacionPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gls-secondary mb-4">
-            {locale === 'es' ? 'Educación' : locale === 'de' ? 'Bildung' : 'Education'}
+            {t('educationTitle')}
           </h1>
           <p className="text-xl text-gls-secondary opacity-90 max-w-3xl mx-auto">
-            {locale === 'es' 
-              ? 'Proyectos educativos que promueven el aprendizaje, la innovación y el desarrollo de habilidades para un futuro sostenible.'
-              : locale === 'de'
-              ? 'Bildungsprojekte, die Lernen, Innovation und Kompetenzentwicklung für eine nachhaltige Zukunft fördern.'
-              : 'Educational projects that promote learning, innovation and skill development for a sustainable future.'
-            }
+            {t('educationDescription')}
           </p>
         </div>
 
@@ -58,25 +53,25 @@ export default function EducacionPage() {
               
               {/* Project Content */}
               <div className="p-6 bg-black">
-                <h3 className="text-xl font-bold text-white mb-2">{project.title.en}</h3>
-                <p className="text-white opacity-80 mb-4 text-sm">{project.description.en}</p>
+                <h3 className="text-xl font-bold text-white mb-2">{project.title[locale] || project.title.es}</h3>
+                <p className="text-white opacity-80 mb-4 text-sm">{project.description[locale] || project.description.es}</p>
                 
                 {/* Location */}
                 <div className="flex items-center text-white opacity-70 text-sm mb-3">
                   <span className="mr-2">📍</span>
-                  <span>{project.location.en}</span>
+                  <span>{project.location[locale] || project.location.es}</span>
                 </div>
                 
                 {/* Impact */}
                 <div className="flex items-center text-indigo-400 text-sm mb-4">
                   <span className="mr-2">🎯</span>
-                  <span className="font-medium">{project.impact.en}</span>
+                  <span className="font-medium">{project.impact[locale] || project.impact.es}</span>
                 </div>
                 
                 {/* Stats */}
                 <div className="flex justify-between text-sm text-white opacity-70 mb-4">
-                  <span>👥 {project.volunteers} volunteers</span>
-                  <span>🆓 {project.spots} spots</span>
+                  <span>👥 {project.volunteers} {t('volunteersLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}</span>
+                  <span>🆓 {project.spots} {t('spotsLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}</span>
                 </div>
                 
                 {/* Action Button */}

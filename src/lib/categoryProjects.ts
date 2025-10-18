@@ -259,7 +259,7 @@ export const categoryProjects: Record<string, CategoryProject[]> = {
       spots: 50,
       volunteers: 120,
       impact: {
-        es: '5,000 usuarios registrados',
+        es: '5,000 personas registradas',
         en: '5,000 registered users',
         de: '5.000 registrierte Nutzer'
       }
@@ -268,217 +268,473 @@ export const categoryProjects: Record<string, CategoryProject[]> = {
   'Salud': [
     {
       id: 'health-1',
-      title: 'Clínica móvil comunitaria',
-      description: 'Servicio médico itinerante que lleva atención sanitaria básica a comunidades desfavorecidas. Incluye chequeos, vacunación y educación preventiva.',
+      title: {
+        es: 'Clínica móvil comunitaria',
+        en: 'Community Mobile Clinic',
+        de: 'Mobile Gemeinschaftsklinik'
+      },
+      description: {
+        es: 'Servicio médico itinerante que lleva atención sanitaria básica a comunidades desfavorecidas. Incluye chequeos, vacunación y educación preventiva.',
+        en: 'Itinerant medical service that brings basic health care to disadvantaged communities. Includes checkups, vaccination and preventive education.',
+        de: 'Mobiler medizinischer Dienst, der grundlegende Gesundheitsversorgung in benachteiligte Gemeinden bringt. Inklusive Untersuchungen, Impfungen und Präventionserziehung.'
+      },
       category: 'Salud',
       imageUrl: 'https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=1600&auto=format&fit=crop',
-      location: 'Milán, Italia',
+      location: {
+        es: 'Milán, Italia',
+        en: 'Milan, Italy',
+        de: 'Mailand, Italien'
+      },
       city: 'Milán',
       country: 'Italia',
       spots: 12,
       volunteers: 30,
-      impact: '2,000 pacientes atendidos'
+      impact: {
+        es: '2,000 pacientes atendidos',
+        en: '2,000 patients treated',
+        de: '2.000 Patienten behandelt'
+      }
     },
     {
       id: 'health-2',
-      title: 'Programa de Salud Mental',
-      description: 'Talleres, terapia grupal y acompañamiento comunitario para promover el bienestar mental en zonas urbanas.',
+      title: {
+        es: 'Programa de Salud Mental',
+        en: 'Mental Health Program',
+        de: 'Psychische Gesundheitsprogramm'
+      },
+      description: {
+        es: 'Talleres, terapia grupal y acompañamiento comunitario para promover el bienestar mental en zonas urbanas.',
+        en: 'Workshops, group therapy and community support to promote mental well-being in urban areas.',
+        de: 'Workshops, Gruppentherapie und Gemeinschaftsbetreuung zur Förderung des psychischen Wohlbefindens in städtischen Gebieten.'
+      },
       category: 'Salud',
       imageUrl: 'https://images.unsplash.com/photo-1512250341731-1eec352fffd3?q=80&w=1600&auto=format&fit=crop',
-      location: 'Viena, Austria',
+      location: {
+        es: 'Viena, Austria',
+        en: 'Vienna, Austria',
+        de: 'Wien, Österreich'
+      },
       city: 'Viena',
       country: 'Austria',
       spots: 18,
       volunteers: 40,
-      impact: '800 personas beneficiadas'
+      impact: {
+        es: '800 personas beneficiadas',
+        en: '800 people benefited',
+        de: '800 Menschen profitiert'
+      }
     },
     {
       id: 'health-3',
-      title: 'Deporte Inclusivo',
-      description: 'Actividades deportivas adaptadas para personas con discapacidades físicas y cognitivas.',
+      title: {
+        es: 'Deporte Inclusivo',
+        en: 'Inclusive Sports',
+        de: 'Inklusiver Sport'
+      },
+      description: {
+        es: 'Actividades deportivas adaptadas para personas con discapacidades físicas y cognitivas.',
+        en: 'Adapted sports activities for people with physical and cognitive disabilities.',
+        de: 'Angepasste Sportaktivitäten für Menschen mit körperlichen und kognitiven Behinderungen.'
+      },
       category: 'Salud',
       imageUrl: 'https://images.unsplash.com/photo-1521417531039-75822a219b83?q=80&w=1600&auto=format&fit=crop',
-      location: 'Barcelona, España',
+      location: {
+        es: 'Barcelona, España',
+        en: 'Barcelona, Spain',
+        de: 'Barcelona, Spanien'
+      },
       city: 'Barcelona',
       country: 'España',
       spots: 22,
       volunteers: 55,
-      impact: '300 deportistas inclusivos'
+      impact: {
+        es: '300 deportistas inclusivos',
+        en: '300 inclusive athletes',
+        de: '300 inklusive Sportler'
+      }
     },
     {
       id: 'health-4',
-      title: 'Nutrición Comunitaria',
-      description: 'Talleres de cocina saludable y educación nutricional para familias de bajos recursos.',
+      title: {
+        es: 'Nutrición Comunitaria',
+        en: 'Community Nutrition',
+        de: 'Gemeinschaftsernährung'
+      },
+      description: {
+        es: 'Talleres de cocina saludable y educación nutricional para familias de bajos recursos.',
+        en: 'Healthy cooking workshops and nutritional education for low-income families.',
+        de: 'Gesunde Kochworkshops und Ernährungsbildung für Familien mit niedrigem Einkommen.'
+      },
       category: 'Salud',
       imageUrl: 'https://images.unsplash.com/photo-1463740839922-2d3b7e426a56?q=80&w=1600&auto=format&fit=crop',
-      location: 'Roma, Italia',
+      location: {
+        es: 'Roma, Italia',
+        en: 'Rome, Italy',
+        de: 'Rom, Italien'
+      },
       city: 'Roma',
       country: 'Italia',
       spots: 28,
       volunteers: 65,
-      impact: '1,500 familias educadas'
+      impact: {
+        es: '1,500 familias educadas',
+        en: '1,500 families educated',
+        de: '1.500 Familien ausgebildet'
+      }
     }
   ],
   'Comunidad': [
     {
       id: 'comm-1',
-      title: 'Centros vecinales inclusivos',
-      description: 'Espacios comunitarios que fomentan la integración social y el apoyo mutuo entre vecinos.',
+      title: {
+        es: 'Centros vecinales inclusivos',
+        en: 'Inclusive Neighborhood Centers',
+        de: 'Inklusive Nachbarschaftszentren'
+      },
+      description: {
+        es: 'Espacios comunitarios que fomentan la integración social y el apoyo mutuo entre vecinos.',
+        en: 'Community spaces that foster social integration and mutual support among neighbors.',
+        de: 'Gemeinschaftsräume, die soziale Integration und gegenseitige Unterstützung unter Nachbarn fördern.'
+      },
       category: 'Comunidad',
       imageUrl: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop',
-      location: 'Estocolmo, Suecia',
+      location: {
+        es: 'Estocolmo, Suecia',
+        en: 'Stockholm, Sweden',
+        de: 'Stockholm, Schweden'
+      },
       city: 'Estocolmo',
       country: 'Suecia',
       spots: 20,
       volunteers: 50,
-      impact: '15 centros activos'
+      impact: {
+        es: '15 centros activos',
+        en: '15 active centers',
+        de: '15 aktive Zentren'
+      }
     },
     {
       id: 'comm-2',
-      title: 'Red de Apoyo a Refugiados',
-      description: 'Programa de integración y apoyo para familias refugiadas en comunidades locales.',
+      title: {
+        es: 'Red de Apoyo a Refugiados',
+        en: 'Refugee Support Network',
+        de: 'Flüchtlingsunterstützungsnetzwerk'
+      },
+      description: {
+        es: 'Programa de integración y apoyo para familias refugiadas en comunidades locales.',
+        en: 'Integration and support program for refugee families in local communities.',
+        de: 'Integrations- und Unterstützungsprogramm für Flüchtlingsfamilien in lokalen Gemeinden.'
+      },
       category: 'Comunidad',
       imageUrl: 'https://images.unsplash.com/photo-1559027615-5ce2d09da5c1?q=80&w=1600&auto=format&fit=crop',
-      location: 'Berlín, Alemania',
+      location: {
+        es: 'Berlín, Alemania',
+        en: 'Berlin, Germany',
+        de: 'Berlin, Deutschland'
+      },
       city: 'Berlín',
       country: 'Alemania',
       spots: 30,
       volunteers: 80,
-      impact: '200 familias integradas'
+      impact: {
+        es: '200 familias integradas',
+        en: '200 families integrated',
+        de: '200 Familien integriert'
+      }
     },
     {
       id: 'comm-3',
-      title: 'Festivales Culturales',
-      description: 'Eventos que celebran la diversidad cultural y promueven la cohesión social.',
+      title: {
+        es: 'Festivales Culturales',
+        en: 'Cultural Festivals',
+        de: 'Kulturfestivals'
+      },
+      description: {
+        es: 'Eventos que celebran la diversidad cultural y promueven la cohesión social.',
+        en: 'Events that celebrate cultural diversity and promote social cohesion.',
+        de: 'Veranstaltungen, die kulturelle Vielfalt feiern und sozialen Zusammenhalt fördern.'
+      },
       category: 'Comunidad',
       imageUrl: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?q=80&w=1600&auto=format&fit=crop',
-      location: 'Bruselas, Bélgica',
+      location: {
+        es: 'Bruselas, Bélgica',
+        en: 'Brussels, Belgium',
+        de: 'Brüssel, Belgien'
+      },
       city: 'Bruselas',
       country: 'Bélgica',
       spots: 40,
       volunteers: 100,
-      impact: '50 festivales organizados'
+      impact: {
+        es: '50 festivales organizados',
+        en: '50 festivals organized',
+        de: '50 Festivals organisiert'
+      }
     },
     {
       id: 'comm-4',
-      title: 'Programa de Mentores Juveniles',
-      description: 'Conecta jóvenes con mentores adultos para orientación académica y profesional.',
+      title: {
+        es: 'Programa de Mentores Juveniles',
+        en: 'Youth Mentoring Program',
+        de: 'Jugendmentoring-Programm'
+      },
+      description: {
+        es: 'Conecta jóvenes con mentores adultos para orientación académica y profesional.',
+        en: 'Connects young people with adult mentors for academic and professional guidance.',
+        de: 'Verbindet junge Menschen mit erwachsenen Mentoren für akademische und berufliche Beratung.'
+      },
       category: 'Comunidad',
       imageUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600&auto=format&fit=crop',
-      location: 'Dublín, Irlanda',
+      location: {
+        es: 'Dublín, Irlanda',
+        en: 'Dublin, Ireland',
+        de: 'Dublin, Irland'
+      },
       city: 'Dublín',
       country: 'Irlanda',
       spots: 25,
       volunteers: 60,
-      impact: '300 jóvenes mentorizados'
+      impact: {
+        es: '300 jóvenes mentorizados',
+        en: '300 young people mentored',
+        de: '300 Jugendliche betreut'
+      }
     }
   ],
   'Océanos': [
     {
       id: 'ocean-1',
-      title: 'Recuperación de playas',
-      description: 'Limpieza y restauración de ecosistemas costeros afectados por la contaminación marina.',
+      title: {
+        es: 'Recuperación de playas',
+        en: 'Beach Recovery',
+        de: 'Strandwiederherstellung'
+      },
+      description: {
+        es: 'Limpieza y restauración de ecosistemas costeros afectados por la contaminación marina.',
+        en: 'Cleanup and restoration of coastal ecosystems affected by marine pollution.',
+        de: 'Reinigung und Wiederherstellung von Küstenökosystemen, die von Meeresverschmutzung betroffen sind.'
+      },
       category: 'Océanos',
       imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop',
-      location: 'Marsella, Francia',
+      location: {
+        es: 'Marsella, Francia',
+        en: 'Marseille, France',
+        de: 'Marseille, Frankreich'
+      },
       city: 'Marsella',
       country: 'Francia',
       spots: 35,
       volunteers: 120,
-      impact: '10 playas restauradas'
+      impact: {
+        es: '10 playas restauradas',
+        en: '10 beaches restored',
+        de: '10 Strände wiederhergestellt'
+      }
     },
     {
       id: 'ocean-2',
-      title: 'Protección de Corales',
-      description: 'Proyecto de restauración de arrecifes de coral en el Mediterráneo.',
+      title: {
+        es: 'Protección de Corales',
+        en: 'Coral Protection',
+        de: 'Korallenschutz'
+      },
+      description: {
+        es: 'Proyecto de restauración de arrecifes de coral en el Mediterráneo.',
+        en: 'Coral reef restoration project in the Mediterranean.',
+        de: 'Korallenriff-Wiederherstellungsprojekt im Mittelmeer.'
+      },
       category: 'Océanos',
       imageUrl: 'https://images.unsplash.com/photo-1500417148159-68083bd7333a?q=80&w=1600&auto=format&fit=crop',
-      location: 'Niza, Francia',
+      location: {
+        es: 'Niza, Francia',
+        en: 'Nice, France',
+        de: 'Nizza, Frankreich'
+      },
       city: 'Niza',
       country: 'Francia',
       spots: 15,
       volunteers: 45,
-      impact: '5 hectáreas de coral protegidas'
+      impact: {
+        es: '5 hectáreas de coral protegidas',
+        en: '5 hectares of coral protected',
+        de: '5 Hektar Korallen geschützt'
+      }
     },
     {
       id: 'ocean-3',
-      title: 'Monitoreo Marino',
-      description: 'Ciencia ciudadana para estudiar la biodiversidad marina y el impacto del cambio climático.',
+      title: {
+        es: 'Monitoreo Marino',
+        en: 'Marine Monitoring',
+        de: 'Meeresüberwachung'
+      },
+      description: {
+        es: 'Ciencia ciudadana para estudiar la biodiversidad marina y el impacto del cambio climático.',
+        en: 'Citizen science to study marine biodiversity and the impact of climate change.',
+        de: 'Bürgerwissenschaft zur Erforschung der Meeresbiodiversität und der Auswirkungen des Klimawandels.'
+      },
       category: 'Océanos',
       imageUrl: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=1600&auto=format&fit=crop',
-      location: 'Valencia, España',
+      location: {
+        es: 'Valencia, España',
+        en: 'Valencia, Spain',
+        de: 'Valencia, Spanien'
+      },
       city: 'Valencia',
       country: 'España',
       spots: 20,
       volunteers: 60,
-      impact: '1,000 especies catalogadas'
+      impact: {
+        es: '1,000 especies catalogadas',
+        en: '1,000 species catalogued',
+        de: '1.000 Arten katalogisiert'
+      }
     },
     {
       id: 'ocean-4',
-      title: 'Pesca Sostenible',
-      description: 'Educación sobre prácticas de pesca responsable y conservación marina.',
+      title: {
+        es: 'Pesca Sostenible',
+        en: 'Sustainable Fishing',
+        de: 'Nachhaltige Fischerei'
+      },
+      description: {
+        es: 'Educación sobre prácticas de pesca responsable y conservación marina.',
+        en: 'Education on responsible fishing practices and marine conservation.',
+        de: 'Bildung über verantwortungsvolle Fischereipraktiken und Meeresschutz.'
+      },
       category: 'Océanos',
       imageUrl: 'https://images.unsplash.com/photo-1508186225823-0963cf9ab0de?q=80&w=1600&auto=format&fit=crop',
-      location: 'Porto, Portugal',
+      location: {
+        es: 'Porto, Portugal',
+        en: 'Porto, Portugal',
+        de: 'Porto, Portugal'
+      },
       city: 'Porto',
       country: 'Portugal',
       spots: 18,
       volunteers: 50,
-      impact: '200 pescadores capacitados'
+      impact: {
+        es: '200 pescadores capacitados',
+        en: '200 fishermen trained',
+        de: '200 Fischer ausgebildet'
+      }
     }
   ],
   'Alimentación': [
     {
       id: 'food-1',
-      title: 'Huertos urbanos',
-      description: 'Creación de espacios agrícolas urbanos para promover la alimentación local y sostenible.',
+      title: {
+        es: 'Huertos urbanos',
+        en: 'Urban Gardens',
+        de: 'Städtische Gärten'
+      },
+      description: {
+        es: 'Creación de espacios agrícolas urbanos para promover la alimentación local y sostenible.',
+        en: 'Creation of urban agricultural spaces to promote local and sustainable food.',
+        de: 'Schaffung städtischer landwirtschaftlicher Räume zur Förderung lokaler und nachhaltiger Ernährung.'
+      },
       category: 'Alimentación',
       imageUrl: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=1600&auto=format&fit=crop',
-      location: 'Londres, Reino Unido',
+      location: {
+        es: 'Londres, Reino Unido',
+        en: 'London, United Kingdom',
+        de: 'London, Vereinigtes Königreich'
+      },
       city: 'Londres',
       country: 'Reino Unido',
       spots: 25,
       volunteers: 70,
-      impact: '20 huertos urbanos activos'
+      impact: {
+        es: '20 huertos urbanos activos',
+        en: '20 active urban gardens',
+        de: '20 aktive Stadtgärten'
+      }
     },
     {
       id: 'food-2',
-      title: 'Banco de Alimentos',
-      description: 'Redistribución de alimentos excedentes para combatir el desperdicio y la inseguridad alimentaria.',
+      title: {
+        es: 'Banco de Alimentos',
+        en: 'Food Bank',
+        de: 'Tafel'
+      },
+      description: {
+        es: 'Redistribución de alimentos excedentes para combatir el desperdicio y la inseguridad alimentaria.',
+        en: 'Redistribution of surplus food to combat waste and food insecurity.',
+        de: 'Umverteilung von überschüssigen Lebensmitteln zur Bekämpfung von Verschwendung und Ernährungsunsicherheit.'
+      },
       category: 'Alimentación',
       imageUrl: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1600&auto=format&fit=crop',
-      location: 'Hamburgo, Alemania',
+      location: {
+        es: 'Hamburgo, Alemania',
+        en: 'Hamburg, Germany',
+        de: 'Hamburg, Deutschland'
+      },
       city: 'Hamburgo',
       country: 'Alemania',
       spots: 30,
       volunteers: 85,
-      impact: '5,000 familias alimentadas'
+      impact: {
+        es: '5,000 familias alimentadas',
+        en: '5,000 families fed',
+        de: '5.000 Familien ernährt'
+      }
     },
     {
       id: 'food-3',
-      title: 'Agricultura Regenerativa',
-      description: 'Promoción de técnicas agrícolas que restauran la salud del suelo y la biodiversidad.',
+      title: {
+        es: 'Agricultura Regenerativa',
+        en: 'Regenerative Agriculture',
+        de: 'Regenerative Landwirtschaft'
+      },
+      description: {
+        es: 'Promoción de técnicas agrícolas que restauran la salud del suelo y la biodiversidad.',
+        en: 'Promotion of agricultural techniques that restore soil health and biodiversity.',
+        de: 'Förderung landwirtschaftlicher Techniken, die die Bodengesundheit und Biodiversität wiederherstellen.'
+      },
       category: 'Alimentación',
       imageUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1600&auto=format&fit=crop',
-      location: 'Bordeaux, Francia',
+      location: {
+        es: 'Bordeaux, Francia',
+        en: 'Bordeaux, France',
+        de: 'Bordeaux, Frankreich'
+      },
       city: 'Bordeaux',
       country: 'Francia',
       spots: 20,
       volunteers: 55,
-      impact: '100 hectáreas regeneradas'
+      impact: {
+        es: '100 hectáreas regeneradas',
+        en: '100 hectares regenerated',
+        de: '100 Hektar regeneriert'
+      }
     },
     {
       id: 'food-4',
-      title: 'Cocina Sostenible',
-      description: 'Talleres de cocina con ingredientes locales y técnicas de reducción de desperdicios.',
+      title: {
+        es: 'Cocina Sostenible',
+        en: 'Sustainable Cooking',
+        de: 'Nachhaltiges Kochen'
+      },
+      description: {
+        es: 'Talleres de cocina con ingredientes locales y técnicas de reducción de desperdicios.',
+        en: 'Cooking workshops with local ingredients and waste reduction techniques.',
+        de: 'Kochworkshops mit lokalen Zutaten und Abfallreduktionstechniken.'
+      },
       category: 'Alimentación',
       imageUrl: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1600&auto=format&fit=crop',
-      location: 'Copenhague, Dinamarca',
+      location: {
+        es: 'Copenhague, Dinamarca',
+        en: 'Copenhagen, Denmark',
+        de: 'Kopenhagen, Dänemark'
+      },
       city: 'Copenhague',
       country: 'Dinamarca',
       spots: 22,
       volunteers: 60,
-      impact: '800 personas capacitadas'
+      impact: {
+        es: '800 personas capacitadas',
+        en: '800 people trained',
+        de: '800 Menschen ausgebildet'
+      }
     }
   ]
 };

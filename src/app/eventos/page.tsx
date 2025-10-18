@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useI18n, categoryLabel } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 
 type Category =
   | "Medio ambiente"
@@ -252,7 +252,7 @@ export default function EventosPage() {
             className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
             value={form.website ?? ""}
             onChange={(e) => update("website", e.target.value)}
-            placeholder={locale === 'de' ? 'https://beispiel.de' : locale === 'en' ? 'https://example.com' : 'https://ejemplo.com'}
+            placeholder={t('websitePlaceholder' + locale.charAt(0).toUpperCase() + locale.slice(1))}
           />
         </div>
 
@@ -264,7 +264,7 @@ export default function EventosPage() {
             className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
             value={form.image_url ?? ""}
             onChange={(e) => update("image_url", e.target.value)}
-            placeholder={locale === 'de' ? 'Bild-URL (optional)' : locale === 'en' ? 'Image URL (optional)' : 'URL de imagen (opcional)'}
+            placeholder={t('imageUrlPlaceholder' + locale.charAt(0).toUpperCase() + locale.slice(1))}
           />
         </div>
 
@@ -288,7 +288,7 @@ export default function EventosPage() {
           />
           {form.image_url && (
             <div className="mt-2">
-              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">{locale === 'de' ? 'Vorschau' : locale === 'en' ? 'Preview' : 'Vista previa'}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">{t('previewLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}</div>
               <div className="w-full h-40 overflow-hidden rounded border border-gray-300 dark:border-slate-600">
                 <img
                   src={form.image_url}
@@ -357,7 +357,7 @@ export default function EventosPage() {
         <div className="border rounded p-4 bg-gray-900 text-white">
           <div className="font-semibold mb-2">{t("createdEvent")}</div>
           <div className="text-sm">
-            <span className="font-semibold">{created.title}</span> se realizará el <span className="font-semibold">{created.date}</span> en <span className="font-semibold">{created.city}, {created.country}</span>{created.address ? `, ${created.address}` : ""}.
+            <span className="font-semibold">{created.title}</span> {t('eventCreatedMessage')} <span className="font-semibold">{created.date}</span> en <span className="font-semibold">{created.city}, {created.country}</span>{created.address ? `, ${created.address}` : ""}.
           </div>
         </div>
       )}
@@ -370,7 +370,7 @@ export default function EventosPage() {
             onClick={refreshParticipatedEvents}
             className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
           >
-            {locale === 'de' ? 'Aktualisieren' : locale === 'en' ? 'Refresh' : 'Actualizar'}
+            {t('refresh')}
           </button>
         </div>
         <div className="overflow-auto border border-gray-300 dark:border-slate-600 rounded">

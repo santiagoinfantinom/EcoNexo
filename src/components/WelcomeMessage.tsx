@@ -25,39 +25,23 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
   const values = [
     {
       icon: "🌱",
-      title: locale === 'es' ? "Sostenibilidad" : locale === 'de' ? "Nachhaltigkeit" : "Sustainability",
-      description: locale === 'es' 
-        ? "Conectamos proyectos que construyen un futuro más verde y sostenible para Europa"
-        : locale === 'de'
-        ? "Wir verbinden Projekte, die eine grünere und nachhaltigere Zukunft für Europa aufbauen"
-        : "We connect projects building a greener and more sustainable future for Europe"
+      title: t('sustainabilityTitle'),
+      description: t('sustainabilityDescription')
     },
     {
       icon: "🤝",
-      title: locale === 'es' ? "Comunidad" : locale === 'de' ? "Gemeinschaft" : "Community",
-      description: locale === 'es'
-        ? "Fomentamos la colaboración entre voluntarios, organizaciones y comunidades locales"
-        : locale === 'de'
-        ? "Wir fördern die Zusammenarbeit zwischen Freiwilligen, Organisationen und lokalen Gemeinden"
-        : "We foster collaboration between volunteers, organizations and local communities"
+      title: t('communityTitle'),
+      description: t('communityDescription')
     },
     {
       icon: "🌍",
-      title: locale === 'es' ? "Impacto Global" : locale === 'de' ? "Globaler Einfluss" : "Global Impact",
-      description: locale === 'es'
-        ? "Cada acción local contribuye a un cambio positivo a escala europea"
-        : locale === 'de'
-        ? "Jede lokale Aktion trägt zu einem positiven Wandel auf europäischer Ebene bei"
-        : "Every local action contributes to positive change at European scale"
+      title: t('globalImpactTitle'),
+      description: t('globalImpactDescription')
     },
     {
       icon: "💡",
-      title: locale === 'es' ? "Innovación" : locale === 'de' ? "Innovation" : "Innovation",
-      description: locale === 'es'
-        ? "Apoyamos soluciones creativas y tecnologías verdes para los desafíos ambientales"
-        : locale === 'de'
-        ? "Wir unterstützen kreative Lösungen und grüne Technologien für Umweltherausforderungen"
-        : "We support creative solutions and green technologies for environmental challenges"
+      title: t('innovationTitle'),
+      description: t('innovationDescription')
     }
   ];
 
@@ -82,15 +66,10 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
               <span className="text-4xl">🌿</span>
               <div>
                 <h1 className="text-3xl font-bold text-gls-secondary">
-                  {locale === 'es' ? "¡Bienvenido a EcoNexo!" : locale === 'de' ? "Willkommen bei EcoNexo!" : "Welcome to EcoNexo!"}
+                  {t('welcomeMessageTitle')}
                 </h1>
                 <p className="text-gls-secondary opacity-80 mt-2">
-                  {locale === 'es' 
-                    ? "Descubre nuestros valores y únete al movimiento sostenible"
-                    : locale === 'de'
-                    ? "Entdecke unsere Werte und werde Teil der nachhaltigen Bewegung"
-                    : "Discover our values and join the sustainable movement"
-                  }
+                  {t('welcomeMessageDescription')}
                 </p>
               </div>
             </div>
@@ -127,20 +106,10 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
           {/* Call to Action */}
           <div className="bg-ecosia-green/20 rounded-xl p-6 text-center">
             <h3 className="text-2xl font-bold text-gls-primary mb-4">
-              {locale === 'es' 
-                ? "¿Listo para hacer la diferencia?"
-                : locale === 'de'
-                ? "Bereit, einen Unterschied zu machen?"
-                : "Ready to make a difference?"
-              }
+              {t('readyToMakeDifference')}
             </h3>
             <p className="text-gls-primary opacity-90 mb-6">
-              {locale === 'es'
-                ? "Explora proyectos, únete a eventos y conecta con una comunidad comprometida con el futuro del planeta"
-                : locale === 'de'
-                ? "Erkunde Projekte, nimm an Veranstaltungen teil und verbinde dich mit einer Gemeinschaft, die sich für die Zukunft des Planeten engagiert"
-                : "Explore projects, join events and connect with a community committed to the planet's future"
-              }
+              {t('readyDescription')}
             </p>
             <div className="flex gap-4 justify-center">
               <button
@@ -156,7 +125,7 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
                 }}
                 className="btn-gls-primary px-8 py-3 text-lg"
               >
-                {locale === 'es' ? "¡Empezar!" : locale === 'de' ? "Los geht's!" : "Let's Go!"}
+                {t('letsGo')}
               </button>
               <button
                 onClick={() => {
@@ -191,7 +160,7 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
                 }}
                 className="btn-gls-secondary px-8 py-3 text-lg"
               >
-                {locale === 'es' ? "Ver Mapa" : locale === 'de' ? "Karte anzeigen" : "View Map"}
+                {t('viewMap')}
               </button>
             <button
               onClick={() => {
@@ -206,7 +175,7 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
               title={paypalUrl && paypalUrl !== '#' ? '' : (locale === 'de' ? 'Demnächst verfügbar' : locale === 'en' ? 'Coming soon' : 'Próximamente')}
               disabled={!paypalUrl || paypalUrl === '#'}
             >
-              {locale === 'de' ? 'Unterstütze uns' : locale === 'en' ? 'Support us' : 'Apóyanos'}
+              {t('supportUs')}
             </button>
             </div>
           </div>

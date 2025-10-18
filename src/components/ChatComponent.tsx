@@ -35,61 +35,66 @@ export default function ChatComponent() {
   const topics: Topic[] = [
     {
       id: "general",
-      name: locale === 'de' ? "Allgemein" : locale === 'en' ? "General" : "General",
+      name: t('generalTopic'),
       icon: "💬",
       color: "bg-blue-500",
-      description: locale === 'de' ? "Allgemeine Diskussionen" : locale === 'en' ? "General discussions" : "Discusiones generales",
+      description: t('topicDescriptionGeneral'),
       messageCount: 4
     },
     {
       id: "environment",
-      name: locale === 'de' ? "Umwelt" : locale === 'en' ? "Environment" : "Medio Ambiente",
+      name: t('environmentTopic'),
       icon: "🌱",
       color: "bg-green-500",
-      description: locale === 'de' ? "Umweltschutz und Nachhaltigkeit" : locale === 'en' ? "Environmental protection and sustainability" : "Protección ambiental y sostenibilidad",
+      description: t('topicDescriptionEnvironment'),
       messageCount: 4
     },
     {
       id: "education",
-      name: locale === 'de' ? "Bildung" : locale === 'en' ? "Education" : "Educación",
+      name: t('educationTopic'),
       icon: "📚",
       color: "bg-purple-500",
-      description: locale === 'de' ? "Bildungsprojekte und Lernen" : locale === 'en' ? "Educational projects and learning" : "Proyectos educativos y aprendizaje",
+      description: t('topicDescriptionEducation'),
       messageCount: 3
     },
     {
       id: "health",
-      name: locale === 'de' ? "Gesundheit" : locale === 'en' ? "Health" : "Salud",
+      name: t('healthTopic'),
       icon: "🏥",
       color: "bg-red-500",
-      description: locale === 'de' ? "Gesundheitsprojekte und Wohlbefinden" : locale === 'en' ? "Health projects and wellness" : "Proyectos de salud y bienestar",
+      description: t('topicDescriptionHealth'),
       messageCount: 3
     },
     {
       id: "community",
-      name: locale === 'de' ? "Gemeinschaft" : locale === 'en' ? "Community" : "Comunidad",
+      name: t('communityTopic'),
       icon: "🤝",
       color: "bg-orange-500",
-      description: locale === 'de' ? "Gemeinschaftsprojekte und Zusammenarbeit" : locale === 'en' ? "Community projects and collaboration" : "Proyectos comunitarios y colaboración",
+      description: t('topicDescriptionCommunity'),
       messageCount: 4
     },
     {
       id: "oceans",
-      name: locale === 'de' ? "Ozeane" : locale === 'en' ? "Oceans" : "Océanos",
+      name: t('oceansTopic'),
       icon: "🌊",
       color: "bg-cyan-500",
-      description: locale === 'de' ? "Meeresschutz und Wasserprojekte" : locale === 'en' ? "Ocean protection and water projects" : "Protección marina y proyectos de agua",
+      description: t('topicDescriptionOceans'),
       messageCount: 3
     },
     {
       id: "food",
-      name: locale === 'de' ? "Ernährung" : locale === 'en' ? "Food" : "Alimentación",
+      name: t('foodTopic'),
       icon: "🍎",
       color: "bg-lime-500",
-      description: locale === 'de' ? "Nachhaltige Ernährung und Landwirtschaft" : locale === 'en' ? "Sustainable food and agriculture" : "Alimentación sostenible y agricultura",
+      description: t('topicDescriptionFood'),
       messageCount: 4
     }
   ];
+
+  // Helper function to get translated messages
+  const getTranslatedMessage = (messageKey: string) => {
+    return t(messageKey as keyof typeof t) || messageKey;
+  };
 
   // Mock messages for demonstration
   useEffect(() => {
@@ -97,9 +102,7 @@ export default function ChatComponent() {
       // General messages
       {
         id: "1",
-        text: locale === 'de' ? "Hallo! Ich bin neu hier und möchte mehr über nachhaltige Projekte erfahren." : 
-              locale === 'en' ? "Hello! I'm new here and would like to learn more about sustainable projects." :
-              "¡Hola! Soy nuevo aquí y me gustaría aprender más sobre proyectos sostenibles.",
+        text: getTranslatedMessage('chatMessage1'),
         sender: "Ana García",
         timestamp: new Date(Date.now() - 1000 * 60 * 30),
         avatar: "🌱",
@@ -107,9 +110,7 @@ export default function ChatComponent() {
       },
       {
         id: "2", 
-        text: locale === 'de' ? "Willkommen! Wir haben hier viele tolle Projekte. Hast du schon mal bei einem Umweltprojekt mitgemacht?" :
-              locale === 'en' ? "Welcome! We have many great projects here. Have you ever participated in an environmental project?" :
-              "¡Bienvenida! Tenemos muchos proyectos geniales aquí. ¿Has participado alguna vez en un proyecto ambiental?",
+        text: getTranslatedMessage('chatMessage2'),
         sender: "Carlos M.",
         timestamp: new Date(Date.now() - 1000 * 60 * 25),
         avatar: "🌳",
@@ -117,9 +118,7 @@ export default function ChatComponent() {
       },
       {
         id: "3",
-        text: locale === 'de' ? "Kann jemand empfehlen, wie ich mich lokal engagieren kann?" :
-              locale === 'en' ? "Can anyone recommend how I can get involved locally?" :
-              "¿Alguien puede recomendar cómo puedo involucrarme localmente?",
+        text: getTranslatedMessage('chatMessage3'),
         sender: "Lisa K.",
         timestamp: new Date(Date.now() - 1000 * 60 * 15),
         avatar: "👋",
@@ -127,9 +126,7 @@ export default function ChatComponent() {
       },
       {
         id: "4",
-        text: locale === 'de' ? "Ich suche nach Freiwilligenarbeit in Berlin. Hat jemand Tipps?" :
-              locale === 'en' ? "I'm looking for volunteer work in Berlin. Does anyone have tips?" :
-              "Busco trabajo voluntario en Berlín. ¿Alguien tiene consejos?",
+        text: getTranslatedMessage('chatMessage4'),
         sender: "Tom R.",
         timestamp: new Date(Date.now() - 1000 * 60 * 10),
         avatar: "🏙️",
@@ -193,7 +190,7 @@ export default function ChatComponent() {
         id: "10",
         text: locale === 'de' ? "Online-Kurs über Klimawandel gestartet. Kostenlos für alle!" :
               locale === 'en' ? "Online course about climate change started. Free for everyone!" :
-              "¡Curso en línea sobre cambio climático iniciado. ¡Gratis para todos!",
+              "¡Curso en línea sobre cambio climático iniciado. ¡Gratis para todo el mundo!",
         sender: "Climate Edu",
         timestamp: new Date(Date.now() - 1000 * 60 * 28),
         avatar: "🌍",
@@ -225,7 +222,7 @@ export default function ChatComponent() {
         id: "13",
         text: locale === 'de' ? "Gemeinschaftsgarten sucht Freiwillige für Kräutergarten-Projekt." :
               locale === 'en' ? "Community garden looking for volunteers for herb garden project." :
-              "Jardín comunitario busca voluntarios para proyecto de jardín de hierbas.",
+              "Jardín comunitario busca voluntarixs para proyecto de jardín de hierbas.",
         sender: "Health Garden",
         timestamp: new Date(Date.now() - 1000 * 60 * 32),
         avatar: "🌿",
@@ -277,7 +274,7 @@ export default function ChatComponent() {
         id: "18",
         text: locale === 'de' ? "Fahrrad-Werkstatt sucht Freiwillige. Mechanik-Kenntnisse erwünscht!" :
               locale === 'en' ? "Bike workshop looking for volunteers. Mechanical skills desired!" :
-              "¡Taller de bicicletas busca voluntarios. ¡Conocimientos de mecánica deseados!",
+              "¡Taller de bicicletas busca voluntarixs. ¡Conocimientos de mecánica deseados!",
         sender: "Bike Collective",
         timestamp: new Date(Date.now() - 1000 * 60 * 14),
         avatar: "🚲",
@@ -321,7 +318,7 @@ export default function ChatComponent() {
         id: "22",
         text: locale === 'de' ? "Gemeinschaftsgarten sucht Gärtner. Gemüse für alle!" :
               locale === 'en' ? "Community garden looking for gardeners. Vegetables for everyone!" :
-              "Jardín comunitario busca jardineros. ¡Verduras para todos!",
+              "Jardín comunitario busca jardinerxs. ¡Verduras para todo el mundo!",
         sender: "Garden Share",
         timestamp: new Date(Date.now() - 1000 * 60 * 48),
         avatar: "🥕",
