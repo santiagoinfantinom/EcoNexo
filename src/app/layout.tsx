@@ -29,7 +29,7 @@ const geistMono = Geist_Mono({
 
 const interTight = Inter_Tight({ subsets: ["latin"] });
 
-export const metadata: Metadata = generateMetadata("es");
+export const metadata: Metadata = generateMetadata("en");
 
 export default function RootLayout({
   children,
@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" data-theme="dark">
+    <html lang="en" data-theme="dark">
       <body
         className={`${interTight.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-gls-primary`}
       >
