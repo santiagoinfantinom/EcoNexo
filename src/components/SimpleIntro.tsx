@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useI18n } from '@/lib/i18n';
 
 export default function SimpleIntro() {
   const [showIntro, setShowIntro] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const { locale, setLocale, t } = useI18n();
+  const { locale, setLocale } = useI18n();
 
   useEffect(() => {
     // Show intro after page loads
@@ -17,11 +17,11 @@ export default function SimpleIntro() {
     return () => clearTimeout(timer);
   }, []);
 
-  const steps = useMemo(() => [
+  const steps = [
     {
       icon: '🌍',
-      title: t('welcomeIntroLanguageTitle'),
-      description: t('welcomeIntroLanguageDescription'),
+      title: 'Selecciona tu idioma',
+      description: 'EcoNexo está disponible en español, inglés y alemán',
       buttons: [
         { label: '🇪🇸 Español', locale: 'es' },
         { label: '🇬🇧 English', locale: 'en' },
@@ -30,30 +30,30 @@ export default function SimpleIntro() {
     },
     {
       icon: '🗺️',
-      title: t('welcomeIntroMapTitle'),
-      description: t('welcomeIntroMapDescription')
+      title: 'Mapa de Proyectos',
+      description: 'Explora proyectos sostenibles en toda Europa'
     },
     {
       icon: '📅',
-      title: t('welcomeIntroEventsTitle'),
-      description: t('welcomeIntroEventsDescription')
+      title: 'Eventos Ambientales',
+      description: 'Descubre eventos y oportunidades de voluntariado'
     },
     {
       icon: '💼',
-      title: t('welcomeIntroJobsTitle'),
-      description: t('welcomeIntroJobsDescription')
+      title: 'Trabajos Verdes',
+      description: 'Encuentra oportunidades de carrera sostenible'
     },
     {
       icon: '💬',
-      title: t('welcomeIntroChatTitle'),
-      description: t('welcomeIntroChatDescription')
+      title: 'Chat Comunitario',
+      description: 'Conecta con la comunidad ambiental'
     },
     {
       icon: '👤',
-      title: t('welcomeIntroProfileTitle'),
-      description: t('welcomeIntroProfileDescription')
+      title: 'Perfil Personal',
+      description: 'Gestiona tu cuenta y proyectos guardados'
     }
-  ], [t]);
+  ];
 
   const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
     setLocale(selectedLocale);
@@ -191,7 +191,7 @@ export default function SimpleIntro() {
               onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#d1d5db'}
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#e5e7eb'}
             >
-              {t('welcomeIntroSkip')}
+              Saltar
             </button>
             <button
               onClick={handleNext}
@@ -209,7 +209,7 @@ export default function SimpleIntro() {
               onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#059669'}
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#10b981'}
             >
-              {currentStep === steps.length - 1 ? t('welcomeIntroGetStarted') : t('welcomeIntroNext')}
+              {currentStep === steps.length - 1 ? '¡Comenzar!' : 'Siguiente'}
             </button>
           </div>
         )}

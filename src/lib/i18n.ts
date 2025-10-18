@@ -645,7 +645,7 @@ export function impactTagLabel(original: string, locale: Locale) {
 }
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+  const [locale, setLocaleState] = useState<Locale>("es");
   useEffect(() => {
     try {
       if (typeof window !== "undefined") {
