@@ -35,7 +35,7 @@ type EventDetails = {
 const EVENT_DETAILS: Record<string, EventDetails> = {
   "e1": {
     id: "e1",
-    title: "Plantación de árboles nativos",
+    title: "Native Tree Planting",
     title_en: "Native Tree Planting",
     title_de: "Pflanzung einheimischer Bäume",
     description: "Únete a nuestra plantación comunitaria de especies nativas para restaurar el ecosistema local. Aprenderás sobre las especies autóctonas y su importancia para la biodiversidad urbana.",
@@ -50,13 +50,13 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
     category: "environment",
     maxVolunteers: 30,
     currentVolunteers: 12,
-    requirements: ["Ropa cómoda", "Botas de trabajo", "Guantes", "Agua"],
-    benefits: ["Certificado de participación", "Almuerzo incluido", "Material educativo"],
+    requirements: ["Comfortable clothing", "Work boots", "Gloves", "Water"],
+    benefits: ["Participation certificate", "Lunch included", "Educational material"],
     contact: "info@greencity.org"
   },
   "e2": {
     id: "e2",
-    title: "Taller de energía solar",
+    title: "Solar Energy Workshop",
     title_en: "Solar Energy Workshop",
     title_de: "Solar-Energie-Workshop",
     description: "Aprende sobre instalación y beneficios de paneles solares residenciales. Incluye demostración práctica y cálculo de ahorro energético.",
@@ -71,13 +71,13 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
     category: "education",
     maxVolunteers: 20,
     currentVolunteers: 15,
-    requirements: ["Cuaderno", "Calculadora", "Ropa cómoda"],
-    benefits: ["Certificado de capacitación", "Manual técnico", "Coffee break"],
+    requirements: ["Notebook", "Calculator", "Comfortable clothing"],
+    benefits: ["Training certificate", "Technical manual", "Coffee break"],
     contact: "training@solartech.edu"
   },
   "e3": {
     id: "e3",
-    title: "Mercado de productos locales",
+    title: "Local Products Market",
     title_en: "Local Products Market",
     title_de: "Lokaler Produktmarkt",
     description: "Feria de productos orgánicos y artesanías locales sostenibles. Conoce productores locales y sus prácticas ecológicas.",
@@ -92,13 +92,13 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
     category: "community",
     maxVolunteers: 40,
     currentVolunteers: 25,
-    requirements: ["Dinero para compras", "Bolsa reutilizable"],
-    benefits: ["Descuentos especiales", "Degustaciones gratuitas", "Red de contactos"],
+    requirements: ["Money for purchases", "Reusable bag"],
+    benefits: ["Special discounts", "Free tastings", "Contact network"],
     contact: "mercado@productoreslocales.es"
   },
   "e4": {
     id: "e4",
-    title: "Limpieza de río",
+    title: "River Cleanup",
     description: "Participa en la limpieza del río Verde para mejorar la calidad del agua y proteger la vida acuática. Incluye clasificación de residuos y educación ambiental.",
     date: "2025-02-14",
     time: "08:00",
@@ -108,13 +108,13 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
     category: "environment",
     maxVolunteers: 25,
     currentVolunteers: 18,
-    requirements: ["Guantes de trabajo", "Ropa cómoda", "Botas impermeables"],
-    benefits: ["Certificado de participación", "Refrigerio", "Material educativo"],
+    requirements: ["Work gloves", "Comfortable clothing", "Waterproof boots"],
+    benefits: ["Participation certificate", "Refreshments", "Educational material"],
     contact: "rio@guardianes.es"
   },
   "e5": {
     id: "e5",
-    title: "Conferencia sobre cambio climático",
+    title: "Climate Change Conference",
     description: "Asiste a esta conferencia informativa sobre los efectos del cambio climático y las acciones que podemos tomar para mitigarlo.",
     date: "2025-03-05",
     time: "18:00",
