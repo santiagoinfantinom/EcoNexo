@@ -23,7 +23,7 @@ export default function TestModal() {
           left: 0 !important;
           width: 100vw !important;
           height: 100vh !important;
-          background-color: red !important;
+          background: linear-gradient(135deg, #0f4c3a 0%, #1a5f3f 50%, #2d7a3a 100%) !important;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
@@ -33,57 +33,64 @@ export default function TestModal() {
           opacity: 1 !important;
         ">
           <div style="
-            background-color: yellow !important;
-            border: 4px solid red !important;
-            border-radius: 20px !important;
+            background: linear-gradient(145deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%) !important;
+            border: 2px solid #10b981 !important;
+            border-radius: 24px !important;
             padding: 40px !important;
             max-width: 500px !important;
             width: 100% !important;
             text-align: center !important;
             position: relative !important;
+            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.25) !important;
           ">
             <div style="font-size: 80px; margin-bottom: 20px;">🌍</div>
-            <h1 style="font-size: 32px; font-weight: bold; color: black; margin-bottom: 15px;">
+            <h1 style="font-size: 32px; font-weight: bold; color: #064e3b; margin-bottom: 15px;">
               ¡Bienvenido a EcoNexo!
             </h1>
-            <p style="font-size: 18px; color: black; margin-bottom: 30px;">
+            <p style="font-size: 18px; color: #374151; margin-bottom: 30px;">
               Selecciona tu idioma preferido para comenzar
             </p>
             
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-              <button onclick="localStorage.setItem('econexo:locale', 'es'); window.location.reload();" style="
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <button onclick="localStorage.setItem('econexo:locale', 'es'); localStorage.setItem('econexo-language-set', 'true'); localStorage.setItem('econexo-preferred-language', 'es'); document.getElementById('test-modal').remove();" style="
                 width: 100% !important;
-                background-color: green !important;
+                background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%) !important;
                 color: white !important;
-                padding: 15px 30px !important;
-                border-radius: 12px !important;
+                padding: 16px 32px !important;
+                border-radius: 16px !important;
                 border: none !important;
                 font-size: 18px !important;
-                font-weight: 600 !important;
+                font-weight: 500 !important;
                 cursor: pointer !important;
-              ">🇪🇸 Español</button>
-              <button onclick="localStorage.setItem('econexo:locale', 'en'); window.location.reload();" style="
+                transition: all 0.3s ease !important;
+                box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3) !important;
+              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px 0 rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px 0 rgba(16, 185, 129, 0.3)'">🇪🇸 Español</button>
+              <button onclick="localStorage.setItem('econexo:locale', 'en'); localStorage.setItem('econexo-language-set', 'true'); localStorage.setItem('econexo-preferred-language', 'en'); document.getElementById('test-modal').remove();" style="
                 width: 100% !important;
-                background-color: green !important;
+                background: linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%) !important;
                 color: white !important;
-                padding: 15px 30px !important;
-                border-radius: 12px !important;
+                padding: 16px 32px !important;
+                border-radius: 16px !important;
                 border: none !important;
                 font-size: 18px !important;
-                font-weight: 600 !important;
+                font-weight: 500 !important;
                 cursor: pointer !important;
-              ">🇬🇧 English</button>
-              <button onclick="localStorage.setItem('econexo:locale', 'de'); window.location.reload();" style="
+                transition: all 0.3s ease !important;
+                box-shadow: 0 4px 14px 0 rgba(5, 150, 105, 0.3) !important;
+              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px 0 rgba(5, 150, 105, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px 0 rgba(5, 150, 105, 0.3)'">🇬🇧 English</button>
+              <button onclick="localStorage.setItem('econexo:locale', 'de'); localStorage.setItem('econexo-language-set', 'true'); localStorage.setItem('econexo-preferred-language', 'de'); document.getElementById('test-modal').remove();" style="
                 width: 100% !important;
-                background-color: green !important;
+                background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%) !important;
                 color: white !important;
-                padding: 15px 30px !important;
-                border-radius: 12px !important;
+                padding: 16px 32px !important;
+                border-radius: 16px !important;
                 border: none !important;
                 font-size: 18px !important;
-                font-weight: 600 !important;
+                font-weight: 500 !important;
                 cursor: pointer !important;
-              ">🇩🇪 Deutsch</button>
+                transition: all 0.3s ease !important;
+                box-shadow: 0 4px 14px 0 rgba(4, 120, 87, 0.3) !important;
+              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px 0 rgba(4, 120, 87, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px 0 rgba(4, 120, 87, 0.3)'">🇩🇪 Deutsch</button>
             </div>
           </div>
         </div>
