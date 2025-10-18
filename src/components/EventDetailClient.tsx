@@ -895,19 +895,11 @@ function getLocalizedEventData(eventId: string, locale: string) {
   // In a real app, you'd have localized fields in the database
   const overridesFromMap = (EVENT_I18N as Record<string, Record<string, Partial<EventDetails>>>)[eventId]?.[locale as 'en' | 'de'] || {};
   const auto = autoTranslateEvent(baseEvent, locale);
-  const translatedCategory = baseEvent.category === 'environment' ? 
-    t('categoryEnvironment') :
-    baseEvent.category === 'education' ?
-    t('categoryEducation') :
-    baseEvent.category === 'community' ?
-    t('categoryCommunity') :
-    baseEvent.category;
 
   return {
     ...baseEvent,
     ...auto,
     ...overridesFromMap,
-    category: translatedCategory,
   };
 }
 
@@ -916,7 +908,24 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
   const { user } = useAuth();
   const [saved, setSaved] = React.useState<boolean>(false);
   
-  const event = getLocalizedEventData(eventId, locale);
+  const baseEvent = getLocalizedEventData(eventId, locale);
+  if (!baseEvent) {
+    notFound();
+  }
+
+  // Translate category within the component where t is available
+  const translatedCategory = baseEvent.category === 'environment' ? 
+    t('categoryEnvironment') :
+    baseEvent.category === 'education' ?
+    t('categoryEducation') :
+    baseEvent.category === 'community' ?
+    t('categoryCommunity') :
+    baseEvent.category;
+
+  const event = {
+    ...baseEvent,
+    category: translatedCategory,
+  };
   
   if (!event) {
     notFound();
