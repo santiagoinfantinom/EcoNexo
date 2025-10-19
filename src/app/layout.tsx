@@ -9,12 +9,10 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CreateEventFAB from "@/components/CreateEventFAB";
 import HeaderNav from "@/components/HeaderNav";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
-import { OnboardingModal } from "@/components/OnboardingModal";
-import WelcomeIntro from "@/components/WelcomeIntro";
 import SimpleIntro from "@/components/SimpleIntro";
-import TestModal from "@/components/TestModal";
 import PlausibleProvider from "next-plausible";
 import DynamicManifest from "@/components/DynamicManifest";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { generateMetadata } from "@/lib/metadata";
 
 const geistSans = Geist({
@@ -45,15 +43,15 @@ export default function RootLayout({
           <ThemeProvider>
             <I18nProvider>
               <AuthProvider>
-                <ServiceWorkerRegistration />
-                <DynamicManifest />
-                <SimpleIntro />
-<OnboardingModal />
-                <LanguageSwitcher />
-                <HeaderNav />
-                <main className="min-h-screen">{children}</main>
-                <CreateEventFAB />
-                <TestModal />
+                <ErrorBoundary>
+                  <ServiceWorkerRegistration />
+                  <DynamicManifest />
+                  <SimpleIntro />
+                  <LanguageSwitcher />
+                  <HeaderNav />
+                  <main className="min-h-screen">{children}</main>
+                  <CreateEventFAB />
+                </ErrorBoundary>
               </AuthProvider>
             </I18nProvider>
           </ThemeProvider>

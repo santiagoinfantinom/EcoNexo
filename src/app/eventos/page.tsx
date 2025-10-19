@@ -288,7 +288,7 @@ export default function EventosPage() {
           />
           {form.image_url && (
             <div className="mt-2">
-              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">{t('previewLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">{t('previewLabel')}</div>
               <div className="w-full h-40 overflow-hidden rounded border border-gray-300 dark:border-slate-600">
                 <img
                   src={form.image_url}

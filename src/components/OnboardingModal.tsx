@@ -21,6 +21,10 @@ export function OnboardingModal() {
   const { t, locale, setLocale } = useI18n();
 
   useEffect(() => {
+    // DISABLED - DO NOT SHOW ONBOARDING
+    console.log('🔧 ONBOARDING DISABLED: Not showing onboarding modal');
+    return;
+    
     // FORCE SHOW ONBOARDING IN DEVELOPMENT - ALWAYS SHOW
     const isDevelopment = process.env.NODE_ENV === 'development';
     

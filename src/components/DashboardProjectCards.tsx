@@ -11,7 +11,7 @@ export default function DashboardProjectCards() {
       description: t('urbanReforestationDesc'),
       location: t('locationBerlin'),
       metric: `2,500 ${t('treesPlanted')}`,
-      volunteers: `150 ${t('volunteersLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}`
+      volunteers: `150 ${t('volunteersLabel')}`
     },
     {
       id: "p2", 
@@ -19,7 +19,7 @@ export default function DashboardProjectCards() {
       description: t('seineRiverCleanupDesc'),
       location: t('locationParis'),
       metric: `5 ${t('wasteCollected')}`,
-      volunteers: `200 ${t('volunteersLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}`
+      volunteers: `200 ${t('volunteersLabel')}`
     },
     {
       id: "p3",
@@ -27,7 +27,7 @@ export default function DashboardProjectCards() {
       description: t('communityGardensDesc'),
       location: t('locationMadrid'),
       metric: `15 ${t('communityGardensActive')}`,
-      volunteers: `80 ${t('volunteersLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}`
+      volunteers: `80 ${t('volunteersLabel')}`
     }
   ];
 

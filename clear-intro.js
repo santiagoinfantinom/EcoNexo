@@ -1,0 +1,1 @@
+console.log('Clearing intro localStorage...'); localStorage.removeItem('econexo-intro-shown'); localStorage.removeItem('econexo:locale'); localStorage.removeItem('econexo-language-set'); localStorage.removeItem('econexo-preferred-language'); console.log('Intro localStorage cleared!');

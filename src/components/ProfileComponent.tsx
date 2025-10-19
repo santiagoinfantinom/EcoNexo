@@ -1,64 +1,162 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import EcoNexoLogo from "./EcoNexoLogo";
+import AuthButton from "./AuthButton";
 
 interface ProfileData {
-  firstName: string;
-  lastName: string;
+  // Basic Information
+  full_name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   phone: string;
+  
+  // Personal Details
+  birthdate: string;
+  birth_place: string;
+  pronouns: string;
+  gender: string;
+  
+  // Location
   city: string;
   country: string;
-  aboutMe: string;
+  timezone: string;
+  
+  // Profile Content
+  about_me: string;
+  bio: string;
+  avatar_url: string;
+  
+  // Interests and Skills
   passions: string;
-  areasOfExpertise: string;
   hobbies: string;
   interests: string;
   skills: string;
+  areas_of_expertise: string;
   languages: string;
-  linkedin: string;
-  twitter: string;
-  instagram: string;
-  website: string;
-  profilePhoto: string;
+  
+  // Social Media
+  linkedin_url: string;
+  twitter_url: string;
+  instagram_url: string;
+  website_url: string;
+  github_url: string;
+  
+  // Preferences
+  preferred_language: string;
+  newsletter_subscribed: boolean;
+  notifications_enabled: boolean;
+  profile_visibility: string;
 }
 
 export default function ProfileComponent() {
   const { t, locale } = useI18n();
+  const { user, loading: authLoading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [profileData, setProfileData] = useState<ProfileData>({
-    firstName: "",
-    lastName: "",
+    // Basic Information
+    full_name: "",
+    first_name: "",
+    last_name: "",
     email: "",
     phone: "",
+    
+    // Personal Details
+    birthdate: "",
+    birth_place: "",
+    pronouns: "",
+    gender: "",
+    
+    // Location
     city: "",
     country: "",
-    aboutMe: "",
+    timezone: "",
+    
+    // Profile Content
+    about_me: "",
+    bio: "",
+    avatar_url: "/logo-econexo.png",
+    
+    // Interests and Skills
     passions: "",
-    areasOfExpertise: "",
     hobbies: "",
     interests: "",
     skills: "",
+    areas_of_expertise: "",
     languages: "",
-    linkedin: "",
-    twitter: "",
-    instagram: "",
-    website: "",
-    profilePhoto: "/logo-econexo.png"
+    
+    // Social Media
+    linkedin_url: "",
+    twitter_url: "",
+    instagram_url: "",
+    website_url: "",
+    github_url: "",
+    
+    // Preferences
+    preferred_language: locale,
+    newsletter_subscribed: false,
+    notifications_enabled: true,
+    profile_visibility: "public"
   });
 
-  // Load profile data from localStorage on component mount
+  // Load profile data from Supabase or localStorage
   useEffect(() => {
-    const savedProfile = localStorage.getItem('econexo:profile');
-    if (savedProfile) {
-      setProfileData(JSON.parse(savedProfile));
-    }
-  }, []);
+    const loadProfile = async () => {
+      if (!user) {
+        // Load from localStorage if no user
+        const savedProfile = localStorage.getItem('econexo:profile');
+        if (savedProfile) {
+          setProfileData(JSON.parse(savedProfile));
+        }
+        return;
+      }
+
+      if (!isSupabaseConfigured()) {
+        // Fallback to localStorage if Supabase not configured
+        const savedProfile = localStorage.getItem('econexo:profile');
+        if (savedProfile) {
+          setProfileData(JSON.parse(savedProfile));
+        }
+        return;
+      }
+
+      try {
+        const supabase = getSupabase();
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+          console.error('Error loading profile:', error);
+          setError('Error cargando perfil');
+          return;
+        }
+
+        if (data) {
+          setProfileData(prev => ({
+            ...prev,
+            ...data,
+            avatar_url: data.avatar_url || "/logo-econexo.png"
+          }));
+        }
+      } catch (err) {
+        console.error('Error loading profile:', err);
+        setError('Error cargando perfil');
+      }
+    };
+
+    loadProfile();
+  }, [user]);
 
   const handleInputChange = (field: keyof ProfileData, value: string) => {
     setProfileData(prev => ({
@@ -104,28 +202,67 @@ export default function ProfileComponent() {
 
   const handleSave = async () => {
     setIsLoading(true);
+    setError("");
+    
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Save to localStorage
-      localStorage.setItem('econexo:profile', JSON.stringify(profileData));
+      if (user && isSupabaseConfigured()) {
+        // Save to Supabase
+        const supabase = getSupabase();
+        const { error } = await supabase
+          .from('profiles')
+          .upsert({
+            id: user.id,
+            ...profileData,
+            updated_at: new Date().toISOString()
+          });
+
+        if (error) {
+          console.error('Error saving profile:', error);
+          setError('Error guardando perfil');
+          return;
+        }
+      } else {
+        // Fallback to localStorage
+        localStorage.setItem('econexo:profile', JSON.stringify(profileData));
+      }
       
       setIsEditing(false);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error('Error saving profile:', error);
+      setError('Error guardando perfil');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCancel = () => {
-    // Reload from localStorage to discard changes
-    const savedProfile = localStorage.getItem('econexo:profile');
-    if (savedProfile) {
-      setProfileData(JSON.parse(savedProfile));
+  const handleCancel = async () => {
+    // Reload from Supabase or localStorage to discard changes
+    if (user && isSupabaseConfigured()) {
+      try {
+        const supabase = getSupabase();
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (data) {
+          setProfileData(prev => ({
+            ...prev,
+            ...data,
+            avatar_url: data.avatar_url || "/logo-econexo.png"
+          }));
+        }
+      } catch (err) {
+        console.error('Error reloading profile:', err);
+      }
+    } else {
+      const savedProfile = localStorage.getItem('econexo:profile');
+      if (savedProfile) {
+        setProfileData(JSON.parse(savedProfile));
+      }
     }
     setIsEditing(false);
   };
@@ -133,6 +270,70 @@ export default function ProfileComponent() {
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
+
+  // Show loading state while auth is loading
+  if (authLoading) {
+    return (
+      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6 text-white">
+          <div className="animate-pulse">
+            <div className="h-8 bg-green-500 rounded w-48 mb-2"></div>
+            <div className="h-4 bg-green-400 rounded w-32"></div>
+          </div>
+        </div>
+        <div className="p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-32 w-32 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto"></div>
+            <div className="space-y-2">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show auth prompt if not logged in
+  if (!user) {
+    return (
+      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">{t("myProfile")}</h1>
+              <p className="text-green-100 text-sm mt-1">
+                {t("signInToAccessProfile")}
+              </p>
+            </div>
+            <EcoNexoLogo className="w-12 h-12" size={48} />
+          </div>
+        </div>
+        <div className="p-6 text-center">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
+              {t("accessYourProfile")}
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              {t("signInToManageProfile")}
+            </p>
+            <AuthButton size="lg" />
+          </div>
+          <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-4">
+            <h3 className="font-medium text-slate-900 dark:text-slate-100 mb-2">
+              {t("whatYouCanDo")}
+            </h3>
+            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+              <li>• {t("managePersonalInfo")}</li>
+              <li>• {t("setPreferences")}</li>
+              <li>• {t("trackActivities")}</li>
+              <li>• {t("connectWithCommunity")}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
@@ -187,13 +388,23 @@ export default function ProfileComponent() {
         </div>
       )}
 
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mx-6 mt-4 rounded">
+          <div className="flex items-center gap-2">
+            <span>⚠️</span>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+
       <div className="p-6">
         {/* Profile Photo Section */}
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
-            {profileData.profilePhoto && profileData.profilePhoto !== "/logo-econexo.png" ? (
+            {profileData.avatar_url && profileData.avatar_url !== "/logo-econexo.png" ? (
               <img
-                src={profileData.profilePhoto}
+                src={profileData.avatar_url}
                 alt="Profile"
                 className="w-32 h-32 rounded-full object-cover border-4 border-green-200 dark:border-green-700"
               />
@@ -228,19 +439,21 @@ export default function ProfileComponent() {
               >
                 {t("changePhoto")}
               </button>
-              {profileData.profilePhoto && profileData.profilePhoto !== "/logo-econexo.png" && (
+              {profileData.avatar_url && profileData.avatar_url !== "/logo-econexo.png" && (
                 <button
                   onClick={() => {
-                    const updatedProfile = { ...profileData, profilePhoto: '/logo-econexo.png' };
+                    const updatedProfile = { ...profileData, avatar_url: '/logo-econexo.png' };
                     setProfileData(updatedProfile);
-                    localStorage.setItem('econexo:profile', JSON.stringify(updatedProfile));
+                    if (!user || !isSupabaseConfigured()) {
+                      localStorage.setItem('econexo:profile', JSON.stringify(updatedProfile));
+                    }
                     setShowSuccess(true);
                     setTimeout(() => setShowSuccess(false), 2000);
                     console.log('Switched back to EcoNexo logo');
                   }}
                   className="text-sm text-gray-500 hover:text-gray-700 font-medium"
                 >
-{t("useLogo")}
+                  {t("useLogo")}
                 </button>
               )}
             </div>
@@ -259,8 +472,8 @@ export default function ProfileComponent() {
               </label>
               <input
                 type="text"
-                value={profileData.firstName}
-                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                value={profileData.first_name}
+                onChange={(e) => handleInputChange('first_name', e.target.value)}
                 disabled={!isEditing}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
                 placeholder={locale === 'de' ? "Vorname eingeben" : locale === 'en' ? "Enter first name" : "Ingresa tu nombre"}
@@ -272,8 +485,8 @@ export default function ProfileComponent() {
               </label>
               <input
                 type="text"
-                value={profileData.lastName}
-                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                value={profileData.last_name}
+                onChange={(e) => handleInputChange('last_name', e.target.value)}
                 disabled={!isEditing}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
                 placeholder={locale === 'de' ? "Nachname eingeben" : locale === 'en' ? "Enter last name" : "Ingresa tu apellido"}
@@ -304,6 +517,52 @@ export default function ProfileComponent() {
                 className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
                 placeholder={locale === 'de' ? "Telefon eingeben" : locale === 'en' ? "Enter phone" : "Ingresa tu teléfono"}
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                {t("birthdate")}
+              </label>
+              <input
+                type="date"
+                value={profileData.birthdate}
+                onChange={(e) => handleInputChange('birthdate', e.target.value)}
+                disabled={!isEditing}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                {t("pronouns")}
+              </label>
+              <select
+                value={profileData.pronouns}
+                onChange={(e) => handleInputChange('pronouns', e.target.value)}
+                disabled={!isEditing}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
+              >
+                <option value="">{t("selectPronouns")}</option>
+                <option value="él/ella">{t("heShe")}</option>
+                <option value="they/them">{t("theyThem")}</option>
+                <option value="er/sie">{t("erSie")}</option>
+                <option value="other">{t("other")}</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                {t("gender")}
+              </label>
+              <select
+                value={profileData.gender}
+                onChange={(e) => handleInputChange('gender', e.target.value)}
+                disabled={!isEditing}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
+              >
+                <option value="">{t("selectGender")}</option>
+                <option value="male">{t("male")}</option>
+                <option value="female">{t("female")}</option>
+                <option value="non-binary">{t("nonBinary")}</option>
+                <option value="prefer-not-to-say">{t("preferNotToSay")}</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -340,8 +599,8 @@ export default function ProfileComponent() {
             {t("aboutMe")}
           </h2>
           <textarea
-            value={profileData.aboutMe}
-            onChange={(e) => handleInputChange('aboutMe', e.target.value)}
+            value={profileData.about_me}
+            onChange={(e) => handleInputChange('about_me', e.target.value)}
             disabled={!isEditing}
             rows={4}
             className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
@@ -369,8 +628,8 @@ export default function ProfileComponent() {
               {t("areasOfExpertise")}
             </h2>
             <textarea
-              value={profileData.areasOfExpertise}
-              onChange={(e) => handleInputChange('areasOfExpertise', e.target.value)}
+              value={profileData.areas_of_expertise}
+              onChange={(e) => handleInputChange('areas_of_expertise', e.target.value)}
               disabled={!isEditing}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
@@ -451,8 +710,8 @@ export default function ProfileComponent() {
               </label>
               <input
                 type="url"
-                value={profileData.linkedin}
-                onChange={(e) => handleInputChange('linkedin', e.target.value)}
+                value={profileData.linkedin_url}
+                onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
                 disabled={!isEditing}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
                 placeholder="https://linkedin.com/in/tu-perfil"
@@ -464,8 +723,8 @@ export default function ProfileComponent() {
               </label>
               <input
                 type="url"
-                value={profileData.twitter}
-                onChange={(e) => handleInputChange('twitter', e.target.value)}
+                value={profileData.twitter_url}
+                onChange={(e) => handleInputChange('twitter_url', e.target.value)}
                 disabled={!isEditing}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
                 placeholder="https://twitter.com/tu-usuario"
@@ -477,8 +736,8 @@ export default function ProfileComponent() {
               </label>
               <input
                 type="url"
-                value={profileData.instagram}
-                onChange={(e) => handleInputChange('instagram', e.target.value)}
+                value={profileData.instagram_url}
+                onChange={(e) => handleInputChange('instagram_url', e.target.value)}
                 disabled={!isEditing}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
                 placeholder="https://instagram.com/tu-usuario"
@@ -490,8 +749,8 @@ export default function ProfileComponent() {
               </label>
               <input
                 type="url"
-                value={profileData.website}
-                onChange={(e) => handleInputChange('website', e.target.value)}
+                value={profileData.website_url}
+                onChange={(e) => handleInputChange('website_url', e.target.value)}
                 disabled={!isEditing}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
                 placeholder="https://tu-sitio-web.com"

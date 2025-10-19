@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useI18n } from '@/lib/i18n';
 
 export default function SimpleIntro() {
@@ -9,19 +9,34 @@ export default function SimpleIntro() {
   const { locale, setLocale, t } = useI18n();
 
   useEffect(() => {
-    // Show intro after page loads
-    const timer = setTimeout(() => {
-      setShowIntro(true);
-    }, 1000);
+    console.log('🔧 SimpleIntro: useEffect ejecutándose');
     
-    return () => clearTimeout(timer);
-  }, []);
+    // Check if intro has been shown before
+    const hasSeenIntro = localStorage.getItem('econexo-intro-shown');
+    console.log('🔧 SimpleIntro: hasSeenIntro =', hasSeenIntro);
+    
+    if (!hasSeenIntro) {
+      console.log('🔧 SimpleIntro: Mostrando intro...');
+      
+      // Force English as default
+      setLocale('en');
+      localStorage.setItem('econexo:locale', 'en');
+      localStorage.setItem('econexo-language-set', 'true');
+      localStorage.setItem('econexo-preferred-language', 'en');
+      
+      // Show intro immediately (no delay)
+      console.log('🔧 SimpleIntro: Mostrando intro inmediatamente');
+      setShowIntro(true);
+    } else {
+      console.log('🔧 SimpleIntro: Intro ya se mostró antes, no mostrando');
+    }
+  }, [setLocale]);
 
-  const steps = useMemo(() => [
+  const steps = [
     {
       icon: '🌍',
-      title: t('welcomeIntroLanguageTitle'),
-      description: t('welcomeIntroLanguageDescription'),
+      title: 'Choose Your Language',
+      description: 'EcoNexo is available in multiple languages',
       buttons: [
         { label: '🇪🇸 Español', locale: 'es' },
         { label: '🇬🇧 English', locale: 'en' },
@@ -30,30 +45,30 @@ export default function SimpleIntro() {
     },
     {
       icon: '🗺️',
-      title: t('welcomeIntroMapTitle'),
-      description: t('welcomeIntroMapDescription')
+      title: 'Explore the Map',
+      description: 'Discover environmental projects near you'
     },
     {
       icon: '📅',
-      title: t('welcomeIntroEventsTitle'),
-      description: t('welcomeIntroEventsDescription')
+      title: 'Join Events',
+      description: 'Participate in community environmental activities'
     },
     {
       icon: '💼',
-      title: t('welcomeIntroJobsTitle'),
-      description: t('welcomeIntroJobsDescription')
+      title: 'Find Jobs',
+      description: 'Discover green career opportunities'
     },
     {
       icon: '💬',
-      title: t('welcomeIntroChatTitle'),
-      description: t('welcomeIntroChatDescription')
+      title: 'Community Chat',
+      description: 'Connect with like-minded environmentalists'
     },
     {
       icon: '👤',
-      title: t('welcomeIntroProfileTitle'),
-      description: t('welcomeIntroProfileDescription')
+      title: 'Your Profile',
+      description: 'Track your environmental impact and achievements'
     }
-  ], [t]);
+  ];
 
   const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
     setLocale(selectedLocale);
@@ -64,32 +79,44 @@ export default function SimpleIntro() {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      // Mark intro as shown and close
+      localStorage.setItem('econexo-intro-shown', 'true');
       setShowIntro(false);
     }
   };
 
   const handleSkip = () => {
+    // Mark intro as shown and close
+    localStorage.setItem('econexo-intro-shown', 'true');
     setShowIntro(false);
   };
 
+  console.log('🔧 SimpleIntro: showIntro =', showIntro);
   if (!showIntro) return null;
 
   const currentStepData = steps[currentStep];
+  console.log('🔧 SimpleIntro: RENDERIZANDO MODAL con step =', currentStep);
 
   return (
     <div 
+      data-intro-modal="true"
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 9999,
-        padding: '20px'
+        zIndex: 999999,
+        padding: '20px',
+        width: '100vw',
+        height: '100vh',
+        visibility: 'visible',
+        opacity: 1,
+        pointerEvents: 'auto'
       }}
     >
       <div 
@@ -146,13 +173,13 @@ export default function SimpleIntro() {
           {currentStepData.description}
         </p>
 
-        {currentStep === 0 ? (
-          // Language selection
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {currentStepData.buttons?.map((button, index) => (
+        {/* Language selection buttons */}
+        {currentStep === 0 && currentStepData.buttons && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
+            {currentStepData.buttons.map((button, index) => (
               <button
                 key={index}
-                onClick={() => handleLanguageSelect(button.locale as 'es' | 'en' | 'de')}
+                onClick={() => handleLanguageSelect(button.locale)}
                 style={{
                   width: '100%',
                   backgroundColor: '#10b981',
@@ -161,55 +188,57 @@ export default function SimpleIntro() {
                   borderRadius: '12px',
                   border: 'none',
                   fontSize: '18px',
-                  fontWeight: '500',
+                  fontWeight: '600',
                   cursor: 'pointer',
-                  transition: 'background-color 0.2s'
+                  transition: 'all 0.3s ease'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#059669'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#10b981'}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = '#059669';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = '#10b981';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
               >
                 {button.label}
               </button>
             ))}
           </div>
-        ) : (
-          // Feature introduction
+        )}
+
+        {/* Navigation buttons */}
+        {currentStep > 0 && (
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
             <button
               onClick={handleSkip}
               style={{
+                backgroundColor: '#6b7280',
+                color: 'white',
                 padding: '12px 24px',
-                backgroundColor: '#e5e7eb',
-                color: '#374151',
                 borderRadius: '8px',
                 border: 'none',
                 fontSize: '16px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s'
+                fontWeight: '600',
+                cursor: 'pointer'
               }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#d1d5db'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#e5e7eb'}
             >
-                {t('welcomeIntroSkip')}
+              Skip
             </button>
             <button
               onClick={handleNext}
               style={{
-                padding: '12px 24px',
                 backgroundColor: '#10b981',
                 color: 'white',
+                padding: '12px 24px',
                 borderRadius: '8px',
                 border: 'none',
                 fontSize: '16px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s'
+                fontWeight: '600',
+                cursor: 'pointer'
               }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#059669'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#10b981'}
             >
-                {currentStep === steps.length - 1 ? t('welcomeIntroGetStarted') : t('welcomeIntroNext')}
+              {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
             </button>
           </div>
         )}

@@ -48,7 +48,7 @@ export default function SaludPage() {
             <div key={project.id} className="bg-gls-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               {/* Project Image */}
               <div className="h-48">
-                <ProjectSpecificImage project={project} className="w-full h-full" />
+                <ProjectSpecificImage project={project} className="w-full h-full" locale={locale} />
               </div>
               
               {/* Project Content */}
@@ -70,8 +70,8 @@ export default function SaludPage() {
                 
                 {/* Stats */}
                 <div className="flex justify-between text-sm text-white mb-4">
-                  <span>👥 {project.volunteers} {t('volunteersLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}</span>
-                  <span>🆓 {project.spots} {t('spotsLabel' + locale.charAt(0).toUpperCase() + locale.slice(1))}</span>
+                  <span>👥 {project.volunteers} {t('volunteersLabel')}</span>
+                  <span>🆓 {project.spots} {t('spotsLabel')}</span>
                 </div>
                 
                 {/* Action Button */}

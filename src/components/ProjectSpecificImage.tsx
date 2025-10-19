@@ -27,9 +27,10 @@ interface ProjectSpecificImageProps {
     imageUrl?: string;
   };
   className?: string;
+  locale?: 'es' | 'en' | 'de';
 }
 
-export default function ProjectSpecificImage({ project, className = "" }: ProjectSpecificImageProps) {
+export default function ProjectSpecificImage({ project, className = "", locale = 'es' }: ProjectSpecificImageProps) {
   // If project has an image url, use it directly (supports image_url and imageUrl)
   const directImage = project.image_url || project.imageUrl;
   if (directImage) {
@@ -37,14 +38,14 @@ export default function ProjectSpecificImage({ project, className = "" }: Projec
       <div className={`relative w-full h-full overflow-hidden ${className}`}>
         <img 
           src={directImage} 
-          alt={project.title?.es || project.name || 'Project image'} 
+          alt={project.title?.en || project.name || 'Project image'} 
           className="w-full h-full object-cover"
           loading="lazy"
         />
         {/* Project title overlay */}
         <div className="absolute bottom-2 left-2 right-2">
           <div className="bg-black bg-opacity-60 text-white text-sm font-bold px-2 py-1 rounded">
-            {project.title?.es || project.name || 'Proyecto'}
+            {project.title?.en || project.name || 'Project'}
           </div>
         </div>
       </div>
@@ -180,7 +181,7 @@ export default function ProjectSpecificImage({ project, className = "" }: Projec
       <div className="absolute bottom-2 left-2 right-2">
         <div className="bg-black/30 backdrop-blur-sm rounded px-2 py-1">
           <div className="text-white text-xs font-medium truncate">
-            {project.title?.es || project.title?.en || project.title?.de || 'Proyecto'}
+            {project.title?.en || project.title?.es || project.title?.de || 'Project'}
           </div>
         </div>
       </div>
