@@ -294,46 +294,46 @@ export default function ProfileComponent() {
     );
   }
 
-  // Show auth prompt if not logged in
-  if (!user) {
-    return (
-      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">{t("myProfile")}</h1>
-              <p className="text-green-100 text-sm mt-1">
-                {t("signInToAccessProfile")}
-              </p>
-            </div>
-            <EcoNexoLogo className="w-12 h-12" size={48} />
-          </div>
-        </div>
-        <div className="p-6 text-center">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
-              {t("accessYourProfile")}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              {t("signInToManageProfile")}
-            </p>
-            <AuthButton size="lg" />
-          </div>
-          <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-4">
-            <h3 className="font-medium text-slate-900 dark:text-slate-100 mb-2">
-              {t("whatYouCanDo")}
-            </h3>
-            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-              <li>• {t("managePersonalInfo")}</li>
-              <li>• {t("setPreferences")}</li>
-              <li>• {t("trackActivities")}</li>
-              <li>• {t("connectWithCommunity")}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Show auth prompt if not logged in - DISABLED FOR NOW
+  // if (!user) {
+  //   return (
+  //     <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
+  //       <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6 text-white">
+  //         <div className="flex items-center justify-between">
+  //           <div>
+  //             <h1 className="text-3xl font-bold">{t("myProfile")}</h1>
+  //             <p className="text-green-100 text-sm mt-1">
+  //               {t("signInToAccessProfile")}
+  //             </p>
+  //           </div>
+  //           <EcoNexoLogo className="w-12 h-12" size={48} />
+  //         </div>
+  //       </div>
+  //       <div className="p-6 text-center">
+  //         <div className="mb-6">
+  //           <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
+  //             {t("accessYourProfile")}
+  //           </h2>
+  //           <p className="text-gray-600 dark:text-gray-400 mb-6">
+  //             {t("signInToManageProfile")}
+  //           </p>
+  //           <AuthButton size="lg" />
+  //         </div>
+  //         <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-4">
+  //           <h3 className="font-medium text-slate-900 dark:text-slate-100 mb-2">
+  //             {t("whatYouCanDo")}
+  //           </h3>
+  //           <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+  //             <li>• {t("managePersonalInfo")}</li>
+  //             <li>• {t("setPreferences")}</li>
+  //             <li>• {t("trackActivities")}</li>
+  //             <li>• {t("connectWithCommunity")}</li>
+  //           </ul>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">

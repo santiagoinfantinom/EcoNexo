@@ -41,6 +41,7 @@ const DICTS: Record<Locale, Dict> = {
     myEvents: "My Events",
     myJobs: "My Jobs",
     supportUs: "Support Us",
+    aboutUs: "About Us",
     createProfile: "Create Profile",
     email: "Email",
     fullName: "Full Name",
@@ -269,8 +270,6 @@ const DICTS: Record<Locale, Dict> = {
     languagesPlaceholder: "What languages do you speak?",
     volunteersLabel: "volunteers",
     spotsLabel: "spots",
-    volunteersLabelEn: "volunteers",
-    spotsLabelEn: "spots",
     previewLabel: "Preview",
   },
   de: {
@@ -308,6 +307,7 @@ const DICTS: Record<Locale, Dict> = {
     myEvents: "Meine Veranstaltungen",
     myJobs: "Meine Jobs",
     supportUs: "Unterstützen",
+    aboutUs: "Über Uns",
     createProfile: "Profil erstellen",
     email: "E-Mail",
     fullName: "Vollständiger Name",
@@ -536,8 +536,6 @@ const DICTS: Record<Locale, Dict> = {
     languagesPlaceholder: "Welche Sprachen sprichst du?",
     volunteersLabel: "Freiwillige",
     spotsLabel: "Plätze",
-    volunteersLabelDe: "Freiwillige",
-    spotsLabelDe: "Plätze",
     previewLabel: "Vorschau",
   },
   es: {
@@ -575,6 +573,7 @@ const DICTS: Record<Locale, Dict> = {
     myEvents: "Mis eventos",
     myJobs: "Mis trabajos",
     supportUs: "Apóyanos",
+    aboutUs: "Sobre Nosotros",
     createProfile: "Crear perfil",
     email: "Email",
     fullName: "Nombre completo",
@@ -966,8 +965,6 @@ const DICTS: Record<Locale, Dict> = {
     yourName: "Tu nombre",
     volunteersLabel: "voluntarios",
     spotsLabel: "plazas",
-    volunteersLabelEs: "voluntarios",
-    spotsLabelEs: "plazas",
     previewLabel: "Vista previa",
   },
 };
@@ -981,12 +978,12 @@ export function locationLabel(original: string, locale: Locale) {
   if (locale === "es") return original;
   
   const locationMap: Record<string, Record<Locale, string>> = {
-    "Berlín": { en: "Berlin", de: "Berlin" },
-    "Madrid": { en: "Madrid", de: "Madrid" },
-    "París": { en: "Paris", de: "Paris" },
-    "Alemania": { en: "Germany", de: "Deutschland" },
-    "España": { en: "Spain", de: "Spanien" },
-    "Francia": { en: "France", de: "Frankreich" },
+    "Berlín": { en: "Berlin", de: "Berlin", es: "Berlín" },
+    "Madrid": { en: "Madrid", de: "Madrid", es: "Madrid" },
+    "París": { en: "Paris", de: "Paris", es: "París" },
+    "Alemania": { en: "Germany", de: "Deutschland", es: "Alemania" },
+    "España": { en: "Spain", de: "Spanien", es: "España" },
+    "Francia": { en: "France", de: "Frankreich", es: "Francia" },
   };
   
   return locationMap[original]?.[locale] || original;
@@ -996,12 +993,12 @@ export function categoryLabel(category: string, locale: Locale) {
   if (locale === "es") return category;
   
   const categoryMap: Record<string, Record<Locale, string>> = {
-  "Medio ambiente": { en: "Environment", de: "Umwelt" },
-  "Educación": { en: "Education", de: "Bildung" },
-  "Comunidad": { en: "Community", de: "Gemeinschaft" },
-    "Salud": { en: "Health", de: "Gesundheit" },
-  "Océanos": { en: "Oceans", de: "Ozeane" },
-  "Alimentación": { en: "Food", de: "Ernährung" },
+  "Medio ambiente": { en: "Environment", de: "Umwelt", es: "Medio ambiente" },
+  "Educación": { en: "Education", de: "Bildung", es: "Educación" },
+  "Comunidad": { en: "Community", de: "Gemeinschaft", es: "Comunidad" },
+    "Salud": { en: "Health", de: "Gesundheit", es: "Salud" },
+  "Océanos": { en: "Oceans", de: "Ozeane", es: "Océanos" },
+  "Alimentación": { en: "Food", de: "Ernährung", es: "Alimentación" },
 };
 
   return categoryMap[category]?.[locale] || category;
@@ -1027,9 +1024,9 @@ export function impactTagLabel(original: string, locale: Locale) {
   if (locale === "es") return original;
   
   const impactMap: Record<string, Record<Locale, string>> = {
-    "Alto impacto": { en: "High impact", de: "Hohe Wirkung" },
-    "Medio impacto": { en: "Medium impact", de: "Mittlere Wirkung" },
-    "Bajo impacto": { en: "Low impact", de: "Niedrige Wirkung" },
+    "Alto impacto": { en: "High impact", de: "Hohe Wirkung", es: "Alto impacto" },
+    "Medio impacto": { en: "Medium impact", de: "Mittlere Wirkung", es: "Medio impacto" },
+    "Bajo impacto": { en: "Low impact", de: "Niedrige Wirkung", es: "Bajo impacto" },
   };
   
   return impactMap[original]?.[locale] || original;

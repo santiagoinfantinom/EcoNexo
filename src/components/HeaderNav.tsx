@@ -73,6 +73,12 @@ export default function HeaderNav() {
         >
           {t("profile")}
         </Link>
+        <Link 
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
+          href="/about"
+        >
+          {t("aboutUs")}
+        </Link>
       </nav>
     </header>
     </>
