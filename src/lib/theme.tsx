@@ -9,21 +9,29 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
   const [mounted, setMounted] = useState(false);
 
+  console.log('🎨 ThemeProvider: Rendering with theme:', theme, 'mounted:', mounted);
+
   useEffect(() => {
+    console.log('🎨 ThemeProvider: useEffect - setting mounted to true');
     setMounted(true);
     try {
       const saved = localStorage.getItem("econexo:theme") as Theme | null;
+      console.log('🎨 ThemeProvider: Saved theme from localStorage:', saved);
       if (saved === "light" || saved === "dark") {
+        console.log('🎨 ThemeProvider: Setting theme from localStorage:', saved);
         setThemeState(saved);
       }
-    } catch {}
+    } catch (error) {
+      console.error('🎨 ThemeProvider: Error reading from localStorage:', error);
+    }
   }, []);
 
   useEffect(() => {
     if (mounted) {
+      console.log('🎨 ThemeProvider: Applying theme to document:', theme);
       const root = document.documentElement;
       root.setAttribute("data-theme", theme);
-      console.log('🎨 Theme changed to:', theme);
+      console.log('🎨 ThemeProvider: data-theme attribute set to:', root.getAttribute("data-theme"));
     }
   }, [theme, mounted]);
 
