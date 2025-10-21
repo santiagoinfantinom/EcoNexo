@@ -1,19 +1,46 @@
 "use client";
-import { useTheme } from "@/lib/theme";
 import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     console.log('🌙 ThemeToggle: Component mounted');
     setMounted(true);
+    
+    // Load theme from localStorage
+    try {
+      const saved = localStorage.getItem("econexo:theme") as "light" | "dark" | null;
+      if (saved === "light" || saved === "dark") {
+        console.log('🌙 ThemeToggle: Loading theme from localStorage:', saved);
+        setTheme(saved);
+      }
+    } catch (error) {
+      console.error('🌙 ThemeToggle: Error loading theme:', error);
+    }
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      console.log('🌙 ThemeToggle: Applying theme to document:', theme);
+      const root = document.documentElement;
+      root.setAttribute("data-theme", theme);
+      console.log('🌙 ThemeToggle: data-theme attribute set to:', root.getAttribute("data-theme"));
+    }
+  }, [theme, mounted]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     console.log('🌙 ThemeToggle: Button clicked! Current theme:', theme, 'Switching to:', newTheme);
+    
+    try {
+      localStorage.setItem("econexo:theme", newTheme);
+      console.log('🌙 ThemeToggle: Theme saved to localStorage');
+    } catch (error) {
+      console.error('🌙 ThemeToggle: Error saving theme:', error);
+    }
+    
     setTheme(newTheme);
   };
 
