@@ -1,7 +1,11 @@
 export interface DonationCampaign {
   id: string;
   title: string;
+  title_en?: string;
+  title_de?: string;
   description: string;
+  description_en?: string;
+  description_de?: string;
   organization: string;
   category: 'environment' | 'education' | 'health' | 'community' | 'oceans' | 'food';
   targetAmount: number;
@@ -186,7 +190,11 @@ export const SAMPLE_DONATION_CAMPAIGNS: DonationCampaign[] = [
   {
     id: 'reforestation-berlin',
     title: 'Reforestación Urbana Berlín',
+    title_en: 'Berlin Urban Reforestation',
+    title_de: 'Urbane Aufforstung Berlin',
     description: 'Plantación de 1000 árboles nativos en parques urbanos de Berlín para mejorar la calidad del aire y crear hábitats para la biodiversidad.',
+    description_en: 'Planting 1000 native trees in Berlin urban parks to improve air quality and create habitats for biodiversity.',
+    description_de: 'Pflanzung von 1000 einheimischen Bäumen in Berliner Stadtparks zur Verbesserung der Luftqualität und Schaffung von Lebensräumen für die Biodiversität.',
     organization: 'Green Berlin Initiative',
     category: 'environment',
     targetAmount: 50000,
@@ -214,7 +222,11 @@ export const SAMPLE_DONATION_CAMPAIGNS: DonationCampaign[] = [
   {
     id: 'ocean-cleanup-marseille',
     title: 'Limpieza de Océanos Marsella',
+    title_en: 'Marseille Ocean Cleanup',
+    title_de: 'Meeresreinigung Marseille',
     description: 'Proyecto de limpieza de microplásticos en el Mediterráneo con tecnología innovadora de filtrado.',
+    description_en: 'Microplastics cleanup project in the Mediterranean with innovative filtering technology.',
+    description_de: 'Mikroplastik-Reinigungsprojekt im Mittelmeer mit innovativer Filtertechnologie.',
     organization: 'Mediterranean Cleanup',
     category: 'oceans',
     targetAmount: 75000,
@@ -242,7 +254,11 @@ export const SAMPLE_DONATION_CAMPAIGNS: DonationCampaign[] = [
   {
     id: 'urban-gardens-madrid',
     title: 'Huertos Urbanos Madrid',
+    title_en: 'Madrid Urban Gardens',
+    title_de: 'Madrid Stadtgärten',
     description: 'Creación de 50 huertos comunitarios en barrios desfavorecidos de Madrid para promover la soberanía alimentaria.',
+    description_en: 'Creating 50 community gardens in disadvantaged neighborhoods of Madrid to promote food sovereignty.',
+    description_de: 'Schaffung von 50 Gemeinschaftsgärten in benachteiligten Stadtteilen von Madrid zur Förderung der Ernährungssouveränität.',
     organization: 'Madrid Verde',
     category: 'food',
     targetAmount: 30000,

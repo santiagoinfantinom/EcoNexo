@@ -360,6 +360,14 @@ const DICTS: Record<Locale, Dict> = {
     chatMessage3: "This is exactly what we need more of!",
     chatMessage4: "Has anyone tried this approach before?",
     
+    // Category translations
+    environment: "Environment",
+    education: "Education",
+    health: "Health",
+    community: "Community",
+    oceans: "Oceans",
+    food: "Food",
+    
     countries: "Countries",
     languages: "Languages", 
     currencies: "Currencies",
@@ -738,6 +746,14 @@ const DICTS: Record<Locale, Dict> = {
     chatMessage3: "Das ist genau das, was wir mehr brauchen!",
     chatMessage4: "Hat jemand diesen Ansatz schon einmal ausprobiert?",
     
+    // Category translations
+    environment: "Umwelt",
+    education: "Bildung",
+    health: "Gesundheit",
+    community: "Gemeinschaft",
+    oceans: "Ozeane",
+    food: "Ernährung",
+    
     countries: "Länder",
     languages: "Sprachen",
     currencies: "Währungen", 
@@ -1083,6 +1099,15 @@ const DICTS: Record<Locale, Dict> = {
     chatMessage2: "He estado trabajando en proyectos similares en mi área",
     chatMessage3: "¡Esto es exactamente lo que necesitamos más!",
     chatMessage4: "¿Alguien ha probado este enfoque antes?",
+    
+    // Category translations
+    environment: "Medio Ambiente",
+    education: "Educación",
+    health: "Salud",
+    community: "Comunidad",
+    oceans: "Océanos",
+    food: "Alimentación",
+    
     companyName: "Nombre de la empresa",
     companyNamePlaceholder: "Nombre de tu empresa",
     conductGuidelines: "Pautas de Conducta",

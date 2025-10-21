@@ -85,6 +85,23 @@ export default function SustainableMonetization({
     return Math.min((current / target) * 100, 100);
   };
 
+  // Helper functions for translations
+  const getTranslatedTitle = (campaign: any) => {
+    if (locale === 'de' && campaign.title_de) return campaign.title_de;
+    if (locale === 'en' && campaign.title_en) return campaign.title_en;
+    return campaign.title;
+  };
+
+  const getTranslatedDescription = (campaign: any) => {
+    if (locale === 'de' && campaign.description_de) return campaign.description_de;
+    if (locale === 'en' && campaign.description_en) return campaign.description_en;
+    return campaign.description;
+  };
+
+  const getTranslatedCategory = (category: string) => {
+    return t(category);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -176,7 +193,7 @@ export default function SustainableMonetization({
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-green-600 bg-green-100 px-2 py-1 rounded">
-                      {campaign.category}
+                      {getTranslatedCategory(campaign.category)}
                     </span>
                     {campaign.verified && (
                       <span className="text-sm text-blue-600">✓ {t("verified")}</span>
@@ -184,11 +201,11 @@ export default function SustainableMonetization({
                   </div>
                   
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {campaign.title}
+                    {getTranslatedTitle(campaign)}
                   </h3>
                   
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                    {campaign.description}
+                    {getTranslatedDescription(campaign)}
                   </p>
 
                   {/* Progress Bar */}
