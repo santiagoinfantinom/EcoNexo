@@ -310,6 +310,8 @@ const DICTS: Record<Locale, Dict> = {
     // Geographic Expansion
     geographicExpansion: "Geographic Expansion",
     geographicExpansionDescription: "EcoNexo expands across Europe with support for multiple languages, local currencies and government APIs.",
+    expansion: "Expansion",
+    monetization: "Monetization",
     countries: "Countries",
     languages: "Languages", 
     currencies: "Currencies",
@@ -638,6 +640,8 @@ const DICTS: Record<Locale, Dict> = {
     // Geographic Expansion
     geographicExpansion: "Geografische Expansion",
     geographicExpansionDescription: "EcoNexo expandiert sich in ganz Europa mit Unterstützung für mehrere Sprachen, lokale Währungen und Regierungs-APIs.",
+    expansion: "Expansion",
+    monetization: "Monetarisierung",
     countries: "Länder",
     languages: "Sprachen",
     currencies: "Währungen", 
@@ -1126,6 +1130,8 @@ const DICTS: Record<Locale, Dict> = {
     // Geographic Expansion
     geographicExpansion: "Expansión Geográfica",
     geographicExpansionDescription: "EcoNexo se expande por toda Europa con soporte para múltiples idiomas, monedas locales y APIs gubernamentales.",
+    expansion: "Expansión",
+    monetization: "Monetización",
     countries: "Países",
     languages: "Idiomas",
     currencies: "Monedas",

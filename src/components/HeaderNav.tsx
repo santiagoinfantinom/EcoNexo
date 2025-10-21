@@ -77,13 +77,13 @@ export default function HeaderNav() {
           className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/expansion"
         >
-          🌍 Expansión
+          🌍 {t("expansion")}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/monetizacion"
         >
-          💰 Monetización
+          💰 {t("monetization")}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
