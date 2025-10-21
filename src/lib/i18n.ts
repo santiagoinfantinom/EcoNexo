@@ -1133,8 +1133,8 @@ const DICTS: Record<Locale, Dict> = {
     // Geographic Expansion
     geographicExpansion: "Expansión Geográfica",
     geographicExpansionDescription: "EcoNexo se expande por toda Europa con soporte para múltiples idiomas, monedas locales y APIs gubernamentales.",
-    expansion: "Expansión",
-    monetization: "Monetización",
+    expansion: "Expansion",
+    monetization: "Monetization",
     countries: "Países",
     languages: "Idiomas",
     currencies: "Monedas",

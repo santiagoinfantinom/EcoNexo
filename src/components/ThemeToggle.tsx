@@ -27,6 +27,15 @@ export default function ThemeToggle() {
       const root = document.documentElement;
       root.setAttribute("data-theme", theme);
       console.log('🌙 ThemeToggle: data-theme attribute set to:', root.getAttribute("data-theme"));
+      
+      // Also update body classes for immediate visual feedback
+      if (theme === "dark") {
+        document.body.style.backgroundColor = "#1F3D3B";
+        document.body.style.color = "#F2F6EB";
+      } else {
+        document.body.style.backgroundColor = "#F2F6EB";
+        document.body.style.color = "#1F3D3B";
+      }
     }
   }, [theme, mounted]);
 
