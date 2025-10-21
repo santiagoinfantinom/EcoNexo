@@ -10,6 +10,7 @@ import CreateEventFAB from "@/components/CreateEventFAB";
 import HeaderNav from "@/components/HeaderNav";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import SimpleIntro from "@/components/SimpleIntro";
+import ThemeToggle from "@/components/ThemeToggle";
 import PlausibleProvider from "next-plausible";
 import DynamicManifest from "@/components/DynamicManifest";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -35,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en">
       <body
         className={`${interTight.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-gls-primary`}
       >
@@ -48,6 +49,7 @@ export default function RootLayout({
                   <DynamicManifest />
                   <SimpleIntro />
                   <LanguageSwitcher />
+                  <ThemeToggle />
                   <HeaderNav />
                   <main className="min-h-screen">{children}</main>
                   <CreateEventFAB />

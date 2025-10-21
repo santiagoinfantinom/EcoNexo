@@ -18,10 +18,10 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-gls-secondary mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-white dark:text-white mb-6">
             {t('welcomeMessageTitle')}
           </h1>
-          <p className="text-xl md:text-2xl text-gls-secondary opacity-90 max-w-4xl mx-auto mb-8">
+          <p className="text-xl md:text-2xl text-white dark:text-white opacity-95 max-w-4xl mx-auto mb-8">
             {t('welcomeMessageDescription')}
           </p>
           
@@ -44,15 +44,15 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
               <div className="text-3xl font-bold text-green-600 mb-2">500+</div>
-              <div className="text-gls-secondary font-medium">{t('activeProjects')}</div>
+              <div className="text-gray-800 dark:text-white font-medium">{t('activeProjects')}</div>
             </div>
             <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
               <div className="text-3xl font-bold text-blue-600 mb-2">2,500+</div>
-              <div className="text-gls-secondary font-medium">{t('volunteers')}</div>
+              <div className="text-gray-800 dark:text-white font-medium">{t('volunteers')}</div>
             </div>
             <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
               <div className="text-3xl font-bold text-purple-600 mb-2">50+</div>
-              <div className="text-gls-secondary font-medium">{t('cities')}</div>
+              <div className="text-gray-800 dark:text-white font-medium">{t('cities')}</div>
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default function Home() {
       {/* Featured Projects */}
       <section className="py-16 px-4 bg-white/50 dark:bg-slate-800/50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gls-secondary text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-12">
             {t('featuredProjects')}
           </h2>
           <DashboardProjectCards />
@@ -71,7 +71,7 @@ export default function Home() {
       {/* Categories */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gls-secondary text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-12">
             {t('exploreCategories')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -159,7 +159,7 @@ export default function Home() {
       {/* Eco Tips */}
       <section className="py-16 px-4 bg-green-50 dark:bg-slate-800/50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gls-secondary text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-12">
             {t('ecoTipsTitle')}
           </h2>
           <EcoTips />

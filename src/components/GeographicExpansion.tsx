@@ -43,19 +43,19 @@ export default function GeographicExpansion() {
 
   const getRegionName = (region: string) => {
     const regionNames: Record<string, string> = {
-      'all': 'Todos',
-      'Northern Europe': 'Europa del Norte',
-      'Western Europe': 'Europa Occidental',
-      'Central Europe': 'Europa Central',
-      'Southern Europe': 'Europa del Sur',
-      'Eastern Europe': 'Europa del Este'
+      'all': t('all'),
+      'Northern Europe': t('northernEurope'),
+      'Western Europe': t('westernEurope'),
+      'Central Europe': t('centralEurope'),
+      'Southern Europe': t('southernEurope'),
+      'Eastern Europe': t('easternEurope')
     };
     return regionNames[region] || region;
   };
 
   const getLanguageName = (lang: string) => {
     const languageNames: Record<string, string> = {
-      'all': 'Todos',
+      'all': t('all'),
       'de': 'Alemán',
       'en': 'Inglés',
       'es': 'Español',
@@ -87,54 +87,54 @@ export default function GeographicExpansion() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gls-secondary mb-4">
-          🌍 Expansión Geográfica
+        <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          🌍 {t('geographicExpansion')}
         </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          EcoNexo se expande por toda Europa con soporte para múltiples idiomas, monedas locales y APIs gubernamentales.
+        <p className="text-xl text-gray-700 dark:text-gray-200 max-w-3xl mx-auto">
+          {t('geographicExpansionDescription')}
         </p>
       </div>
 
       {/* Statistics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-blue-50 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-blue-600">
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
             {COUNTRIES.length}
           </div>
-          <div className="text-sm text-gray-600">Países</div>
+          <div className="text-sm text-gray-700 dark:text-gray-300">{t('countries')}</div>
         </div>
-        <div className="bg-green-50 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-green-600">
+        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
             {new Set(COUNTRIES.map(c => c.language)).size}
           </div>
-          <div className="text-sm text-gray-600">Idiomas</div>
+          <div className="text-sm text-gray-700 dark:text-gray-300">{t('languages')}</div>
         </div>
-        <div className="bg-purple-50 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-purple-600">
+        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
             {new Set(COUNTRIES.map(c => c.currency)).size}
           </div>
-          <div className="text-sm text-gray-600">Monedas</div>
+          <div className="text-sm text-gray-700 dark:text-gray-300">{t('currencies')}</div>
         </div>
-        <div className="bg-orange-50 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-orange-600">
+        <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
             {GOVERNMENT_APIS.length}
           </div>
-          <div className="text-sm text-gray-600">APIs Gubernamentales</div>
+          <div className="text-sm text-gray-700 dark:text-gray-300">{t('governmentAPIs')}</div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Filtros</h2>
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 mb-8">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t('filters')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Región
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {t('region')}
             </label>
             <select
               value={selectedRegion}
               onChange={(e) => setSelectedRegion(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             >
               {regions.map(region => (
                 <option key={region} value={region}>
@@ -144,13 +144,13 @@ export default function GeographicExpansion() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Idioma
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {t('language')}
             </label>
             <select
               value={selectedLanguage}
               onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             >
               {languages.map(lang => (
                 <option key={lang} value={lang}>
@@ -167,15 +167,15 @@ export default function GeographicExpansion() {
         {filteredCountries.map((country) => {
           const api = getGovernmentAPI(country.code);
           return (
-            <div key={country.code} className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div key={country.code} className="bg-white dark:bg-slate-800 rounded-lg shadow-lg overflow-hidden">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-3xl">{country.flag}</div>
                   <div className="text-right">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">
                       {getCountryName(country)}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
                       {country.code}
                     </div>
                   </div>
@@ -183,42 +183,42 @@ export default function GeographicExpansion() {
 
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Capital:</span>
-                    <span className="font-medium">{country.capital}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('capital')}:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{country.capital}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Población:</span>
-                    <span className="font-medium">{country.population.toLocaleString()}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('population')}:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{country.population.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Moneda:</span>
-                    <span className="font-medium">{country.currencySymbol} {country.currency}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('currency')}:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{country.currencySymbol} {country.currency}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Idioma:</span>
-                    <span className="font-medium">{getLanguageName(country.language)}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('language')}:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{getLanguageName(country.language)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Región:</span>
-                    <span className="font-medium">{getRegionName(country.region)}</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('regionLabel')}:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{getRegionName(country.region)}</span>
                   </div>
                 </div>
 
                 {api && (
-                  <div className="bg-green-50 rounded-lg p-3">
-                    <div className="text-sm font-medium text-green-800 mb-1">
-                      ✓ API Gubernamental Disponible
+                  <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3">
+                    <div className="text-sm font-medium text-green-800 dark:text-green-200 mb-1">
+                      ✓ {t('governmentAPIAvailable')}
                     </div>
-                    <div className="text-xs text-green-600">
+                    <div className="text-xs text-green-600 dark:text-green-300">
                       {api.name}
                     </div>
                   </div>
                 )}
 
                 {!api && (
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <div className="text-sm text-gray-600">
-                      API gubernamental en desarrollo
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">
+                      {t('governmentAPIInDevelopment')}
                     </div>
                   </div>
                 )}
@@ -229,20 +229,20 @@ export default function GeographicExpansion() {
       </div>
 
       {/* Government APIs Section */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          🔌 APIs Gubernamentales Integradas
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+          🔌 {t('integratedGovernmentAPIs')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {GOVERNMENT_APIS.map((api) => (
-            <div key={api.country} className="border border-gray-200 rounded-lg p-4">
+            <div key={api.country} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-medium text-gray-900">{api.name}</h3>
-                <span className="text-sm text-gray-500">{api.country}</span>
+                <h3 className="font-medium text-gray-900 dark:text-white">{api.name}</h3>
+                <span className="text-sm text-gray-500 dark:text-gray-400">{api.country}</span>
               </div>
-              <p className="text-sm text-gray-600 mb-3">{api.description}</p>
-              <div className="text-xs text-gray-500">
-                Base URL: {api.baseUrl}
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{api.description}</p>
+              <div className="text-xs text-gray-500 dark:text-gray-400">
+                {t('baseURL')}: {api.baseUrl}
               </div>
             </div>
           ))}

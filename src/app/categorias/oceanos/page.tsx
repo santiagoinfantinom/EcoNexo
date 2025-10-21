@@ -14,10 +14,10 @@ export default function OceanosPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gls-secondary mb-4">
+          <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-4">
             {t('oceansTitle')}
           </h1>
-          <p className="text-xl text-gls-secondary opacity-90 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-700 dark:text-gray-200 opacity-90 max-w-3xl mx-auto">
             {t('oceansDescription')}
           </p>
         </div>

@@ -65,17 +65,17 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
             <div className="flex items-center gap-4">
               <span className="text-4xl">🌿</span>
               <div>
-                <h1 className="text-3xl font-bold text-gls-secondary">
+                <h1 className="text-3xl font-bold text-white">
                   {t('welcomeMessageTitle')}
                 </h1>
-                <p className="text-gls-secondary opacity-80 mt-2">
+                <p className="text-white opacity-80 mt-2">
                   {t('welcomeMessageDescription')}
                 </p>
               </div>
             </div>
             <button
               onClick={handleClose}
-              className="text-gls-secondary hover:text-vibrant-rose transition-colors text-2xl font-bold"
+              className="text-white hover:text-vibrant-rose transition-colors text-2xl font-bold"
               aria-label="Close"
             >
               ×

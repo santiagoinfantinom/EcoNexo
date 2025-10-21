@@ -6,7 +6,7 @@ export type Theme = "light" | "dark";
 const ThemeContext = createContext<{ theme: Theme; setTheme: (t: Theme) => void } | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>("light");
 
   useEffect(() => {
     try {

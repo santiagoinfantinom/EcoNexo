@@ -9,10 +9,10 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-gls-secondary mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-800 dark:text-white mb-6">
             About EcoNexo
           </h1>
-          <p className="text-xl md:text-2xl text-gls-secondary opacity-90 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-200 opacity-90 max-w-3xl mx-auto">
             Connecting Europe's environmental community for a sustainable future
           </p>
         </div>
@@ -20,7 +20,7 @@ export default function AboutPage() {
         {/* Mission Section */}
         <section className="mb-16">
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8">
-            <h2 className="text-3xl font-bold text-gls-secondary mb-6">Our Mission</h2>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Our Mission</h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
               EcoNexo is dedicated to connecting environmental activists, volunteers, and organizations 
               across Europe to create a more sustainable future. We believe that collaboration and 
@@ -36,11 +36,11 @@ export default function AboutPage() {
 
         {/* Features Grid */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-gls-secondary text-center mb-12">What We Offer</h2>
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white text-center mb-12">What We Offer</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 text-center">
               <div className="text-4xl mb-4">🗺️</div>
-              <h3 className="text-xl font-bold text-gls-secondary mb-3">Interactive Map</h3>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">Interactive Map</h3>
               <p className="text-gray-700 dark:text-gray-300">
                 Discover environmental projects and events near you with our interactive map interface.
               </p>
@@ -48,7 +48,7 @@ export default function AboutPage() {
             
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 text-center">
               <div className="text-4xl mb-4">📅</div>
-              <h3 className="text-xl font-bold text-gls-secondary mb-3">Events & Activities</h3>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">Events & Activities</h3>
               <p className="text-gray-700 dark:text-gray-300">
                 Join environmental events, workshops, and community activities happening across Europe.
               </p>
@@ -56,7 +56,7 @@ export default function AboutPage() {
             
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 text-center">
               <div className="text-4xl mb-4">💼</div>
-              <h3 className="text-xl font-bold text-gls-secondary mb-3">Green Jobs</h3>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">Green Jobs</h3>
               <p className="text-gray-700 dark:text-gray-300">
                 Find meaningful employment opportunities in the environmental and sustainability sector.
               </p>
@@ -64,7 +64,7 @@ export default function AboutPage() {
             
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 text-center">
               <div className="text-4xl mb-4">💬</div>
-              <h3 className="text-xl font-bold text-gls-secondary mb-3">Community Chat</h3>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">Community Chat</h3>
               <p className="text-gray-700 dark:text-gray-300">
                 Connect with fellow environmentalists through our community discussion forums.
               </p>
@@ -72,7 +72,7 @@ export default function AboutPage() {
             
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 text-center">
               <div className="text-4xl mb-4">👤</div>
-              <h3 className="text-xl font-bold text-gls-secondary mb-3">Personal Profiles</h3>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">Personal Profiles</h3>
               <p className="text-gray-700 dark:text-gray-300">
                 Create detailed profiles to showcase your environmental interests and expertise.
               </p>
@@ -80,7 +80,7 @@ export default function AboutPage() {
             
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 text-center">
               <div className="text-4xl mb-4">🌍</div>
-              <h3 className="text-xl font-bold text-gls-secondary mb-3">Multilingual</h3>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">Multilingual</h3>
               <p className="text-gray-700 dark:text-gray-300">
                 Available in English, Spanish, and German to serve diverse European communities.
               </p>
@@ -91,31 +91,31 @@ export default function AboutPage() {
         {/* Values Section */}
         <section className="mb-16">
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8">
-            <h2 className="text-3xl font-bold text-gls-secondary mb-6">Our Values</h2>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Our Values</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-xl font-semibold text-gls-secondary mb-3">🌱 Sustainability</h3>
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">🌱 Sustainability</h3>
                 <p className="text-gray-700 dark:text-gray-300">
                   We are committed to promoting sustainable practices and environmental protection 
                   across all our activities and partnerships.
                 </p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gls-secondary mb-3">🤝 Community</h3>
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">🤝 Community</h3>
                 <p className="text-gray-700 dark:text-gray-300">
                   We believe in the power of community and collaboration to create meaningful 
                   environmental change.
                 </p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gls-secondary mb-3">🌍 Inclusivity</h3>
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">🌍 Inclusivity</h3>
                 <p className="text-gray-700 dark:text-gray-300">
                   We welcome people from all backgrounds and skill levels to join our 
                   environmental community.
                 </p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gls-secondary mb-3">📈 Impact</h3>
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">📈 Impact</h3>
                 <p className="text-gray-700 dark:text-gray-300">
                   We focus on creating measurable positive impact for the environment and 
                   our communities.
@@ -149,7 +149,7 @@ export default function AboutPage() {
         {/* Contact Section */}
         <section className="text-center">
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8">
-            <h2 className="text-3xl font-bold text-gls-secondary mb-6">Get Involved</h2>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Get Involved</h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
               Ready to make a difference? Join our community and start contributing to 
               environmental change today.
