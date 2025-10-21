@@ -7,24 +7,37 @@ const ThemeContext = createContext<{ theme: Theme; setTheme: (t: Theme) => void 
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     try {
       const saved = localStorage.getItem("econexo:theme") as Theme | null;
-      if (saved === "light" || saved === "dark") setThemeState(saved);
+      if (saved === "light" || saved === "dark") {
+        setThemeState(saved);
+      }
     } catch {}
   }, []);
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.setAttribute("data-theme", theme);
-  }, [theme]);
+    if (mounted) {
+      const root = document.documentElement;
+      root.setAttribute("data-theme", theme);
+      console.log('🎨 Theme changed to:', theme);
+    }
+  }, [theme, mounted]);
 
   const value = useMemo(
     () => ({
       theme,
       setTheme: (t: Theme) => {
-        try { localStorage.setItem("econexo:theme", t); } catch {}
+        console.log('🎨 Setting theme to:', t);
+        try { 
+          localStorage.setItem("econexo:theme", t); 
+          console.log('🎨 Theme saved to localStorage');
+        } catch (error) {
+          console.error('🎨 Error saving theme to localStorage:', error);
+        }
         setThemeState(t);
       },
     }),

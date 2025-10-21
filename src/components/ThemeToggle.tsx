@@ -13,7 +13,9 @@ export default function ThemeToggle() {
   if (!mounted) return null;
 
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    const newTheme = theme === "light" ? "dark" : "light";
+    console.log('🌙 ThemeToggle: Current theme:', theme, 'Switching to:', newTheme);
+    setTheme(newTheme);
   };
 
   return (
