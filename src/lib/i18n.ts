@@ -242,6 +242,7 @@ const DICTS: Record<Locale, Dict> = {
     welcomeIntroSkip: "Skip",
     welcomeIntroNext: "Next",
     welcomeIntroGetStarted: "Get Started!",
+    welcomeIntroFinish: "Finish",
     // Profile fields
     personalInformation: "Personal Information",
     firstName: "First Name",
@@ -572,6 +573,7 @@ const DICTS: Record<Locale, Dict> = {
     welcomeIntroSkip: "Überspringen",
     welcomeIntroNext: "Weiter",
     welcomeIntroGetStarted: "Los geht's!",
+    welcomeIntroFinish: "Beenden",
     // Profile fields
     personalInformation: "Persönliche Informationen",
     firstName: "Vorname",
@@ -902,6 +904,7 @@ const DICTS: Record<Locale, Dict> = {
     welcomeIntroSkip: "Saltar",
     welcomeIntroNext: "Siguiente",
     welcomeIntroGetStarted: "¡Empezar!",
+    welcomeIntroFinish: "Finalizar",
     // Profile fields
     personalInformation: "Información Personal",
     firstName: "Nombre",

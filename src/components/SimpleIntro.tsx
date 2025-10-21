@@ -18,25 +18,19 @@ export default function SimpleIntro() {
     if (!hasSeenIntro) {
       console.log('🔧 SimpleIntro: Mostrando intro...');
       
-      // Force English as default
-      setLocale('en');
-      localStorage.setItem('econexo:locale', 'en');
-      localStorage.setItem('econexo-language-set', 'true');
-      localStorage.setItem('econexo-preferred-language', 'en');
-      
       // Show intro immediately (no delay)
       console.log('🔧 SimpleIntro: Mostrando intro inmediatamente');
       setShowIntro(true);
     } else {
       console.log('🔧 SimpleIntro: Intro ya se mostró antes, no mostrando');
     }
-  }, [setLocale]);
+  }, []);
 
   const steps = [
     {
       icon: '🌍',
-      title: 'Choose Your Language',
-      description: 'EcoNexo is available in multiple languages',
+      title: t('welcomeIntroLanguageTitle'),
+      description: t('welcomeIntroLanguageDescription'),
       buttons: [
         { label: '🇪🇸 Español', locale: 'es' },
         { label: '🇬🇧 English', locale: 'en' },
@@ -45,28 +39,28 @@ export default function SimpleIntro() {
     },
     {
       icon: '🗺️',
-      title: 'Explore the Map',
-      description: 'Discover environmental projects near you'
+      title: t('welcomeIntroMapTitle'),
+      description: t('welcomeIntroMapDescription')
     },
     {
       icon: '📅',
-      title: 'Join Events',
-      description: 'Participate in community environmental activities'
+      title: t('welcomeIntroEventsTitle'),
+      description: t('welcomeIntroEventsDescription')
     },
     {
       icon: '💼',
-      title: 'Find Jobs',
-      description: 'Discover green career opportunities'
+      title: t('welcomeIntroJobsTitle'),
+      description: t('welcomeIntroJobsDescription')
     },
     {
       icon: '💬',
-      title: 'Community Chat',
-      description: 'Connect with like-minded environmentalists'
+      title: t('welcomeIntroChatTitle'),
+      description: t('welcomeIntroChatDescription')
     },
     {
       icon: '👤',
-      title: 'Your Profile',
-      description: 'Track your environmental impact and achievements'
+      title: t('welcomeIntroProfileTitle'),
+      description: t('welcomeIntroProfileDescription')
     }
   ];
 
@@ -223,7 +217,7 @@ export default function SimpleIntro() {
                 cursor: 'pointer'
               }}
             >
-              Skip
+              {t('welcomeIntroSkip')}
             </button>
             <button
               onClick={handleNext}
@@ -238,7 +232,7 @@ export default function SimpleIntro() {
                 cursor: 'pointer'
               }}
             >
-              {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
+              {currentStep === steps.length - 1 ? t('welcomeIntroFinish') : t('welcomeIntroNext')}
             </button>
           </div>
         )}
