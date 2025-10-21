@@ -28,13 +28,19 @@ export default function ThemeToggle() {
       root.setAttribute("data-theme", theme);
       console.log('🌙 ThemeToggle: data-theme attribute set to:', root.getAttribute("data-theme"));
       
-      // Also update body classes for immediate visual feedback
+      // Apply theme styles directly to body and html
       if (theme === "dark") {
         document.body.style.backgroundColor = "#1F3D3B";
         document.body.style.color = "#F2F6EB";
+        document.documentElement.style.backgroundColor = "#1F3D3B";
+        document.documentElement.style.color = "#F2F6EB";
+        console.log('🌙 ThemeToggle: Applied dark theme styles');
       } else {
         document.body.style.backgroundColor = "#F2F6EB";
         document.body.style.color = "#1F3D3B";
+        document.documentElement.style.backgroundColor = "#F2F6EB";
+        document.documentElement.style.color = "#1F3D3B";
+        console.log('🌙 ThemeToggle: Applied light theme styles');
       }
     }
   }, [theme, mounted]);

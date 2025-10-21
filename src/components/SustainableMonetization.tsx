@@ -97,11 +97,11 @@ export default function SustainableMonetization({
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gls-secondary mb-4">
-          💰 Monetización Sostenible
+        <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          💰 {t("sustainableMonetization")}
         </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Apoya proyectos verificados, descubre ofertas sostenibles y accede a funciones premium que impulsan el impacto ambiental.
+        <p className="text-xl text-gray-700 dark:text-gray-200 max-w-3xl mx-auto">
+          {t("sustainableMonetizationDescription")}
         </p>
       </div>
 
@@ -112,25 +112,25 @@ export default function SustainableMonetization({
             <div className="text-2xl font-bold text-green-600">
               {formatCurrency(impactMetrics.totalDonations, 'EUR')}
             </div>
-            <div className="text-sm text-gray-600">Donaciones Totales</div>
+            <div className="text-sm text-gray-600">{t("totalDonations")}</div>
           </div>
           <div className="bg-blue-50 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
               {impactMetrics.totalImpact.co2Reduced.toLocaleString()} kg
             </div>
-            <div className="text-sm text-gray-600">CO₂ Reducido</div>
+            <div className="text-sm text-gray-600">{t("co2Reduced")}</div>
           </div>
           <div className="bg-purple-50 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-purple-600">
               {impactMetrics.totalImpact.treesPlanted.toLocaleString()}
             </div>
-            <div className="text-sm text-gray-600">Árboles Plantados</div>
+            <div className="text-sm text-gray-600">{t("treesPlanted")}</div>
           </div>
           <div className="bg-orange-50 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-orange-600">
               {impactMetrics.totalImpact.peopleHelped.toLocaleString()}
             </div>
-            <div className="text-sm text-gray-600">Personas Ayudadas</div>
+            <div className="text-sm text-gray-600">{t("peopleHelped")}</div>
           </div>
         </div>
       )}
@@ -139,9 +139,9 @@ export default function SustainableMonetization({
       <div className="border-b border-gray-200 mb-8">
         <nav className="flex space-x-8">
           {[
-            { id: 'donations', name: 'Donaciones', icon: '💚', count: campaigns.length },
-            { id: 'sponsorships', name: 'Patrocinios', icon: '🤝', count: sponsorships.length },
-            { id: 'premium', name: 'Premium', icon: '⭐', count: subscriptions.length }
+            { id: 'donations', name: t("donations"), icon: '💚', count: campaigns.length },
+            { id: 'sponsorships', name: t("sponsorships"), icon: '🤝', count: sponsorships.length },
+            { id: 'premium', name: t("premium"), icon: '⭐', count: subscriptions.length }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -179,7 +179,7 @@ export default function SustainableMonetization({
                       {campaign.category}
                     </span>
                     {campaign.verified && (
-                      <span className="text-sm text-blue-600">✓ Verificado</span>
+                      <span className="text-sm text-blue-600">✓ {t("verified")}</span>
                     )}
                   </div>
                   
@@ -204,7 +204,7 @@ export default function SustainableMonetization({
                       ></div>
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
-                      {formatProgress(campaign.currentAmount, campaign.targetAmount).toFixed(1)}% completado
+                      {formatProgress(campaign.currentAmount, campaign.targetAmount).toFixed(1)}% {t("completed")}
                     </div>
                   </div>
 
@@ -215,7 +215,7 @@ export default function SustainableMonetization({
                         <div className="font-semibold text-green-600">
                           {campaign.impactMetrics.co2Reduction.toLocaleString()} kg
                         </div>
-                        <div className="text-gray-500">CO₂ Reducido</div>
+                        <div className="text-gray-500">{t("co2ReducedShort")}</div>
                       </div>
                     )}
                     {campaign.impactMetrics.treesPlanted && (
@@ -223,7 +223,7 @@ export default function SustainableMonetization({
                         <div className="font-semibold text-green-600">
                           {campaign.impactMetrics.treesPlanted}
                         </div>
-                        <div className="text-gray-500">Árboles</div>
+                        <div className="text-gray-500">{t("trees")}</div>
                       </div>
                     )}
                   </div>
@@ -297,7 +297,7 @@ export default function SustainableMonetization({
 
                   {/* Benefits */}
                   <div className="mb-4">
-                    <h4 className="text-sm font-semibold text-gray-900 mb-2">Beneficios:</h4>
+                    <h4 className="text-sm font-semibold text-gray-900 mb-2">{t("benefits")}:</h4>
                     <ul className="text-sm text-gray-600 space-y-1">
                       {sponsorship.benefits.slice(0, 3).map((benefit, index) => (
                         <li key={index} className="flex items-center">
@@ -320,13 +320,13 @@ export default function SustainableMonetization({
                       <div className="font-semibold text-green-600">
                         {sponsorship.impact.wasteReduction} kg
                       </div>
-                      <div className="text-gray-500">Residuos</div>
+                      <div className="text-gray-500">{t("waste")}</div>
                     </div>
                     <div className="text-center">
                       <div className="font-semibold text-green-600">
                         {sponsorship.impact.renewableEnergy}%
                       </div>
-                      <div className="text-gray-500">Renovable</div>
+                      <div className="text-gray-500">{t("renewable")}</div>
                     </div>
                   </div>
 
@@ -334,7 +334,7 @@ export default function SustainableMonetization({
                     onClick={() => handleSponsorshipClick(sponsorship.id)}
                     className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors"
                   >
-                    Ver Oferta
+                    {t("viewOffer")}
                   </button>
                 </div>
               </div>
@@ -350,7 +350,7 @@ export default function SustainableMonetization({
               }`}>
                 {subscription.id === 'eco-champion' && (
                   <div className="bg-green-500 text-white text-center py-2 text-sm font-medium">
-                    ⭐ Más Popular
+                    ⭐ {t("mostPopular")}
                   </div>
                 )}
                 
@@ -364,7 +364,7 @@ export default function SustainableMonetization({
                       {formatCurrency(subscription.price, subscription.currency)}
                     </div>
                     <div className="text-gray-500">
-                      / {subscription.interval === 'monthly' ? 'mes' : 'año'}
+                      / {subscription.interval === 'monthly' ? t("month") : t("year")}
                     </div>
                   </div>
 
@@ -382,7 +382,7 @@ export default function SustainableMonetization({
                       <span className="font-semibold text-green-600">
                         {subscription.impactContribution}%
                       </span>
-                      <span className="text-gray-600"> de los ingresos se donan a causas ambientales</span>
+                      <span className="text-gray-600"> {t("ofRevenueDonated")}</span>
                     </div>
                   </div>
 
@@ -394,7 +394,7 @@ export default function SustainableMonetization({
                         : 'bg-gray-500 text-white hover:bg-gray-600'
                     }`}
                   >
-                    Suscribirse
+                    {t("subscribe")}
                   </button>
                 </div>
               </div>
