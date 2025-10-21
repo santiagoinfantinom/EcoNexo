@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useMemo, useState, useEffect } from "react";
 
-export type Locale = "en" | "de" | "es";
+export type Locale = "en" | "de" | "es" | "fr" | "it" | "pl" | "nl";
 
 type Dict = Record<string, string>;
 

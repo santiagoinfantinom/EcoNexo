@@ -1,54 +1,14 @@
-"use client";
-import React, { useState, useEffect } from 'react';
+'use client';
 
-interface DonationCampaign {
-  id: string;
-  title: string;
-  description: string;
-  targetAmount: number;
-  currentAmount: number;
-  deadline: string;
-  organizer: string;
-  category: string;
-  image: string;
-  impact: {
-    co2Reduction: number;
-    treesPlanted: number;
-    peopleHelped: number;
-  };
-  verified: boolean;
-}
-
-interface Sponsorship {
-  id: string;
-  companyName: string;
-  logo: string;
-  description: string;
-  category: string;
-  discount: number; // percentage
-  conditions: string[];
-  sustainability: {
-    carbonNeutral: boolean;
-    renewableEnergy: boolean;
-    wasteReduction: boolean;
-    socialResponsibility: boolean;
-  };
-}
-
-interface PremiumFeature {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  period: 'monthly' | 'yearly';
-  features: string[];
-  popular?: boolean;
-}
+import { useState, useEffect } from 'react';
+import { useI18n } from '@/lib/i18n';
+import { monetizationService, DonationCampaign, Sponsorship, PremiumSubscription } from '@/lib/sustainableMonetization';
+import { trackEvent } from '@/lib/analytics';
 
 interface SustainableMonetizationProps {
-  onDonation?: (campaign: DonationCampaign, amount: number) => void;
-  onSponsorshipClick?: (sponsorship: Sponsorship) => void;
-  onPremiumUpgrade?: (feature: PremiumFeature) => void;
+  onDonation?: (campaignId: string, amount: number) => void;
+  onSponsorshipClick?: (sponsorshipId: string) => void;
+  onPremiumUpgrade?: (subscriptionId: string) => void;
 }
 
 export default function SustainableMonetization({ 
@@ -56,507 +16,392 @@ export default function SustainableMonetization({
   onSponsorshipClick, 
   onPremiumUpgrade 
 }: SustainableMonetizationProps) {
+  const { t, locale } = useI18n();
   const [activeTab, setActiveTab] = useState<'donations' | 'sponsorships' | 'premium'>('donations');
-  const [donationAmount, setDonationAmount] = useState<number>(25);
-  const [selectedCampaign, setSelectedCampaign] = useState<DonationCampaign | null>(null);
+  const [campaigns, setCampaigns] = useState<DonationCampaign[]>([]);
+  const [sponsorships, setSponsorships] = useState<Sponsorship[]>([]);
+  const [subscriptions, setSubscriptions] = useState<PremiumSubscription[]>([]);
+  const [impactMetrics, setImpactMetrics] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const donationCampaigns: DonationCampaign[] = [
-    {
-      id: 'd1',
-      title: 'Reforestación Urbana Madrid',
-      description: 'Plantar 1000 árboles nativos en parques urbanos de Madrid para mejorar la calidad del aire y crear corredores verdes.',
-      targetAmount: 15000,
-      currentAmount: 8750,
-      deadline: '2024-12-31',
-      organizer: 'Green Madrid Initiative',
-      category: 'environment',
-      image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=400&q=80',
-      impact: {
-        co2Reduction: 500,
-        treesPlanted: 1000,
-        peopleHelped: 50000
-      },
-      verified: true
-    },
-    {
-      id: 'd2',
-      title: 'Energía Solar Comunitaria',
-      description: 'Instalar paneles solares en centros comunitarios para reducir costos energéticos y promover energías renovables.',
-      targetAmount: 25000,
-      currentAmount: 18200,
-      deadline: '2025-03-15',
-      organizer: 'Solar Community Coop',
-      category: 'energy',
-      image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=400&q=80',
-      impact: {
-        co2Reduction: 1200,
-        treesPlanted: 0,
-        peopleHelped: 2000
-      },
-      verified: true
-    },
-    {
-      id: 'd3',
-      title: 'Educación Ambiental Rural',
-      description: 'Llevar programas de educación ambiental a escuelas rurales para formar la próxima generación de ecologistas.',
-      targetAmount: 8000,
-      currentAmount: 3200,
-      deadline: '2025-01-30',
-      organizer: 'Rural Education Foundation',
-      category: 'education',
-      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=400&q=80',
-      impact: {
-        co2Reduction: 200,
-        treesPlanted: 100,
-        peopleHelped: 500
-      },
-      verified: false
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [campaignsData, sponsorshipsData, subscriptionsData, metricsData] = await Promise.all([
+        monetizationService.getVerifiedCampaigns(),
+        monetizationService.getSponsorships(),
+        monetizationService.getPremiumSubscriptions(),
+        monetizationService.getImpactMetrics()
+      ]);
+
+      setCampaigns(campaignsData);
+      setSponsorships(sponsorshipsData);
+      setSubscriptions(subscriptionsData);
+      setImpactMetrics(metricsData);
+    } catch (error) {
+      console.error('Error loading monetization data:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const sponsorships: Sponsorship[] = [
-    {
-      id: 's1',
-      companyName: 'EcoBike',
-      logo: '🚴',
-      description: 'Bicicletas eléctricas sostenibles con materiales reciclados',
-      category: 'transport',
-      discount: 15,
-      conditions: ['Compra mínima €500', 'Registro en EcoNexo'],
-      sustainability: {
-        carbonNeutral: true,
-        renewableEnergy: true,
-        wasteReduction: true,
-        socialResponsibility: true
-      }
-    },
-    {
-      id: 's2',
-      companyName: 'GreenEnergy Solutions',
-      logo: '⚡',
-      description: 'Instalación de paneles solares residenciales',
-      category: 'energy',
-      discount: 20,
-      conditions: ['Primera instalación', 'Evaluación energética'],
-      sustainability: {
-        carbonNeutral: true,
-        renewableEnergy: true,
-        wasteReduction: false,
-        socialResponsibility: true
-      }
-    },
-    {
-      id: 's3',
-      companyName: 'Sustainable Fashion Co',
-      logo: '👕',
-      description: 'Ropa sostenible hecha con materiales orgánicos',
-      category: 'fashion',
-      discount: 25,
-      conditions: ['Compra mínima €100', 'Miembro EcoNexo'],
-      sustainability: {
-        carbonNeutral: false,
-        renewableEnergy: true,
-        wasteReduction: true,
-        socialResponsibility: true
-      }
+  const handleDonation = async (campaignId: string, amount: number) => {
+    try {
+      await monetizationService.processDonation(campaignId, amount, {});
+      onDonation?.(campaignId, amount);
+      trackEvent('Donation Made', { campaignId, amount });
+      await loadData(); // Refresh data
+    } catch (error) {
+      console.error('Error processing donation:', error);
     }
-  ];
+  };
 
-  const premiumFeatures: PremiumFeature[] = [
-    {
-      id: 'p1',
-      name: 'EcoNexo Pro',
-      description: 'Acceso completo a análisis avanzados y herramientas premium',
-      price: 9.99,
-      period: 'monthly',
-      features: [
-        'Análisis de impacto detallado',
-        'Recomendaciones personalizadas avanzadas',
-        'Acceso a eventos exclusivos',
-        'Certificados de participación digitales',
-        'Soporte prioritario',
-        'Sin anuncios'
-      ],
-      popular: true
-    },
-    {
-      id: 'p2',
-      name: 'EcoNexo Pro Anual',
-      description: 'Ahorra 20% con la suscripción anual',
-      price: 95.99,
-      period: 'yearly',
-      features: [
-        'Todo lo de EcoNexo Pro',
-        'Ahorro del 20%',
-        'Acceso beta a nuevas funciones',
-        'Reportes mensuales personalizados',
-        'Mentoría ambiental personalizada'
-      ]
-    },
-    {
-      id: 'p3',
-      name: 'EcoNexo Business',
-      description: 'Para organizadores y empresas sostenibles',
-      price: 29.99,
-      period: 'monthly',
-      features: [
-        'Dashboard de gestión avanzado',
-        'Analytics de eventos detallados',
-        'Herramientas de marketing sostenible',
-        'Integración con redes sociales',
-        'Gestión de voluntarixs',
-        'Reportes de impacto automáticos'
-      ]
+  const handleSponsorshipClick = (sponsorshipId: string) => {
+    onSponsorshipClick?.(sponsorshipId);
+    trackEvent('Sponsorship Clicked', { sponsorshipId });
+  };
+
+  const handlePremiumUpgrade = async (subscriptionId: string) => {
+    try {
+      await monetizationService.subscribeToPremium(subscriptionId, {});
+      onPremiumUpgrade?.(subscriptionId);
+      trackEvent('Premium Subscription', { subscriptionId });
+    } catch (error) {
+      console.error('Error processing premium subscription:', error);
     }
-  ];
-
-  const handleDonation = (campaign: DonationCampaign) => {
-    onDonation?.(campaign, donationAmount);
-    // Reset form
-    setSelectedCampaign(null);
-    setDonationAmount(25);
   };
 
-  const getProgressPercentage = (current: number, target: number): number => {
-    return Math.min(100, (current / target) * 100);
+  const formatCurrency = (amount: number, currency: string) => {
+    return new Intl.NumberFormat(locale === 'es' ? 'es-ES' : locale === 'de' ? 'de-DE' : 'en-US', {
+      style: 'currency',
+      currency: currency
+    }).format(amount);
   };
 
-  const getDaysLeft = (deadline: string): number => {
-    const today = new Date();
-    const deadlineDate = new Date(deadline);
-    const diffTime = deadlineDate.getTime() - today.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const formatProgress = (current: number, target: number) => {
+    return Math.min((current / target) * 100, 100);
   };
 
-  const getSustainabilityScore = (sustainability: Sponsorship['sustainability']): number => {
-    const factors = Object.values(sustainability);
-    return Math.round((factors.filter(Boolean).length / factors.length) * 100);
-  };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-          Monetización Sostenible
-        </h3>
-        <div className="flex bg-slate-100 dark:bg-slate-700 rounded-lg p-1">
-          <button
-            onClick={() => setActiveTab('donations')}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
-              activeTab === 'donations'
-                ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-slate-100 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-            }`}
-          >
-            💰 Donaciones
-          </button>
-          <button
-            onClick={() => setActiveTab('sponsorships')}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
-              activeTab === 'sponsorships'
-                ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-slate-100 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-            }`}
-          >
-            🤝 Patrocinios
-          </button>
-          <button
-            onClick={() => setActiveTab('premium')}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
-              activeTab === 'premium'
-                ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-slate-100 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-            }`}
-          >
-            ⭐ Premium
-          </button>
-        </div>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gls-secondary mb-4">
+          💰 Monetización Sostenible
+        </h1>
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          Apoya proyectos verificados, descubre ofertas sostenibles y accede a funciones premium que impulsan el impacto ambiental.
+        </p>
       </div>
 
-      {/* Donations Tab */}
-      {activeTab === 'donations' && (
-        <div className="space-y-4">
-          <div className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-            Apoya proyectos ambientales verificados y transparentes
+      {/* Impact Metrics */}
+      {impactMetrics && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-green-50 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-green-600">
+              {formatCurrency(impactMetrics.totalDonations, 'EUR')}
+            </div>
+            <div className="text-sm text-gray-600">Donaciones Totales</div>
           </div>
-          
-          {donationCampaigns.map((campaign) => (
-            <div key={campaign.id} className="border border-gray-200 dark:border-slate-600 rounded-lg p-4">
-              <div className="flex items-start gap-4">
-                <img
-                  src={campaign.image}
+          <div className="bg-blue-50 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-blue-600">
+              {impactMetrics.totalImpact.co2Reduced.toLocaleString()} kg
+            </div>
+            <div className="text-sm text-gray-600">CO₂ Reducido</div>
+          </div>
+          <div className="bg-purple-50 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-purple-600">
+              {impactMetrics.totalImpact.treesPlanted.toLocaleString()}
+            </div>
+            <div className="text-sm text-gray-600">Árboles Plantados</div>
+          </div>
+          <div className="bg-orange-50 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-orange-600">
+              {impactMetrics.totalImpact.peopleHelped.toLocaleString()}
+            </div>
+            <div className="text-sm text-gray-600">Personas Ayudadas</div>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation Tabs */}
+      <div className="border-b border-gray-200 mb-8">
+        <nav className="flex space-x-8">
+          {[
+            { id: 'donations', name: 'Donaciones', icon: '💚', count: campaigns.length },
+            { id: 'sponsorships', name: 'Patrocinios', icon: '🤝', count: sponsorships.length },
+            { id: 'premium', name: 'Premium', icon: '⭐', count: subscriptions.length }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === tab.id
+                  ? 'border-green-500 text-green-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <span className="mr-2">{tab.icon}</span>
+              {tab.name}
+              <span className="ml-2 bg-gray-100 text-gray-600 py-1 px-2 rounded-full text-xs">
+                {tab.count}
+              </span>
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Tab Content */}
+      <div className="min-h-96">
+        {activeTab === 'donations' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {campaigns.map((campaign) => (
+              <div key={campaign.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                <img 
+                  src={campaign.images[0]} 
                   alt={campaign.title}
-                  className="w-20 h-20 rounded-lg object-cover"
+                  className="w-full h-48 object-cover"
                 />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-medium text-slate-900 dark:text-slate-100">
-                      {campaign.title}
-                    </h4>
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-green-600 bg-green-100 px-2 py-1 rounded">
+                      {campaign.category}
+                    </span>
                     {campaign.verified && (
-                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                        ✓ Verificado
-                      </span>
+                      <span className="text-sm text-blue-600">✓ Verificado</span>
                     )}
                   </div>
                   
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {campaign.title}
+                  </h3>
+                  
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                     {campaign.description}
                   </p>
-                  
-                  <div className="grid grid-cols-3 gap-4 mb-3">
-                    <div className="text-center">
-                      <div className="text-lg font-semibold text-green-600 dark:text-green-400">
-                        {campaign.impact.co2Reduction}kg
-                      </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">CO₂ reducido</div>
+
+                  {/* Progress Bar */}
+                  <div className="mb-4">
+                    <div className="flex justify-between text-sm text-gray-600 mb-1">
+                      <span>{formatCurrency(campaign.currentAmount, campaign.currency)}</span>
+                      <span>{formatCurrency(campaign.targetAmount, campaign.currency)}</span>
                     </div>
-                    <div className="text-center">
-                      <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-                        {campaign.impact.treesPlanted}
-                      </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">Árboles</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-semibold text-purple-600 dark:text-purple-400">
-                        {campaign.impact.peopleHelped.toLocaleString()}
-                      </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">Personas</div>
-                    </div>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400 mb-1">
-                      <span>Progreso</span>
-                      <span>€{campaign.currentAmount.toLocaleString()} / €{campaign.targetAmount.toLocaleString()}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-2">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${getProgressPercentage(campaign.currentAmount, campaign.targetAmount)}%` }}
+                        className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${formatProgress(campaign.currentAmount, campaign.targetAmount)}%` }}
                       ></div>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-slate-500 dark:text-slate-400">
-                      {getDaysLeft(campaign.deadline)} días restantes
+                    <div className="text-xs text-gray-500 mt-1">
+                      {formatProgress(campaign.currentAmount, campaign.targetAmount).toFixed(1)}% completado
                     </div>
+                  </div>
+
+                  {/* Impact Metrics */}
+                  <div className="grid grid-cols-2 gap-2 mb-4 text-xs">
+                    {campaign.impactMetrics.co2Reduction && (
+                      <div className="text-center">
+                        <div className="font-semibold text-green-600">
+                          {campaign.impactMetrics.co2Reduction.toLocaleString()} kg
+                        </div>
+                        <div className="text-gray-500">CO₂ Reducido</div>
+                      </div>
+                    )}
+                    {campaign.impactMetrics.treesPlanted && (
+                      <div className="text-center">
+                        <div className="font-semibold text-green-600">
+                          {campaign.impactMetrics.treesPlanted}
+                        </div>
+                        <div className="text-gray-500">Árboles</div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Donation Buttons */}
+                  <div className="flex space-x-2">
                     <button
-                      onClick={() => setSelectedCampaign(campaign)}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                      onClick={() => handleDonation(campaign.id, 25)}
+                      className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
                     >
-                      Donar
+                      €25
+                    </button>
+                    <button
+                      onClick={() => handleDonation(campaign.id, 50)}
+                      className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                    >
+                      €50
+                    </button>
+                    <button
+                      onClick={() => handleDonation(campaign.id, 100)}
+                      className="flex-1 bg-green-700 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-green-800 transition-colors"
+                    >
+                      €100
                     </button>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Sponsorships Tab */}
-      {activeTab === 'sponsorships' && (
-        <div className="space-y-4">
-          <div className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-            Descuentos exclusivos de empresas comprometidas con la sostenibilidad
+            ))}
           </div>
-          
-          {sponsorships.map((sponsorship) => (
-            <div key={sponsorship.id} className="border border-gray-200 dark:border-slate-600 rounded-lg p-4">
-              <div className="flex items-start gap-4">
-                <div className="text-4xl">{sponsorship.logo}</div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-medium text-slate-900 dark:text-slate-100">
-                      {sponsorship.companyName}
-                    </h4>
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                      -{sponsorship.discount}% descuento
-                    </span>
+        )}
+
+        {activeTab === 'sponsorships' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {sponsorships.map((sponsorship) => (
+              <div key={sponsorship.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <img 
+                      src={sponsorship.companyLogo} 
+                      alt={sponsorship.company}
+                      className="h-12 w-auto"
+                    />
+                    <div className="text-right">
+                      <div className="text-sm font-medium text-gray-900">
+                        {sponsorship.company}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Score: {sponsorship.sustainabilityScore}/100
+                      </div>
+                    </div>
                   </div>
-                  
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                    {sponsorship.description}
+
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {sponsorship.offer.title}
+                  </h3>
+
+                  <p className="text-gray-600 text-sm mb-4">
+                    {sponsorship.offer.description}
                   </p>
-                  
-                  <div className="mb-3">
-                    <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      Puntuación de Sostenibilidad: {getSustainabilityScore(sponsorship.sustainability)}%
-                    </div>
-                    <div className="flex gap-2">
-                      {Object.entries(sponsorship.sustainability).map(([key, value]) => (
-                        <span
-                          key={key}
-                          className={`px-2 py-1 rounded-full text-xs ${
-                            value
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                              : 'bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-400'
-                          }`}
-                        >
-                          {key.replace(/([A-Z])/g, ' $1').trim()}
-                        </span>
-                      ))}
+
+                  <div className="bg-green-50 rounded-lg p-4 mb-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">
+                        {sponsorship.offer.discount}% OFF
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Hasta {formatCurrency(sponsorship.offer.maxDiscount || 0, 'EUR')}
+                      </div>
                     </div>
                   </div>
-                  
-                  <div className="mb-3">
-                    <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                      Condiciones:
-                    </div>
-                    <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-1">
-                      {sponsorship.conditions.map((condition, index) => (
-                        <li key={index}>• {condition}</li>
+
+                  {/* Benefits */}
+                  <div className="mb-4">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-2">Beneficios:</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      {sponsorship.benefits.slice(0, 3).map((benefit, index) => (
+                        <li key={index} className="flex items-center">
+                          <span className="text-green-500 mr-2">✓</span>
+                          {benefit}
+                        </li>
                       ))}
                     </ul>
                   </div>
-                  
+
+                  {/* Impact */}
+                  <div className="grid grid-cols-3 gap-2 mb-4 text-xs">
+                    <div className="text-center">
+                      <div className="font-semibold text-green-600">
+                        {sponsorship.impact.co2Reduction} kg
+                      </div>
+                      <div className="text-gray-500">CO₂</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-semibold text-green-600">
+                        {sponsorship.impact.wasteReduction} kg
+                      </div>
+                      <div className="text-gray-500">Residuos</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-semibold text-green-600">
+                        {sponsorship.impact.renewableEnergy}%
+                      </div>
+                      <div className="text-gray-500">Renovable</div>
+                    </div>
+                  </div>
+
                   <button
-                    onClick={() => onSponsorshipClick?.(sponsorship)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                    onClick={() => handleSponsorshipClick(sponsorship.id)}
+                    className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors"
                   >
                     Ver Oferta
                   </button>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Premium Tab */}
-      {activeTab === 'premium' && (
-        <div className="space-y-4">
-          <div className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-            Desbloquea funciones avanzadas y apoya el desarrollo de EcoNexo
+            ))}
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {premiumFeatures.map((feature) => (
-              <div
-                key={feature.id}
-                className={`border rounded-lg p-6 relative ${
-                  feature.popular
-                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                    : 'border-gray-200 dark:border-slate-600'
-                }`}
-              >
-                {feature.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="px-3 py-1 bg-green-600 text-white text-xs rounded-full">
-                      Más Popular
-                    </span>
+        )}
+
+        {activeTab === 'premium' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {subscriptions.map((subscription) => (
+              <div key={subscription.id} className={`bg-white rounded-lg shadow-lg overflow-hidden ${
+                subscription.id === 'eco-champion' ? 'ring-2 ring-green-500' : ''
+              }`}>
+                {subscription.id === 'eco-champion' && (
+                  <div className="bg-green-500 text-white text-center py-2 text-sm font-medium">
+                    ⭐ Más Popular
                   </div>
                 )}
                 
-                <div className="text-center mb-4">
-                  <h4 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
-                    {feature.name}
-                  </h4>
-                  <div className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-                    €{feature.price}
-                    <span className="text-sm font-normal text-slate-500 dark:text-slate-400">
-                      /{feature.period === 'monthly' ? 'mes' : 'año'}
-                    </span>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {subscription.name}
+                  </h3>
+                  
+                  <div className="mb-4">
+                    <div className="text-3xl font-bold text-gray-900">
+                      {formatCurrency(subscription.price, subscription.currency)}
+                    </div>
+                    <div className="text-gray-500">
+                      / {subscription.interval === 'monthly' ? 'mes' : 'año'}
+                    </div>
                   </div>
+
+                  <ul className="space-y-2 mb-6">
+                    {subscription.features.map((feature, index) => (
+                      <li key={index} className="flex items-center text-sm">
+                        <span className="text-green-500 mr-2">✓</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="bg-green-50 rounded-lg p-3 mb-4">
+                    <div className="text-sm text-center">
+                      <span className="font-semibold text-green-600">
+                        {subscription.impactContribution}%
+                      </span>
+                      <span className="text-gray-600"> de los ingresos se donan a causas ambientales</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handlePremiumUpgrade(subscription.id)}
+                    className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
+                      subscription.id === 'eco-champion'
+                        ? 'bg-green-500 text-white hover:bg-green-600'
+                        : 'bg-gray-500 text-white hover:bg-gray-600'
+                    }`}
+                  >
+                    Suscribirse
+                  </button>
                 </div>
-                
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 text-center">
-                  {feature.description}
-                </p>
-                
-                <ul className="space-y-2 mb-6">
-                  {feature.features.map((feat, index) => (
-                    <li key={index} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                      <span className="text-green-600">✓</span>
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-                
-                <button
-                  onClick={() => onPremiumUpgrade?.(feature)}
-                  className={`w-full py-2 rounded-lg font-medium transition-colors ${
-                    feature.popular
-                      ? 'bg-green-600 text-white hover:bg-green-700'
-                      : 'bg-slate-600 text-white hover:bg-slate-700'
-                  }`}
-                >
-                  Suscribirse
-                </button>
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* Donation Modal */}
-      {selectedCampaign && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl max-w-md w-full p-6">
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
-              Donar a {selectedCampaign.title}
-            </h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Cantidad (€)
-                </label>
-                <div className="grid grid-cols-4 gap-2 mb-2">
-                  {[10, 25, 50, 100].map((amount) => (
-                    <button
-                      key={amount}
-                      onClick={() => setDonationAmount(amount)}
-                      className={`py-2 px-3 rounded-lg text-sm font-medium transition-all ${
-                        donationAmount === amount
-                          ? 'bg-green-600 text-white'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
-                      }`}
-                    >
-                      €{amount}
-                    </button>
-                  ))}
-                </div>
-                <input
-                  type="number"
-                  value={donationAmount}
-                  onChange={(e) => setDonationAmount(parseInt(e.target.value) || 0)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
-                  min="1"
-                />
-              </div>
-              
-              <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-3">
-                <div className="text-sm text-slate-600 dark:text-slate-400">
-                  Tu donación de €{donationAmount} ayudará a:
-                </div>
-                <ul className="text-sm text-slate-600 dark:text-slate-400 mt-2 space-y-1">
-                  <li>• Reducir {Math.round((donationAmount / selectedCampaign.targetAmount) * selectedCampaign.impact.co2Reduction)}kg de CO₂</li>
-                  <li>• Plantar {Math.round((donationAmount / selectedCampaign.targetAmount) * selectedCampaign.impact.treesPlanted)} árboles</li>
-                  <li>• Ayudar a {Math.round((donationAmount / selectedCampaign.targetAmount) * selectedCampaign.impact.peopleHelped)} personas</li>
-                </ul>
-              </div>
-              
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setSelectedCampaign(null)}
-                  className="flex-1 py-2 px-4 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={() => handleDonation(selectedCampaign)}
-                  className="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  Donar €{donationAmount}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
