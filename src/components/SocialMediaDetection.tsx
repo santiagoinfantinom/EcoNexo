@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { useI18n } from '@/lib/i18n';
 
 interface SocialMediaProject {
   id: string;
@@ -40,6 +41,7 @@ export default function SocialMediaDetection({
   onProjectApproved,
   autoDetection = true 
 }: SocialMediaDetectionProps) {
+  const { t } = useI18n();
   const [detectedProjects, setDetectedProjects] = useState<SocialMediaProject[]>([]);
   const [loading, setLoading] = useState(false);
   const [detectionEnabled, setDetectionEnabled] = useState(autoDetection);
@@ -108,7 +110,7 @@ export default function SocialMediaDetection({
     },
     {
       id: 'sm3',
-      title: 'Reforestación comunitaria en Berlín',
+      title: 'socialMediaCommunityReforestationBerlin',
       description: 'Community tree planting event this Sunday! Help us plant 500 native trees in Tempelhof Park. Bring friends and family! 🌳🌍 #Reforestation #Berlin #Community',
       source: 'facebook',
       author: 'Green Berlin Initiative',
@@ -303,14 +305,14 @@ export default function SocialMediaDetection({
                 {project.imageUrl && (
                   <img
                     src={project.imageUrl}
-                    alt={project.title}
+                    alt={t(project.title)}
                     className="w-20 h-20 rounded-lg object-cover"
                   />
                 )}
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <h4 className="font-medium text-slate-900 dark:text-slate-100">
-                      {project.title}
+                      {t(project.title)}
                     </h4>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSourceColor(project.source)}`}>
                       {getSourceIcon(project.source)} {project.source}

@@ -279,12 +279,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <button
         onClick={handleCenterOnLocation}
         className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200"
-        title={locale === 'es' ? "Centrar en mi ubicación" : 
-               locale === 'de' ? "Auf meinen Standort zentrieren" : 
-               "Center on my location"}
-        aria-label={locale === 'es' ? "Centrar en mi ubicación" : 
-                   locale === 'de' ? "Auf meinen Standort zentrieren" : 
-                   "Center on my location"}
+        title={t("centerOnMyLocation")}
+        aria-label={t("centerOnMyLocation")}
       >
         📍
       </button>

@@ -91,10 +91,10 @@ export function useGamification() {
     addPoints(achievement.points, `Achievement: ${achievement.title}`);
   };
 
-  const getAvailableBadges = (): UserBadge[] => [
+  const getAvailableBadges = (t?: (key: string) => string): UserBadge[] => [
     {
       id: 'first-event',
-      name: 'Primer Evento',
+      name: t ? t('badgeFirstEvent') : 'badgeFirstEvent',
       description: 'Participaste en tu primer evento ecológico',
       icon: '🌱',
       color: 'green',
@@ -102,7 +102,7 @@ export function useGamification() {
     },
     {
       id: 'eco-warrior',
-      name: 'Guerrero Ecológico',
+      name: t ? t('badgeEcoWarrior') : 'badgeEcoWarrior',
       description: 'Completaste 10 eventos ecológicos',
       icon: '🛡️',
       color: 'blue',
@@ -110,7 +110,7 @@ export function useGamification() {
     },
     {
       id: 'community-leader',
-      name: 'Líder Comunitario',
+      name: t ? t('badgeCommunityLeader') : 'badgeCommunityLeader',
       description: 'Organizaste tu primer proyecto',
       icon: '👑',
       color: 'purple',
@@ -118,7 +118,7 @@ export function useGamification() {
     },
     {
       id: 'green-job-hunter',
-      name: 'Cazador de Empleos Verdes',
+      name: t ? t('badgeGreenJobHunter') : 'badgeGreenJobHunter',
       description: 'Aplicaste a 5 trabajos sostenibles',
       icon: '💼',
       color: 'yellow',
@@ -126,7 +126,7 @@ export function useGamification() {
     },
     {
       id: 'chat-master',
-      name: 'Maestro del Chat',
+      name: t ? t('badgeChatMaster') : 'badgeChatMaster',
       description: 'Participaste en 50 conversaciones',
       icon: '💬',
       color: 'pink',
@@ -134,31 +134,31 @@ export function useGamification() {
     }
   ];
 
-  const getAvailableAchievements = (): UserAchievement[] => [
+  const getAvailableAchievements = (t?: (key: string) => string): UserAchievement[] => [
     {
       id: 'eco-explorer',
-      title: 'Explorador Ecológico',
+      title: t ? t('achievementEcoExplorer') : 'achievementEcoExplorer',
       description: 'Descubriste todo el tipo de eventos disponibles',
       points: 50,
       category: 'events'
     },
     {
       id: 'project-pioneer',
-      title: 'Pionero de Proyectos',
+      title: t ? t('achievementProjectPioneer') : 'achievementProjectPioneer',
       description: 'Creaste tu primer proyecto sostenible',
       points: 100,
       category: 'projects'
     },
     {
       id: 'community-connector',
-      title: 'Conector Comunitario',
+      title: t ? t('achievementCommunityConnector') : 'achievementCommunityConnector',
       description: 'Ayudaste a conectar a 10 personas',
       points: 75,
       category: 'community'
     },
     {
       id: 'carbon-neutral',
-      title: 'Carbono Neutral',
+      title: t ? t('achievementCarbonNeutral') : 'achievementCarbonNeutral',
       description: 'Compensaste tu huella de carbono',
       points: 200,
       category: 'environment'

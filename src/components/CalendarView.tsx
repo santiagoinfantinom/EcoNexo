@@ -30,7 +30,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e1',
       projectId: 'p1',
-      title: locale === 'es' ? 'Plantación de árboles nativos' : 
+      title: 'eventNativeTreePlanting', 
              locale === 'de' ? 'Einheimische Baumpflanzung' : 'Native tree planting',
       date: new Date(2025, 0, 15), // January 15, 2025
       time: '09:00',
@@ -45,7 +45,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e2',
       projectId: 'p2',
-      title: locale === 'es' ? 'Taller de energía solar' :
+      title: 'eventSolarEnergyWorkshop',
              locale === 'de' ? 'Solar-Energie Workshop' : 'Solar energy workshop',
       date: new Date(2025, 0, 22), // January 22, 2025
       time: '14:00',
@@ -77,7 +77,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e4',
       projectId: 'p4',
-      title: locale === 'es' ? 'Limpieza de río' :
+      title: 'eventRiverCleanup',
              locale === 'de' ? 'Flussreinigung' : 'River cleanup',
       date: new Date(2025, 1, 14), // February 14, 2025
       time: '08:00',
@@ -94,7 +94,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e5',
       projectId: 'p5',
-      title: locale === 'es' ? 'Conferencia sobre cambio climático' :
+      title: 'eventClimateConference',
              locale === 'de' ? 'Klimawandel-Konferenz' : 'Climate change conference',
       date: new Date(2025, 2, 5), // March 5, 2025
       time: '18:00',
@@ -109,7 +109,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e6',
       projectId: 'p6',
-      title: locale === 'es' ? 'Construcción de jardines verticales' :
+      title: 'eventVerticalGardens',
              locale === 'de' ? 'Vertikale Gartenbau' : 'Vertical garden building',
       date: new Date(2025, 2, 18), // March 18, 2025
       time: '10:00',
@@ -141,7 +141,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e8',
       projectId: 'p2',
-      title: locale === 'es' ? 'Carrera ecológica 5K' :
+      title: 'eventEcoRace',
              locale === 'de' ? 'Ökologischer 5K-Lauf' : 'Eco-friendly 5K run',
       date: new Date(2025, 3, 22), // April 22, 2025 (Earth Day)
       time: '08:00',
@@ -158,7 +158,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e9',
       projectId: 'p3',
-      title: locale === 'es' ? 'Instalación de paneles solares' :
+      title: 'eventSolarPanels',
              locale === 'de' ? 'Solarpanel-Installation' : 'Solar panel installation',
       date: new Date(2025, 4, 10), // May 10, 2025
       time: '09:00',
@@ -222,7 +222,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e13',
       projectId: 'p1',
-      title: locale === 'es' ? 'Reflexión semestral ambiental' :
+      title: 'eventEnvironmentalReflection',
              locale === 'de' ? 'Halbjährliche Umweltreflexion' : 'Semi-annual environmental reflection',
       date: new Date(2025, 6, 15), // July 15, 2025
       time: '17:00',
@@ -237,7 +237,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e14',
       projectId: 'p2',
-      title: locale === 'es' ? 'Celebración de verano sostenible' :
+      title: 'eventSustainableSummer',
              locale === 'de' ? 'Nachhaltige Sommerfeier' : 'Sustainable summer celebration',
       date: new Date(2025, 6, 30), // July 30, 2025
       time: '20:00',
@@ -254,7 +254,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e15',
       projectId: 'p3',
-      title: locale === 'es' ? 'Plantación de otoño' :
+      title: 'eventAutumnPlanting',
              locale === 'de' ? 'Herbstpflanzung' : 'Autumn planting',
       date: new Date(2025, 9, 5), // October 5, 2025
       time: '10:00',
@@ -315,7 +315,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e16',
       projectId: 'p4',
-      title: locale === 'es' ? 'Taller de conservación de alimentos' :
+      title: 'eventFoodConservationWorkshop',
              locale === 'de' ? 'Lebensmittelkonservierungsworkshop' : 'Food preservation workshop',
       date: new Date(2025, 9, 12), // October 12, 2025
       time: '14:00',
@@ -330,7 +330,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e17',
       projectId: 'p5',
-      title: locale === 'es' ? 'Limpieza de bosque otoñal' :
+      title: 'eventForestCleanup',
              locale === 'de' ? 'Herbstwaldreinigung' : 'Autumn forest cleanup',
       date: new Date(2025, 9, 19), // October 19, 2025
       time: '09:00',
@@ -362,7 +362,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e19',
       projectId: 'p1',
-      title: locale === 'es' ? 'Construcción de refugios para aves' :
+      title: 'eventBirdShelters',
              locale === 'de' ? 'Vogelschutzunterstände bauen' : 'Building bird shelters',
       date: new Date(2025, 10, 3), // November 3, 2025 (Monday)
       time: '13:00',
@@ -377,7 +377,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e20',
       projectId: 'p2',
-      title: locale === 'es' ? 'Taller de energía eólica' :
+      title: 'eventWindEnergy',
              locale === 'de' ? 'Windenergie-Workshop' : 'Wind energy workshop',
       date: new Date(2025, 10, 7), // November 7, 2025 (Friday)
       time: '16:00',
@@ -392,7 +392,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e21',
       projectId: 'p3',
-      title: locale === 'es' ? 'Feria de productos orgánicos' :
+      title: 'eventOrganicProducts',
              locale === 'de' ? 'Bio-Produktmesse' : 'Organic products fair',
       date: new Date(2025, 10, 10), // November 10, 2025 (Monday)
       time: '09:00',
@@ -407,7 +407,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e22',
       projectId: 'p4',
-      title: locale === 'es' ? 'Restauración de humedales' :
+      title: 'eventWetlandsRestoration',
              locale === 'de' ? 'Feuchtgebietssanierung' : 'Wetland restoration',
       date: new Date(2025, 10, 14), // November 14, 2025 (Friday)
       time: '08:00',
@@ -437,7 +437,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e24',
       projectId: 'p6',
-      title: locale === 'es' ? 'Construcción de jardines comunitarios' :
+      title: 'eventCommunityGardens',
              locale === 'de' ? 'Gemeinschaftsgärten bauen' : 'Building community gardens',
       date: new Date(2025, 10, 21), // November 21, 2025 (Friday)
       time: '10:00',
@@ -484,7 +484,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e27',
       projectId: 'p3',
-      title: locale === 'es' ? 'Mercado navideño sostenible' :
+      title: 'eventSustainableChristmas',
              locale === 'de' ? 'Nachhaltiger Weihnachtsmarkt' : 'Sustainable Christmas market',
       date: new Date(2025, 11, 1), // December 1, 2025 (Monday)
       time: '12:00',
@@ -499,7 +499,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e28',
       projectId: 'p4',
-      title: locale === 'es' ? 'Reforestación de invierno' :
+      title: 'eventWinterReforestation',
              locale === 'de' ? 'Winteraufforstung' : 'Winter reforestation',
       date: new Date(2025, 11, 5), // December 5, 2025 (Friday)
       time: '09:00',
@@ -514,7 +514,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e29',
       projectId: 'p5',
-      title: locale === 'es' ? 'Seminario de cambio climático' :
+      title: 'eventClimateSeminar',
              locale === 'de' ? 'Klimawandel-Seminar' : 'Climate change seminar',
       date: new Date(2025, 11, 8), // December 8, 2025 (Monday)
       time: '17:00',
@@ -529,7 +529,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e30',
       projectId: 'p6',
-      title: locale === 'es' ? 'Celebración de fin de año ecológica' :
+      title: 'eventEcoNewYear',
              locale === 'de' ? 'Ökologische Jahresendfeier' : 'Eco-friendly year-end celebration',
       date: new Date(2025, 11, 15), // December 15, 2025 (Monday)
       time: '19:00',
@@ -544,7 +544,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e31',
       projectId: 'p1',
-      title: locale === 'es' ? 'Conservación de especies marinas' :
+      title: 'eventMarineConservation',
              locale === 'de' ? 'Meeresartenkonservierung' : 'Marine species conservation',
       date: new Date(2025, 11, 19), // December 19, 2025 (Friday)
       time: '11:00',
@@ -559,7 +559,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e32',
       projectId: 'p2',
-      title: locale === 'es' ? 'Taller de energía hidroeléctrica' :
+      title: 'eventHydroelectricWorkshop',
              locale === 'de' ? 'Wasserkraft-Workshop' : 'Hydroelectric energy workshop',
       date: new Date(2025, 11, 22), // December 22, 2025 (Monday)
       time: '14:00',
@@ -694,7 +694,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
     if (filters.searchText) {
       filtered = filtered.filter(event => 
-        event.title.toLowerCase().includes(filters.searchText.toLowerCase()) ||
+        t(event.title).toLowerCase().includes(filters.searchText.toLowerCase()) ||
         event.location.toLowerCase().includes(filters.searchText.toLowerCase()) ||
         event.organizer.toLowerCase().includes(filters.searchText.toLowerCase())
       );
@@ -820,7 +820,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                             key={event.id}
                             href={`/eventos/${event.id}`}
                             className="text-xs px-1.5 py-0.5 rounded cursor-pointer truncate block hover:opacity-95 font-medium"
-                            title={event.title}
+                            title={t(event.title)}
                             style={{
                               backgroundColor: event.category === 'environment' ? '#dcfce7' : event.category === 'education' ? '#dbeafe' : '#f3e8ff',
                               color: event.category === 'environment' ? '#166534' : event.category === 'education' ? '#1e3a8a' : '#6b21a8'
@@ -830,7 +830,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                               <span className={`w-2 h-2 rounded-full ${
                                 event.category === 'environment' ? 'bg-green-600' : event.category === 'education' ? 'bg-blue-700' : 'bg-purple-700'
                               }`} />
-                              {event.title}
+                              {t(event.title)}
                               <span className="ml-1 opacity-90">
                                 ({event.registered}/{event.spots})
                               </span>
@@ -1015,7 +1015,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   href={`/eventos/${event.id}`}
                                   className="font-medium text-gray-800 hover:text-blue-600 transition-colors"
                                 >
-                                  {event.title}
+                                  {t(event.title)}
                                 </Link>
                                 <p className="text-sm text-gray-600">{event.location}</p>
                                 <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
@@ -1049,7 +1049,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   <div className="w-32 h-20 overflow-hidden rounded-md border border-gray-200">
                                     <img
                                       src={headerImageSrc}
-                                      alt={event.title}
+                                      alt={t(event.title)}
                                       className="w-full h-full object-cover"
                                       loading="lazy"
                                       referrerPolicy="no-referrer"

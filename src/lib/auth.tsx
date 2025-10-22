@@ -132,14 +132,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithMagicLink = useCallback(async (email: string) => {
     if (!isSupabaseConfigured()) return { error: "Supabase not configured" };
     const supabase = getSupabase();
-    const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined } });
+    const emailRedirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
+    const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo } });
     return { error: error?.message };
   }, []);
 
   const signInWithOAuth = useCallback(async (provider: "google" | "github" | "gitlab" | "bitbucket" | "azure") => {
     if (!isSupabaseConfigured()) return { error: "Supabase not configured" };
     const supabase = getSupabase();
-    const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: typeof window !== "undefined" ? window.location.origin : undefined } });
+    const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
+    const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo } });
     return { error: error?.message };
   }, []);
 

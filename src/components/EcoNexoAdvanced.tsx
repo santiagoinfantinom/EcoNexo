@@ -5,7 +5,6 @@ import AdvancedFilters, { FilterOptions } from './AdvancedFilters';
 import IntelligentClustering from './IntelligentClustering';
 import PersonalizedRecommendations from './PersonalizedRecommendations';
 import ImpactAnalysis from './ImpactAnalysis';
-import SustainableMonetization from './SustainableMonetization';
 import SocialMediaDetection from './SocialMediaDetection';
 
 interface Event {
@@ -75,7 +74,6 @@ export default function EcoNexoAdvanced({
     { id: 'routes', name: 'Rutas Sostenibles', icon: '🛤️', description: 'Planifica rutas ecológicas' },
     { id: 'clustering', name: 'Clustering Inteligente', icon: '🗺️', description: 'Agrupa eventos cercanos' },
     { id: 'impact', name: 'Análisis de Impacto', icon: '📊', description: 'Calcula el impacto ambiental' },
-    { id: 'monetization', name: 'Monetización', icon: '💰', description: 'Donaciones y patrocinios' },
     { id: 'social', name: 'Detección Social', icon: '📱', description: 'Proyectos desde redes sociales' }
   ];
 
@@ -165,20 +163,6 @@ export default function EcoNexoAdvanced({
           </div>
         );
       
-      case 'monetization':
-        return (
-          <SustainableMonetization
-            onDonation={(campaign, amount) => {
-              console.log('Donation:', campaign.title, amount);
-            }}
-            onSponsorshipClick={(sponsorship) => {
-              console.log('Sponsorship clicked:', sponsorship.companyName);
-            }}
-            onPremiumUpgrade={(feature) => {
-              console.log('Premium upgrade:', feature.name);
-            }}
-          />
-        );
       
       case 'social':
         return (
@@ -247,12 +231,6 @@ export default function EcoNexoAdvanced({
                 className="w-full text-left p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
               >
                 Ver mis recomendaciones
-              </button>
-              <button
-                onClick={() => setActiveFeature('monetization')}
-                className="w-full text-left p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-              >
-                Apoyar proyectos
               </button>
               <button
                 onClick={() => setActiveFeature('social')}

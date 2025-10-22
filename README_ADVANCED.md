@@ -78,7 +78,6 @@ src/components/
 ├── IntelligentClustering.tsx      # Clustering de eventos
 ├── PersonalizedRecommendations.tsx # Sistema de recomendaciones
 ├── ImpactAnalysis.tsx            # Análisis de impacto
-├── SustainableMonetization.tsx   # Monetización sostenible
 ├── SocialMediaDetection.tsx      # Detección automática
 ├── EcoNexoAdvanced.tsx           # Componente principal
 └── ... (componentes existentes)

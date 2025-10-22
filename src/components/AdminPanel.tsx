@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { trackEvent } from '@/lib/analytics';
+import { useI18n } from '@/lib/i18n';
 
 interface AdminStats {
   totalUsers: number;
@@ -28,6 +29,7 @@ interface AdminProject {
 }
 
 export function AdminPanel() {
+  const { t } = useI18n();
   const [stats, setStats] = useState<AdminStats>({
     totalUsers: 0,
     totalEvents: 0,
@@ -57,14 +59,14 @@ export function AdminPanel() {
       setEvents([
         {
           id: '1',
-          title: 'Limpieza de Playa Barcelona',
+          title: 'adminBeachCleanupBarcelona',
           date: '2024-01-20',
           participants: 45,
           status: 'active'
         },
         {
           id: '2',
-          title: 'Plantación de Árboles Madrid',
+          title: 'adminTreePlantingMadrid',
           date: '2024-01-25',
           participants: 32,
           status: 'active'
@@ -74,14 +76,14 @@ export function AdminPanel() {
       setProjects([
         {
           id: '1',
-          title: 'Huerto Comunitario Valencia',
+          title: 'adminCommunityGardenValencia',
           creator: 'María García',
           status: 'active',
           volunteers: 12
         },
         {
           id: '2',
-          title: 'Energía Solar Barrio',
+          title: 'adminSolarEnergyNeighborhood',
           creator: 'Carlos López',
           status: 'draft',
           volunteers: 0
@@ -107,33 +109,33 @@ export function AdminPanel() {
   const renderOverview = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Usuarios Totales</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("adminTotalUsers")}</h3>
         <p className="text-3xl font-bold text-blue-600">{stats.totalUsers.toLocaleString()}</p>
         <p className="text-sm text-gray-500 mt-1">+12% este mes</p>
       </div>
       
       <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Eventos Activos</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("adminActiveEvents")}</h3>
         <p className="text-3xl font-bold text-green-600">{stats.totalEvents}</p>
         <p className="text-sm text-gray-500 mt-1">+8% este mes</p>
       </div>
       
       <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Proyectos</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("adminProjects")}</h3>
         <p className="text-3xl font-bold text-purple-600">{stats.totalProjects}</p>
         <p className="text-sm text-gray-500 mt-1">+15% este mes</p>
       </div>
       
       <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Empleos Verdes</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("adminGreenJobs")}</h3>
         <p className="text-3xl font-bold text-yellow-600">{stats.totalJobs}</p>
         <p className="text-sm text-gray-500 mt-1">+5% este mes</p>
       </div>
       
       <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Usuarios Activos</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("adminActiveUsers")}</h3>
         <p className="text-3xl font-bold text-indigo-600">{stats.activeUsers}</p>
-        <p className="text-sm text-gray-500 mt-1">Últimos 30 días</p>
+        <p className="text-sm text-gray-500 mt-1">{t("adminLast30Days")}</p>
       </div>
     </div>
   );
@@ -141,26 +143,26 @@ export function AdminPanel() {
   const renderEvents = () => (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">Gestión de Eventos</h3>
+        <h3 className="text-lg font-semibold text-gray-900">{t("adminEventManagement")}</h3>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Evento
+                {t("adminEvent")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Fecha
+                {t("adminDate")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Participantes
+                {t("adminParticipants")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Estado
+                {t("adminStatus")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Acciones
+                {t("adminActions")}
               </th>
             </tr>
           </thead>
@@ -168,7 +170,7 @@ export function AdminPanel() {
             {events.map((event) => (
               <tr key={event.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {event.title}
+                  {t(event.title)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(event.date).toLocaleDateString()}
@@ -182,8 +184,8 @@ export function AdminPanel() {
                     event.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                     'bg-red-100 text-red-800'
                   }`}>
-                    {event.status === 'active' ? 'Activo' :
-                     event.status === 'completed' ? 'Completado' : 'Cancelado'}
+                    {event.status === 'active' ? t("adminActive") :
+                     event.status === 'completed' ? t("adminCompleted") : t("adminCancelled")}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -191,13 +193,13 @@ export function AdminPanel() {
                     onClick={() => handleEventAction(event.id, 'edit')}
                     className="text-indigo-600 hover:text-indigo-900 mr-3"
                   >
-                    Editar
+                    {t("adminEdit")}
                   </button>
                   <button
                     onClick={() => handleEventAction(event.id, 'delete')}
                     className="text-red-600 hover:text-red-900"
                   >
-                    Eliminar
+                    {t("adminDelete")}
                   </button>
                 </td>
               </tr>
@@ -211,26 +213,26 @@ export function AdminPanel() {
   const renderProjects = () => (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">Gestión de Proyectos</h3>
+        <h3 className="text-lg font-semibold text-gray-900">{t("adminProjectManagement")}</h3>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Proyecto
+                {t("adminProject")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Creador
+                {t("adminCreator")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Voluntarios
+                {t("adminVolunteers")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Estado
+                {t("adminStatus")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Acciones
+                {t("adminActions")}
               </th>
             </tr>
           </thead>
@@ -238,7 +240,7 @@ export function AdminPanel() {
             {projects.map((project) => (
               <tr key={project.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {project.title}
+                  {t(project.title)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {project.creator}
@@ -252,8 +254,8 @@ export function AdminPanel() {
                     project.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                     'bg-gray-100 text-gray-800'
                   }`}>
-                    {project.status === 'active' ? 'Activo' :
-                     project.status === 'completed' ? 'Completado' : 'Borrador'}
+                    {project.status === 'active' ? t("adminActive") :
+                     project.status === 'completed' ? t("adminCompleted") : t("adminDraft")}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -261,19 +263,19 @@ export function AdminPanel() {
                     onClick={() => handleProjectAction(project.id, 'approve')}
                     className="text-green-600 hover:text-green-900 mr-3"
                   >
-                    Aprobar
+                    {t("adminApprove")}
                   </button>
                   <button
                     onClick={() => handleProjectAction(project.id, 'edit')}
                     className="text-indigo-600 hover:text-indigo-900 mr-3"
                   >
-                    Editar
+                    {t("adminEdit")}
                   </button>
                   <button
                     onClick={() => handleProjectAction(project.id, 'delete')}
                     className="text-red-600 hover:text-red-900"
                   >
-                    Eliminar
+                    {t("adminDelete")}
                   </button>
                 </td>
               </tr>
@@ -288,18 +290,18 @@ export function AdminPanel() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-          <p className="mt-2 text-gray-600">Gestiona eventos, proyectos y personas usuarias de EcoNexo</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t("adminPanelTitle")}</h1>
+          <p className="mt-2 text-gray-600">{t("adminPanelDescription")}</p>
         </div>
 
         {/* Navigation Tabs */}
         <div className="border-b border-gray-200 mb-8">
           <nav className="-mb-px flex space-x-8">
             {[
-              { id: 'overview', name: 'Resumen', icon: '📊' },
-              { id: 'events', name: 'Eventos', icon: '📅' },
-              { id: 'projects', name: 'Proyectos', icon: '🚀' },
-              { id: 'users', name: 'Usuarios', icon: '👥' }
+              { id: 'overview', name: t("adminOverview"), icon: '📊' },
+              { id: 'events', name: t("adminEvents"), icon: '📅' },
+              { id: 'projects', name: t("adminProjects"), icon: '🚀' },
+              { id: 'users', name: t("adminUsers"), icon: '👥' }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -323,8 +325,8 @@ export function AdminPanel() {
         {activeTab === 'projects' && renderProjects()}
         {activeTab === 'users' && (
           <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Gestión de Usuarios</h3>
-            <p className="text-gray-600">Funcionalidad de gestión de personas usuarias en desarrollo...</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("adminUserManagement")}</h3>
+            <p className="text-gray-600">{t("adminUserManagementInDevelopment")}</p>
           </div>
         )}
       </div>

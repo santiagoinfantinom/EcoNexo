@@ -19,7 +19,7 @@ type Job = {
 const JOBS: Job[] = [
   {
     id: "j1",
-    title: "Especialista en Reforestación Urbana",
+    title: "jobTitle1",
     company: "Green City Berlin",
     city: "Berlín",
     country: "Alemania",
@@ -32,7 +32,7 @@ const JOBS: Job[] = [
   },
   {
     id: "j2",
-    title: "Analista de Datos de Calidad del Aire",
+    title: "jobTitle2",
     company: "Euro Air Lab",
     city: "París",
     country: "Francia",
@@ -45,7 +45,7 @@ const JOBS: Job[] = [
   },
   {
     id: "j3",
-    title: "Educador/a ambiental (STEM)",
+    title: "jobTitle3",
     company: "SolarTech Academy",
     city: "Madrid",
     country: "España",
@@ -58,7 +58,7 @@ const JOBS: Job[] = [
   },
   {
     id: "j4",
-    title: "Coordinador/a de Limpiezas de Ríos",
+    title: "jobTitle4",
     company: "River Guardians",
     city: "Milán",
     country: "Italia",

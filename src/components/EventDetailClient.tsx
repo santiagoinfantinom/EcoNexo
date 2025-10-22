@@ -130,7 +130,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e6": {
     id: "e6",
-    title: "Construcción de jardines verticales",
+    title: "eventVerticalGardens",
     description: "Aprende a construir jardines verticales en edificios urbanos para mejorar la calidad del aire y la biodiversidad urbana.",
     date: "2025-03-18",
     time: "10:00",
@@ -162,7 +162,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e8": {
     id: "e8",
-    title: "Carrera ecológica 5K",
+    title: "eventEcoRace",
     description: "Únete a nuestra carrera 5K con enfoque ecológico. Recorreremos rutas verdes mientras promovemos el deporte sostenible.",
     date: "2025-04-22",
     time: "08:00",
@@ -178,7 +178,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e9": {
     id: "e9",
-    title: "Instalación de paneles solares",
+    title: "eventSolarPanels",
     description: "Participa en la instalación de paneles solares en una escuela primaria para promover las energías renovables.",
     date: "2025-05-10",
     time: "09:00",
@@ -242,7 +242,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e13": {
     id: "e13",
-    title: "Reflexión semestral ambiental",
+    title: "eventEnvironmentalReflection",
     description: "Participa en nuestra sesión de reflexión sobre los logros ambientales del primer semestre y planifica acciones futuras.",
     date: "2025-07-15",
     time: "17:00",
@@ -258,7 +258,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e14": {
     id: "e14",
-    title: "Celebración de verano sostenible",
+    title: "eventSustainableSummer",
     description: "Celebra el verano de manera sostenible con música en vivo, comida local y actividades eco-friendly.",
     date: "2025-07-30",
     time: "20:00",
@@ -274,7 +274,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e15": {
     id: "e15",
-    title: "Plantación de otoño",
+    title: "eventAutumnPlanting",
     description: "Únete a nuestra plantación de especies otoñales para preparar el ecosistema para el invierno.",
     date: "2025-10-05",
     time: "10:00",
@@ -338,7 +338,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e17": {
     id: "e17",
-    title: "Limpieza de bosque otoñal",
+    title: "eventForestCleanup",
     description: "Participa en la limpieza del bosque otoñal para mantener el ecosistema saludable durante el cambio de estación.",
     date: "2025-10-19",
     time: "09:00",
@@ -402,7 +402,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e19": {
     id: "e19",
-    title: "Construcción de refugios para aves",
+    title: "eventBirdShelters",
     description: "Ayuda a construir refugios para aves migratorias en nuestra reserva natural para proteger la biodiversidad.",
     date: "2025-11-03",
     time: "13:00",
@@ -418,7 +418,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e20": {
     id: "e20",
-    title: "Taller de energía eólica",
+    title: "eventWindEnergy",
     description: "Aprende sobre energía eólica y participa en la construcción de pequeños generadores eólicos.",
     date: "2025-11-07",
     time: "16:00",
@@ -434,7 +434,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e21": {
     id: "e21",
-    title: "Feria de productos orgánicos",
+    title: "eventOrganicProducts",
     description: "Explora productos orgánicos locales en nuestra feria especializada con productores certificados.",
     date: "2025-11-10",
     time: "09:00",
@@ -450,7 +450,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e22": {
     id: "e22",
-    title: "Restauración de humedales",
+    title: "eventWetlandsRestoration",
     description: "Participa en la restauración de humedales para mejorar la calidad del agua y proteger especies acuáticas.",
     date: "2025-11-14",
     time: "08:00",
@@ -482,7 +482,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e24": {
     id: "e24",
-    title: "Construcción de jardines comunitarios",
+    title: "eventCommunityGardens",
     description: "Ayuda a construir jardines comunitarios para promover la agricultura urbana y la cohesión social.",
     date: "2025-11-21",
     time: "10:00",
@@ -530,7 +530,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e27": {
     id: "e27",
-    title: "Mercado navideño sostenible",
+    title: "eventSustainableChristmas",
     description: "Descubre productos navideños sostenibles en nuestro mercado especializado con enfoque ecológico.",
     date: "2025-12-01",
     time: "12:00",
@@ -546,7 +546,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e28": {
     id: "e28",
-    title: "Reforestación de invierno",
+    title: "eventWinterReforestation",
     description: "Participa en la reforestación de invierno para preparar el bosque para la próxima primavera.",
     date: "2025-12-05",
     time: "09:00",
@@ -562,7 +562,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e29": {
     id: "e29",
-    title: "Seminario de cambio climático",
+    title: "eventClimateSeminar",
     description: "Asiste a este seminario especializado sobre los últimos avances en la lucha contra el cambio climático.",
     date: "2025-12-08",
     time: "17:00",
@@ -578,7 +578,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e30": {
     id: "e30",
-    title: "Celebración de fin de año ecológica",
+    title: "eventEcoNewYear",
     description: "Celebra el fin de año de manera ecológica con música, comida local y actividades sostenibles.",
     date: "2025-12-15",
     time: "19:00",
@@ -594,7 +594,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e31": {
     id: "e31",
-    title: "Conservación de especies marinas",
+    title: "eventMarineConservation",
     description: "Aprende sobre la conservación de especies marinas y participa en actividades de protección del océano.",
     date: "2025-12-19",
     time: "11:00",
@@ -610,7 +610,7 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   },
   "e32": {
     id: "e32",
-    title: "Taller de energía hidroeléctrica",
+    title: "eventHydroelectricWorkshop",
     description: "Aprende sobre energía hidroeléctrica y participa en la construcción de pequeños generadores hidráulicos.",
     date: "2025-12-22",
     time: "14:00",
@@ -1184,7 +1184,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
                 </span>
               </div>
               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                {event.title}
+                {t(event.title)}
               </h1>
               <p className="text-lg text-slate-600 dark:text-slate-400">
                 {event.description}
