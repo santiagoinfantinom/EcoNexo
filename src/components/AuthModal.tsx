@@ -76,29 +76,8 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     setError("");
     
     try {
-      // Simulate OAuth data extraction directly
-      const mockGoogleData = {
-        provider: 'google',
-        name: 'Usuario Google',
-        email: 'usuario@gmail.com',
-        picture: 'https://via.placeholder.com/150/4285f4/ffffff?text=G',
-        locale: 'es',
-        verified_email: true,
-        timestamp: Date.now()
-      };
-      
-      // Store OAuth data in localStorage
-      localStorage.setItem('oauth_data', JSON.stringify(mockGoogleData));
-      
-      // Show success message
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-        onClose();
-        // Redirect to profile with imported data
-        window.location.href = '/perfil?oauth=google&imported=true';
-      }, 2000);
-      
+      // Redirect directly to Gmail login page
+      window.location.href = "https://mail.google.com";
     } catch (err) {
       setError("Error inesperado. Intenta de nuevo.");
       setIsLoading(false);
@@ -110,29 +89,8 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     setError("");
     
     try {
-      // Simulate OAuth data extraction directly
-      const mockMicrosoftData = {
-        provider: 'microsoft',
-        name: 'Usuario Microsoft',
-        email: 'usuario@outlook.com',
-        picture: 'https://via.placeholder.com/150/0078d4/ffffff?text=M',
-        locale: 'es',
-        verified_email: true,
-        timestamp: Date.now()
-      };
-      
-      // Store OAuth data in localStorage
-      localStorage.setItem('oauth_data', JSON.stringify(mockMicrosoftData));
-      
-      // Show success message
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-        onClose();
-        // Redirect to profile with imported data
-        window.location.href = '/perfil?oauth=microsoft&imported=true';
-      }, 2000);
-      
+      // Redirect directly to Outlook login page
+      window.location.href = "https://outlook.live.com";
     } catch (err) {
       setError("Error inesperado. Intenta de nuevo.");
       setIsLoading(false);
@@ -238,8 +196,8 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
 
           {/* OAuth Providers */}
           <div className="space-y-3">
-            <div className="text-center text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-              ✅ <strong>Funcionando:</strong> Importa datos de Google y Microsoft sin errores
+            <div className="text-center text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+              🔗 <strong>Redirección Directa:</strong> Te lleva directamente a Gmail y Outlook para iniciar sesión
             </div>
             <button
               onClick={handleGoogleAuth}
