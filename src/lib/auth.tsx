@@ -182,10 +182,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithOAuth = useCallback(async (provider: "google" | "github" | "gitlab" | "bitbucket" | "azure") => {
     if (!isSupabaseConfigured()) return { error: "Supabase not configured" };
-    const supabase = getSupabase();
-    const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
-    const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo } });
-    return { error: error?.message };
+    
+    try {
+      const supabase = getSupabase();
+      const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
+      
+      // Configure OAuth options with additional scopes for data import
+      const options: any = { redirectTo };
+      
+      // Add specific scopes for data import based on provider
+      if (provider === "google") {
+        options.scopes = "openid email profile https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/calendar.readonly";
+      } else if (provider === "azure") {
+        options.scopes = "openid email profile Mail.Read User.Read Calendars.Read";
+      }
+      
+      const { error } = await supabase.auth.signInWithOAuth({ provider, options });
+      
+      if (error) {
+        console.error("OAuth error:", error);
+        return { error: error.message };
+      }
+      
+      return {};
+    } catch (error) {
+      console.error("OAuth error:", error);
+      return { error: "Error de autenticación. Intenta de nuevo." };
+    }
   }, []);
 
   const signOut = useCallback(async () => {

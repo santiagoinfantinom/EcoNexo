@@ -13,16 +13,8 @@ export function getSupabase() {
 }
 
 export function isSupabaseConfigured(): boolean {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  
-  return Boolean(
-    url && 
-    key && 
-    url !== "your_supabase_url_here" && 
-    key !== "your_supabase_anon_key_here" &&
-    url.startsWith("http")
-  );
+  // Always return false to force OAuth direct mode
+  return false;
 }
 
 

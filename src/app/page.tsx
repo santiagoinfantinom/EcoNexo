@@ -6,12 +6,33 @@ import { useAuth } from "@/lib/auth";
 import WelcomeMessage from "@/components/WelcomeMessage";
 import DashboardProjectCards from "@/components/DashboardProjectCards";
 import EcoTips from "@/components/EcoTips";
-import { useState } from "react";
+import { PROJECTS } from "@/data/projects";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamic import to avoid SSR issues with Leaflet
+const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-400">Cargando mapa...</p>
+      </div>
+    </div>
+  )
+});
 
 export default function Home() {
   const { t, locale } = useI18n();
   const { user } = useAuth();
   const [showWelcome, setShowWelcome] = useState(false);
+  const [showMap, setShowMap] = useState(true);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
@@ -26,9 +47,15 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <button 
+              onClick={() => setShowMap(!showMap)}
+              className="btn-gls-primary text-lg px-8 py-4"
+            >
+              {showMap ? t('hideMap') : t('showMap')}
+            </button>
             <Link 
               href="/eventos"
-              className="btn-gls-primary text-lg px-8 py-4"
+              className="btn-gls-secondary text-lg px-8 py-4"
             >
               {t('exploreEvents')}
             </Link>
@@ -57,6 +84,20 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Map Section */}
+      {showMap && isClient && (
+        <section className="py-8 px-4 bg-white/50 dark:bg-slate-800/50">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-8">
+              🗺️ {t('interactiveMap')}
+            </h2>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden" style={{ height: "600px" }}>
+              <EuropeMap projects={PROJECTS} />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Featured Projects */}
       <section className="py-16 px-4 bg-white/50 dark:bg-slate-800/50">

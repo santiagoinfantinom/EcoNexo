@@ -72,6 +72,7 @@ export default function ProfileComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -123,6 +124,37 @@ export default function ProfileComponent() {
   // Load profile data from Supabase or localStorage
   useEffect(() => {
     const loadProfile = async () => {
+      // Check for OAuth imported data first
+      const oauthData = localStorage.getItem('oauth_data');
+      if (oauthData) {
+        try {
+          const importedData = JSON.parse(oauthData);
+          console.log('📥 Datos OAuth importados:', importedData);
+          
+          // Import OAuth data into profile
+          setProfileData(prev => ({
+            ...prev,
+            full_name: importedData.name || prev.full_name,
+            email: importedData.email || prev.email,
+            avatar_url: importedData.picture || prev.avatar_url,
+            preferred_language: importedData.locale || prev.preferred_language,
+            // Mark as imported
+            oauth_imported: true,
+            oauth_provider: importedData.provider
+          }));
+          
+          // Clear OAuth data after import
+          localStorage.removeItem('oauth_data');
+          
+          // Show success message
+          setSuccessMessage(`✅ Datos importados desde ${importedData.provider === 'google' ? 'Google' : 'Microsoft'}`);
+          setTimeout(() => setSuccessMessage(''), 5000);
+          
+        } catch (err) {
+          console.error('Error importing OAuth data:', err);
+        }
+      }
+      
       if (!user) {
         // Load from localStorage if no user
         const savedProfile = localStorage.getItem('econexo:profile');
@@ -424,6 +456,13 @@ export default function ProfileComponent() {
       {showSuccess && (
         <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 px-4 py-3 mx-6 mt-4 rounded-lg font-medium">
           {t("profileUpdated")}
+        </div>
+      )}
+
+      {/* OAuth Import Success Message */}
+      {successMessage && (
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200 px-4 py-3 mx-6 mt-4 rounded-lg font-medium">
+          {successMessage}
         </div>
       )}
 

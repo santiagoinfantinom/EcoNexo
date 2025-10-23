@@ -22,12 +22,20 @@ type EventDetails = {
   time: string;
   duration: number;
   location: string;
+  location_en?: string;
+  location_de?: string;
   organizer: string;
+  organizer_en?: string;
+  organizer_de?: string;
   category: string;
   maxVolunteers: number;
   currentVolunteers: number;
   requirements: string[];
+  requirements_en?: string[];
+  requirements_de?: string[];
   benefits: string[];
+  benefits_en?: string[];
+  benefits_de?: string[];
   contact: string;
 };
 
@@ -99,33 +107,57 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   "e4": {
     id: "e4",
     title: "River Cleanup",
+    title_en: "River Cleanup",
+    title_de: "Flussreinigung",
     description: "Participa en la limpieza del río Verde para mejorar la calidad del agua y proteger la vida acuática. Incluye clasificación de residuos y educación ambiental.",
+    description_en: "Participate in the Green River cleanup to improve water quality and protect aquatic life. Includes waste sorting and environmental education.",
+    description_de: "Nimm an der Reinigung des Grünen Flusses teil, um die Wasserqualität zu verbessern und das Wasserleben zu schützen. Beinhaltet Mülltrennung und Umweltbildung.",
     date: "2025-02-14",
     time: "08:00",
     duration: 3,
     location: "Río Verde, Milán",
+    location_en: "Green River, Milan",
+    location_de: "Grüner Fluss, Mailand",
     organizer: "River Guardians",
+    organizer_en: "River Guardians",
+    organizer_de: "Flusswächter",
     category: "environment",
     maxVolunteers: 25,
     currentVolunteers: 18,
     requirements: ["Work gloves", "Comfortable clothing", "Waterproof boots"],
+    requirements_en: ["Work gloves", "Comfortable clothing", "Waterproof boots"],
+    requirements_de: ["Arbeitshandschuhe", "Bequeme Kleidung", "Wasserdichte Stiefel"],
     benefits: ["Participation certificate", "Refreshments", "Educational material"],
+    benefits_en: ["Participation certificate", "Refreshments", "Educational material"],
+    benefits_de: ["Teilnahmezertifikat", "Erfrischungen", "Bildungsmaterial"],
     contact: "rio@guardianes.es"
   },
   "e5": {
     id: "e5",
     title: "Climate Change Conference",
+    title_en: "Climate Change Conference",
+    title_de: "Klimawandel-Konferenz",
     description: "Asiste a esta conferencia informativa sobre los efectos del cambio climático y las acciones que podemos tomar para mitigarlo.",
+    description_en: "Attend this informative conference about the effects of climate change and the actions we can take to mitigate it.",
+    description_de: "Nimm an dieser informativen Konferenz über die Auswirkungen des Klimawandels und die Maßnahmen teil, die wir zur Eindämmung ergreifen können.",
     date: "2025-03-05",
     time: "18:00",
     duration: 2,
     location: "Auditorio Municipal, París",
+    location_en: "Municipal Auditorium, Paris",
+    location_de: "Städtisches Auditorium, Paris",
     organizer: "Local Climate Institute",
+    organizer_en: "Local Climate Institute",
+    organizer_de: "Lokales Klimainstitut",
     category: "education",
     maxVolunteers: 200,
     currentVolunteers: 150,
     requirements: ["Registro previo", "Documento de identidad"],
+    requirements_en: ["Prior registration", "Identity document"],
+    requirements_de: ["Vorherige Anmeldung", "Ausweisdokument"],
     benefits: ["Certificado de asistencia", "Material informativo", "Networking"],
+    benefits_en: ["Attendance certificate", "Informative material", "Networking"],
+    benefits_de: ["Teilnahmezertifikat", "Informatives Material", "Netzwerken"],
     contact: "clima@instituto.es"
   },
   "e6": {
@@ -355,17 +387,29 @@ const EVENT_DETAILS: Record<string, EventDetails> = {
   "e17b": {
     id: "e17b",
     title: "Taller de huertos urbanos",
+    title_en: "Urban Garden Workshop",
+    title_de: "Urbaner Gartenbau-Workshop",
     description: "Aprende a crear y mantener un huerto urbano en espacios pequeños para cultivar tus propios alimentos.",
+    description_en: "Learn to create and maintain an urban garden in small spaces to grow your own food.",
+    description_de: "Lerne, einen städtischen Garten in kleinen Räumen zu schaffen und zu pflegen, um dein eigenes Essen anzubauen.",
     date: "2025-10-15",
     time: "16:00",
     duration: 3,
     location: "Jardín Comunitario, Londres",
+    location_en: "Community Garden, London",
+    location_de: "Gemeinschaftsgarten, London",
     organizer: "Urban Gardens",
+    organizer_en: "Urban Gardens",
+    organizer_de: "Städtische Gärten",
     category: "education",
     maxVolunteers: 20,
     currentVolunteers: 15,
     requirements: ["Ropa cómoda", "Cuaderno", "Semillas"],
+    requirements_en: ["Comfortable clothes", "Notebook", "Seeds"],
+    requirements_de: ["Bequeme Kleidung", "Notizbuch", "Samen"],
     benefits: ["Kit de semillas", "Manual", "Seguimiento"],
+    benefits_en: ["Seed kit", "Manual", "Follow-up"],
+    benefits_de: ["Samen-Kit", "Handbuch", "Nachbetreuung"],
     contact: "huerto@urban.es"
   },
   "e18": {
@@ -891,13 +935,33 @@ function getLocalizedEventData(eventId: string, locale: string) {
   const baseEvent = EVENT_DETAILS[eventId];
   if (!baseEvent) return null;
 
-  // For now, we'll use the base event data and translate the category
-  // In a real app, you'd have localized fields in the database
+  // Use specific language fields if available, otherwise fall back to auto-translation
+  const localizedEvent = { ...baseEvent };
+  
+  if (locale === 'en') {
+    if (baseEvent.title_en) localizedEvent.title = baseEvent.title_en;
+    if (baseEvent.description_en) localizedEvent.description = baseEvent.description_en;
+    if (baseEvent.location_en) localizedEvent.location = baseEvent.location_en;
+    if (baseEvent.organizer_en) localizedEvent.organizer = baseEvent.organizer_en;
+    if (baseEvent.requirements_en) localizedEvent.requirements = baseEvent.requirements_en;
+    if (baseEvent.benefits_en) localizedEvent.benefits = baseEvent.benefits_en;
+  } else if (locale === 'de') {
+    if (baseEvent.title_de) localizedEvent.title = baseEvent.title_de;
+    if (baseEvent.description_de) localizedEvent.description = baseEvent.description_de;
+    if (baseEvent.location_de) localizedEvent.location = baseEvent.location_de;
+    if (baseEvent.organizer_de) localizedEvent.organizer = baseEvent.organizer_de;
+    if (baseEvent.requirements_de) localizedEvent.requirements = baseEvent.requirements_de;
+    if (baseEvent.benefits_de) localizedEvent.benefits = baseEvent.benefits_de;
+  }
+
+  // Fallback to auto-translation for missing fields
+  const auto = autoTranslateEvent(localizedEvent, locale);
+  
+  // Apply manual overrides if they exist
   const overridesFromMap = (EVENT_I18N as Record<string, Record<string, Partial<EventDetails>>>)[eventId]?.[locale as 'en' | 'de'] || {};
-  const auto = autoTranslateEvent(baseEvent, locale);
 
   return {
-    ...baseEvent,
+    ...localizedEvent,
     ...auto,
     ...overridesFromMap,
   };
