@@ -1,0 +1,227 @@
+/* Configuración global de estilos para EcoNexo */
+:root {
+  /* Colores de contraste mejorados */
+  --text-primary: #111827; /* gray-900 */
+  --text-secondary: #374151; /* gray-700 */
+  --text-tertiary: #6b7280; /* gray-500 */
+  --text-muted: #9ca3af; /* gray-400 */
+  
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb; /* gray-50 */
+  --bg-tertiary: #f3f4f6; /* gray-100 */
+  --bg-quaternary: #e5e7eb; /* gray-200 */
+  
+  /* Modo oscuro */
+  --dark-text-primary: #f9fafb; /* gray-50 */
+  --dark-text-secondary: #d1d5db; /* gray-300 */
+  --dark-text-tertiary: #9ca3af; /* gray-400 */
+  --dark-text-muted: #6b7280; /* gray-500 */
+  
+  --dark-bg-primary: #111827; /* gray-900 */
+  --dark-bg-secondary: #1f2937; /* gray-800 */
+  --dark-bg-tertiary: #374151; /* gray-700 */
+  --dark-bg-quaternary: #4b5563; /* gray-600 */
+  
+  /* Bordes y sombras */
+  --border-light: #e5e7eb; /* gray-200 */
+  --border-medium: #d1d5db; /* gray-300 */
+  --border-strong: #9ca3af; /* gray-400 */
+  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  
+  /* Colores de estado */
+  --success: #10b981; /* emerald-500 */
+  --warning: #f59e0b; /* amber-500 */
+  --error: #ef4444; /* red-500 */
+  --info: #3b82f6; /* blue-500 */
+  
+  /* Transiciones */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+}
+
+/* Clases de utilidad globales para contraste */
+.text-contrast-high {
+  color: var(--text-primary);
+}
+
+.dark .text-contrast-high {
+  color: var(--dark-text-primary);
+}
+
+.text-contrast-medium {
+  color: var(--text-secondary);
+}
+
+.dark .text-contrast-medium {
+  color: var(--dark-text-secondary);
+}
+
+.text-contrast-low {
+  color: var(--text-tertiary);
+}
+
+.dark .text-contrast-low {
+  color: var(--dark-text-tertiary);
+}
+
+/* Fondos con contraste mejorado */
+.bg-contrast-primary {
+  background-color: var(--bg-primary);
+}
+
+.dark .bg-contrast-primary {
+  background-color: var(--dark-bg-primary);
+}
+
+.bg-contrast-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.dark .bg-contrast-secondary {
+  background-color: var(--dark-bg-secondary);
+}
+
+.bg-contrast-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.dark .bg-contrast-tertiary {
+  background-color: var(--dark-bg-tertiary);
+}
+
+/* Tarjetas con contraste mejorado */
+.card-contrast {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-medium);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.dark .card-contrast {
+  background-color: var(--dark-bg-primary);
+  border-color: var(--border-strong);
+}
+
+.card-contrast:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.dark .card-contrast:hover {
+  background-color: var(--dark-bg-secondary);
+}
+
+/* Botones con contraste mejorado */
+.btn-contrast-primary {
+  background-color: var(--success);
+  color: white;
+  border: none;
+  transition: all var(--transition-normal);
+}
+
+.btn-contrast-primary:hover {
+  background-color: #059669; /* emerald-600 */
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-contrast-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+  transition: all var(--transition-normal);
+}
+
+.dark .btn-contrast-secondary {
+  background-color: var(--dark-bg-tertiary);
+  color: var(--dark-text-primary);
+  border-color: var(--border-strong);
+}
+
+.btn-contrast-secondary:hover {
+  background-color: var(--bg-quaternary);
+  transform: translateY(-1px);
+}
+
+.dark .btn-contrast-secondary:hover {
+  background-color: var(--dark-bg-quaternary);
+}
+
+/* Inputs con contraste mejorado */
+.input-contrast {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  transition: all var(--transition-normal);
+}
+
+.dark .input-contrast {
+  background-color: var(--dark-bg-tertiary);
+  color: var(--dark-text-primary);
+  border-color: var(--border-medium);
+}
+
+.input-contrast:focus {
+  outline: none;
+  border-color: var(--info);
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mejoras de contraste para usuarios con problemas de visión */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #000000;
+    --text-secondary: #1a1a1a;
+    --border-medium: #000000;
+    --border-strong: #000000;
+  }
+  
+  .dark {
+    --dark-text-primary: #ffffff;
+    --dark-text-secondary: #f0f0f0;
+    --dark-bg-primary: #000000;
+    --dark-bg-secondary: #1a1a1a;
+  }
+}
+
+/* Estilos para modo de alto contraste */
+.high-contrast {
+  --text-primary: #000000;
+  --text-secondary: #1a1a1a;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f0f0f0;
+  --border-medium: #000000;
+  --border-strong: #000000;
+}
+
+.dark.high-contrast {
+  --dark-text-primary: #ffffff;
+  --dark-text-secondary: #f0f0f0;
+  --dark-bg-primary: #000000;
+  --dark-bg-secondary: #1a1a1a;
+  --dark-bg-tertiary: #333333;
+}
+
+/* Utilidades de espaciado consistentes */
+.spacing-xs { padding: 0.25rem; }
+.spacing-sm { padding: 0.5rem; }
+.spacing-md { padding: 1rem; }
+.spacing-lg { padding: 1.5rem; }
+.spacing-xl { padding: 2rem; }
+
+/* Utilidades de transición consistentes */
+.transition-fast { transition: all var(--transition-fast); }
+.transition-normal { transition: all var(--transition-normal); }
+.transition-slow { transition: all var(--transition-slow); }

@@ -16,12 +16,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Hero Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative py-20 px-4 bg-gradient-to-br from-green-600 via-green-700 to-blue-600">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-white dark:text-white mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
             {t('welcomeMessageTitle')}
           </h1>
-          <p className="text-xl md:text-2xl text-white dark:text-white opacity-95 max-w-4xl mx-auto mb-8">
+          <p className="text-xl md:text-2xl text-white opacity-95 max-w-4xl mx-auto mb-8">
             {t('welcomeMessageDescription')}
           </p>
           

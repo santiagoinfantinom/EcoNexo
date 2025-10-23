@@ -50,6 +50,19 @@ interface ProfileData {
   newsletter_subscribed: boolean;
   notifications_enabled: boolean;
   profile_visibility: string;
+  
+  // OAuth Data
+  oauth_provider?: string;
+  oauth_data?: {
+    age?: number;
+    verified_email?: boolean;
+    locale?: string;
+    hd?: string;
+    tenant_id?: string;
+    preferred_username?: string;
+    upn?: string;
+    raw_metadata?: any;
+  };
 }
 
 export default function ProfileComponent() {
@@ -294,61 +307,87 @@ export default function ProfileComponent() {
     );
   }
 
-  // Show auth prompt if not logged in - DISABLED FOR NOW
-  // if (!user) {
-  //   return (
-  //     <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
-  //       <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6 text-white">
-  //         <div className="flex items-center justify-between">
-  //           <div>
-  //             <h1 className="text-3xl font-bold">{t("myProfile")}</h1>
-  //             <p className="text-green-100 text-sm mt-1">
-  //               {t("signInToAccessProfile")}
-  //             </p>
-  //           </div>
-  //           <EcoNexoLogo className="w-12 h-12" size={48} />
-  //         </div>
-  //       </div>
-  //       <div className="p-6 text-center">
-  //         <div className="mb-6">
-  //           <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
-  //             {t("accessYourProfile")}
-  //           </h2>
-  //           <p className="text-gray-600 dark:text-gray-400 mb-6">
-  //             {t("signInToManageProfile")}
-  //           </p>
-  //           <AuthButton size="lg" />
-  //         </div>
-  //         <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-4">
-  //           <h3 className="font-medium text-slate-900 dark:text-slate-100 mb-2">
-  //             {t("whatYouCanDo")}
-  //           </h3>
-  //           <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-  //             <li>• {t("managePersonalInfo")}</li>
-  //             <li>• {t("setPreferences")}</li>
-  //             <li>• {t("trackActivities")}</li>
-  //             <li>• {t("connectWithCommunity")}</li>
-  //           </ul>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  // Show auth prompt if not logged in
+  if (!user) {
+    return (
+      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">{t("myProfile")}</h1>
+              <p className="text-green-100 text-sm mt-1">
+                {t("signInToAccessProfile")}
+              </p>
+            </div>
+            <EcoNexoLogo className="w-12 h-12" size={48} />
+          </div>
+        </div>
+        <div className="p-6 text-center">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
+              {t("accessYourProfile")}
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400 mb-6">
+              {t("signInToManageProfile")}
+            </p>
+            <AuthButton size="lg" />
+          </div>
+          <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
+              {t("whatYouCanDo")}
+            </h3>
+            <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-1">
+              <li>• {t("managePersonalInfo")}</li>
+              <li>• {t("setPreferences")}</li>
+              <li>• {t("trackActivities")}</li>
+              <li>• {t("connectWithCommunity")}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">{t("myProfile")}</h1>
-            <p className="text-green-100 text-sm mt-1">
-              {isEditing ? 
-                (locale === 'de' ? "Bearbeitungsmodus" : locale === 'en' ? "Edit mode" : "Modo edición") : 
-                (locale === 'de' ? "Profilansicht" : locale === 'en' ? "Profile view" : "Vista de perfil")
-              }
-            </p>
-          </div>
+        <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl font-bold">{t("myProfile")}</h1>
+                {profileData.oauth_provider && (
+                  <div className="flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full">
+                    {profileData.oauth_provider === 'google' ? (
+                      <>
+                        <svg className="w-4 h-4" viewBox="0 0 24 24">
+                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span className="text-sm font-medium">Google</span>
+                      </>
+                    ) : profileData.oauth_provider === 'azure' ? (
+                      <>
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M1 12L11 2L13.5 4.5L6.5 11.5H23L13 21.5L10.5 19L17.5 12H1Z"/>
+                        </svg>
+                        <span className="text-sm font-medium">Microsoft</span>
+                      </>
+                    ) : (
+                      <span className="text-sm font-medium">{profileData.oauth_provider}</span>
+                    )}
+                  </div>
+                )}
+              </div>
+              <p className="text-green-100 text-sm mt-1">
+                {isEditing ? 
+                  (locale === 'de' ? "Bearbeitungsmodus" : locale === 'en' ? "Edit mode" : "Modo edición") : 
+                  (locale === 'de' ? "Profilansicht" : locale === 'en' ? "Profile view" : "Vista de perfil")
+                }
+              </p>
+            </div>
           <div className="flex gap-3">
             {isEditing ? (
               <>
@@ -383,14 +422,14 @@ export default function ProfileComponent() {
 
       {/* Success Message */}
       {showSuccess && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 mx-6 mt-4 rounded">
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 px-4 py-3 mx-6 mt-4 rounded-lg font-medium">
           {t("profileUpdated")}
         </div>
       )}
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mx-6 mt-4 rounded">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 mx-6 mt-4 rounded-lg font-medium">
           <div className="flex items-center gap-2">
             <span>⚠️</span>
             <span>{error}</span>
@@ -435,7 +474,7 @@ export default function ProfileComponent() {
             <div className="mt-3 flex gap-2">
               <button
                 onClick={triggerFileInput}
-                className="text-sm text-green-600 hover:text-green-700 font-medium"
+                className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold transition-colors"
               >
                 {t("changePhoto")}
               </button>
@@ -451,7 +490,7 @@ export default function ProfileComponent() {
                     setTimeout(() => setShowSuccess(false), 2000);
                     console.log('Switched back to EcoNexo logo');
                   }}
-                  className="text-sm text-gray-500 hover:text-gray-700 font-medium"
+                  className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 font-semibold transition-colors"
                 >
                   {t("useLogo")}
                 </button>
@@ -697,6 +736,86 @@ export default function ProfileComponent() {
             />
           </div>
         </div>
+
+        {/* OAuth Provider Information */}
+        {profileData.oauth_provider && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              {profileData.oauth_provider === 'google' ? 'Información de Google' : 
+               profileData.oauth_provider === 'azure' ? 'Información de Microsoft' : 
+               'Información del Proveedor'}
+            </h2>
+            <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {profileData.oauth_data?.age && (
+                  <div>
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                      Edad calculada:
+                    </span>
+                    <p className="text-slate-900 dark:text-slate-100 font-semibold">
+                      {profileData.oauth_data.age} años
+                    </p>
+                  </div>
+                )}
+                {profileData.oauth_data?.verified_email && (
+                  <div>
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                      Email verificado:
+                    </span>
+                    <p className="text-green-600 dark:text-green-400 font-semibold">
+                      ✅ Verificado
+                    </p>
+                  </div>
+                )}
+                {profileData.oauth_data?.locale && (
+                  <div>
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                      Idioma preferido:
+                    </span>
+                    <p className="text-slate-900 dark:text-slate-100 font-semibold">
+                      {profileData.oauth_data.locale}
+                    </p>
+                  </div>
+                )}
+                {profileData.oauth_data?.hd && (
+                  <div>
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                      Dominio Google Workspace:
+                    </span>
+                    <p className="text-slate-900 dark:text-slate-100 font-semibold">
+                      {profileData.oauth_data.hd}
+                    </p>
+                  </div>
+                )}
+                {profileData.oauth_data?.tenant_id && (
+                  <div>
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                      Tenant ID:
+                    </span>
+                    <p className="text-slate-900 dark:text-slate-100 font-semibold">
+                      {profileData.oauth_data.tenant_id}
+                    </p>
+                  </div>
+                )}
+                {profileData.oauth_data?.preferred_username && (
+                  <div>
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                      Usuario preferido:
+                    </span>
+                    <p className="text-slate-900 dark:text-slate-100 font-semibold">
+                      {profileData.oauth_data.preferred_username}
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  Esta información fue extraída automáticamente de tu cuenta de {profileData.oauth_provider === 'google' ? 'Google' : 'Microsoft'} al iniciar sesión.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Social Media */}
         <div className="mb-8">

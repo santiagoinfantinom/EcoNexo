@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useGlobalConfig } from "@/hooks/useGlobalConfig";
+import { BaseCard, BaseButton, BaseSelect, BaseTitle, BaseFilterPanel, BaseEmptyState, BaseLabel, BaseInput } from "@/components/ui";
 import Link from "next/link";
 
 type CalendarViewProps = {
@@ -10,6 +12,18 @@ type CalendarViewProps = {
 
 export default function CalendarView({ projects, onProjectSelect }: CalendarViewProps) {
   const { t, locale } = useI18n();
+  const { 
+    getCardClasses, 
+    getButtonClasses, 
+    getInputClasses, 
+    getTitleClasses, 
+    getNavigationClasses,
+    getCalendarClasses,
+    getFilterClasses,
+    getEventClasses,
+    getEmptyClasses,
+    combineClasses
+  } = useGlobalConfig();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
   const [monthCategory, setMonthCategory] = useState<'' | 'environment' | 'education' | 'community'>('');
@@ -30,8 +44,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e1',
       projectId: 'p1',
-      title: 'eventNativeTreePlanting', 
-             locale === 'de' ? 'Einheimische Baumpflanzung' : 'Native tree planting',
+      title: locale === 'de' ? 'Einheimische Baumpflanzung' : 'Native tree planting',
       date: new Date(2025, 0, 15), // January 15, 2025
       time: '09:00',
       duration: 3,
@@ -45,8 +58,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e2',
       projectId: 'p2',
-      title: 'eventSolarEnergyWorkshop',
-             locale === 'de' ? 'Solar-Energie Workshop' : 'Solar energy workshop',
+      title: locale === 'de' ? 'Solar-Energie Workshop' : 'Solar energy workshop',
       date: new Date(2025, 0, 22), // January 22, 2025
       time: '14:00',
       duration: 3,
@@ -56,6 +68,96 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                 locale === 'de' ? 'Grünes Innovationszentrum, Madrid' : 'Green Innovation Center, Madrid',
       category: 'education',
       organizer: locale === 'es' ? 'SolarTech Academy' : locale === 'de' ? 'SolarTech Akademie' : 'SolarTech Academy'
+    },
+    {
+      id: 'e1b',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Taller de reciclaje creativo' :
+             locale === 'de' ? 'Kreatives Recycling-Workshop' : 'Creative recycling workshop',
+      date: new Date(2025, 0, 3), // January 3, 2025
+      time: '15:00',
+      duration: 2,
+      spots: 25,
+      registered: 18,
+      location: locale === 'es' ? 'Centro de Arte Verde, Madrid' :
+                locale === 'de' ? 'Grünes Kunstzentrum, Madrid' : 'Green Art Center, Madrid',
+      category: 'education',
+      organizer: locale === 'es' ? 'Arte Sostenible' : locale === 'de' ? 'Nachhaltige Kunst' : 'Sustainable Art'
+    },
+    {
+      id: 'e1c',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Caminata ecológica matutina' :
+             locale === 'de' ? 'Morgendlicher Öko-Spaziergang' : 'Morning eco-walk',
+      date: new Date(2025, 0, 7), // January 7, 2025
+      time: '08:00',
+      duration: 2,
+      spots: 20,
+      registered: 14,
+      location: locale === 'es' ? 'Parque Central, Barcelona' :
+                locale === 'de' ? 'Zentralpark, Barcelona' : 'Central Park, Barcelona',
+      category: 'community',
+      organizer: locale === 'es' ? 'Caminantes Verdes' : locale === 'de' ? 'Grüne Wanderer' : 'Green Walkers'
+    },
+    {
+      id: 'e1d',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Instalación de paneles solares' :
+             locale === 'de' ? 'Solarpanel-Installation' : 'Solar panel installation',
+      date: new Date(2025, 0, 12), // January 12, 2025
+      time: '10:00',
+      duration: 4,
+      spots: 15,
+      registered: 11,
+      location: locale === 'es' ? 'Escuela Verde, Milán' :
+                locale === 'de' ? 'Grüne Schule, Mailand' : 'Green School, Milan',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Solar Community' : locale === 'de' ? 'Solar-Gemeinschaft' : 'Solar Community'
+    },
+    {
+      id: 'e1e',
+      projectId: 'p5',
+      title: locale === 'es' ? 'Conferencia sobre cambio climático' :
+             locale === 'de' ? 'Klimawandel-Konferenz' : 'Climate change conference',
+      date: new Date(2025, 0, 18), // January 18, 2025
+      time: '18:00',
+      duration: 2,
+      spots: 100,
+      registered: 75,
+      location: locale === 'es' ? 'Auditorio Municipal, París' :
+                locale === 'de' ? 'Stadtauditorium, Paris' : 'City Auditorium, Paris',
+      category: 'education',
+      organizer: locale === 'es' ? 'Instituto Climático' : locale === 'de' ? 'Klimainstitut' : 'Climate Institute'
+    },
+    {
+      id: 'e1f',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Mercado de productos orgánicos' :
+             locale === 'de' ? 'Bio-Produktmarkt' : 'Organic products market',
+      date: new Date(2025, 0, 25), // January 25, 2025
+      time: '11:00',
+      duration: 5,
+      spots: 50,
+      registered: 35,
+      location: locale === 'es' ? 'Plaza Orgánica, Londres' :
+                locale === 'de' ? 'Bio-Platz, London' : 'Organic Square, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Productos Orgánicos' : locale === 'de' ? 'Bio-Produkte' : 'Organic Products'
+    },
+    {
+      id: 'e1g',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Limpieza de playa' :
+             locale === 'de' ? 'Strandreinigung' : 'Beach cleanup',
+      date: new Date(2025, 0, 28), // January 28, 2025
+      time: '09:30',
+      duration: 3,
+      spots: 40,
+      registered: 28,
+      location: locale === 'es' ? 'Playa Verde, Berlín' :
+                locale === 'de' ? 'Grüner Strand, Berlin' : 'Green Beach, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Guardianes del Mar' : locale === 'de' ? 'Meeresschützer' : 'Ocean Guardians'
     },
 
     // February 2025
@@ -77,8 +179,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e4',
       projectId: 'p4',
-      title: 'eventRiverCleanup',
-             locale === 'de' ? 'Flussreinigung' : 'River cleanup',
+      title: locale === 'de' ? 'Flussreinigung' : 'River cleanup',
       date: new Date(2025, 1, 14), // February 14, 2025
       time: '08:00',
       duration: 3,
@@ -89,13 +190,102 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       category: 'environment',
       organizer: locale === 'es' ? 'Guardianes del Río' : locale === 'de' ? 'Flusswächter' : 'River Guardians'
     },
+    {
+      id: 'e3b',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Taller de jardinería urbana' :
+             locale === 'de' ? 'Städtischer Gartenbau-Workshop' : 'Urban gardening workshop',
+      date: new Date(2025, 1, 2), // February 2, 2025
+      time: '14:00',
+      duration: 3,
+      spots: 20,
+      registered: 16,
+      location: locale === 'es' ? 'Jardín Comunitario, Berlín' :
+                locale === 'de' ? 'Gemeinschaftsgarten, Berlin' : 'Community Garden, Berlin',
+      category: 'education',
+      organizer: locale === 'es' ? 'Jardineros Urbanos' : locale === 'de' ? 'Städtische Gärtner' : 'Urban Gardeners'
+    },
+    {
+      id: 'e3c',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Carrera solidaria por el medio ambiente' :
+             locale === 'de' ? 'Umwelt-Solidaritätslauf' : 'Environmental solidarity run',
+      date: new Date(2025, 1, 5), // February 5, 2025
+      time: '10:00',
+      duration: 2,
+      spots: 100,
+      registered: 85,
+      location: locale === 'es' ? 'Parque del Retiro, Madrid' :
+                locale === 'de' ? 'Retiro-Park, Madrid' : 'Retiro Park, Madrid',
+      category: 'community',
+      organizer: locale === 'es' ? 'Corredores Verdes' : locale === 'de' ? 'Grüne Läufer' : 'Green Runners'
+    },
+    {
+      id: 'e3d',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Construcción de hoteles para insectos' :
+             locale === 'de' ? 'Insektenhotel-Bau' : 'Insect hotel building',
+      date: new Date(2025, 1, 12), // February 12, 2025
+      time: '16:00',
+      duration: 2,
+      spots: 15,
+      registered: 12,
+      location: locale === 'es' ? 'Parque Natural, Milán' :
+                locale === 'de' ? 'Naturpark, Mailand' : 'Nature Park, Milan',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Protectores de Insectos' : locale === 'de' ? 'Insektenschützer' : 'Insect Protectors'
+    },
+    {
+      id: 'e3e',
+      projectId: 'p5',
+      title: locale === 'es' ? 'Seminario de energía renovable' :
+             locale === 'de' ? 'Erneuerbare Energien-Seminar' : 'Renewable energy seminar',
+      date: new Date(2025, 1, 16), // February 16, 2025
+      time: '19:00',
+      duration: 2,
+      spots: 60,
+      registered: 45,
+      location: locale === 'es' ? 'Centro de Energía, París' :
+                locale === 'de' ? 'Energiezentrum, Paris' : 'Energy Center, Paris',
+      category: 'education',
+      organizer: locale === 'es' ? 'Energía Verde' : locale === 'de' ? 'Grüne Energie' : 'Green Energy'
+    },
+    {
+      id: 'e3f',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Festival de comida vegana' :
+             locale === 'de' ? 'Veganes Essensfestival' : 'Vegan food festival',
+      date: new Date(2025, 1, 20), // February 20, 2025
+      time: '12:00',
+      duration: 6,
+      spots: 200,
+      registered: 150,
+      location: locale === 'es' ? 'Plaza de la Alimentación, Londres' :
+                locale === 'de' ? 'Ernährungsplatz, London' : 'Food Square, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Veganos Unidos' : locale === 'de' ? 'Vereinte Veganer' : 'United Vegans'
+    },
+    {
+      id: 'e3g',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Monitoreo de calidad del aire' :
+             locale === 'de' ? 'Luftqualitätsüberwachung' : 'Air quality monitoring',
+      date: new Date(2025, 1, 26), // February 26, 2025
+      time: '13:00',
+      duration: 3,
+      spots: 12,
+      registered: 9,
+      location: locale === 'es' ? 'Distrito Industrial, Berlín' :
+                locale === 'de' ? 'Industriegebiet, Berlin' : 'Industrial District, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Aire Limpio' : locale === 'de' ? 'Saubere Luft' : 'Clean Air'
+    },
 
     // March 2025
     {
       id: 'e5',
       projectId: 'p5',
-      title: 'eventClimateConference',
-             locale === 'de' ? 'Klimawandel-Konferenz' : 'Climate change conference',
+      title: locale === 'de' ? 'Klimawandel-Konferenz' : 'Climate change conference',
       date: new Date(2025, 2, 5), // March 5, 2025
       time: '18:00',
       duration: 2,
@@ -109,8 +299,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e6',
       projectId: 'p6',
-      title: 'eventVerticalGardens',
-             locale === 'de' ? 'Vertikale Gartenbau' : 'Vertical garden building',
+      title: locale === 'de' ? 'Vertikale Gartenbau' : 'Vertical garden building',
       date: new Date(2025, 2, 18), // March 18, 2025
       time: '10:00',
       duration: 5,
@@ -120,6 +309,96 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                 locale === 'de' ? 'Zentrum Geschäftsgebäude, London' : 'Downtown Commercial Building, London',
       category: 'environment',
       organizer: locale === 'es' ? 'Urban Green Solutions' : locale === 'de' ? 'Städtische Grüne Lösungen' : 'Urban Green Solutions'
+    },
+    {
+      id: 'e5b',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Plantación de árboles nativos' :
+             locale === 'de' ? 'Einheimische Baumpflanzung' : 'Native tree planting',
+      date: new Date(2025, 2, 1), // March 1, 2025
+      time: '09:00',
+      duration: 4,
+      spots: 35,
+      registered: 28,
+      location: locale === 'es' ? 'Bosque Urbano, Berlín' :
+                locale === 'de' ? 'Stadtwald, Berlin' : 'Urban Forest, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Plantadores Verdes' : locale === 'de' ? 'Grüne Pflanzer' : 'Green Planters'
+    },
+    {
+      id: 'e5c',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Taller de energía eólica' :
+             locale === 'de' ? 'Windenergie-Workshop' : 'Wind energy workshop',
+      date: new Date(2025, 2, 8), // March 8, 2025
+      time: '16:00',
+      duration: 3,
+      spots: 25,
+      registered: 20,
+      location: locale === 'es' ? 'Centro de Energías Renovables, Madrid' :
+                locale === 'de' ? 'Zentrum für erneuerbare Energien, Madrid' : 'Renewable Energy Center, Madrid',
+      category: 'education',
+      organizer: locale === 'es' ? 'Energía Eólica' : locale === 'de' ? 'Windenergie' : 'Wind Energy'
+    },
+    {
+      id: 'e5d',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Mercado de productos de temporada' :
+             locale === 'de' ? 'Saisonproduktmarkt' : 'Seasonal products market',
+      date: new Date(2025, 2, 12), // March 12, 2025
+      time: '10:00',
+      duration: 6,
+      spots: 60,
+      registered: 45,
+      location: locale === 'es' ? 'Plaza de la Temporada, Barcelona' :
+                locale === 'de' ? 'Saisonplatz, Barcelona' : 'Season Square, Barcelona',
+      category: 'community',
+      organizer: locale === 'es' ? 'Productores de Temporada' : locale === 'de' ? 'Saisonproduzenten' : 'Seasonal Producers'
+    },
+    {
+      id: 'e5e',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Construcción de jardines verticales' :
+             locale === 'de' ? 'Vertikale Gartenbau' : 'Vertical garden building',
+      date: new Date(2025, 2, 15), // March 15, 2025
+      time: '11:00',
+      duration: 4,
+      spots: 18,
+      registered: 14,
+      location: locale === 'es' ? 'Edificio Comercial, Milán' :
+                locale === 'de' ? 'Geschäftsgebäude, Mailand' : 'Commercial Building, Milan',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Jardines Verticales' : locale === 'de' ? 'Vertikale Gärten' : 'Vertical Gardens'
+    },
+    {
+      id: 'e5f',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Cena comunitaria sostenible' :
+             locale === 'de' ? 'Nachhaltiges Gemeinschaftsessen' : 'Sustainable community dinner',
+      date: new Date(2025, 2, 22), // March 22, 2025
+      time: '19:00',
+      duration: 3,
+      spots: 80,
+      registered: 65,
+      location: locale === 'es' ? 'Restaurante Verde, Londres' :
+                locale === 'de' ? 'Grünes Restaurant, London' : 'Green Restaurant, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Cena Sostenible' : locale === 'de' ? 'Nachhaltiges Essen' : 'Sustainable Dining'
+    },
+    {
+      id: 'e5g',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Monitoreo de biodiversidad' :
+             locale === 'de' ? 'Biodiversitätsüberwachung' : 'Biodiversity monitoring',
+      date: new Date(2025, 2, 28), // March 28, 2025
+      time: '07:00',
+      duration: 4,
+      spots: 15,
+      registered: 12,
+      location: locale === 'es' ? 'Reserva Natural, Berlín' :
+                locale === 'de' ? 'Naturschutzgebiet, Berlin' : 'Nature Reserve, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Biodiversidad Verde' : locale === 'de' ? 'Grüne Biodiversität' : 'Green Biodiversity'
     },
 
     // April 2025
@@ -141,8 +420,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e8',
       projectId: 'p2',
-      title: 'eventEcoRace',
-             locale === 'de' ? 'Ökologischer 5K-Lauf' : 'Eco-friendly 5K run',
+      title: locale === 'de' ? 'Ökologischer 5K-Lauf' : 'Eco-friendly 5K run',
       date: new Date(2025, 3, 22), // April 22, 2025 (Earth Day)
       time: '08:00',
       duration: 2,
@@ -158,8 +436,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e9',
       projectId: 'p3',
-      title: 'eventSolarPanels',
-             locale === 'de' ? 'Solarpanel-Installation' : 'Solar panel installation',
+      title: locale === 'de' ? 'Solarpanel-Installation' : 'Solar panel installation',
       date: new Date(2025, 4, 10), // May 10, 2025
       time: '09:00',
       duration: 7,
@@ -222,8 +499,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e13',
       projectId: 'p1',
-      title: 'eventEnvironmentalReflection',
-             locale === 'de' ? 'Halbjährliche Umweltreflexion' : 'Semi-annual environmental reflection',
+      title: locale === 'de' ? 'Halbjährliche Umweltreflexion' : 'Semi-annual environmental reflection',
       date: new Date(2025, 6, 15), // July 15, 2025
       time: '17:00',
       duration: 2,
@@ -237,8 +513,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e14',
       projectId: 'p2',
-      title: 'eventSustainableSummer',
-             locale === 'de' ? 'Nachhaltige Sommerfeier' : 'Sustainable summer celebration',
+      title: locale === 'de' ? 'Nachhaltige Sommerfeier' : 'Sustainable summer celebration',
       date: new Date(2025, 6, 30), // July 30, 2025
       time: '20:00',
       duration: 4,
@@ -254,8 +529,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e15',
       projectId: 'p3',
-      title: 'eventAutumnPlanting',
-             locale === 'de' ? 'Herbstpflanzung' : 'Autumn planting',
+      title: locale === 'de' ? 'Herbstpflanzung' : 'Autumn planting',
       date: new Date(2025, 9, 5), // October 5, 2025
       time: '10:00',
       duration: 4,
@@ -315,8 +589,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e16',
       projectId: 'p4',
-      title: 'eventFoodConservationWorkshop',
-             locale === 'de' ? 'Lebensmittelkonservierungsworkshop' : 'Food preservation workshop',
+      title: locale === 'de' ? 'Lebensmittelkonservierungsworkshop' : 'Food preservation workshop',
       date: new Date(2025, 9, 12), // October 12, 2025
       time: '14:00',
       duration: 3,
@@ -330,8 +603,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e17',
       projectId: 'p5',
-      title: 'eventForestCleanup',
-             locale === 'de' ? 'Herbstwaldreinigung' : 'Autumn forest cleanup',
+      title: locale === 'de' ? 'Herbstwaldreinigung' : 'Autumn forest cleanup',
       date: new Date(2025, 9, 19), // October 19, 2025
       time: '09:00',
       duration: 3,
@@ -362,8 +634,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e19',
       projectId: 'p1',
-      title: 'eventBirdShelters',
-             locale === 'de' ? 'Vogelschutzunterstände bauen' : 'Building bird shelters',
+      title: locale === 'de' ? 'Vogelschutzunterstände bauen' : 'Building bird shelters',
       date: new Date(2025, 10, 3), // November 3, 2025 (Monday)
       time: '13:00',
       duration: 4,
@@ -377,8 +648,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e20',
       projectId: 'p2',
-      title: 'eventWindEnergy',
-             locale === 'de' ? 'Windenergie-Workshop' : 'Wind energy workshop',
+      title: locale === 'de' ? 'Windenergie-Workshop' : 'Wind energy workshop',
       date: new Date(2025, 10, 7), // November 7, 2025 (Friday)
       time: '16:00',
       duration: 2,
@@ -392,8 +662,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e21',
       projectId: 'p3',
-      title: 'eventOrganicProducts',
-             locale === 'de' ? 'Bio-Produktmesse' : 'Organic products fair',
+      title: locale === 'de' ? 'Bio-Produktmesse' : 'Organic products fair',
       date: new Date(2025, 10, 10), // November 10, 2025 (Monday)
       time: '09:00',
       duration: 6,
@@ -407,8 +676,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e22',
       projectId: 'p4',
-      title: 'eventWetlandsRestoration',
-             locale === 'de' ? 'Feuchtgebietssanierung' : 'Wetland restoration',
+      title: locale === 'de' ? 'Feuchtgebietssanierung' : 'Wetland restoration',
       date: new Date(2025, 10, 14), // November 14, 2025 (Friday)
       time: '08:00',
       duration: 5,
@@ -437,8 +705,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e24',
       projectId: 'p6',
-      title: 'eventCommunityGardens',
-             locale === 'de' ? 'Gemeinschaftsgärten bauen' : 'Building community gardens',
+      title: locale === 'de' ? 'Gemeinschaftsgärten bauen' : 'Building community gardens',
       date: new Date(2025, 10, 21), // November 21, 2025 (Friday)
       time: '10:00',
       duration: 6,
@@ -484,8 +751,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e27',
       projectId: 'p3',
-      title: 'eventSustainableChristmas',
-             locale === 'de' ? 'Nachhaltiger Weihnachtsmarkt' : 'Sustainable Christmas market',
+      title: locale === 'de' ? 'Nachhaltiger Weihnachtsmarkt' : 'Sustainable Christmas market',
       date: new Date(2025, 11, 1), // December 1, 2025 (Monday)
       time: '12:00',
       duration: 8,
@@ -499,8 +765,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e28',
       projectId: 'p4',
-      title: 'eventWinterReforestation',
-             locale === 'de' ? 'Winteraufforstung' : 'Winter reforestation',
+      title: locale === 'de' ? 'Winteraufforstung' : 'Winter reforestation',
       date: new Date(2025, 11, 5), // December 5, 2025 (Friday)
       time: '09:00',
       duration: 4,
@@ -514,8 +779,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e29',
       projectId: 'p5',
-      title: 'eventClimateSeminar',
-             locale === 'de' ? 'Klimawandel-Seminar' : 'Climate change seminar',
+      title: locale === 'de' ? 'Klimawandel-Seminar' : 'Climate change seminar',
       date: new Date(2025, 11, 8), // December 8, 2025 (Monday)
       time: '17:00',
       duration: 2,
@@ -529,8 +793,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e30',
       projectId: 'p6',
-      title: 'eventEcoNewYear',
-             locale === 'de' ? 'Ökologische Jahresendfeier' : 'Eco-friendly year-end celebration',
+      title: locale === 'de' ? 'Ökologische Jahresendfeier' : 'Eco-friendly year-end celebration',
       date: new Date(2025, 11, 15), // December 15, 2025 (Monday)
       time: '19:00',
       duration: 4,
@@ -544,8 +807,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e31',
       projectId: 'p1',
-      title: 'eventMarineConservation',
-             locale === 'de' ? 'Meeresartenkonservierung' : 'Marine species conservation',
+      title: locale === 'de' ? 'Meeresartenkonservierung' : 'Marine species conservation',
       date: new Date(2025, 11, 19), // December 19, 2025 (Friday)
       time: '11:00',
       duration: 3,
@@ -559,8 +821,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e32',
       projectId: 'p2',
-      title: 'eventHydroelectricWorkshop',
-             locale === 'de' ? 'Wasserkraft-Workshop' : 'Hydroelectric energy workshop',
+      title: locale === 'de' ? 'Wasserkraft-Workshop' : 'Hydroelectric energy workshop',
       date: new Date(2025, 11, 22), // December 22, 2025 (Monday)
       time: '14:00',
       duration: 3,
@@ -728,31 +989,25 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="bg-transparent rounded-lg shadow-lg border border-gray-300 dark:border-gray-600 p-4 max-w-4xl mx-auto">
+    <BaseCard variant="default" className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex flex-col items-center mb-4">
-        <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-3">{t("calendar")}</h2>
+        <BaseTitle level="h2" className="mb-3 capitalize">
+          {t("calendar")}
+        </BaseTitle>
         <div className="flex gap-2">
-          <button
+          <BaseButton 
+            variant={viewMode === 'month' ? 'primary' : 'secondary'}
             onClick={() => setViewMode('month')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              viewMode === 'month' 
-                ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
-                : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-500'
-            }`}
           >
             {t("month")}
-          </button>
-          <button
+          </BaseButton>
+          <BaseButton 
+            variant={viewMode === 'list' ? 'primary' : 'secondary'}
             onClick={() => setViewMode('list')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              viewMode === 'list' 
-                ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
-                : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-500'
-            }`}
           >
             {t("list")}
-          </button>
+          </BaseButton>
         </div>
       </div>
 
@@ -760,29 +1015,28 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
         <>
           {/* Month category filter */}
           <div className="flex items-center justify-center gap-2 mb-3">
-            <select
+            <BaseSelect
               value={monthCategory}
               onChange={(e) => setMonthCategory(e.target.value as any)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-700"
             >
               <option value="">{locale === 'es' ? 'Todas las categorías' : locale === 'de' ? 'Alle Kategorien' : 'All categories'}</option>
               <option value="environment">{locale === 'es' ? 'Medio Ambiente' : locale === 'de' ? 'Umwelt' : 'Environment'}</option>
               <option value="education">{locale === 'es' ? 'Educación' : locale === 'de' ? 'Bildung' : 'Education'}</option>
               <option value="community">{locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community'}</option>
-            </select>
+            </BaseSelect>
           </div>
           {/* Month Navigation */}
-          <div className="flex items-center justify-between mb-4 text-slate-900">
+          <div className={getNavigationClasses('container')}>
             <button
               onClick={() => navigateMonth('prev')}
-              className="p-2 hover:bg-gray-200 rounded-md"
+              className={getNavigationClasses('button')}
             >
               ←
             </button>
             <h3 className="text-lg font-semibold text-white">{formatMonthYear(currentMonth)}</h3>
             <button
               onClick={() => navigateMonth('next')}
-              className="p-2 hover:bg-gray-200 rounded-md"
+              className={getNavigationClasses('button')}
             >
               →
             </button>
@@ -792,7 +1046,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
           <div className="grid grid-cols-7 gap-1">
             {/* Week day headers */}
             {weekDays.map(day => (
-              <div key={day} className="p-2 text-center text-sm font-semibold text-gray-700 bg-gray-100">
+              <div key={day} className={getCalendarClasses('weekDays')}>
                 {day}
               </div>
             ))}
@@ -805,13 +1059,18 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
               return (
                 <div
                   key={index}
-                  className={`min-h-[80px] p-1 border border-gray-300 dark:border-gray-600 ${
-                    day ? 'bg-transparent dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800' : 'bg-gray-100 dark:bg-gray-800'
-                  } ${isToday ? 'bg-green-50 dark:bg-green-900 border-green-500' : ''}`}
+                  className={combineClasses(
+                    getCalendarClasses('dayCell'),
+                    day ? getCalendarClasses('dayCellActive') : getCalendarClasses('dayCellInactive'),
+                    isToday ? 'bg-green-50 dark:bg-green-900 border-green-500' : ''
+                  )}
                 >
                   {day && (
                     <>
-                      <div className={`text-sm font-semibold ${isToday ? 'text-green-700 dark:text-green-300' : 'text-gray-900 dark:text-gray-100'}`}>
+                      <div className={combineClasses(
+                        'text-sm font-semibold',
+                        isToday ? getCalendarClasses('dayNumberToday') : getCalendarClasses('dayNumber')
+                      )}>
                         {day.getDate()}
                       </div>
                       <div className="mt-1 space-y-1">
@@ -838,7 +1097,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                           </Link>
                         ))}
                         {events.length > 2 && (
-                          <div className="text-xs text-gray-700 dark:text-gray-300">
+                          <div className={getCalendarClasses('eventText')}>
                             +{events.length - 2} {locale === 'es' ? 'más' : locale === 'de' ? 'mehr' : 'more'}
                           </div>
                         )}
@@ -855,59 +1114,57 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                 {viewMode === 'list' && (
                   <>
                     {/* Month Navigation and Filter Toggle */}
-                    <div className="flex items-center justify-between mb-4 text-slate-900">
+                    <div className={getNavigationClasses('container')}>
                       <div className="flex items-center gap-4">
                         <button
                           onClick={() => navigateMonth('prev')}
-                          className="p-2 hover:bg-gray-200 rounded-md transition-colors"
+                          className={getNavigationClasses('button')}
                         >
                           ←
                         </button>
                         <h3 className="text-lg font-semibold text-white">{formatMonthYear(currentMonth)}</h3>
                         <button
                           onClick={() => navigateMonth('next')}
-                          className="p-2 hover:bg-gray-200 rounded-md transition-colors"
+                          className={getNavigationClasses('button')}
                         >
                           →
                         </button>
                       </div>
-                      <button
+                      <BaseButton
+                        variant="outline"
                         onClick={() => setShowFilters(!showFilters)}
-                        className="px-3 py-1 bg-blue-700 text-white text-sm rounded-md hover:bg-blue-800 transition-colors"
+                        className="px-3 py-1 text-sm"
                       >
                         {showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'}
-                      </button>
+                      </BaseButton>
                     </div>
 
                     {/* Filters Panel */}
                     {showFilters && (
-                      <div className="bg-gray-100 rounded-lg p-4 mb-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <BaseFilterPanel>
                           {/* Search */}
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <BaseLabel>
                               {locale === 'es' ? 'Buscar' : locale === 'de' ? 'Suchen' : 'Search'}
-                            </label>
-                            <input
+                            </BaseLabel>
+                            <BaseInput
                               type="text"
                               value={filters.searchText}
                               onChange={(e) => setFilters({...filters, searchText: e.target.value})}
                               placeholder={locale === 'es' ? 'Título, ubicación, organizador...' : 
                                          locale === 'de' ? 'Titel, Ort, Organisator...' : 
                                          'Title, location, organizer...'}
-                              className="w-full px-3 py-2 border border-gray-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                             />
                           </div>
 
                           {/* Category Filter */}
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <BaseLabel>
                               {locale === 'es' ? 'Categoría' : locale === 'de' ? 'Kategorie' : 'Category'}
-                            </label>
-                            <select
+                            </BaseLabel>
+                            <BaseSelect
                               value={filters.category}
                               onChange={(e) => setFilters({...filters, category: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                             >
                               <option value="">{locale === 'es' ? 'Todas las categorías' : 
                                                locale === 'de' ? 'Alle Kategorien' : 
@@ -926,18 +1183,17 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                    category}
                                 </option>
                               ))}
-                            </select>
+                            </BaseSelect>
                           </div>
 
                           {/* Location Filter */}
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <BaseLabel>
                               {locale === 'es' ? 'Ubicación' : locale === 'de' ? 'Standort' : 'Location'}
-                            </label>
-                            <select
+                            </BaseLabel>
+                            <BaseSelect
                               value={filters.location}
                               onChange={(e) => setFilters({...filters, location: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                             >
                               <option value="">{locale === 'es' ? 'Todas las ubicaciones' : 
                                                locale === 'de' ? 'Alle Standorte' : 
@@ -945,18 +1201,17 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                               {getUniqueLocations().map(location => (
                                 <option key={location} value={location}>{location}</option>
                               ))}
-                            </select>
+                            </BaseSelect>
                           </div>
 
                           {/* Date Range Filter */}
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <BaseLabel>
                               {locale === 'es' ? 'Rango de fechas' : locale === 'de' ? 'Datumsbereich' : 'Date range'}
-                            </label>
-                            <select
+                            </BaseLabel>
+                            <BaseSelect
                               value={filters.dateRange}
                               onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                             >
                               <option value="">{locale === 'es' ? 'Todas las fechas' : 
                                                locale === 'de' ? 'Alle Daten' : 
@@ -969,7 +1224,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                                    locale === 'de' ? 'Diese Woche' : 'This week'}</option>
                               <option value="month">{locale === 'es' ? 'Este mes' : 
                                                     locale === 'de' ? 'Diesen Monat' : 'This month'}</option>
-                            </select>
+                            </BaseSelect>
                           </div>
 
                           {/* Spots Available Filter */}
@@ -981,26 +1236,26 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                               onChange={(e) => setFilters({...filters, spotsAvailable: e.target.checked})}
                               className="mr-2"
                             />
-                            <label htmlFor="spotsAvailable" className="text-sm font-medium text-gray-700">
+                            <BaseLabel htmlFor="spotsAvailable" variant="checkbox">
                               {locale === 'es' ? 'Solo con cupos disponibles' : 
                                locale === 'de' ? 'Nur mit verfügbaren Plätzen' : 
                                'Only with available spots'}
-                            </label>
+                            </BaseLabel>
                           </div>
 
                           {/* Clear Filters Button */}
                           <div className="flex items-end">
-                            <button
+                            <BaseButton
+                              variant="secondary"
                               onClick={clearFilters}
-                              className="px-4 py-2 bg-gray-700 text-white text-sm rounded-md hover:bg-gray-800 transition-colors"
+                              className="px-4 py-2 text-sm"
                             >
                               {locale === 'es' ? 'Limpiar Filtros' : 
                                locale === 'de' ? 'Filter löschen' : 
                                'Clear Filters'}
-                            </button>
+                            </BaseButton>
                           </div>
-                        </div>
-                      </div>
+                      </BaseFilterPanel>
                     )}
 
                     {/* Filtered Events for Current Month */}
@@ -1008,17 +1263,17 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                       {getFilteredEvents().map(event => {
                         const project = projects.find(p => p.id === event.projectId);
                         return (
-                          <div key={event.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                          <BaseCard key={event.id} variant="default">
                             <div className="flex items-start justify-between gap-4">
                               <div className="flex-1 min-w-0">
                                 <Link 
                                   href={`/eventos/${event.id}`}
-                                  className="font-medium text-gray-800 hover:text-blue-600 transition-colors"
+                                  className={getEventClasses('title')}
                                 >
                                   {t(event.title)}
                                 </Link>
-                                <p className="text-sm text-gray-600">{event.location}</p>
-                                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                                <p className={getEventClasses('location')}>{event.location}</p>
+                                <div className={getEventClasses('details')}>
                                   <span>📅 {event.date.toLocaleDateString()}</span>
                                   <span>🕐 {event.time}</span>
                                   <span>⏱️ {event.duration}h</span>
@@ -1059,7 +1314,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   </div>
                                 ) : null;
                               })()}
-                              <div className="flex gap-2 shrink-0">
+                              <div className={getEventClasses('actions')}>
                                 <Link
                                   href={`/eventos/${event.id}`}
                                   className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
@@ -1074,30 +1329,33 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                 </Link>
                               </div>
                             </div>
-                          </div>
+                          </BaseCard>
                         );
                       })}
                       
                       {/* Show message if no events match filters */}
                       {getFilteredEvents().length === 0 && (
-                          <div className="text-center py-8 text-gray-700">
-                          <p className="text-lg mb-2">🔍</p>
-                          <p>{locale === 'es' ? 'No se encontraron eventos que coincidan con los filtros' : 
-                              locale === 'de' ? 'Keine Veranstaltungen gefunden, die den Filtern entsprechen' : 
-                              'No events found matching the filters'}</p>
-                          <button
-                            onClick={clearFilters}
-                            className="mt-2 px-4 py-2 bg-blue-700 text-white text-sm rounded-md hover:bg-blue-800 transition-colors"
-                          >
-                            {locale === 'es' ? 'Limpiar Filtros' : 
-                             locale === 'de' ? 'Filter löschen' : 
-                             'Clear Filters'}
-                          </button>
-                        </div>
+                        <BaseEmptyState
+                          icon="🔍"
+                          description={locale === 'es' ? 'No se encontraron eventos que coincidan con los filtros' : 
+                                        locale === 'de' ? 'Keine Veranstaltungen gefunden, die den Filtern entsprechen' : 
+                                        'No events found matching the filters'}
+                          action={
+                            <BaseButton
+                              variant="primary"
+                              onClick={clearFilters}
+                              className="mt-2"
+                            >
+                              {locale === 'es' ? 'Limpiar Filtros' : 
+                               locale === 'de' ? 'Filter löschen' : 
+                               'Clear Filters'}
+                            </BaseButton>
+                          }
+                        />
                       )}
                     </div>
                   </>
                 )}
-    </div>
+    </BaseCard>
   );
 }

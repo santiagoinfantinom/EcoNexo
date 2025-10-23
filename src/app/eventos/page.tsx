@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useI18n, categoryLabel } from "@/lib/i18n";
+import CalendarView from "@/components/CalendarView";
 
 type Category =
   | "Medio ambiente"
@@ -40,6 +41,7 @@ const CATEGORIES: Category[] = [
 
 export default function EventosPage() {
   const { t, locale } = useI18n();
+  const [viewMode, setViewMode] = useState<'form' | 'calendar'>('form');
   const [form, setForm] = useState<EventInput>({
     title: "",
     date: "",
@@ -173,10 +175,39 @@ export default function EventosPage() {
 
   return (
     <div className="grid gap-6 max-w-2xl mx-auto text-center">
-      <h1 className="text-3xl font-semibold">{t("createEvent")}</h1>
-      <form onSubmit={submit} className="grid gap-4 mx-auto text-left max-w-xl">
+      <div className="flex flex-col items-center gap-4">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 capitalize">
+          {viewMode === 'form' ? t("createEvent") : t("calendar")}
+        </h1>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setViewMode('form')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
+              viewMode === 'form' 
+                ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
+                : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-500'
+            }`}
+          >
+            {t("createEvent")}
+          </button>
+          <button
+            onClick={() => setViewMode('calendar')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
+              viewMode === 'calendar' 
+                ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
+                : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-500'
+            }`}
+          >
+            {t("calendar")}
+          </button>
+        </div>
+      </div>
+      
+      {viewMode === 'form' && (
+        <>
+          <form onSubmit={submit} className="grid gap-4 mx-auto text-left max-w-xl">
         <div className="grid gap-1">
-          <label className="text-sm text-slate-700 dark:text-slate-300">{t("title")} ({t("required")})</label>
+          <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("title")} ({t("required")})</label>
           <input
             required
             className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
@@ -187,7 +218,7 @@ export default function EventosPage() {
         </div>
         <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
           <div className="grid gap-1">
-            <label className="text-sm text-slate-700 dark:text-slate-300">{t("date")} ({t("required")})</label>
+            <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("date")} ({t("required")})</label>
             <input
               required
               type="date"
@@ -197,7 +228,7 @@ export default function EventosPage() {
             />
           </div>
           <div className="grid gap-1">
-            <label className="text-sm text-slate-700 dark:text-slate-300">{t("mainCategory")} ({t("required")})</label>
+            <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("mainCategory")} ({t("required")})</label>
             <select
               className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
               value={form.category}
@@ -213,7 +244,7 @@ export default function EventosPage() {
         </div>
         <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
           <div className="grid gap-1">
-            <label className="text-sm text-slate-700 dark:text-slate-300">{t("city")} ({t("required")})</label>
+            <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("city")} ({t("required")})</label>
             <input
               required
               className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
@@ -223,7 +254,7 @@ export default function EventosPage() {
             />
           </div>
           <div className="grid gap-1">
-            <label className="text-sm text-slate-700 dark:text-slate-300">{t("country")} ({t("required")})</label>
+            <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("country")} ({t("required")})</label>
             <input
               required
               className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
@@ -235,7 +266,7 @@ export default function EventosPage() {
         </div>
 
         <div className="grid gap-1">
-          <label className="text-sm text-slate-700 dark:text-slate-300">{t("address")} ({t("optional")})</label>
+          <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("address")} ({t("optional")})</label>
           <input
             className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
             value={form.address ?? ""}
@@ -246,7 +277,7 @@ export default function EventosPage() {
 
         {/* Website URL (optional) */}
         <div className="grid gap-1">
-          <label className="text-sm text-slate-700 dark:text-slate-300">Website ({t("optional")})</label>
+          <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("website")} ({t("optional")})</label>
           <input
             type="url"
             className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
@@ -258,7 +289,7 @@ export default function EventosPage() {
 
         {/* Image URL (optional) */}
         <div className="grid gap-1">
-          <label className="text-sm text-slate-700 dark:text-slate-300">{t("image")} URL ({t("optional")})</label>
+          <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("image")} URL ({t("optional")})</label>
           <input
             type="url"
             className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
@@ -270,7 +301,7 @@ export default function EventosPage() {
 
         {/* JPG Upload (optional) */}
         <div className="grid gap-1">
-          <label className="text-sm text-slate-700 dark:text-slate-300">{t("image")} JPG ({t("optional")})</label>
+          <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("image")} JPG ({t("optional")})</label>
           <input
             type="file"
             accept="image/jpeg"
@@ -305,17 +336,17 @@ export default function EventosPage() {
         </div>
 
         <div className="grid gap-2">
-          <div className="text-sm text-slate-700 dark:text-slate-300">{t("optionalCategories")}</div>
+          <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("optionalCategories")}</div>
           <div className="flex flex-wrap gap-2 justify-center">
             {CATEGORIES.map((c) => (
               <button
                 key={c}
                 type="button"
                 onClick={() => toggleOptional(c)}
-                className={`px-3 py-1 rounded-full border ${
+                className={`px-3 py-1 rounded-full border font-medium transition-colors duration-200 ${
                   form.optionalCategories.includes(c)
-                    ? "bg-green-700 text-white"
-                    : `${COLOR_BY_CATEGORY[c].bg} ${COLOR_BY_CATEGORY[c].text} ${COLOR_BY_CATEGORY[c].border}`
+                    ? "bg-green-700 text-white shadow-md"
+                    : `${COLOR_BY_CATEGORY[c].bg} ${COLOR_BY_CATEGORY[c].text} ${COLOR_BY_CATEGORY[c].border} hover:shadow-sm`
                 }`}
               >
                 {categoryLabel(c, locale)}
@@ -326,7 +357,7 @@ export default function EventosPage() {
 
         <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
           <div className="grid gap-1">
-            <label className="text-sm text-slate-700 dark:text-slate-300">{t("capacity")} ({t("optional")})</label>
+            <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("capacity")} ({t("optional")})</label>
             <input
               type="number"
               min={1}
@@ -339,7 +370,7 @@ export default function EventosPage() {
         </div>
 
         <div className="grid gap-1">
-          <label className="text-sm text-slate-700 dark:text-slate-300">{t("notes")} ({t("optional")})</label>
+          <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("notes")} ({t("optional")})</label>
           <textarea
             className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 min-h-24 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
             value={form.notes ?? ""}
@@ -348,14 +379,14 @@ export default function EventosPage() {
           />
         </div>
 
-        <button className="bg-green-700 text-white rounded px-4 py-2 w-fit">
+        <button className="bg-green-700 hover:bg-green-800 text-white font-semibold rounded px-4 py-2 w-fit transition-colors duration-200 shadow-md">
           {t("save")}
         </button>
       </form>
 
       {created && (
-        <div className="border rounded p-4 bg-gray-900 text-white">
-          <div className="font-semibold mb-2">{t("createdEvent")}</div>
+        <div className="border border-green-200 dark:border-green-800 rounded-lg p-4 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100 shadow-md">
+          <div className="font-bold mb-2 text-lg">{t("createdEvent")}</div>
           <div className="text-sm">
             <span className="font-semibold">{created.title}</span> {t('eventCreatedMessage')} <span className="font-semibold">{created.date}</span> en <span className="font-semibold">{created.city}, {created.country}</span>{created.address ? `, ${created.address}` : ""}.
           </div>
@@ -365,10 +396,10 @@ export default function EventosPage() {
       <div className="grid gap-3">
         <div className="h-1 bg-gradient-to-r from-transparent via-green-600 to-transparent rounded-full" />
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-semibold">{t("existingEvents")}</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("existingEvents")}</h2>
           <button 
             onClick={refreshParticipatedEvents}
-            className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
+            className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white font-semibold rounded text-sm transition-colors duration-200 shadow-sm"
           >
             {t('refresh')}
           </button>
@@ -406,6 +437,17 @@ export default function EventosPage() {
           </table>
         </div>
       </div>
+        </>
+      )}
+
+      {viewMode === 'calendar' && (
+        <div className="max-w-6xl mx-auto">
+          <CalendarView 
+            projects={[]} 
+            onProjectSelect={() => {}} 
+          />
+        </div>
+      )}
     </div>
   );
 }

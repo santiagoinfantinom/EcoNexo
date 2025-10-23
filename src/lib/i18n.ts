@@ -349,8 +349,13 @@ const DICTS: Record<Locale, Dict> = {
     chatRulesTitle: "Community Rules",
     
     // Chat Recommendations
-    joinActiveConversations: "Join active conversations",
-    findLocalEvents: "Find local events",
+    recommendations: "Recommendations",
+    popularDiscussions: "Popular Discussions",
+    joinActiveConversations: "Join Active Conversations",
+    newProjects: "New Projects",
+    discoverLatestInitiatives: "Discover Latest Initiatives",
+    eventsNearYou: "Events Near You",
+    findLocalEvents: "Find Local Events",
     
     // Category translations
     environment: "Environment",
@@ -401,6 +406,89 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle2: "Air Quality Data Analyst",
     jobTitle3: "Environmental Educator (STEM)",
     jobTitle4: "River Cleanup Coordinator",
+    
+    // Job descriptions
+    jobDesc1: "Lead urban reforestation initiatives in Berlin, managing tree planting projects, coordinating with local communities, and developing sustainable green spaces. You'll work with environmental scientists, city planners, and volunteers to create healthier urban environments.",
+    jobDesc2: "Analyze air quality data using Python and GIS tools, monitor sensor networks across Paris, and create reports for environmental policy makers. You'll work with data scientists and environmental engineers to improve air quality monitoring systems.",
+    jobDesc3: "Develop and deliver STEM-based environmental education programs in Madrid, teaching students about solar energy, robotics, and sustainability. You'll create engaging curriculum and work with schools to promote environmental awareness.",
+    jobDesc4: "Coordinate river cleanup operations in Milan, managing volunteer teams, ensuring safety protocols, and organizing waste collection initiatives. You'll work with environmental organizations and local authorities to protect water ecosystems.",
+    
+    // Technical tags
+    sensores: "sensors",
+    silvicultura: "silviculture",
+    biodiversidad: "biodiversity",
+    gestióndeproyectos: "project management",
+    didáctica: "pedagogy",
+    energíasolar: "solar energy",
+    robóticaeducativa: "educational robotics",
+    gestióndevoluntariado: "volunteer management",
+    residuos: "waste",
+    seguridad: "safety",
+    python: "Python",
+    gis: "GIS",
+    
+    // Interface translations
+    searchPlaceholderEn: "Search for jobs...",
+    cityLabel: "City",
+    contractLabel: "Contract type",
+    contract_full_time: "Full-time",
+    contract_part_time: "Part-time",
+    contract_contract: "Contract",
+    contract_internship: "Internship",
+    remoteOnly: "Remote only",
+    yearsExp: "years experience",
+    applyBtn: "Apply",
+    saveBtn: "Save",
+    jobPostingConditions: "Job Posting Conditions",
+    jobPostingInfo: "Job posting information",
+    conductGuidelines: "Conduct Guidelines",
+    conductGuidelinesText: "Maintain a respectful and constructive environment",
+    
+    // Job form fields
+    jobTitle: "Job Title",
+    jobTitlePlaceholder: "Enter the job title",
+    companyName: "Company Name",
+    companyNamePlaceholder: "Enter your company name",
+    jobLocation: "Job Location",
+    jobLocationPlaceholder: "Where is the job located?",
+    jobDescription: "Job Description",
+    jobDescriptionPlaceholder: "Describe the job responsibilities",
+    requiredSkills: "Required Skills",
+    requiredSkillsPlaceholder: "Skills needed for the position",
+    benefitsPlaceholder: "Job benefits",
+    contactEmail: "Contact Email",
+    contactEmailPlaceholder: "email@company.com",
+    salaryRange: "Salary Range",
+    salaryRangePlaceholder: "Salary range offered",
+    jobType: "Job Type",
+    jobTypeFullTime: "Full-time",
+    jobTypePartTime: "Part-time",
+    jobTypeContract: "Contract",
+    jobTypeInternship: "Internship",
+    jobTypeRemote: "Remote",
+    jobTypeHybrid: "Hybrid",
+    experienceLevel: "Experience Level",
+    experienceEntry: "Entry level",
+    experienceMid: "Mid level",
+    experienceSenior: "Senior level",
+    experienceExpert: "Expert level",
+    applicationDeadline: "Application Deadline",
+    createJobOffer: "Create Job Offer",
+    saveDraft: "Save Draft",
+    publishJob: "Publish Job",
+    jobCreated: "Job Created",
+    
+    // Language levels
+    naturalLanguages: "Natural Languages",
+    spanish: "Spanish",
+    english: "English", 
+    german: "German",
+    nativeLanguage: "Native language",
+    selectLevel: "Select level",
+    beginner: "Beginner",
+    intermediate: "Intermediate",
+    advanced: "Advanced",
+    fluent: "Fluent",
     
     // Admin panel titles
     adminPanelTitle: "Administration Panel",
@@ -466,6 +554,39 @@ const DICTS: Record<Locale, Dict> = {
     centralEurope: "Central Europe",
     southernEurope: "Southern Europe",
     easternEurope: "Eastern Europe",
+    minExperience: "Minimum experience",
+    minSalary: "Minimum salary",
+    allCities: "All",
+    allContracts: "All",
+    results: "results",
+    
+    // Calendar and Events translations
+    calendar: "Calendar",
+    required: "Required",
+    titlePh: "Event title",
+    mainCategory: "Main Category",
+    cityPh: "City name",
+    countryPh: "Country name",
+    optional: "Optional",
+    addressPh: "Event address",
+    websitePlaceholderEn: "https://example.com",
+    image: "Image",
+    imageUrlPlaceholderEn: "https://example.com/image.jpg",
+    optionalCategories: "Optional Categories",
+    capacityPh: "Maximum participants",
+    notes: "Notes",
+    notesPh: "Additional notes",
+    save: "Save",
+    existingEvents: "Existing Events",
+    refresh: "Refresh",
+    category: "Category",
+    noParticipatedEvents: "No participated events",
+    month: "Month",
+    list: "List",
+    viewEvent: "View Event",
+    join: "Join",
+    createdEvent: "Event Created",
+    eventCreatedMessage: "was created for",
   },
   de: {
   
@@ -662,6 +783,41 @@ const DICTS: Record<Locale, Dict> = {
     spotsLeft: "Plätze übrig",
     requirements: "Anforderungen",
     benefits: "Vorteile",
+    
+    // Job form fields
+    jobTitle: "Stellenbezeichnung",
+    jobTitlePlaceholder: "Stellenbezeichnung eingeben",
+    companyName: "Firmenname",
+    companyNamePlaceholder: "Firmenname eingeben",
+    jobLocation: "Arbeitsort",
+    jobLocationPlaceholder: "Wo befindet sich die Stelle?",
+    jobDescription: "Stellenbeschreibung",
+    jobDescriptionPlaceholder: "Stellenverantwortlichkeiten beschreiben",
+    requiredSkills: "Erforderliche Fähigkeiten",
+    requiredSkillsPlaceholder: "Für die Stelle benötigte Fähigkeiten",
+    benefitsPlaceholder: "Arbeitsvorteile",
+    contactEmail: "Kontakt-E-Mail",
+    contactEmailPlaceholder: "email@unternehmen.com",
+    salaryRange: "Gehaltsspanne",
+    salaryRangePlaceholder: "Angebotene Gehaltsspanne",
+    jobType: "Arbeitsart",
+    jobTypeFullTime: "Vollzeit",
+    jobTypePartTime: "Teilzeit",
+    jobTypeContract: "Vertrag",
+    jobTypeInternship: "Praktikum",
+    jobTypeRemote: "Remote",
+    jobTypeHybrid: "Hybrid",
+    experienceLevel: "Erfahrungslevel",
+    experienceEntry: "Einsteiger",
+    experienceMid: "Mittelstufe",
+    experienceSenior: "Senior",
+    experienceExpert: "Experte",
+    applicationDeadline: "Bewerbungsschluss",
+    createJobOffer: "Stellenausschreibung erstellen",
+    saveDraft: "Entwurf speichern",
+    publishJob: "Stelle veröffentlichen",
+    jobCreated: "Stelle erstellt",
+    
     // Onboarding
     onboardingWelcome: "Willkommen bei EcoNexo!",
     onboardingDescription: "Entdecken Sie nachhaltige Projekte und verbinden Sie sich mit einer Gemeinschaft, die sich für den Umweltschutz engagiert",
@@ -792,6 +948,29 @@ const DICTS: Record<Locale, Dict> = {
     chatMessage3: "Das ist genau das, was wir mehr brauchen!",
     chatMessage4: "Hat jemand diesen Ansatz schon einmal ausprobiert?",
     
+    // Chat Rules
+    chatRule1: "Respektiere alle Teilnehmer",
+    chatRule2: "Halte Gespräche relevant",
+    chatRule3: "Teile keine persönlichen Informationen",
+    chatRule4: "Verwende angemessene Sprache",
+    chatRule5: "Kein Spam",
+    chatRule6: "Sei konstruktiv in deinen Kommentaren",
+    chatRule7: "Melde unangemessene Inhalte",
+    chatRule8: "Genieße und lerne",
+    chatRules: "Chat-Regeln",
+    chatRulesFooter: "Das Befolgen dieser Regeln schafft eine positive Gemeinschaft",
+    chatRulesIntro: "Um eine positive Umgebung zu erhalten, bitte folge diesen Regeln:",
+    chatRulesTitle: "Gemeinschaftsregeln",
+    
+    // Chat Recommendations
+    recommendations: "Empfehlungen",
+    popularDiscussions: "Beliebte Diskussionen",
+    joinActiveConversations: "Tritt Aktiven Gesprächen Bei",
+    newProjects: "Neue Projekte",
+    discoverLatestInitiatives: "Entdecke Neueste Initiativen",
+    eventsNearYou: "Veranstaltungen In Deiner Nähe",
+    findLocalEvents: "Finde Lokale Veranstaltungen",
+    
     // Category translations
     environment: "Umwelt",
     education: "Bildung",
@@ -841,6 +1020,55 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle2: "Luftqualität Datenanalyst",
     jobTitle3: "Umweltpädagoge (STEM)",
     jobTitle4: "Flussreinigung Koordinator",
+    
+    // Job descriptions
+    jobDesc1: "Leiten Sie städtische Aufforstungsinitiativen in Berlin, verwalten Sie Baumpflanzprojekte, koordinieren Sie mit lokalen Gemeinden und entwickeln Sie nachhaltige Grünflächen. Sie arbeiten mit Umweltexperten, Stadtplanern und Freiwilligen zusammen, um gesündere städtische Umgebungen zu schaffen.",
+    jobDesc2: "Analysieren Sie Luftqualitätsdaten mit Python und GIS-Tools, überwachen Sie Sensornetzwerke in Paris und erstellen Sie Berichte für Umweltpolitiker. Sie arbeiten mit Datenwissenschaftlern und Umweltingenieuren zusammen, um Luftqualitätsüberwachungssysteme zu verbessern.",
+    jobDesc3: "Entwickeln und liefern Sie STEM-basierte Umweltbildungsprogramme in Madrid, unterrichten Sie Studenten über Solarenergie, Robotik und Nachhaltigkeit. Sie erstellen ansprechende Lehrpläne und arbeiten mit Schulen zusammen, um Umweltbewusstsein zu fördern.",
+    jobDesc4: "Koordinieren Sie Flussreinigungsoperationen in Mailand, verwalten Sie Freiwilligenteams, gewährleisten Sie Sicherheitsprotokolle und organisieren Sie Abfallsammlungsinitiativen. Sie arbeiten mit Umweltorganisationen und lokalen Behörden zusammen, um Wasserökosysteme zu schützen.",
+    
+    // Technical tags
+    sensores: "Sensoren",
+    silvicultura: "Forstwirtschaft",
+    biodiversidad: "Biodiversität",
+    gestióndeproyectos: "Projektmanagement",
+    didáctica: "Pädagogik",
+    energíasolar: "Solarenergie",
+    robóticaeducativa: "Bildungsrobotik",
+    gestióndevoluntariado: "Freiwilligenmanagement",
+    residuos: "Abfall",
+    seguridad: "Sicherheit",
+    python: "Python",
+    gis: "GIS",
+    
+    // Interface translations
+    searchPlaceholderEn: "Nach Jobs suchen...",
+    cityLabel: "Stadt",
+    contractLabel: "Vertragstyp",
+    contract_full_time: "Vollzeit",
+    contract_part_time: "Teilzeit",
+    contract_contract: "Vertrag",
+    contract_internship: "Praktikum",
+    remoteOnly: "Nur Remote",
+    yearsExp: "Jahre Erfahrung",
+    applyBtn: "Bewerben",
+    saveBtn: "Speichern",
+    jobPostingConditions: "Stellenausschreibungsbedingungen",
+    jobPostingInfo: "Stellenausschreibungsinformationen",
+    conductGuidelines: "Verhaltensrichtlinien",
+    conductGuidelinesText: "Halten Sie eine respektvolle und konstruktive Umgebung aufrecht",
+    
+    // Language levels
+    naturalLanguages: "Natürliche Sprachen",
+    spanish: "Spanisch",
+    english: "Englisch",
+    german: "Deutsch",
+    nativeLanguage: "Muttersprache",
+    selectLevel: "Niveau auswählen",
+    beginner: "Anfänger",
+    intermediate: "Mittelstufe",
+    advanced: "Fortgeschritten",
+    fluent: "Fließend",
     
     // Admin panel titles
     adminPanelTitle: "Administrations-Panel",
@@ -906,6 +1134,11 @@ const DICTS: Record<Locale, Dict> = {
     centralEurope: "Mitteleuropa", 
     southernEurope: "Südeuropa",
     easternEurope: "Osteuropa",
+    minExperience: "Mindestberufserfahrung",
+    minSalary: "Mindestgehalt",
+    allCities: "Alle",
+    allContracts: "Alle",
+    results: "Ergebnisse",
   },
   es: {
   
@@ -1229,14 +1462,6 @@ const DICTS: Record<Locale, Dict> = {
     chatMessage3: "¡Esto es exactamente lo que necesitamos más!",
     chatMessage4: "¿Alguien ha probado este enfoque antes?",
     
-    // Category translations
-    environment: "Medio Ambiente",
-    education: "Educación",
-    health: "Salud",
-    community: "Comunidad",
-    oceans: "Océanos",
-    food: "Alimentación",
-    
     companyName: "Nombre de la empresa",
     companyNamePlaceholder: "Nombre de tu empresa",
     conductGuidelines: "Pautas de Conducta",
@@ -1250,6 +1475,18 @@ const DICTS: Record<Locale, Dict> = {
     contract_part_time: "Medio tiempo",
     countryPh: "Selecciona tu país",
     createJobOffer: "Crear Oferta de Trabajo",
+    
+    // Language levels
+    naturalLanguages: "Lenguajes Naturales",
+    spanish: "Español",
+    english: "Inglés",
+    german: "Alemán",
+    nativeLanguage: "Lengua materna",
+    selectLevel: "Seleccionar nivel",
+    beginner: "Principiante",
+    intermediate: "Intermedio",
+    advanced: "Avanzado",
+    fluent: "Fluido",
     createdEvent: "Evento creado",
     currentTopic: "Tema actual",
     cvLink: "Enlace al CV",
@@ -1303,6 +1540,9 @@ const DICTS: Record<Locale, Dict> = {
     mediumImpact: "Medio impacto",
     minExperience: "Experiencia mínima",
     minSalary: "Salario mínimo",
+    allCities: "Todas",
+    allContracts: "Todos",
+    results: "resultados",
     month: "mes",
     motivationLetter: "Carta de motivación",
     motivations: "Motivaciones",
@@ -1331,7 +1571,6 @@ const DICTS: Record<Locale, Dict> = {
     required: "Requerido",
     requiredSkills: "Habilidades requeridas",
     requiredSkillsPlaceholder: "Habilidades necesarias para el puesto",
-    results: "Resultados",
     salaryRange: "Rango salarial",
     salaryRangePlaceholder: "Rango de salario ofrecido",
     satellite: "Satélite",
@@ -1440,6 +1679,29 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle3: "Educador/a ambiental (STEM)",
     jobTitle4: "Coordinador/a de Limpiezas de Ríos",
     
+    // Job descriptions
+    jobDesc1: "Lidera iniciativas de reforestación urbana en Berlín, gestionando proyectos de plantación de árboles, coordinando con comunidades locales y desarrollando espacios verdes sostenibles. Trabajarás con científicos ambientales, planificadores urbanos y voluntarios para crear entornos urbanos más saludables.",
+    jobDesc2: "Analiza datos de calidad del aire usando Python y herramientas GIS, monitorea redes de sensores en París y crea informes para responsables de políticas ambientales. Trabajarás con científicos de datos e ingenieros ambientales para mejorar los sistemas de monitoreo de calidad del aire.",
+    jobDesc3: "Desarrolla y entrega programas de educación ambiental basados en STEM en Madrid, enseñando a estudiantes sobre energía solar, robótica y sostenibilidad. Crearás currículos atractivos y trabajarás con escuelas para promover la conciencia ambiental.",
+    jobDesc4: "Coordina operaciones de limpieza de ríos en Milán, gestionando equipos de voluntarios, asegurando protocolos de seguridad y organizando iniciativas de recolección de residuos. Trabajarás con organizaciones ambientales y autoridades locales para proteger los ecosistemas acuáticos.",
+    
+    // Technical tags
+    sensores: "sensores",
+    silvicultura: "silvicultura",
+    biodiversidad: "biodiversidad",
+    gestióndeproyectos: "gestión de proyectos",
+    didáctica: "didáctica",
+    energíasolar: "energía solar",
+    robóticaeducativa: "robótica educativa",
+    gestióndevoluntariado: "gestión de voluntariado",
+    residuos: "residuos",
+    seguridad: "seguridad",
+    python: "Python",
+    gis: "GIS",
+    
+    // Interface translations
+    searchPlaceholderEn: "Buscar trabajos...",
+    
     // Admin panel titles
     adminPanelTitle: "Panel de Administración",
     adminPanelDescription: "Gestiona eventos, proyectos y personas usuarias de EcoNexo",
@@ -1505,6 +1767,278 @@ const DICTS: Record<Locale, Dict> = {
     southernEurope: "Europa del Sur",
     easternEurope: "Europa del Este",
   },
+  fr: {
+    // Job titles
+    jobTitle1: "Spécialiste en Reboisement Urbain",
+    jobTitle2: "Analyste de Données de Qualité de l'Air",
+    jobTitle3: "Éducateur Environnemental (STEM)",
+    jobTitle4: "Coordinateur de Nettoyage de Rivières",
+    
+    // Job descriptions
+    jobDesc1: "Dirigez les initiatives de reboisement urbain à Berlin, gérez les projets de plantation d'arbres, coordonnez avec les communautés locales et développez des espaces verts durables. Vous travaillerez avec des scientifiques environnementaux, des urbanistes et des bénévoles pour créer des environnements urbains plus sains.",
+    jobDesc2: "Analysez les données de qualité de l'air en utilisant Python et les outils GIS, surveillez les réseaux de capteurs à Paris et créez des rapports pour les décideurs politiques environnementaux. Vous travaillerez avec des scientifiques de données et des ingénieurs environnementaux pour améliorer les systèmes de surveillance de la qualité de l'air.",
+    jobDesc3: "Développez et livrez des programmes d'éducation environnementale basés sur STEM à Madrid, enseignez aux étudiants l'énergie solaire, la robotique et la durabilité. Vous créerez des programmes d'études engageants et travaillerez avec les écoles pour promouvoir la sensibilisation environnementale.",
+    jobDesc4: "Coordonnez les opérations de nettoyage de rivières à Milan, gérez les équipes de bénévoles, assurez les protocoles de sécurité et organisez les initiatives de collecte de déchets. Vous travaillerez avec des organisations environnementales et les autorités locales pour protéger les écosystèmes aquatiques.",
+    
+    // Technical tags
+    sensores: "capteurs",
+    silvicultura: "sylviculture",
+    biodiversidad: "biodiversité",
+    gestióndeproyectos: "gestion de projet",
+    didáctica: "pédagogie",
+    energíasolar: "énergie solaire",
+    robóticaeducativa: "robotique éducative",
+    gestióndevoluntariado: "gestion du bénévolat",
+    residuos: "déchets",
+    seguridad: "sécurité",
+    python: "Python",
+    gis: "GIS",
+    
+    // Interface translations
+    searchPlaceholderEn: "Rechercher des emplois...",
+    cityLabel: "Ville",
+    contractLabel: "Type de contrat",
+    contract_full_time: "Temps plein",
+    contract_part_time: "Temps partiel",
+    contract_contract: "Contrat",
+    contract_internship: "Stage",
+    remoteOnly: "Télétravail uniquement",
+    yearsExp: "années d'expérience",
+    applyBtn: "Postuler",
+    saveBtn: "Sauvegarder",
+    jobPostingConditions: "Conditions de Publication",
+    jobPostingInfo: "Informations de publication",
+    conductGuidelines: "Directives de Conduite",
+    conductGuidelinesText: "Maintenez un environnement respectueux et constructif",
+    createJobOffer: "Créer une Offre d'Emploi",
+    
+    // Chat Rules
+    chatRules: "Règles Du Chat",
+    chatRule1: "Respecte Tous Les Participants",
+    chatRule2: "Garde Les Conversations Pertinentes",
+    chatRule3: "Ne Partage Pas D'Informations Personnelles",
+    chatRule4: "Utilise Un Langage Approprié",
+    chatRule5: "Pas De Spam",
+    chatRule6: "Sois Constructif Dans Tes Commentaires",
+    chatRule7: "Signale Le Contenu Inapproprié",
+    chatRule8: "Profite Et Apprends",
+    chatRulesFooter: "Suivre Ces Règles Crée Une Communauté Positive",
+    chatRulesIntro: "Pour Maintenir Un Environnement Positif, Veuillez Suivre Ces Règles:",
+    chatRulesTitle: "Règles De La Communauté",
+    
+    // Chat Recommendations
+    recommendations: "Recommandations",
+    popularDiscussions: "Discussions Populaires",
+    joinActiveConversations: "Rejoins Les Conversations Actives",
+    newProjects: "Nouveaux Projets",
+    discoverLatestInitiatives: "Découvre Les Dernières Initiatives",
+    eventsNearYou: "Événements Près De Toi",
+    findLocalEvents: "Trouve Des Événements Locaux",
+  },
+  it: {
+    // Job titles
+    jobTitle1: "Specialista in Riforestazione Urbana",
+    jobTitle2: "Analista Dati Qualità dell'Aria",
+    jobTitle3: "Educatore Ambientale (STEM)",
+    jobTitle4: "Coordinatore Pulizia Fiumi",
+    
+    // Job descriptions
+    jobDesc1: "Dirigi le iniziative di riforestazione urbana a Berlino, gestisci progetti di piantagione di alberi, coordina con le comunità locali e sviluppa spazi verdi sostenibili. Lavorerai con scienziati ambientali, urbanisti e volontari per creare ambienti urbani più sani.",
+    jobDesc2: "Analizza i dati sulla qualità dell'aria utilizzando Python e strumenti GIS, monitora le reti di sensori a Parigi e crea report per i responsabili delle politiche ambientali. Lavorerai con scienziati dei dati e ingegneri ambientali per migliorare i sistemi di monitoraggio della qualità dell'aria.",
+    jobDesc3: "Sviluppa e consegna programmi di educazione ambientale basati su STEM a Madrid, insegnando agli studenti energia solare, robotica e sostenibilità. Creerai curricula coinvolgenti e lavorerai con le scuole per promuovere la consapevolezza ambientale.",
+    jobDesc4: "Coordina le operazioni di pulizia dei fiumi a Milano, gestisci squadre di volontari, assicura protocolli di sicurezza e organizza iniziative di raccolta rifiuti. Lavorerai con organizzazioni ambientali e autorità locali per proteggere gli ecosistemi acquatici.",
+    
+    // Technical tags
+    sensores: "sensori",
+    silvicultura: "silvicoltura",
+    biodiversidad: "biodiversità",
+    gestióndeproyectos: "gestione progetti",
+    didáctica: "didattica",
+    energíasolar: "energia solare",
+    robóticaeducativa: "robotica educativa",
+    gestióndevoluntariado: "gestione volontariato",
+    residuos: "rifiuti",
+    seguridad: "sicurezza",
+    python: "Python",
+    gis: "GIS",
+    
+    // Interface translations
+    searchPlaceholderEn: "Cerca lavori...",
+    cityLabel: "Città",
+    contractLabel: "Tipo di contratto",
+    contract_full_time: "Tempo pieno",
+    contract_part_time: "Part-time",
+    contract_contract: "Contratto",
+    contract_internship: "Stage",
+    remoteOnly: "Solo remoto",
+    yearsExp: "anni di esperienza",
+    applyBtn: "Candidati",
+    saveBtn: "Salva",
+    jobPostingConditions: "Condizioni di Pubblicazione",
+    jobPostingInfo: "Informazioni di pubblicazione",
+    conductGuidelines: "Linee Guida di Condotta",
+    conductGuidelinesText: "Mantieni un ambiente rispettoso e costruttivo",
+    createJobOffer: "Crea Offerta di Lavoro",
+    
+    // Chat Rules
+    chatRules: "Regole Della Chat",
+    chatRule1: "Rispetta Tutti I Partecipanti",
+    chatRule2: "Mantieni Le Conversazioni Rilevanti",
+    chatRule3: "Non Condividere Informazioni Personali",
+    chatRule4: "Usa Un Linguaggio Appropriato",
+    chatRule5: "Niente Spam",
+    chatRule6: "Sii Costruttivo Nei Tuoi Commenti",
+    chatRule7: "Segnala Contenuti Inappropriati",
+    chatRule8: "Divertiti E Impara",
+    chatRulesFooter: "Seguire Queste Regole Crea Una Comunità Positiva",
+    chatRulesIntro: "Per Mantenere Un Ambiente Positivo, Segui Queste Regole:",
+    chatRulesTitle: "Regole Della Comunità",
+    
+    // Chat Recommendations
+    recommendations: "Raccomandazioni",
+    popularDiscussions: "Discussioni Popolari",
+    joinActiveConversations: "Unisciti Alle Conversazioni Attive",
+    newProjects: "Nuovi Progetti",
+    discoverLatestInitiatives: "Scopri Le Ultime Iniziative",
+    eventsNearYou: "Eventi Vicino A Te",
+    findLocalEvents: "Trova Eventi Locali",
+  },
+  pl: {
+    // Job titles
+    jobTitle1: "Specjalista ds. Reforestacji Miejskiej",
+    jobTitle2: "Analityk Danych Jakości Powietrza",
+    jobTitle3: "Edukator Środowiskowy (STEM)",
+    jobTitle4: "Koordynator Czyszczenia Rzek",
+    
+    // Job descriptions
+    jobDesc1: "Kieruj inicjatywami reforestacji miejskiej w Berlinie, zarządzaj projektami sadzenia drzew, koordynuj z lokalnymi społecznościami i rozwijaj zrównoważone tereny zielone. Będziesz pracować z naukowcami środowiskowymi, urbanistami i wolontariuszami, aby tworzyć zdrowsze środowiska miejskie.",
+    jobDesc2: "Analizuj dane dotyczące jakości powietrza używając Pythona i narzędzi GIS, monitoruj sieci czujników w Paryżu i twórz raporty dla decydentów polityki środowiskowej. Będziesz pracować z analitykami danych i inżynierami środowiskowymi, aby ulepszać systemy monitorowania jakości powietrza.",
+    jobDesc3: "Rozwijaj i dostarczaj programy edukacji środowiskowej oparte na STEM w Madrycie, ucząc studentów o energii słonecznej, robotyce i zrównoważonym rozwoju. Będziesz tworzyć angażujące programy nauczania i pracować ze szkołami, aby promować świadomość środowiskową.",
+    jobDesc4: "Koordynuj operacje czyszczenia rzek w Mediolanie, zarządzaj zespołami wolontariuszy, zapewniaj protokoły bezpieczeństwa i organizuj inicjatywy zbierania odpadów. Będziesz pracować z organizacjami środowiskowymi i lokalnymi władzami, aby chronić ekosystemy wodne.",
+    
+    // Technical tags
+    sensores: "czujniki",
+    silvicultura: "leśnictwo",
+    biodiversidad: "bioróżnorodność",
+    gestióndeproyectos: "zarządzanie projektami",
+    didáctica: "dydaktyka",
+    energíasolar: "energia słoneczna",
+    robóticaeducativa: "robotyka edukacyjna",
+    gestióndevoluntariado: "zarządzanie wolontariatem",
+    residuos: "odpady",
+    seguridad: "bezpieczeństwo",
+    python: "Python",
+    gis: "GIS",
+    
+    // Interface translations
+    searchPlaceholderEn: "Szukaj pracy...",
+    cityLabel: "Miasto",
+    contractLabel: "Typ umowy",
+    contract_full_time: "Pełny etat",
+    contract_part_time: "Część etatu",
+    contract_contract: "Umowa",
+    contract_internship: "Staż",
+    remoteOnly: "Tylko zdalnie",
+    yearsExp: "lat doświadczenia",
+    applyBtn: "Aplikuj",
+    saveBtn: "Zapisz",
+    jobPostingConditions: "Warunki Publikacji",
+    jobPostingInfo: "Informacje o publikacji",
+    conductGuidelines: "Wytyczne Postępowania",
+    conductGuidelinesText: "Utrzymuj szanujące i konstruktywne środowisko",
+    createJobOffer: "Utwórz Ofertę Pracy",
+    
+    // Chat Rules
+    chatRules: "Zasady Czatu",
+    chatRule1: "Szanuj Wszystkich Uczestników",
+    chatRule2: "Utrzymuj Rozmowy Na Temat",
+    chatRule3: "Nie Udostępniaj Informacji Osobistych",
+    chatRule4: "Używaj Odpowiedniego Języka",
+    chatRule5: "Brak Spamu",
+    chatRule6: "Bądź Konstruktywny W Swoich Komentarzach",
+    chatRule7: "Zgłaszaj Nieodpowiednie Treści",
+    chatRule8: "Ciesz Się I Ucz Się",
+    chatRulesFooter: "Przestrzeganie Tych Zasad Tworzy Pozytywną Społeczność",
+    chatRulesIntro: "Aby Utrzymać Pozytywne Środowisko, Proszę Przestrzegać Tych Zasad:",
+    chatRulesTitle: "Zasady Społeczności",
+    
+    // Chat Recommendations
+    recommendations: "Rekomendacje",
+    popularDiscussions: "Popularne Dyskusje",
+    joinActiveConversations: "Dołącz Do Aktywnych Rozmów",
+    newProjects: "Nowe Projekty",
+    discoverLatestInitiatives: "Odkryj Najnowsze Inicjatywy",
+    eventsNearYou: "Wydarzenia W Twojej Okolicy",
+    findLocalEvents: "Znajdź Lokalne Wydarzenia",
+  },
+  nl: {
+    // Job titles
+    jobTitle1: "Stedelijke Herbebossing Specialist",
+    jobTitle2: "Luchtkwaliteit Data Analist",
+    jobTitle3: "Milieu Educateur (STEM)",
+    jobTitle4: "Rivier Opruiming Coördinator",
+    
+    // Job descriptions
+    jobDesc1: "Leid stedelijke herbebossingsinitiatieven in Berlijn, beheer boomplantprojecten, coördineer met lokale gemeenschappen en ontwikkel duurzame groene ruimtes. Je werkt samen met milieuwetenschappers, stadsplanners en vrijwilligers om gezondere stedelijke omgevingen te creëren.",
+    jobDesc2: "Analyseer luchtkwaliteitsgegevens met Python en GIS-tools, monitor sensornetwerken in Parijs en maak rapporten voor milieubeleidsmakers. Je werkt samen met datawetenschappers en milieu-ingenieurs om luchtkwaliteitsmonitoringssystemen te verbeteren.",
+    jobDesc3: "Ontwikkel en lever STEM-gebaseerde milieu-educatieprogramma's in Madrid, leer studenten over zonne-energie, robotica en duurzaamheid. Je creëert boeiende curricula en werkt samen met scholen om milieubewustzijn te bevorderen.",
+    jobDesc4: "Coördineer rivieropruimingsoperaties in Milaan, beheer vrijwilligersteams, zorg voor veiligheidsprotocollen en organiseer afvalinzamelingsinitiatieven. Je werkt samen met milieuorganisaties en lokale autoriteiten om waterecosystemen te beschermen.",
+    
+    // Technical tags
+    sensores: "sensoren",
+    silvicultura: "bosbouw",
+    biodiversidad: "biodiversiteit",
+    gestióndeproyectos: "projectmanagement",
+    didáctica: "didactiek",
+    energíasolar: "zonne-energie",
+    robóticaeducativa: "educatieve robotica",
+    gestióndevoluntariado: "vrijwilligersmanagement",
+    residuos: "afval",
+    seguridad: "veiligheid",
+    python: "Python",
+    gis: "GIS",
+    
+    // Interface translations
+    searchPlaceholderEn: "Zoek banen...",
+    cityLabel: "Stad",
+    contractLabel: "Contracttype",
+    contract_full_time: "Volledig",
+    contract_part_time: "Deeltijd",
+    contract_contract: "Contract",
+    contract_internship: "Stage",
+    remoteOnly: "Alleen op afstand",
+    yearsExp: "jaar ervaring",
+    applyBtn: "Solliciteer",
+    saveBtn: "Opslaan",
+    jobPostingConditions: "Vacature Voorwaarden",
+    jobPostingInfo: "Vacature informatie",
+    conductGuidelines: "Gedragsrichtlijnen",
+    conductGuidelinesText: "Houd een respectvolle en constructieve omgeving",
+    createJobOffer: "Vacature Aanmaken",
+    
+    // Chat Rules
+    chatRules: "Chat Regels",
+    chatRule1: "Respecteer Alle Deelnemers",
+    chatRule2: "Houd Gesprekken Relevant",
+    chatRule3: "Deel Geen Persoonlijke Informatie",
+    chatRule4: "Gebruik Geschikte Taal",
+    chatRule5: "Geen Spam",
+    chatRule6: "Wees Constructief In Je Reacties",
+    chatRule7: "Meld Ongepaste Inhoud",
+    chatRule8: "Geniet En Leer",
+    chatRulesFooter: "Het Volgen Van Deze Regels Creëert Een Positieve Gemeenschap",
+    chatRulesIntro: "Om Een Positieve Omgeving Te Behouden, Volg Deze Regels:",
+    chatRulesTitle: "Gemeenschapsregels",
+    
+    // Chat Recommendations
+    recommendations: "Aanbevelingen",
+    popularDiscussions: "Populaire Discussies",
+    joinActiveConversations: "Sluit Je Aan Bij Actieve Gesprekken",
+    newProjects: "Nieuwe Projecten",
+    discoverLatestInitiatives: "Ontdek De Nieuwste Initiatieven",
+    eventsNearYou: "Evenementen Bij Je In De Buurt",
+    findLocalEvents: "Vind Lokale Evenementen",
+  },
 };
 
 const I18nContext = createContext<{ t: (k: string) => string; locale: Locale; setLocale: (l: Locale) => void } | null>(null);
@@ -1516,12 +2050,12 @@ export function locationLabel(original: string, locale: Locale) {
   if (locale === "es") return original;
   
   const locationMap: Record<string, Record<Locale, string>> = {
-    "Berlín": { en: "Berlin", de: "Berlin", es: "Berlín" },
-    "Madrid": { en: "Madrid", de: "Madrid", es: "Madrid" },
-    "París": { en: "Paris", de: "Paris", es: "París" },
-    "Alemania": { en: "Germany", de: "Deutschland", es: "Alemania" },
-    "España": { en: "Spain", de: "Spanien", es: "España" },
-    "Francia": { en: "France", de: "Frankreich", es: "Francia" },
+    "Berlín": { en: "Berlin", de: "Berlin", es: "Berlín", fr: "Berlin", it: "Berlino", pl: "Berlin", nl: "Berlijn" },
+    "Madrid": { en: "Madrid", de: "Madrid", es: "Madrid", fr: "Madrid", it: "Madrid", pl: "Madryt", nl: "Madrid" },
+    "París": { en: "Paris", de: "Paris", es: "París", fr: "Paris", it: "Parigi", pl: "Paryż", nl: "Parijs" },
+    "Alemania": { en: "Germany", de: "Deutschland", es: "Alemania", fr: "Allemagne", it: "Germania", pl: "Niemcy", nl: "Duitsland" },
+    "España": { en: "Spain", de: "Spanien", es: "España", fr: "Espagne", it: "Spagna", pl: "Hiszpania", nl: "Spanje" },
+    "Francia": { en: "France", de: "Frankreich", es: "Francia", fr: "France", it: "Francia", pl: "Francja", nl: "Frankrijk" },
   };
   
   return locationMap[original]?.[locale] || original;
@@ -1531,12 +2065,12 @@ export function categoryLabel(category: string, locale: Locale) {
   if (locale === "es") return category;
   
   const categoryMap: Record<string, Record<Locale, string>> = {
-  "Medio ambiente": { en: "Environment", de: "Umwelt", es: "Medio ambiente" },
-  "Educación": { en: "Education", de: "Bildung", es: "Educación" },
-  "Comunidad": { en: "Community", de: "Gemeinschaft", es: "Comunidad" },
-    "Salud": { en: "Health", de: "Gesundheit", es: "Salud" },
-  "Océanos": { en: "Oceans", de: "Ozeane", es: "Océanos" },
-  "Alimentación": { en: "Food", de: "Ernährung", es: "Alimentación" },
+  "Medio ambiente": { en: "Environment", de: "Umwelt", es: "Medio ambiente", fr: "Environnement", it: "Ambiente", pl: "Środowisko", nl: "Milieu" },
+  "Educación": { en: "Education", de: "Bildung", es: "Educación", fr: "Éducation", it: "Educazione", pl: "Edukacja", nl: "Onderwijs" },
+  "Comunidad": { en: "Community", de: "Gemeinschaft", es: "Comunidad", fr: "Communauté", it: "Comunità", pl: "Społeczność", nl: "Gemeenschap" },
+    "Salud": { en: "Health", de: "Gesundheit", es: "Salud", fr: "Santé", it: "Salute", pl: "Zdrowie", nl: "Gezondheid" },
+  "Océanos": { en: "Oceans", de: "Ozeane", es: "Océanos", fr: "Océans", it: "Oceani", pl: "Oceany", nl: "Oceanen" },
+  "Alimentación": { en: "Food", de: "Ernährung", es: "Alimentación", fr: "Alimentation", it: "Alimentazione", pl: "Żywność", nl: "Voeding" },
 };
 
   return categoryMap[category]?.[locale] || category;
@@ -1562,9 +2096,9 @@ export function impactTagLabel(original: string, locale: Locale) {
   if (locale === "es") return original;
   
   const impactMap: Record<string, Record<Locale, string>> = {
-    "Alto impacto": { en: "High impact", de: "Hohe Wirkung", es: "Alto impacto" },
-    "Medio impacto": { en: "Medium impact", de: "Mittlere Wirkung", es: "Medio impacto" },
-    "Bajo impacto": { en: "Low impact", de: "Niedrige Wirkung", es: "Bajo impacto" },
+    "Alto impacto": { en: "High impact", de: "Hohe Wirkung", es: "Alto impacto", fr: "Impact élevé", it: "Impatto alto", pl: "Wysoki wpływ", nl: "Hoge impact" },
+    "Medio impacto": { en: "Medium impact", de: "Mittlere Wirkung", es: "Medio impacto", fr: "Impact moyen", it: "Impatto medio", pl: "Średni wpływ", nl: "Gemiddelde impact" },
+    "Bajo impacto": { en: "Low impact", de: "Niedrige Wirkung", es: "Bajo impacto", fr: "Impact faible", it: "Impatto basso", pl: "Niski wpływ", nl: "Lage impact" },
   };
   
   return impactMap[original]?.[locale] || original;

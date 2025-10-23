@@ -163,7 +163,12 @@ export default function JobsPage() {
     cv: "", 
     motivations: "", 
     expertiseAreas: "", 
-    motivationLetter: null as File | null 
+    motivationLetter: null as File | null,
+    languages: {
+      spanish: { level: "", native: false },
+      english: { level: "", native: false },
+      german: { level: "", native: false }
+    }
   });
   const toggleSave = (id: string) => setSavedJobs((s)=> ({ ...s, [id]: !s[id] }));
   const submitApplication = async () => {
@@ -175,7 +180,12 @@ export default function JobsPage() {
       cv: "", 
       motivations: "", 
       expertiseAreas: "", 
-      motivationLetter: null 
+      motivationLetter: null,
+      languages: {
+        spanish: { level: "", native: false },
+        english: { level: "", native: false },
+        german: { level: "", native: false }
+      }
     });
   };
 
@@ -340,6 +350,138 @@ export default function JobsPage() {
                   placeholder={t("expertiseAreasPlaceholder")}
                   required
                 />
+              </div>
+
+              {/* Lenguajes Naturales */}
+              <div>
+                <label className="block text-sm font-medium mb-3">{t("naturalLanguages")}</label>
+                <div className="space-y-4">
+                  {/* Español */}
+                  <div className="border rounded-lg p-4 dark:border-slate-600">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">🇪🇸</span>
+                        <span className="font-medium">{t("spanish")}</span>
+                      </div>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={applicant.languages.spanish.native}
+                          onChange={(e) => setApplicant({
+                            ...applicant,
+                            languages: {
+                              ...applicant.languages,
+                              spanish: { ...applicant.languages.spanish, native: e.target.checked }
+                            }
+                          })}
+                          className="rounded"
+                        />
+                        <span className="text-sm text-slate-600 dark:text-slate-400">{t("nativeLanguage")}</span>
+                      </label>
+                    </div>
+                    <select
+                      value={applicant.languages.spanish.level}
+                      onChange={(e) => setApplicant({
+                        ...applicant,
+                        languages: {
+                          ...applicant.languages,
+                          spanish: { ...applicant.languages.spanish, level: e.target.value }
+                        }
+                      })}
+                      className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
+                    >
+                      <option value="">{t("selectLevel")}</option>
+                      <option value="beginner">{t("beginner")}</option>
+                      <option value="intermediate">{t("intermediate")}</option>
+                      <option value="advanced">{t("advanced")}</option>
+                      <option value="fluent">{t("fluent")}</option>
+                    </select>
+                  </div>
+
+                  {/* Inglés */}
+                  <div className="border rounded-lg p-4 dark:border-slate-600">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">🇬🇧</span>
+                        <span className="font-medium">{t("english")}</span>
+                      </div>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={applicant.languages.english.native}
+                          onChange={(e) => setApplicant({
+                            ...applicant,
+                            languages: {
+                              ...applicant.languages,
+                              english: { ...applicant.languages.english, native: e.target.checked }
+                            }
+                          })}
+                          className="rounded"
+                        />
+                        <span className="text-sm text-slate-600 dark:text-slate-400">{t("nativeLanguage")}</span>
+                      </label>
+                    </div>
+                    <select
+                      value={applicant.languages.english.level}
+                      onChange={(e) => setApplicant({
+                        ...applicant,
+                        languages: {
+                          ...applicant.languages,
+                          english: { ...applicant.languages.english, level: e.target.value }
+                        }
+                      })}
+                      className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
+                    >
+                      <option value="">{t("selectLevel")}</option>
+                      <option value="beginner">{t("beginner")}</option>
+                      <option value="intermediate">{t("intermediate")}</option>
+                      <option value="advanced">{t("advanced")}</option>
+                      <option value="fluent">{t("fluent")}</option>
+                    </select>
+                  </div>
+
+                  {/* Alemán */}
+                  <div className="border rounded-lg p-4 dark:border-slate-600">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">🇩🇪</span>
+                        <span className="font-medium">{t("german")}</span>
+                      </div>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={applicant.languages.german.native}
+                          onChange={(e) => setApplicant({
+                            ...applicant,
+                            languages: {
+                              ...applicant.languages,
+                              german: { ...applicant.languages.german, native: e.target.checked }
+                            }
+                          })}
+                          className="rounded"
+                        />
+                        <span className="text-sm text-slate-600 dark:text-slate-400">{t("nativeLanguage")}</span>
+                      </label>
+                    </div>
+                    <select
+                      value={applicant.languages.german.level}
+                      onChange={(e) => setApplicant({
+                        ...applicant,
+                        languages: {
+                          ...applicant.languages,
+                          german: { ...applicant.languages.german, level: e.target.value }
+                        }
+                      })}
+                      className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
+                    >
+                      <option value="">{t("selectLevel")}</option>
+                      <option value="beginner">{t("beginner")}</option>
+                      <option value="intermediate">{t("intermediate")}</option>
+                      <option value="advanced">{t("advanced")}</option>
+                      <option value="fluent">{t("fluent")}</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
               {/* Carta de Motivación PDF */}

@@ -52,13 +52,25 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     try {
       const { error } = await signInWithOAuth(provider);
       if (error) {
-        setError(error);
+        if (error === "Supabase not configured") {
+          setError("Configuración de Supabase requerida. Por favor, configura las variables de entorno NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en tu archivo .env.local");
+        } else {
+          setError(error);
+        }
       }
     } catch (err) {
       setError("Error inesperado. Intenta de nuevo.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoogleAuth = async () => {
+    await handleOAuthAuth("google");
+  };
+
+  const handleOutlookAuth = async () => {
+    await handleOAuthAuth("azure");
   };
 
   return (
@@ -111,7 +123,10 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               <div className="flex items-center gap-2">
                 <span>⚠️</span>
-                <span>{error}</span>
+                <div>
+                  <div className="font-semibold">Configuración requerida</div>
+                  <div className="text-sm mt-1">{error}</div>
+                </div>
               </div>
             </div>
           )}
@@ -158,7 +173,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           {/* OAuth Providers */}
           <div className="space-y-3">
             <button
-              onClick={() => handleOAuthAuth("google")}
+              onClick={handleGoogleAuth}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-700 py-2 px-4 rounded-lg border border-gray-300 transition-colors disabled:opacity-50"
             >
@@ -183,7 +198,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             </button>
 
             <button
-              onClick={() => handleOAuthAuth("azure")}
+              onClick={handleOutlookAuth}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
             >
@@ -217,6 +232,38 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 </button>
               </>
             )}
+          </div>
+
+          {/* Help Section */}
+          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-600">
+            <div className="text-center">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                ¿Problemas con la autenticación?
+              </p>
+              <button
+                onClick={() => {
+                  const helpText = `
+🔧 CONFIGURACIÓN DE SUPABASE REQUERIDA
+
+Para usar la autenticación OAuth (Google/Microsoft), necesitas configurar Supabase:
+
+1. Ve a https://supabase.com y crea un proyecto
+2. Obtén tu URL y clave anónima
+3. Crea un archivo .env.local con:
+   NEXT_PUBLIC_SUPABASE_URL=tu_url_aqui
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_aqui
+
+📋 Instrucciones completas en: SUPABASE_SETUP_INSTRUCTIONS.md
+
+🚀 Alternativa: Usa el modo demo (datos en localStorage)
+                  `;
+                  alert(helpText);
+                }}
+                className="text-xs text-blue-600 hover:text-blue-700 font-medium underline"
+              >
+                Ver instrucciones de configuración
+              </button>
+            </div>
           </div>
         </div>
       </div>

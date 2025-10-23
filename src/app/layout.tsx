@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono, Inter_Tight } from "next/font/google";
 import "./globals.css";
+import "../styles/global-config.css";
 import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import { AuthProvider } from "@/lib/auth";
@@ -10,7 +11,6 @@ import CreateEventFAB from "@/components/CreateEventFAB";
 import HeaderNav from "@/components/HeaderNav";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import SimpleIntro from "@/components/SimpleIntro";
-import ThemeToggle from "@/components/ThemeToggle";
 import PlausibleProvider from "next-plausible";
 import DynamicManifest from "@/components/DynamicManifest";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -49,7 +49,6 @@ export default function RootLayout({
                   <DynamicManifest />
                   <SimpleIntro />
                   <LanguageSwitcher />
-                  <ThemeToggle />
                   <HeaderNav />
                   <main className="min-h-screen">{children}</main>
                   <CreateEventFAB />
