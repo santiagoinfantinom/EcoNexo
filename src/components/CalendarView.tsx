@@ -529,7 +529,8 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e15',
       projectId: 'p3',
-      title: locale === 'de' ? 'Herbstpflanzung' : 'Autumn planting',
+      title: locale === 'es' ? 'Plantación otoñal' :
+             locale === 'de' ? 'Herbstpflanzung' : 'Autumn planting',
       date: new Date(2025, 9, 5), // October 5, 2025
       time: '10:00',
       duration: 4,
@@ -589,7 +590,8 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e16',
       projectId: 'p4',
-      title: locale === 'de' ? 'Lebensmittelkonservierungsworkshop' : 'Food preservation workshop',
+      title: locale === 'es' ? 'Taller de conservación de alimentos' :
+             locale === 'de' ? 'Lebensmittelkonservierungsworkshop' : 'Food preservation workshop',
       date: new Date(2025, 9, 12), // October 12, 2025
       time: '14:00',
       duration: 3,
@@ -603,7 +605,8 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     {
       id: 'e17',
       projectId: 'p5',
-      title: locale === 'de' ? 'Herbstwaldreinigung' : 'Autumn forest cleanup',
+      title: locale === 'es' ? 'Limpieza del bosque otoñal' :
+             locale === 'de' ? 'Herbstwaldreinigung' : 'Autumn forest cleanup',
       date: new Date(2025, 9, 19), // October 19, 2025
       time: '09:00',
       duration: 3,

@@ -57,6 +57,12 @@ export default function HeaderNav() {
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
+          href="/calendario"
+        >
+          📅 {t("calendar")}
+        </Link>
+        <Link 
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
           href="/trabajos"
         >
           {t("jobs")}
