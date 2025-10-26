@@ -24,18 +24,55 @@ function GoogleCallbackContent() {
 
       if (!code || !state) {
         setStatus('error');
-        setMessage('Parámetros de autenticación faltantes');
+        setMessage('No puedes acceder directamente a esta página. Por favor, inicia sesión desde la página principal.');
+        
+        // Automatically redirect to home after 3 seconds
+        setTimeout(() => {
+          router.push('/');
+        }, 3000);
         return;
       }
 
       try {
-        const oauthService = createOAuthService();
-        const result = await oauthService.handleGoogleCallback(code, state);
+        // Call the API to exchange code for user info
+        const response = await fetch(`/api/auth/google/callback?code=${code}&state=${state}`);
+        const result = await response.json();
 
         if (result.success && result.user) {
           // Store user data in localStorage
-          localStorage.setItem('econexo_user', JSON.stringify(result.user));
+          const user = result.user;
+          
+          localStorage.setItem('econexo_user', JSON.stringify({
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            picture: user.picture,
+            provider: user.provider,
+          }));
+          
           localStorage.setItem('econexo_auth_provider', 'google');
+          
+          // Store OAuth data
+          localStorage.setItem('oauth_data', JSON.stringify({
+            name: user.name,
+            email: user.email,
+            picture: user.picture,
+            provider: 'google',
+            locale: user.locale || 'es',
+            verified_email: user.verified_email || true,
+          }));
+          
+          // Store profile data with all available fields
+          localStorage.setItem('econexo:profile', JSON.stringify({
+            full_name: user.name || '',
+            first_name: user.given_name || '',
+            last_name: user.family_name || '',
+            email: user.email,
+                   avatar_url: user.picture || '/logo-econexo.png',
+            preferred_language: user.locale || 'es',
+            oauth_provider: 'google',
+            oauth_imported: true,
+          }));
           
           setStatus('success');
           setMessage('¡Autenticación exitosa! Redirigiendo...');

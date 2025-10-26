@@ -67,14 +67,6 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     
     try {
       const oauthService = createOAuthService();
-      
-      // Check if Google OAuth is properly configured
-      if (!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID === 'your_google_client_id_here') {
-        setError("Google OAuth no está configurado. Contacta al administrador para configurar la autenticación con Google.");
-        setIsLoading(false);
-        return;
-      }
-      
       const result = await oauthService.authenticateWithGoogle();
       
       if (!result.success) {
@@ -94,14 +86,6 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     
     try {
       const oauthService = createOAuthService();
-      
-      // Check if Outlook OAuth is properly configured
-      if (!process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID || process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID === 'your_outlook_client_id_here') {
-        setError("Outlook OAuth no está configurado. Contacta al administrador para configurar la autenticación con Outlook.");
-        setIsLoading(false);
-        return;
-      }
-      
       const result = await oauthService.authenticateWithOutlook();
       
       if (!result.success) {
@@ -201,8 +185,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
               {/* Google Button */}
               <button
                 onClick={handleGoogleAuth}
-                disabled={isLoading}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -213,17 +196,17 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 <span className="font-medium text-gray-700 dark:text-gray-200">Google</span>
               </button>
 
-              {/* Outlook Button */}
-              <button
+              {/* Outlook Button - Temporarily disabled */}
+              {/* <button
                 onClick={handleOutlookAuth}
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#0078D4">
                   <path d="M7.462 8.85h9.076c.398 0 .724-.326.724-.724V4.724c0-.398-.326-.724-.724-.724H7.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM7.462 15.15h9.076c.398 0 .724-.326.724-.724v-3.402c0-.398-.326-.724-.724-.724H7.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM2.462 8.85h4.076c.398 0 .724-.326.724-.724V4.724c0-.398-.326-.724-.724-.724H2.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM2.462 15.15h4.076c.398 0 .724-.326.724-.724v-3.402c0-.398-.326-.724-.724-.724H2.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724z"/>
                 </svg>
                 <span className="font-medium text-gray-700 dark:text-gray-200">Microsoft Outlook</span>
-              </button>
+              </button> */}
             </div>
           </div>
 

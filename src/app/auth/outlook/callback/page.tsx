@@ -16,8 +16,43 @@ export default function OutlookCallbackPage() {
 
         if (result.success && result.user) {
           // Store user data in localStorage
-          localStorage.setItem('econexo_user', JSON.stringify(result.user));
+          const user = result.user;
+          
+          localStorage.setItem('econexo_user', JSON.stringify(user));
           localStorage.setItem('econexo_auth_provider', 'outlook');
+          
+          // Store OAuth data
+          localStorage.setItem('oauth_data', JSON.stringify({
+            name: user.name,
+            email: user.email,
+            picture: user.picture,
+            provider: 'outlook',
+            locale: user.locale || 'es',
+            verified_email: true,
+          }));
+          
+          // Parse name into first and last name for Outlook
+          let firstName = '';
+          let lastName = '';
+          if (user.name) {
+            const nameParts = user.name.trim().split(' ');
+            if (nameParts.length > 0) {
+              firstName = nameParts[0];
+              lastName = nameParts.slice(1).join(' ');
+            }
+          }
+          
+          // Store profile data with all available fields
+          localStorage.setItem('econexo:profile', JSON.stringify({
+            full_name: user.name || '',
+            first_name: firstName,
+            last_name: lastName,
+            email: user.email,
+            avatar_url: user.picture || '/logo-econexo.svg',
+            preferred_language: user.locale || 'es',
+            oauth_provider: 'outlook',
+            oauth_imported: true,
+          }));
           
           setStatus('success');
           setMessage('¡Autenticación exitosa! Redirigiendo...');
@@ -29,6 +64,11 @@ export default function OutlookCallbackPage() {
         } else {
           setStatus('error');
           setMessage(result.error || 'Error de autenticación');
+          
+          // Automatically redirect to home after 3 seconds
+          setTimeout(() => {
+            router.push('/');
+          }, 3000);
         }
       } catch (error) {
         console.error('Redirect error:', error);

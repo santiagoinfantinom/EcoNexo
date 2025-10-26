@@ -173,7 +173,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signInWithMagicLink = useCallback(async (email: string) => {
-    if (!isSupabaseConfigured()) return { error: "Supabase not configured" };
+    if (!isSupabaseConfigured()) {
+      // In development mode without Supabase, simulate login with localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem('econexo_user', JSON.stringify({
+          id: 'demo-' + Math.random().toString(36).substring(7),
+          email: email,
+        }));
+        localStorage.setItem('econexo_auth_provider', 'email');
+        // Simulate session
+        window.location.reload();
+      }
+      return { error: null };
+    }
     const supabase = getSupabase();
     const emailRedirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
     const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo } });

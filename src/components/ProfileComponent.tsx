@@ -97,7 +97,7 @@ export default function ProfileComponent() {
     // Profile Content
     about_me: "",
     bio: "",
-    avatar_url: "/logo-econexo.png",
+          avatar_url: "/logo-econexo.png",
     
     // Interests and Skills
     passions: "",
@@ -124,6 +124,8 @@ export default function ProfileComponent() {
   // Load profile data from Supabase or localStorage
   useEffect(() => {
     const loadProfile = async () => {
+      let isFirstLogin = false;
+      
       // Check for OAuth imported data first
       const oauthData = localStorage.getItem('oauth_data');
       if (oauthData) {
@@ -136,7 +138,7 @@ export default function ProfileComponent() {
             ...prev,
             full_name: importedData.name || prev.full_name,
             email: importedData.email || prev.email,
-            avatar_url: importedData.picture || prev.avatar_url,
+                    avatar_url: importedData.picture || '/logo-econexo.png',
             preferred_language: importedData.locale || prev.preferred_language,
             // Mark as imported
             oauth_imported: true,
@@ -150,6 +152,9 @@ export default function ProfileComponent() {
           setSuccessMessage(`✅ Datos importados desde ${importedData.provider === 'google' ? 'Google' : 'Microsoft'}`);
           setTimeout(() => setSuccessMessage(''), 5000);
           
+          // Mark as first login to show edit mode
+          isFirstLogin = true;
+          
         } catch (err) {
           console.error('Error importing OAuth data:', err);
         }
@@ -157,10 +162,36 @@ export default function ProfileComponent() {
       
       if (!user) {
         // Load from localStorage if no user
+        const authProvider = localStorage.getItem('econexo_auth_provider');
         const savedProfile = localStorage.getItem('econexo:profile');
-        if (savedProfile) {
-          setProfileData(JSON.parse(savedProfile));
+        
+        if (authProvider && savedProfile) {
+          // User is logged in via OAuth but not via Supabase
+          const parsedProfile = JSON.parse(savedProfile);
+          console.log('📥 Cargando perfil desde localStorage:', parsedProfile);
+          
+          // Check if this is a first login by checking oauth_imported flag
+          if (parsedProfile.oauth_imported && parsedProfile.oauth_imported === true) {
+            isFirstLogin = true;
+            // Remove the flag so it doesn't trigger again
+            parsedProfile.oauth_imported = false;
+            localStorage.setItem('econexo:profile', JSON.stringify(parsedProfile));
+          }
+          
+          setProfileData(prev => ({
+            ...prev,
+            ...parsedProfile,
+                   avatar_url: parsedProfile.avatar_url || '/logo-econexo.png'
+          }));
         }
+        
+        setIsLoading(false);
+        
+        // Show edit mode on first login
+        if (isFirstLogin) {
+          setIsEditing(true);
+        }
+        
         return;
       }
 
@@ -191,7 +222,7 @@ export default function ProfileComponent() {
           setProfileData(prev => ({
             ...prev,
             ...data,
-            avatar_url: data.avatar_url || "/logo-econexo.png"
+                   avatar_url: data.avatar_url || "/logo-econexo.png"
           }));
         }
       } catch (err) {
@@ -297,7 +328,7 @@ export default function ProfileComponent() {
           setProfileData(prev => ({
             ...prev,
             ...data,
-            avatar_url: data.avatar_url || "/logo-econexo.png"
+                   avatar_url: data.avatar_url || "/logo-econexo.png"
           }));
         }
       } catch (err) {
@@ -339,8 +370,13 @@ export default function ProfileComponent() {
     );
   }
 
+  // Check if user is logged in via OAuth (localStorage)
+  const isOAuthLoggedIn = typeof window !== 'undefined' && 
+    localStorage.getItem('econexo_auth_provider') && 
+    localStorage.getItem('econexo:profile');
+  
   // Show auth prompt if not logged in
-  if (!user) {
+  if (!user && !isOAuthLoggedIn) {
     return (
       <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6 text-white">
@@ -480,7 +516,7 @@ export default function ProfileComponent() {
         {/* Profile Photo Section */}
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
-            {profileData.avatar_url && profileData.avatar_url !== "/logo-econexo.png" ? (
+                            {profileData.avatar_url && profileData.avatar_url !== "/logo-econexo.png" ? (
               <img
                 src={profileData.avatar_url}
                 alt="Profile"
@@ -517,7 +553,7 @@ export default function ProfileComponent() {
               >
                 {t("changePhoto")}
               </button>
-              {profileData.avatar_url && profileData.avatar_url !== "/logo-econexo.png" && (
+                          {profileData.avatar_url && profileData.avatar_url !== "/logo-econexo.png" && (
                 <button
                   onClick={() => {
                     const updatedProfile = { ...profileData, avatar_url: '/logo-econexo.png' };
@@ -618,11 +654,10 @@ export default function ProfileComponent() {
                 disabled={!isEditing}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 disabled:bg-gray-100 dark:disabled:bg-slate-600"
               >
-                <option value="">{t("selectPronouns")}</option>
-                <option value="él/ella">{t("heShe")}</option>
-                <option value="they/them">{t("theyThem")}</option>
-                <option value="er/sie">{t("erSie")}</option>
-                <option value="other">{t("other")}</option>
+                <option value="">Seleccionar pronombres</option>
+                <option value="El">El</option>
+                <option value="Ella">Ella</option>
+                <option value="Elle">Elle</option>
               </select>
             </div>
             <div>
