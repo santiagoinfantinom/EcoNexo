@@ -604,6 +604,17 @@ const DICTS: Record<Locale, Dict> = {
     join: "Join",
     createdEvent: "Event Created",
     eventCreatedMessage: "was created for",
+    beVolunteer: "Become a volunteer",
+    description: "Description",
+    impact: "Impact",
+    raised: "raised",
+    reached: "reached",
+    goal: "Goal",
+    volunteers: "Volunteers",
+    progressReached: "Progress reached",
+    donatePaypal: "Donate with PayPal",
+    donateStripe: "Donate with Stripe",
+    backToMap: "Back to map",
   },
   de: {
   
@@ -1173,6 +1184,17 @@ const DICTS: Record<Locale, Dict> = {
     allCities: "Alle",
     allContracts: "Alle",
     results: "Ergebnisse",
+    beVolunteer: "Freiwilliger werden",
+    description: "Beschreibung",
+    impact: "Auswirkung",
+    raised: "gesammelt",
+    reached: "erreicht",
+    goal: "Ziel",
+    volunteers: "Freiwillige",
+    progressReached: "Fortschritt erreicht",
+    donatePaypal: "Mit PayPal spenden",
+    donateStripe: "Mit Stripe spenden",
+    backToMap: "Zurück zur Karte",
   },
   es: {
   
@@ -2136,6 +2158,13 @@ export function impactTagLabel(original: string, locale: Locale) {
     "Alto impacto": { en: "High impact", de: "Hohe Wirkung", es: "Alto impacto", fr: "Impact élevé", it: "Impatto alto", pl: "Wysoki wpływ", nl: "Hoge impact" },
     "Medio impacto": { en: "Medium impact", de: "Mittlere Wirkung", es: "Medio impacto", fr: "Impact moyen", it: "Impatto medio", pl: "Średni wpływ", nl: "Gemiddelde impact" },
     "Bajo impacto": { en: "Low impact", de: "Niedrige Wirkung", es: "Bajo impacto", fr: "Impact faible", it: "Impatto basso", pl: "Niski wpływ", nl: "Lage impact" },
+    "Huertos urbanos": { en: "Urban gardens", de: "Städtische Gärten", es: "Huertos urbanos", fr: "Jardins urbains", it: "Orti urbani", pl: "Ogrody miejskie", nl: "Stedelijke tuinen" },
+    "Comunidad": { en: "Community", de: "Gemeinschaft", es: "Comunidad", fr: "Communauté", it: "Comunità", pl: "Społeczność", nl: "Gemeenschap" },
+    "Medio ambiente": { en: "Environment", de: "Umwelt", es: "Medio ambiente", fr: "Environnement", it: "Ambiente", pl: "Środowisko", nl: "Milieu" },
+    "Educación": { en: "Education", de: "Bildung", es: "Educación", fr: "Éducation", it: "Educazione", pl: "Edukacja", nl: "Onderwijs" },
+    "Salud": { en: "Health", de: "Gesundheit", es: "Salud", fr: "Santé", it: "Salute", pl: "Zdrowie", nl: "Gezondheid" },
+    "Océanos": { en: "Oceans", de: "Ozeane", es: "Océanos", fr: "Océans", it: "Oceani", pl: "Oceany", nl: "Oceanen" },
+    "Alimentación": { en: "Food", de: "Nahrung", es: "Alimentación", fr: "Alimentation", it: "Alimentazione", pl: "Żywność", nl: "Voedsel" },
   };
   
   return impactMap[original]?.[locale] || original;
