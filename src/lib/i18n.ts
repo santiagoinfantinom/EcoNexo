@@ -1184,6 +1184,7 @@ const DICTS: Record<Locale, Dict> = {
     allCities: "Alle",
     allContracts: "Alle",
     results: "Ergebnisse",
+    calendar: "Kalender",
     beVolunteer: "Freiwilliger werden",
     description: "Beschreibung",
     impact: "Auswirkung",
