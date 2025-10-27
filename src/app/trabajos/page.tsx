@@ -401,28 +401,28 @@ export default function JobsPage() {
       </div>
 
       {applyFor && (
-        <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4">{t("applyForJob")}: {applyFor.title}</h2>
+        <div className="fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4">
+          <div className="bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto border border-slate-700">
+            <h2 className="text-xl font-bold mb-4 text-white">{t("applyForJob")}: {applyFor.title}</h2>
             <div className="space-y-4">
               {/* Información Personal */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">{t("yourName")} *</label>
+                  <label className="block text-sm font-medium mb-1 text-white">{t("yourName")} *</label>
                   <input 
                     value={applicant.name} 
                     onChange={(e)=>setApplicant({...applicant,name:e.target.value})} 
-                    className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" 
+                    className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white placeholder:text-slate-400" 
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">{t("yourEmail")} *</label>
+                  <label className="block text-sm font-medium mb-1 text-white">{t("yourEmail")} *</label>
                   <input 
                     type="email"
                     value={applicant.email} 
                     onChange={(e)=>setApplicant({...applicant,email:e.target.value})} 
-                    className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" 
+                    className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white placeholder:text-slate-400" 
                     required
                   />
                 </div>
@@ -430,22 +430,22 @@ export default function JobsPage() {
 
               {/* CV Link */}
               <div>
-                <label className="block text-sm font-medium mb-1">{t("cvLink")} ({t("optional")})</label>
+                <label className="block text-sm font-medium mb-1 text-white">{t("cvLink")} ({t("optional")})</label>
                 <input 
                   value={applicant.cv} 
                   onChange={(e)=>setApplicant({...applicant,cv:e.target.value})} 
-                  className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" 
+                  className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white placeholder:text-slate-400" 
                   placeholder="https://linkedin.com/in/tu-perfil"
                 />
               </div>
 
               {/* Motivaciones */}
               <div>
-                <label className="block text-sm font-medium mb-1">{t("motivations")} *</label>
+                <label className="block text-sm font-medium mb-1 text-white">{t("motivations")} *</label>
                 <textarea 
                   value={applicant.motivations} 
                   onChange={(e)=>setApplicant({...applicant,motivations:e.target.value})} 
-                  className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 min-h-24" 
+                  className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white placeholder:text-slate-400 min-h-24" 
                   placeholder={t("motivationsPlaceholder")}
                   required
                 />
@@ -453,11 +453,11 @@ export default function JobsPage() {
 
               {/* Áreas de Expertise */}
               <div>
-                <label className="block text-sm font-medium mb-1">{t("expertiseAreas")} *</label>
+                <label className="block text-sm font-medium mb-1 text-white">{t("expertiseAreas")} *</label>
                 <textarea 
                   value={applicant.expertiseAreas} 
                   onChange={(e)=>setApplicant({...applicant,expertiseAreas:e.target.value})} 
-                  className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 min-h-20" 
+                  className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white placeholder:text-slate-400 min-h-20" 
                   placeholder={t("expertiseAreasPlaceholder")}
                   required
                 />
@@ -465,98 +465,14 @@ export default function JobsPage() {
 
               {/* Lenguajes Naturales */}
               <div>
-                <label className="block text-sm font-medium mb-3">{t("naturalLanguages")}</label>
+                <label className="block text-sm font-medium mb-3 text-white">{t("naturalLanguages")}</label>
                 <div className="space-y-4">
-                  {/* Español */}
-                  <div className="border rounded-lg p-4 dark:border-slate-600">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">🇪🇸</span>
-                        <span className="font-medium">{t("spanish")}</span>
-                      </div>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={applicant.languages.spanish.native}
-                          onChange={(e) => setApplicant({
-                            ...applicant,
-                            languages: {
-                              ...applicant.languages,
-                              spanish: { ...applicant.languages.spanish, native: e.target.checked }
-                            }
-                          })}
-                          className="rounded"
-                        />
-                        <span className="text-sm text-slate-600 dark:text-slate-400">{t("nativeLanguage")}</span>
-                      </label>
-                    </div>
-                    <select
-                      value={applicant.languages.spanish.level}
-                      onChange={(e) => setApplicant({
-                        ...applicant,
-                        languages: {
-                          ...applicant.languages,
-                          spanish: { ...applicant.languages.spanish, level: e.target.value }
-                        }
-                      })}
-                      className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
-                    >
-                      <option value="">{t("selectLevel")}</option>
-                      <option value="beginner">{t("beginner")}</option>
-                      <option value="intermediate">{t("intermediate")}</option>
-                      <option value="advanced">{t("advanced")}</option>
-                      <option value="fluent">{t("fluent")}</option>
-                    </select>
-                  </div>
-
-                  {/* Inglés */}
-                  <div className="border rounded-lg p-4 dark:border-slate-600">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">🇬🇧</span>
-                        <span className="font-medium">{t("english")}</span>
-                      </div>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={applicant.languages.english.native}
-                          onChange={(e) => setApplicant({
-                            ...applicant,
-                            languages: {
-                              ...applicant.languages,
-                              english: { ...applicant.languages.english, native: e.target.checked }
-                            }
-                          })}
-                          className="rounded"
-                        />
-                        <span className="text-sm text-slate-600 dark:text-slate-400">{t("nativeLanguage")}</span>
-                      </label>
-                    </div>
-                    <select
-                      value={applicant.languages.english.level}
-                      onChange={(e) => setApplicant({
-                        ...applicant,
-                        languages: {
-                          ...applicant.languages,
-                          english: { ...applicant.languages.english, level: e.target.value }
-                        }
-                      })}
-                      className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
-                    >
-                      <option value="">{t("selectLevel")}</option>
-                      <option value="beginner">{t("beginner")}</option>
-                      <option value="intermediate">{t("intermediate")}</option>
-                      <option value="advanced">{t("advanced")}</option>
-                      <option value="fluent">{t("fluent")}</option>
-                    </select>
-                  </div>
-
-                  {/* Alemán */}
-                  <div className="border rounded-lg p-4 dark:border-slate-600">
+                  {/* Alemán primero - como el usuario pidió */}
+                  <div className="border border-slate-600 rounded-lg p-4 bg-slate-700">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="text-lg">🇩🇪</span>
-                        <span className="font-medium">{t("german")}</span>
+                        <span className="font-medium text-white">{t("german")}</span>
                       </div>
                       <label className="flex items-center gap-2">
                         <input
@@ -571,7 +487,7 @@ export default function JobsPage() {
                           })}
                           className="rounded"
                         />
-                        <span className="text-sm text-slate-600 dark:text-slate-400">{t("nativeLanguage")}</span>
+                        <span className="text-sm text-slate-300">{t("nativeLanguage")}</span>
                       </label>
                     </div>
                     <select
@@ -583,13 +499,97 @@ export default function JobsPage() {
                           german: { ...applicant.languages.german, level: e.target.value }
                         }
                       })}
-                      className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
+                      className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
                     >
-                      <option value="">{t("selectLevel")}</option>
-                      <option value="beginner">{t("beginner")}</option>
-                      <option value="intermediate">{t("intermediate")}</option>
-                      <option value="advanced">{t("advanced")}</option>
-                      <option value="fluent">{t("fluent")}</option>
+                      <option value="" className="bg-slate-700">{t("selectLevel")}</option>
+                      <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
+                      <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
+                      <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
+                      <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
+                    </select>
+                  </div>
+
+                  {/* Español */}
+                  <div className="border border-slate-600 rounded-lg p-4 bg-slate-700">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">🇪🇸</span>
+                        <span className="font-medium text-white">{t("spanish")}</span>
+                      </div>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={applicant.languages.spanish.native}
+                          onChange={(e) => setApplicant({
+                            ...applicant,
+                            languages: {
+                              ...applicant.languages,
+                              spanish: { ...applicant.languages.spanish, native: e.target.checked }
+                            }
+                          })}
+                          className="rounded"
+                        />
+                        <span className="text-sm text-slate-300">{t("nativeLanguage")}</span>
+                      </label>
+                    </div>
+                    <select
+                      value={applicant.languages.spanish.level}
+                      onChange={(e) => setApplicant({
+                        ...applicant,
+                        languages: {
+                          ...applicant.languages,
+                          spanish: { ...applicant.languages.spanish, level: e.target.value }
+                        }
+                      })}
+                      className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
+                    >
+                      <option value="" className="bg-slate-700">{t("selectLevel")}</option>
+                      <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
+                      <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
+                      <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
+                      <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
+                    </select>
+                  </div>
+
+                  {/* Inglés */}
+                  <div className="border border-slate-600 rounded-lg p-4 bg-slate-700">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">🇬🇧</span>
+                        <span className="font-medium text-white">{t("english")}</span>
+                      </div>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={applicant.languages.english.native}
+                          onChange={(e) => setApplicant({
+                            ...applicant,
+                            languages: {
+                              ...applicant.languages,
+                              english: { ...applicant.languages.english, native: e.target.checked }
+                            }
+                          })}
+                          className="rounded"
+                        />
+                        <span className="text-sm text-slate-300">{t("nativeLanguage")}</span>
+                      </label>
+                    </div>
+                    <select
+                      value={applicant.languages.english.level}
+                      onChange={(e) => setApplicant({
+                        ...applicant,
+                        languages: {
+                          ...applicant.languages,
+                          english: { ...applicant.languages.english, level: e.target.value }
+                        }
+                      })}
+                      className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
+                    >
+                      <option value="" className="bg-slate-700">{t("selectLevel")}</option>
+                      <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
+                      <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
+                      <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
+                      <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
                     </select>
                   </div>
                 </div>
@@ -597,8 +597,8 @@ export default function JobsPage() {
 
               {/* Carta de Motivación PDF */}
               <div>
-                <label className="block text-sm font-medium mb-1">{t("motivationLetter")} ({t("optional")})</label>
-                <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-4">
+                <label className="block text-sm font-medium mb-1 text-white">{t("motivationLetter")} ({t("optional")})</label>
+                <div className="border-2 border-dashed border-slate-600 rounded-lg p-4 bg-slate-700">
                   <input
                     type="file"
                     accept=".pdf"
@@ -618,9 +618,9 @@ export default function JobsPage() {
                     className="cursor-pointer flex flex-col items-center justify-center text-center"
                   >
                     <div className="text-4xl mb-2">📄</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-slate-300">
                       {applicant.motivationLetter ? (
-                        <span className="text-green-600 dark:text-green-400">
+                        <span className="text-green-400">
                           ✅ {applicant.motivationLetter.name}
                         </span>
                       ) : (
@@ -636,7 +636,7 @@ export default function JobsPage() {
                   <button
                     type="button"
                     onClick={() => setApplicant({...applicant, motivationLetter: null})}
-                    className="mt-2 text-sm text-red-600 dark:text-red-400 hover:underline"
+                    className="mt-2 text-sm text-red-400 hover:underline"
                   >
                     {t("removeFile")}
                   </button>
@@ -647,7 +647,7 @@ export default function JobsPage() {
               <div className="flex gap-2 pt-4">
                 <button 
                   onClick={()=>setApplyFor(null)} 
-                  className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                  className="px-4 py-2 border border-slate-600 rounded hover:bg-slate-700 transition-colors text-white"
                 >
                   {t("cancel")}
                 </button>
