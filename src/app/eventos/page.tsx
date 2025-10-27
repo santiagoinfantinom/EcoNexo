@@ -78,7 +78,17 @@ export default function EventosPage() {
       }
     };
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    
+    // Listen for custom event when event is added from same tab
+    const handleParticipatedEventAdded = () => {
+      refreshParticipatedEvents();
+    };
+    window.addEventListener('econexo:participatedEventAdded', handleParticipatedEventAdded);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('econexo:participatedEventAdded', handleParticipatedEventAdded);
+    };
   }, []);
   const COLOR_BY_CATEGORY: Record<Category, { bg: string; text: string; border: string }> = {
     "Medio ambiente": { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },

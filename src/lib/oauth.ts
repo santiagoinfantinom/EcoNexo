@@ -363,6 +363,11 @@ export class OutlookOAuthService {
             interests: 'Tecnología, desarrollo web, sostenibilidad',
             skills: 'C#, .NET, Azure, TypeScript, Angular'
           }));
+
+          // Redirect to profile
+          setTimeout(() => {
+            window.location.href = '/perfil';
+          }, 500);
         }
 
         return {
@@ -371,58 +376,32 @@ export class OutlookOAuthService {
         };
       }
 
+      // Use redirect flow for Outlook (more reliable than popup)
+      console.log('🔐 Redirecting to Microsoft OAuth');
+      console.log('📍 Client ID:', this.clientId);
+      console.log('📍 Redirect URI:', this.redirectUri);
+
       // Initialize MSAL before using it
       await this.ensureInitialized();
       
       const loginRequest = {
         scopes: ['openid', 'profile', 'email', 'User.Read'],
         prompt: 'select_account',
+        redirectUri: this.redirectUri,
       };
 
-      const response = await this.msalInstance.loginPopup(loginRequest);
+      // Use redirect instead of popup
+      await this.msalInstance.loginRedirect(loginRequest);
       
-      if (response.account) {
-        return {
-          success: true,
-          user: {
-            id: response.account.homeAccountId,
-            email: response.account.username,
-            name: response.account.name || response.account.username,
-            provider: 'outlook',
-          },
-        };
-      }
-
-      return {
-        success: false,
-        error: 'No se pudo obtener información del usuario',
-      };
+      // If we get here, redirect has started
+      return { success: true };
     } catch (error: any) {
       console.error('Outlook OAuth error:', error);
       
-      // Handle specific MSAL errors
-      if (error.name === 'BrowserAuthError' || error.message?.includes('interaction_in_progress')) {
-        return {
-          success: false,
-          error: 'Ya hay un proceso de autenticación en curso. Por favor espera o recarga la página.',
-        };
-      }
-      
-      // If popup fails, try redirect
-      try {
-        await this.ensureInitialized();
-        await this.msalInstance.loginRedirect({
-          scopes: ['openid', 'profile', 'email', 'User.Read'],
-          prompt: 'select_account',
-        });
-        
-        return { success: true };
-      } catch (redirectError) {
-        return {
-          success: false,
-          error: 'Error al iniciar autenticación con Outlook',
-        };
-      }
+      return {
+        success: false,
+        error: 'Error al iniciar autenticación con Outlook. Por favor, intenta de nuevo.',
+      };
     }
   }
 

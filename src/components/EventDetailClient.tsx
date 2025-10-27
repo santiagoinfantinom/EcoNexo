@@ -1154,6 +1154,13 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
       if (!isAlreadyParticipated) {
         participatedEvents.push(eventToAdd);
         localStorage.setItem('econexo:participatedEvents', JSON.stringify(participatedEvents));
+        
+        // Dispatch custom event to update the list in same tab
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('econexo:participatedEventAdded', {
+            detail: { event: eventToAdd }
+          }));
+        }
       }
       
       alert(locale === 'de' ? 
