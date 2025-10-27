@@ -854,7 +854,7 @@ export default function ProfileComponent() {
                 {profileData.oauth_data?.hd && (
                   <div>
                     <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                      Dominio Google Workspace:
+                      {t('googleWorkspaceDomain')}:
                     </span>
                     <p className="text-slate-900 dark:text-slate-100 font-semibold">
                       {profileData.oauth_data.hd}
@@ -864,7 +864,7 @@ export default function ProfileComponent() {
                 {profileData.oauth_data?.tenant_id && (
                   <div>
                     <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                      Tenant ID:
+                      {t('tenantId')}:
                     </span>
                     <p className="text-slate-900 dark:text-slate-100 font-semibold">
                       {profileData.oauth_data.tenant_id}
@@ -874,7 +874,7 @@ export default function ProfileComponent() {
                 {profileData.oauth_data?.preferred_username && (
                   <div>
                     <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                      Usuario preferido:
+                      {t('preferredUsername')}:
                     </span>
                     <p className="text-slate-900 dark:text-slate-100 font-semibold">
                       {profileData.oauth_data.preferred_username}
