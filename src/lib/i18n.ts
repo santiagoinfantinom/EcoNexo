@@ -311,6 +311,18 @@ const DICTS: Record<Locale, Dict> = {
     // Event creation
     createEvent: "Create Event",
     
+    // Event administrators
+    eventAdministrators: "Event Administrators",
+    addAdministrator: "Add Administrator",
+    administratorEmail: "Administrator Email",
+    searchAdministrator: "Search by email",
+    addAsAdministrator: "Add as Administrator",
+    removeAdministrator: "Remove Administrator",
+    manageAdministrators: "Manage Administrators",
+    noAdministrators: "No administrators",
+    youAreAdministrator: "You are an administrator",
+    eventCreator: "Event Creator",
+    administrators: "Administrators",
     
     ofRevenueDonated: "of revenue donated to environmental causes",
     subscribe: "Subscribe",
@@ -956,6 +968,18 @@ const DICTS: Record<Locale, Dict> = {
     // Event creation
     createEvent: "Event erstellen",
     
+    // Event administrators
+    eventAdministrators: "Event-Administratoren",
+    addAdministrator: "Administrator hinzufügen",
+    administratorEmail: "Administrator-E-Mail",
+    searchAdministrator: "Per E-Mail suchen",
+    addAsAdministrator: "Als Administrator hinzufügen",
+    removeAdministrator: "Administrator entfernen",
+    manageAdministrators: "Administratoren verwalten",
+    noAdministrators: "Keine Administratoren",
+    youAreAdministrator: "Sie sind Administrator",
+    eventCreator: "Event-Ersteller",
+    administrators: "Administratoren",
     
     // Chat translations
     communityChat: "Community Chat",
@@ -1695,6 +1719,18 @@ const DICTS: Record<Locale, Dict> = {
     // Event creation
     createEvent: "Crear Evento",
     
+    // Event administrators
+    eventAdministrators: "Administradores del Evento",
+    addAdministrator: "Agregar Administrador",
+    administratorEmail: "Correo del Administrador",
+    searchAdministrator: "Buscar por correo",
+    addAsAdministrator: "Agregar como Administrador",
+    removeAdministrator: "Remover Administrador",
+    manageAdministrators: "Gestionar Administradores",
+    noAdministrators: "Sin administradores",
+    youAreAdministrator: "Eres un administrador",
+    eventCreator: "Creador del Evento",
+    administrators: "Administradores",
     
     
     capital: "Capital",

@@ -4,6 +4,7 @@ import { useI18n, locationLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import EventRegistrationForm from "./EventRegistrationForm";
+import EventAdministrators from "./EventAdministrators";
 import { useAuth } from "@/lib/auth";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import { trackEvent } from "@/lib/analytics";
@@ -1359,6 +1360,11 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
           <button onClick={toggleSaved} className={`px-8 py-3 rounded-lg font-semibold transition-colors ${saved ? 'bg-amber-200 text-slate-900' : 'border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}`}>
             {saved ? t('saved' + locale.charAt(0).toUpperCase() + locale.slice(1)) : t('save' + locale.charAt(0).toUpperCase() + locale.slice(1))}
           </button>
+        </div>
+
+        {/* Event Administrators */}
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 mt-6">
+          <EventAdministrators eventId={eventId} isCreator={(event as any).created_by === user?.id} />
         </div>
       </div>
 

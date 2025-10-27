@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useI18n, categoryLabel } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
 import CalendarView from "@/components/CalendarView";
 
 type Category =
@@ -41,6 +42,7 @@ const CATEGORIES: Category[] = [
 
 export default function EventosPage() {
   const { t, locale } = useI18n();
+  const { user } = useAuth();
   const [viewMode, setViewMode] = useState<'form' | 'calendar'>('form');
   const [form, setForm] = useState<EventInput>({
     title: "",
@@ -130,6 +132,7 @@ export default function EventosPage() {
           optional_categories: form.optionalCategories,
           capacity: form.capacity,
           notes: form.notes,
+          created_by: user?.id, // Add the creator's user ID
         }),
       });
       if (!res.ok) {
