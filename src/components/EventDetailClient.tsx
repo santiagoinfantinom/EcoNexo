@@ -1218,7 +1218,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
   };
 
   return (
-    <div className="min-h-screen bg-modern">
+    <div className="min-h-screen bg-gls-primary">
       <div className="container mx-auto px-4 py-8">
         {/* Back Button */}
         <Link 
