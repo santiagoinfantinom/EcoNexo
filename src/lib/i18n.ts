@@ -261,6 +261,17 @@ const DICTS: Record<Locale, Dict> = {
     skills: "Skills",
     languages: "Languages",
     socialMedia: "Social Media",
+    
+    // OAuth Provider Information
+    googleInformation: "Google Information",
+    microsoftInformation: "Microsoft Information",
+    providerInformation: "Provider Information",
+    extractedFromOAuth: "This information was automatically extracted from your OAuth account upon login.",
+    calculatedAge: "Calculated Age",
+    years: "years",
+    verifiedEmail: "Verified Email",
+    verified: "Verified",
+    preferredLanguage: "Preferred Language",
     linkedin: "LinkedIn",
     twitter: "Twitter",
     instagram: "Instagram",
@@ -929,6 +940,17 @@ const DICTS: Record<Locale, Dict> = {
     interestsPlaceholder: "Was interessiert dich?",
     skillsPlaceholder: "Welche Fähigkeiten hast du?",
     languagesPlaceholder: "Welche Sprachen sprichst du?",
+    
+    // OAuth Provider Information
+    googleInformation: "Google-Informationen",
+    microsoftInformation: "Microsoft-Informationen",
+    providerInformation: "Anbieter-Informationen",
+    extractedFromOAuth: "Diese Informationen wurden beim Anmelden automatisch aus Ihrem OAuth-Konto extrahiert.",
+    calculatedAge: "Berechnetes Alter",
+    years: "Jahre",
+    verifiedEmail: "Bestätigte E-Mail",
+    verified: "Verifiziert",
+    preferredLanguage: "Bevorzugte Sprache",
     volunteersLabel: "Freiwillige",
     spotsLabel: "Plätze",
     previewLabel: "Vorschau",
@@ -1487,6 +1509,17 @@ const DICTS: Record<Locale, Dict> = {
     interestsPlaceholder: "¿Qué te interesa?",
     skillsPlaceholder: "¿Qué habilidades tienes?",
     languagesPlaceholder: "¿Qué idiomas hablas?",
+    
+    // OAuth Provider Information
+    googleInformation: "Información de Google",
+    microsoftInformation: "Información de Microsoft",
+    providerInformation: "Información del Proveedor",
+    extractedFromOAuth: "Esta información fue extraída automáticamente de tu cuenta al iniciar sesión.",
+    calculatedAge: "Edad calculada",
+    years: "años",
+    verifiedEmail: "Correo verificado",
+    verified: "Verificado",
+    preferredLanguage: "Idioma preferido",
     // Traducciones automáticas generadas Sun Oct 19 11:54:11 CEST 2025
     address: "Dirección",
     addressPh: "Ingresa tu dirección",

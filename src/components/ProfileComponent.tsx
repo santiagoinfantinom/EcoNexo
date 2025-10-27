@@ -815,36 +815,36 @@ export default function ProfileComponent() {
         {profileData.oauth_provider && (
           <div className="mb-8">
             <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
-              {profileData.oauth_provider === 'google' ? 'Información de Google' : 
-               profileData.oauth_provider === 'azure' ? 'Información de Microsoft' : 
-               'Información del Proveedor'}
+              {profileData.oauth_provider === 'google' ? t('googleInformation') : 
+               profileData.oauth_provider === 'azure' ? t('microsoftInformation') : 
+               t('providerInformation')}
             </h2>
             <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {profileData.oauth_data?.age && (
                   <div>
                     <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                      Edad calculada:
+                      {t('calculatedAge')}:
                     </span>
                     <p className="text-slate-900 dark:text-slate-100 font-semibold">
-                      {profileData.oauth_data.age} años
+                      {profileData.oauth_data.age} {t('years')}
                     </p>
                   </div>
                 )}
                 {profileData.oauth_data?.verified_email && (
                   <div>
                     <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                      Email verificado:
+                      {t('verifiedEmail')}:
                     </span>
                     <p className="text-green-600 dark:text-green-400 font-semibold">
-                      ✅ Verificado
+                      ✅ {t('verified')}
                     </p>
                   </div>
                 )}
                 {profileData.oauth_data?.locale && (
                   <div>
                     <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                      Idioma preferido:
+                      {t('preferredLanguage')}:
                     </span>
                     <p className="text-slate-900 dark:text-slate-100 font-semibold">
                       {profileData.oauth_data.locale}
@@ -884,7 +884,7 @@ export default function ProfileComponent() {
               </div>
               <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Esta información fue extraída automáticamente de tu cuenta de {profileData.oauth_provider === 'google' ? 'Google' : 'Microsoft'} al iniciar sesión.
+                  {t('extractedFromOAuth')}
                 </p>
               </div>
             </div>
