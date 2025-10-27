@@ -43,16 +43,30 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
         return;
       }
 
-      const { error } = await signInWithMagicLink(email);
-      if (error) {
-        setError(error);
-      } else {
+      // Send verification email with welcome message
+      const response = await fetch('/api/email/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          locale,
+          captchaToken: captchaToken || undefined,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
         setSuccess(true);
         setShowEmailVerification(true);
         setTimeout(() => {
           setSuccess(false);
           onClose();
         }, 3000);
+      } else {
+        setError(result.message || 'Error al enviar el email');
       }
     } catch (err) {
       setError("Error inesperado. Intenta de nuevo.");
@@ -155,7 +169,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 </div>
                 <span className="text-sm font-medium">
                   {showEmailVerification 
-                    ? "Email de verificación enviado. Revisa tu bandeja de entrada."
+                    ? "¡Email de bienvenida enviado! Por favor revisa tu bandeja de entrada y verifica tu cuenta haciendo clic en el enlace."
                     : "¡Autenticación exitosa!"
                   }
                 </span>
@@ -196,8 +210,8 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 <span className="font-medium text-gray-700 dark:text-gray-200">Google</span>
               </button>
 
-              {/* Outlook Button */}
-              <button
+              {/* Outlook Button - Disabled */}
+              {/* <button
                 onClick={handleOutlookAuth}
                 disabled={isLoading}
                 className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
@@ -206,7 +220,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                   <path d="M7.462 8.85h9.076c.398 0 .724-.326.724-.724V4.724c0-.398-.326-.724-.724-.724H7.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM7.462 15.15h9.076c.398 0 .724-.326.724-.724v-3.402c0-.398-.326-.724-.724-.724H7.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM2.462 8.85h4.076c.398 0 .724-.326.724-.724V4.724c0-.398-.326-.724-.724-.724H2.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM2.462 15.15h4.076c.398 0 .724-.326.724-.724v-3.402c0-.398-.326-.724-.724-.724H2.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724z"/>
                 </svg>
                 <span className="font-medium text-gray-700 dark:text-gray-200">Microsoft Outlook</span>
-              </button>
+              </button> */}
             </div>
           </div>
 

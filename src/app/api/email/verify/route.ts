@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sendVerificationEmail } from '@/lib/emailVerification';
+import { sendVerificationEmail, generateVerificationToken } from '@/lib/emailVerification';
 import { verifyCaptchaToken } from '@/lib/captcha';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, captchaToken } = await request.json();
+    const { email, captchaToken, locale } = await request.json();
 
     if (!email) {
       return NextResponse.json(
@@ -24,13 +24,16 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Send verification email
-    const result = await sendVerificationEmail(email, 'temp-token');
+    // Generate verification token
+    const token = generateVerificationToken();
+
+    // Send verification email with welcome message
+    const result = await sendVerificationEmail(email, token, locale || 'es');
 
     if (result.success) {
       return NextResponse.json({
         success: true,
-        message: 'Email de verificación enviado correctamente',
+        message: 'Email de bienvenida enviado correctamente. Por favor verifica tu correo.',
       });
     } else {
       return NextResponse.json(

@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { sendWelcomeVerificationEmail } from './emailService';
 
 // Email verification token storage (in production, use Redis or database)
 const verificationTokens = new Map<string, { email: string; expires: number; verified: boolean }>();
@@ -27,14 +28,10 @@ export function generateVerificationToken(): string {
  */
 export async function sendVerificationEmail(
   email: string,
-  token: string
+  token: string,
+  locale: string = 'es'
 ): Promise<EmailVerificationResult> {
   try {
-    // For now, we'll use a simple approach without nodemailer
-    // In production, you would configure nodemailer here
-    
-    const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/verify-email?token=${token}`;
-    
     // Store token with expiration (24 hours)
     verificationTokens.set(token, {
       email,
@@ -42,14 +39,26 @@ export async function sendVerificationEmail(
       verified: false,
     });
 
-    // Log the verification URL for development
-    console.log(`Verification email for ${email}: ${verificationUrl}`);
+    // Send welcome email with verification link
+    const result = await sendWelcomeVerificationEmail(email, token, locale);
 
-    return {
-      success: true,
-      message: 'Email de verificación enviado correctamente',
-      token,
-    };
+    if (result.success) {
+      // Log the verification URL for development
+      const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/verify-email?token=${token}`;
+      console.log(`✅ Verification email sent to ${email}`);
+      console.log(`🔗 Verification URL: ${verificationUrl}`);
+      
+      return {
+        success: true,
+        message: 'Email de verificación enviado correctamente',
+        token,
+      };
+    } else {
+      return {
+        success: false,
+        message: result.message,
+      };
+    }
   } catch (error) {
     console.error('Error sending verification email:', error);
     return {
