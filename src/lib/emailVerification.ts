@@ -29,7 +29,7 @@ export function generateVerificationToken(): string {
 export async function sendVerificationEmail(
   email: string,
   token: string,
-  locale: string = 'es'
+  locale: string = 'en'
 ): Promise<EmailVerificationResult> {
   try {
     // Store token with expiration (24 hours)

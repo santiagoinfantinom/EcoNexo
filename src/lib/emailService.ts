@@ -48,7 +48,7 @@ export async function sendEmail(options: EmailOptions): Promise<{ success: boole
 /**
  * Send welcome email with verification link
  */
-export async function sendWelcomeVerificationEmail(email: string, token: string, locale: string = 'es'): Promise<{ success: boolean; message: string }> {
+export async function sendWelcomeVerificationEmail(email: string, token: string, locale: string = 'en'): Promise<{ success: boolean; message: string }> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
 

@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const phone = userMetadata.phone_number || userMetadata.phone || '';
           
           // Extract locale/language preference
-          const preferredLanguage = userMetadata.locale || userMetadata.language || 'es';
+          const preferredLanguage = userMetadata.locale || userMetadata.language || 'en';
           
           // Extract additional Google-specific data
           const googleData = userMetadata.provider === 'google' ? {

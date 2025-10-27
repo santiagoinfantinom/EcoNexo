@@ -249,7 +249,7 @@ export class GoogleOAuthService {
           email: userInfo.email,
           picture: userInfo.picture,
           provider: 'google',
-          locale: userInfo.locale || 'es',
+          locale: userInfo.locale || 'en',
           verified_email: userInfo.verified_email || true,
         }));
         
@@ -258,7 +258,7 @@ export class GoogleOAuthService {
           full_name: userInfo.name,
           email: userInfo.email,
           avatar_url: userInfo.picture,
-          preferred_language: userInfo.locale || 'es',
+          preferred_language: userInfo.locale || 'en',
           oauth_provider: 'google',
           oauth_imported: true,
         }));

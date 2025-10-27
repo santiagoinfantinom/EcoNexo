@@ -58,7 +58,7 @@ function GoogleCallbackContent() {
             email: user.email,
             picture: user.picture,
             provider: 'google',
-            locale: user.locale || 'es',
+            locale: user.locale || 'en',
             verified_email: user.verified_email || true,
           }));
           
@@ -69,7 +69,7 @@ function GoogleCallbackContent() {
             last_name: user.family_name || '',
             email: user.email,
                    avatar_url: user.picture || '/logo-econexo.png',
-            preferred_language: user.locale || 'es',
+            preferred_language: user.locale || 'en',
             oauth_provider: 'google',
             oauth_imported: true,
           }));

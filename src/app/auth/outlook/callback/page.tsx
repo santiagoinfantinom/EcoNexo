@@ -27,7 +27,7 @@ export default function OutlookCallbackPage() {
             email: user.email,
             picture: user.picture,
             provider: 'outlook',
-            locale: user.locale || 'es',
+            locale: user.locale || 'en',
             verified_email: true,
           }));
           
@@ -49,7 +49,7 @@ export default function OutlookCallbackPage() {
             last_name: lastName,
             email: user.email,
             avatar_url: user.picture || '/logo-econexo.svg',
-            preferred_language: user.locale || 'es',
+            preferred_language: user.locale || 'en',
             oauth_provider: 'outlook',
             oauth_imported: true,
           }));

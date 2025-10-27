@@ -3,14 +3,14 @@ import { DICTS } from '@/lib/i18n';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const locale = searchParams.get('locale') || 'es';
+  const locale = searchParams.get('locale') || 'en';
   
-  const dict = DICTS[locale as keyof typeof DICTS] || DICTS.es;
+  const dict = DICTS[locale as keyof typeof DICTS] || DICTS.en;
   
   const manifest = {
-    name: dict.appTitle || "EcoNexo - Plataforma de Sostenibilidad",
+    name: dict.appTitle || "EcoNexo - Sustainability Platform",
     short_name: "EcoNexo",
-    description: dict.appDescription || "Conectando comunidades sostenibles en Europa",
+    description: dict.appDescription || "Connecting sustainable communities in Europe",
     start_url: "/",
     display: "standalone",
     background_color: "#1a5f3f",

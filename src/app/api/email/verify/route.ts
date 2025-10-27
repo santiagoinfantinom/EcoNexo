@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const token = generateVerificationToken();
 
     // Send verification email with welcome message
-    const result = await sendVerificationEmail(email, token, locale || 'es');
+    const result = await sendVerificationEmail(email, token, locale || 'en');
 
     if (result.success) {
       return NextResponse.json({
