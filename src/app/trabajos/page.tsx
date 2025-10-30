@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useI18n, locationLabel } from "@/lib/i18n";
 
 type Job = {
@@ -216,6 +216,7 @@ export default function JobsPage() {
   const [city, setCity] = useState<string>("all");
   const [contract, setContract] = useState<string>("all");
   const [remoteOnly, setRemoteOnly] = useState(false);
+  const [levelFilter, setLevelFilter] = useState<'all' | 'junior' | 'mid' | 'senior' | 'lead'>("all");
   const [showJobForm, setShowJobForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -233,6 +234,31 @@ export default function JobsPage() {
     applicationDeadline: '',
     contactEmail: ''
   });
+
+  // Load saved filters on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('econexo:jobFilters');
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (typeof saved.query === 'string') setQuery(saved.query);
+        if (typeof saved.minSalary === 'number') setMinSalary(saved.minSalary);
+        if (typeof saved.minExperience === 'number') setMinExperience(saved.minExperience);
+        if (typeof saved.city === 'string') setCity(saved.city);
+        if (typeof saved.contract === 'string') setContract(saved.contract);
+        if (typeof saved.remoteOnly === 'boolean') setRemoteOnly(saved.remoteOnly);
+        if (typeof saved.levelFilter === 'string') setLevelFilter(saved.levelFilter);
+      }
+    } catch {}
+  }, []);
+
+  // Persist filters whenever they change
+  useEffect(() => {
+    try {
+      const toSave = { query, minSalary, minExperience, city, contract, remoteOnly, levelFilter };
+      localStorage.setItem('econexo:jobFilters', JSON.stringify(toSave));
+    } catch {}
+  }, [query, minSalary, minExperience, city, contract, remoteOnly, levelFilter]);
   const filtered = useMemo(() => {
     return JOBS.filter((j) =>
       j.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -241,8 +267,9 @@ export default function JobsPage() {
     ).filter(j => j.salaryMinEur >= minSalary && j.experienceYears >= minExperience)
     .filter(j => city === "all" ? true : j.city.toLowerCase() === city.toLowerCase())
     .filter(j => contract === "all" ? true : j.contract === contract)
+    .filter(j => levelFilter === 'all' ? true : j.level === levelFilter)
     .filter(j => remoteOnly ? j.remote : true);
-  }, [query, minSalary, minExperience, city, contract, remoteOnly]);
+  }, [query, minSalary, minExperience, city, contract, levelFilter, remoteOnly]);
 
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES', { style: 'currency', currency: 'EUR' }).format(v);
@@ -303,6 +330,7 @@ export default function JobsPage() {
     motivationLetter: null as File | null,
     languages: [] as { code: string; level: string; native: boolean }[]
   });
+  const [newLanguage, setNewLanguage] = useState<{ code: string; level: string }>({ code: '', level: '' });
   const toggleSave = (id: string) => setSavedJobs((s)=> ({ ...s, [id]: !s[id] }));
   const submitApplication = async () => {
     setApplyFor(null);
@@ -353,7 +381,7 @@ export default function JobsPage() {
         </div>
         
         {/* Segunda fila: Parámetros de búsqueda */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
           <div>
             <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("minSalary")}</label>
             <input type="number" value={minSalary} onChange={(e)=>setMinSalary(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
@@ -369,6 +397,16 @@ export default function JobsPage() {
               {Array.from(new Set(JOBS.map(j=>j.city))).map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("experienceLevel")}</label>
+            <select value={levelFilter} onChange={(e)=>setLevelFilter(e.target.value as any)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
+              <option value="all">{t('all')}</option>
+              <option value="junior">{t('levelJunior')}</option>
+              <option value="mid">{t('levelMid')}</option>
+              <option value="senior">{t('levelSenior')}</option>
+              <option value="lead">{t('levelLead')}</option>
             </select>
           </div>
           <div>
@@ -531,17 +569,8 @@ export default function JobsPage() {
                     <div className="space-y-3">
                       <div className="flex flex-col md:flex-row md:items-center gap-2">
                         <select
-                          onChange={(e) => {
-                            const code = e.target.value;
-                            if (!code) return;
-                            if (applicant.languages.some(l => l.code === code)) return;
-                            setApplicant({
-                              ...applicant,
-                              languages: [...applicant.languages, { code, level: '', native: false }]
-                            });
-                            e.currentTarget.value = '';
-                          }}
-                          defaultValue=""
+                          value={newLanguage.code}
+                          onChange={(e) => setNewLanguage({ ...newLanguage, code: e.target.value })}
                           className="w-full md:w-1/2 border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white"
                         >
                           <option value="" className="bg-slate-700">{t("selectLanguage") ?? 'Selecciona un lenguaje'}</option>
@@ -549,6 +578,36 @@ export default function JobsPage() {
                             <option key={l.code} value={l.code} className="bg-slate-700">{l.label}</option>
                           ))}
                         </select>
+                        <select
+                          value={newLanguage.level}
+                          onChange={(e) => setNewLanguage({ ...newLanguage, level: e.target.value })}
+                          className="w-full md:w-1/3 border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white"
+                        >
+                          <option value="" className="bg-slate-700">{t("selectLevel")}</option>
+                          <option value="A1" className="bg-slate-700">A1</option>
+                          <option value="A2" className="bg-slate-700">A2</option>
+                          <option value="B1" className="bg-slate-700">B1</option>
+                          <option value="B2" className="bg-slate-700">B2</option>
+                          <option value="C1" className="bg-slate-700">C1</option>
+                          <option value="C2" className="bg-slate-700">C2</option>
+                          <option value="Native" className="bg-slate-700">{t("native")}</option>
+                        </select>
+                        <button
+                          type="button"
+                          className="px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded"
+                          onClick={() => {
+                            if (!newLanguage.code) return;
+                            if (applicant.languages.some(l => l.code === newLanguage.code)) return;
+                            setApplicant({
+                              ...applicant,
+                              languages: [...applicant.languages, { code: newLanguage.code, level: newLanguage.level || '', native: newLanguage.level === 'Native' }]
+                            });
+                            setNewLanguage({ code: '', level: '' });
+                          }}
+                          aria-label="add-language"
+                        >
+                          +
+                        </button>
                       </div>
 
                       {applicant.languages.length > 0 && (
@@ -609,7 +668,7 @@ export default function JobsPage() {
 
               {/* Carta de Motivación PDF */}
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">{t("motivationLetter")} ({t("optional")})</label>
+                <label className="block text-sm font-medium mb-1 text-white">{locale === 'de' ? 'Motivationsschreiben' : t("motivationLetter")} ({t("optional")})</label>
                 <div className="border-2 border-dashed border-slate-600 rounded-lg p-4 bg-slate-700">
                   <input
                     type="file"
