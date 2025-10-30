@@ -134,11 +134,11 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                <EcoNexoLogo className="w-8 h-8" size={32} />
+                <span className="text-2xl">🌿</span>
               </div>
               <div>
                 <h2 className="text-2xl font-bold">
-                  {mode === "login" ? t("welcomeBack") : t("joinEcoNexo")}
+                  {mode === "login" ? t("welcomeBack") : `🌿 EcoNexo`}
                 </h2>
                 <p className="text-green-100 text-sm mt-1">
                   {mode === "login" 
