@@ -749,6 +749,172 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       category: 'education',
       organizer: locale === 'es' ? 'Arte Reciclado' : locale === 'de' ? 'Recycling-Kunst' : 'Recycled Art'
     },
+    // Extra November spread for more realism
+    {
+      id: 'e26b',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Siembra urbana comunitaria' :
+             locale === 'de' ? 'Gemeinschaftliche urbane Aussaat' : 'Community urban seeding',
+      date: new Date(2025, 10, 1),
+      time: '10:00',
+      duration: 3,
+      spots: 25,
+      registered: 17,
+      location: locale === 'es' ? 'Huerto Urbano, Barcelona' :
+                locale === 'de' ? 'Urbaner Garten, Barcelona' : 'Urban Garden, Barcelona',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Huertos Vivos' : locale === 'de' ? 'Lebendige Gärten' : 'Living Gardens'
+    },
+    {
+      id: 'e26c',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Intercambio de libros verdes' :
+             locale === 'de' ? 'Grüner Büchertausch' : 'Green book swap',
+      date: new Date(2025, 10, 4),
+      time: '17:00',
+      duration: 2,
+      spots: 40,
+      registered: 22,
+      location: locale === 'es' ? 'Biblioteca Central, Londres' :
+                locale === 'de' ? 'Zentralbibliothek, London' : 'Central Library, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Lecturas Sostenibles' : locale === 'de' ? 'Nachhaltige Lektüren' : 'Sustainable Reads'
+    },
+    {
+      id: 'e26d',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Charla de eficiencia energética' :
+             locale === 'de' ? 'Energieeffizienz‑Vortrag' : 'Energy efficiency talk',
+      date: new Date(2025, 10, 6),
+      time: '18:30',
+      duration: 2,
+      spots: 60,
+      registered: 41,
+      location: locale === 'es' ? 'Ayuntamiento, Milán' :
+                locale === 'de' ? 'Rathaus, Mailand' : 'City Hall, Milan',
+      category: 'education',
+      organizer: locale === 'es' ? 'Eficiencia 360' : locale === 'de' ? 'Effizienz 360' : 'Efficiency 360'
+    },
+    {
+      id: 'e26e',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Taller de compost rápido' :
+             locale === 'de' ? 'Schnell‑Kompost Workshop' : 'Quick compost workshop',
+      date: new Date(2025, 10, 9),
+      time: '09:30',
+      duration: 2,
+      spots: 20,
+      registered: 14,
+      location: locale === 'es' ? 'Centro Verde, Madrid' :
+                locale === 'de' ? 'Grünes Zentrum, Madrid' : 'Green Center, Madrid',
+      category: 'education',
+      organizer: locale === 'es' ? 'Compost Masters' : locale === 'de' ? 'Kompost‑Meister' : 'Compost Masters'
+    },
+    {
+      id: 'e26f',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Censo de aves al amanecer' :
+             locale === 'de' ? 'Vogelzählung bei Sonnenaufgang' : 'Dawn bird census',
+      date: new Date(2025, 10, 12),
+      time: '06:45',
+      duration: 2,
+      spots: 18,
+      registered: 13,
+      location: locale === 'es' ? 'Humedal Urbano, Berlín' :
+                locale === 'de' ? 'Stadtfeuchtgebiet, Berlin' : 'Urban Wetland, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Aves de Ciudad' : locale === 'de' ? 'Stadtvögel' : 'City Birds'
+    },
+    {
+      id: 'e26g',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Trueque de ropa sostenible' :
+             locale === 'de' ? 'Nachhaltiger Kleidertausch' : 'Sustainable clothes swap',
+      date: new Date(2025, 10, 16),
+      time: '11:00',
+      duration: 4,
+      spots: 100,
+      registered: 68,
+      location: locale === 'es' ? 'Centro Comunitario, Londres' :
+                locale === 'de' ? 'Gemeindezentrum, London' : 'Community Center, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Armario Circular' : locale === 'de' ? 'Zirkulärer Kleiderschrank' : 'Circular Closet'
+    },
+    {
+      id: 'e26h',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Taller de huertos en balcones' :
+             locale === 'de' ? 'Balkongarten‑Workshop' : 'Balcony gardening workshop',
+      date: new Date(2025, 10, 22),
+      time: '16:00',
+      duration: 2,
+      spots: 22,
+      registered: 16,
+      location: locale === 'es' ? 'Barrio Viejo, Barcelona' :
+                locale === 'de' ? 'Altstadtviertel, Barcelona' : 'Old Quarter, Barcelona',
+      category: 'education',
+      organizer: locale === 'es' ? 'Huertos Urbanos' : locale === 'de' ? 'Urbane Gärten' : 'Urban Gardens'
+    },
+    {
+      id: 'e26i',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Reforestación participativa' :
+             locale === 'de' ? 'Partizipative Aufforstung' : 'Participatory reforestation',
+      date: new Date(2025, 10, 23),
+      time: '10:00',
+      duration: 4,
+      spots: 35,
+      registered: 19,
+      location: locale === 'es' ? 'Monte Bajo, Milán' :
+                locale === 'de' ? 'Niederwald, Mailand' : 'Low Forest, Milan',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Bosques Vivos' : locale === 'de' ? 'Lebendige Wälder' : 'Living Forests'
+    },
+    {
+      id: 'e26j',
+      projectId: 'p5',
+      title: locale === 'es' ? 'Charla: salud y clima' :
+             locale === 'de' ? 'Vortrag: Gesundheit und Klima' : 'Talk: health and climate',
+      date: new Date(2025, 10, 27),
+      time: '19:00',
+      duration: 2,
+      spots: 90,
+      registered: 61,
+      location: locale === 'es' ? 'Hospital Universitario, París' :
+                locale === 'de' ? 'Universitätsklinikum, Paris' : 'University Hospital, Paris',
+      category: 'education',
+      organizer: locale === 'es' ? 'Salud Verde' : locale === 'de' ? 'Grüne Gesundheit' : 'Green Health'
+    },
+    {
+      id: 'e26k',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Paseo comunitario por el río' :
+             locale === 'de' ? 'Gemeinschaftlicher Flussspaziergang' : 'Community river walk',
+      date: new Date(2025, 10, 29),
+      time: '10:00',
+      duration: 2,
+      spots: 40,
+      registered: 24,
+      location: locale === 'es' ? 'Ribera Verde, Madrid' :
+                locale === 'de' ? 'Grünes Ufer, Madrid' : 'Green Riverside, Madrid',
+      category: 'community',
+      organizer: locale === 'es' ? 'Amigos del Río' : locale === 'de' ? 'Flussfreunde' : 'River Friends'
+    },
+    {
+      id: 'e26l',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Mercadillo de intercambio' :
+             locale === 'de' ? 'Tausch‑Flohmarkt' : 'Swap mini‑market',
+      date: new Date(2025, 10, 30),
+      time: '12:00',
+      duration: 4,
+      spots: 120,
+      registered: 77,
+      location: locale === 'es' ? 'Plaza Central, Londres' :
+                locale === 'de' ? 'Zentralplatz, London' : 'Central Square, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Circular UK' : locale === 'de' ? 'Zirkulär UK' : 'Circular UK'
+    },
 
     // December 2025 Events
     {
