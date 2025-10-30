@@ -726,7 +726,7 @@ export default function JobsPage() {
                   onClick={submitApplication} 
                   className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors font-medium"
                 >
-                  {t("sendApplication")}
+                  Send
                 </button>
               </div>
             </div>
