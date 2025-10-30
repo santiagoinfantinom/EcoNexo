@@ -210,6 +210,7 @@ const JOBS: Job[] = [
 
 export default function JobsPage() {
   const { t, locale } = useI18n();
+  const currentLocale = String(locale);
   const [query, setQuery] = useState("");
   const [minSalary, setMinSalary] = useState(0);
   const [minExperience, setMinExperience] = useState(0);
@@ -507,7 +508,15 @@ export default function JobsPage() {
                   value={applicant.motivations} 
                   onChange={(e)=>setApplicant({...applicant,motivations:e.target.value})} 
                   className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white placeholder:text-slate-400 min-h-24" 
-                  placeholder={t("motivationsPlaceholder")}
+                  placeholder={
+                    currentLocale === 'de' ? 'Motivationsschreiben' :
+                    currentLocale === 'es' ? 'Carta de motivación' :
+                    currentLocale === 'en' ? 'Motivation letter' :
+                    currentLocale === 'fr' ? 'Lettre de motivation' :
+                    currentLocale === 'it' ? 'Lettera di motivazione' :
+                    currentLocale === 'pt' ? 'Carta de motivação' :
+                    t('motivationsPlaceholder')
+                  }
                   required
                 />
               </div>
