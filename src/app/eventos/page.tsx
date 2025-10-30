@@ -187,7 +187,7 @@ export default function EventosPage() {
   }, []);
 
   return (
-    <div className="grid gap-6 max-w-2xl mx-auto text-center">
+    <div className="grid gap-6 max-w-2xl mx-auto text-center mt-8 md:mt-10">
       <div className="flex flex-col items-center gap-4">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 capitalize">
           {viewMode === 'form' ? t("createEvent") : t("calendar")}
