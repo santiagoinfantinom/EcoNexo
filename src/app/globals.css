@@ -52,6 +52,36 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Animated, modern background overlay */
+.animated-gradient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 40% at 15% 20%, color-mix(in oklab, var(--sour-apple) 25%, var(--background) 75%) 0%, transparent 60%),
+    radial-gradient(35% 35% at 85% 15%, color-mix(in oklab, var(--jade) 22%, var(--background) 78%) 0%, transparent 60%),
+    radial-gradient(45% 45% at 80% 80%, color-mix(in oklab, var(--dusty-blue) 28%, var(--background) 72%) 0%, transparent 60%),
+    linear-gradient(135deg, color-mix(in oklab, var(--background) 95%, var(--foreground) 5%), color-mix(in oklab, var(--background) 97%, var(--foreground) 3%));
+  filter: saturate(1.05) brightness(1.0);
+  animation: bgFloat 18s ease-in-out infinite alternate;
+}
+
+@keyframes bgFloat {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: saturate(1.05) brightness(1.0);
+  }
+  50% {
+    transform: translate3d(0px, -8px, 0) scale(1.01);
+    filter: saturate(1.08) brightness(1.02);
+  }
+  100% {
+    transform: translate3d(0, 8px, 0) scale(1.015);
+    filter: saturate(1.1) brightness(1.03);
+  }
+}
+
 /* Modern minimal gradient background container */
 .bg-modern {
   background: 
@@ -205,6 +235,17 @@ body {
 .btn-oauth-outlook:hover {
   background: #106ebe;
   border-color: #106ebe;
+}
+
+/* Elegant separator bar to split controls from content */
+.content-separator {
+  position: relative;
+  height: 1px;
+  margin: 20px 0;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.15), transparent);
+}
+.dark .content-separator {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
 }
 
 /* Botón Sign In/Sign Up mejorado */

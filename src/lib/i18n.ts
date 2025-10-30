@@ -91,7 +91,7 @@ const DICTS: Record<Locale, Dict> = {
     showMap: "Show Map", 
     hideMap: "Hide Map",
     activeProjects: "Active Projects",
-    volunteers: "Volunteers",
+    
     cities: "Cities",
     connectedVolunteers: "Connected volunteers",
     availableSpots: "Available spots",
@@ -435,12 +435,22 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle2: "Air Quality Data Analyst",
     jobTitle3: "Environmental Educator (STEM)",
     jobTitle4: "River Cleanup Coordinator",
+    jobTitle5: "Circular Economy Architect",
+    jobTitle6: "Ocean Conservation Specialist",
+    jobTitle7: "Green Architecture Specialist",
+    jobTitle8: "Circular Economy Researcher",
+    jobTitle9: "Wind Farm Operations Engineer",
     
     // Job descriptions
     jobDesc1: "Lead urban reforestation initiatives in Berlin, managing tree planting projects, coordinating with local communities, and developing sustainable green spaces. You'll work with environmental scientists, city planners, and volunteers to create healthier urban environments.",
     jobDesc2: "Analyze air quality data using Python and GIS tools, monitor sensor networks across Paris, and create reports for environmental policy makers. You'll work with data scientists and environmental engineers to improve air quality monitoring systems.",
     jobDesc3: "Develop and deliver STEM-based environmental education programs in Madrid, teaching students about solar energy, robotics, and sustainability. You'll create engaging curriculum and work with schools to promote environmental awareness.",
     jobDesc4: "Coordinate river cleanup operations in Milan, managing volunteer teams, ensuring safety protocols, and organizing waste collection initiatives. You'll work with environmental organizations and local authorities to protect water ecosystems.",
+    jobDesc5: "Design and implement circular economy strategies for companies in Amsterdam. Work with product teams to extend lifecycle, reduce waste, and create closed-loop material flows. Collaborate with municipalities and startups.",
+    jobDesc6: "Support marine conservation programs out of Lisbon. Monitor biodiversity, analyze data from underwater sensors, and coordinate citizen‑science beach surveys with NGOs and local universities.",
+    jobDesc7: "Lead sustainable architecture projects in Amsterdam. Integrate energy efficiency, passive design, and low‑carbon materials (LEED/BREEAM). Coordinate with urban planners and community stakeholders.",
+    jobDesc8: "Join a Copenhagen research institute to evaluate circular economy pilots. Quantify impact (LCA), publish findings, and support policy recommendations across the Nordics.",
+    jobDesc9: "Operate and optimize wind farms around Hamburg. Oversee maintenance schedules, SCADA monitoring, safety procedures, and performance improvements with OEM partners.",
     
     // Technical tags
     sensores: "sensors",
@@ -522,7 +532,6 @@ const DICTS: Record<Locale, Dict> = {
     jobCreated: "Job Created",
     
     // Language levels
-    naturalLanguages: "Natural Languages",
     spanish: "Spanish",
     english: "English", 
     german: "German",
@@ -532,6 +541,11 @@ const DICTS: Record<Locale, Dict> = {
     intermediate: "Intermediate",
     advanced: "Advanced",
     fluent: "Fluent",
+    selectLanguage: "Select language",
+    levelJunior: "Junior",
+    levelMid: "Mid",
+    levelSenior: "Senior",
+    levelLead: "Lead",
     
     // Admin panel titles
     adminPanelTitle: "Administration Panel",
@@ -727,7 +741,7 @@ const DICTS: Record<Locale, Dict> = {
     showMap: "Karte Anzeigen",
     hideMap: "Karte Ausblenden",
     activeProjects: "Aktive Projekte",
-    volunteers: "Freiwillige",
+    
     cities: "Städte",
     connectedVolunteers: "Verbundene Freiwillige",
     availableSpots: "Verfügbare Plätze",
@@ -1103,12 +1117,22 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle2: "Luftqualität Datenanalyst",
     jobTitle3: "Umweltpädagoge (STEM)",
     jobTitle4: "Flussreinigung Koordinator",
+    jobTitle5: "Architekt Kreislaufwirtschaft",
+    jobTitle6: "Meeresnaturschutz Spezialist",
+    jobTitle7: "Spezialist für grüne Architektur",
+    jobTitle8: "Forscher Kreislaufwirtschaft",
+    jobTitle9: "Ingenieur Windparkbetrieb",
     
     // Job descriptions
     jobDesc1: "Leiten Sie städtische Aufforstungsinitiativen in Berlin, verwalten Sie Baumpflanzprojekte, koordinieren Sie mit lokalen Gemeinden und entwickeln Sie nachhaltige Grünflächen. Sie arbeiten mit Umweltexperten, Stadtplanern und Freiwilligen zusammen, um gesündere städtische Umgebungen zu schaffen.",
     jobDesc2: "Analysieren Sie Luftqualitätsdaten mit Python und GIS-Tools, überwachen Sie Sensornetzwerke in Paris und erstellen Sie Berichte für Umweltpolitiker. Sie arbeiten mit Datenwissenschaftlern und Umweltingenieuren zusammen, um Luftqualitätsüberwachungssysteme zu verbessern.",
     jobDesc3: "Entwickeln und liefern Sie STEM-basierte Umweltbildungsprogramme in Madrid, unterrichten Sie Studenten über Solarenergie, Robotik und Nachhaltigkeit. Sie erstellen ansprechende Lehrpläne und arbeiten mit Schulen zusammen, um Umweltbewusstsein zu fördern.",
     jobDesc4: "Koordinieren Sie Flussreinigungsoperationen in Mailand, verwalten Sie Freiwilligenteams, gewährleisten Sie Sicherheitsprotokolle und organisieren Sie Abfallsammlungsinitiativen. Sie arbeiten mit Umweltorganisationen und lokalen Behörden zusammen, um Wasserökosysteme zu schützen.",
+    jobDesc5: "Entwerfen und implementieren Sie Kreislaufwirtschaftsstrategien für Unternehmen in Amsterdam. Verlängern Sie Produktlebenszyklen, reduzieren Sie Abfälle und schaffen Sie geschlossene Materialkreisläufe in Zusammenarbeit mit Kommunen und Start-ups.",
+    jobDesc6: "Unterstützen Sie Meeresschutzprogramme ab Lissabon. Überwachen Sie die Biodiversität, analysieren Sie Daten von Unterwassersensoren und koordinieren Sie Citizen‑Science‑Strandbefragungen mit NGOs und Universitäten.",
+    jobDesc7: "Leiten Sie nachhaltige Architekturprojekte in Amsterdam. Integrieren Sie Energieeffizienz, Passivhaus‑Design und CO₂‑arme Materialien (LEED/BREEAM). Arbeiten Sie eng mit Stadtplanung und Community zusammen.",
+    jobDesc8: "Arbeiten Sie an einem Forschungsinstitut in Kopenhagen, um Kreislaufwirtschaft‑Pilotprojekte zu evaluieren. Quantifizieren Sie Auswirkungen (LCA), veröffentlichen Sie Ergebnisse und unterstützen Sie Politikempfehlungen.",
+    jobDesc9: "Betreiben und optimieren Sie Windparks rund um Hamburg. Verantwortlich für Wartungspläne, SCADA‑Monitoring, Sicherheitsverfahren und Performance‑Verbesserungen mit OEM‑Partnern.",
     
     // Technical tags
     sensores: "Sensoren",
@@ -1156,7 +1180,6 @@ const DICTS: Record<Locale, Dict> = {
     conductGuidelinesText: "Halten Sie eine respektvolle und konstruktive Umgebung aufrecht",
     
     // Language levels
-    naturalLanguages: "Natürliche Sprachen",
     spanish: "Spanisch",
     english: "Englisch",
     german: "Deutsch",
@@ -1166,6 +1189,11 @@ const DICTS: Record<Locale, Dict> = {
     intermediate: "Mittelstufe",
     advanced: "Fortgeschritten",
     fluent: "Fließend",
+    selectLanguage: "Sprache auswählen",
+    levelJunior: "Junior",
+    levelMid: "Mid-Level",
+    levelSenior: "Senior",
+    levelLead: "Lead",
     
     // Admin panel titles
     adminPanelTitle: "Administrations-Panel",
@@ -1237,6 +1265,15 @@ const DICTS: Record<Locale, Dict> = {
     allContracts: "Alle",
     results: "Ergebnisse",
     calendar: "Kalender",
+    month: "Monat",
+    list: "Liste",
+    applyForJob: "Für Job bewerben",
+    yourName: "Dein Name",
+    yourEmail: "Deine E‑Mail",
+    cvLink: "CV‑Link (optional)",
+    motivations: "Motivationsschreiben",
+    expertiseAreas: "Fachgebiete",
+    expertiseAreasPlaceholder: "Deine Fachgebiete",
     beVolunteer: "Freiwilliger werden",
     description: "Beschreibung",
     impact: "Auswirkung",
@@ -1603,7 +1640,6 @@ const DICTS: Record<Locale, Dict> = {
     createJobOffer: "Crear Oferta de Trabajo",
     
     // Language levels
-    naturalLanguages: "Lenguajes Naturales",
     spanish: "Español",
     english: "Inglés",
     german: "Alemán",
@@ -1613,6 +1649,11 @@ const DICTS: Record<Locale, Dict> = {
     intermediate: "Intermedio",
     advanced: "Avanzado",
     fluent: "Fluido",
+    selectLanguage: "Selecciona un lenguaje",
+    levelJunior: "Junior",
+    levelMid: "Intermedio",
+    levelSenior: "Senior",
+    levelLead: "Líder",
     createdEvent: "Evento creado",
     currentTopic: "Tema actual",
     cvLink: "Enlace al CV",
@@ -1669,7 +1710,7 @@ const DICTS: Record<Locale, Dict> = {
     allCities: "Todas",
     allContracts: "Todos",
     results: "resultados",
-    month: "mes",
+    month: "Mes",
     motivationLetter: "Carta de motivación",
     motivations: "Motivaciones",
     motivationsPlaceholder: "¿Por qué quieres este trabajo?",
@@ -1816,12 +1857,22 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle2: "Analista de Datos de Calidad del Aire",
     jobTitle3: "Educador/a ambiental (STEM)",
     jobTitle4: "Coordinador/a de Limpiezas de Ríos",
+    jobTitle5: "Arquitecto/a de Economía Circular",
+    jobTitle6: "Especialista en Conservación Marina",
+    jobTitle7: "Especialista en Arquitectura Sostenible",
+    jobTitle8: "Investigador/a en Economía Circular",
+    jobTitle9: "Ingeniero/a de Operaciones Eólicas",
     
     // Job descriptions
     jobDesc1: "Lidera iniciativas de reforestación urbana en Berlín, gestionando proyectos de plantación de árboles, coordinando con comunidades locales y desarrollando espacios verdes sostenibles. Trabajarás con científicos ambientales, planificadores urbanos y voluntarios para crear entornos urbanos más saludables.",
     jobDesc2: "Analiza datos de calidad del aire usando Python y herramientas GIS, monitorea redes de sensores en París y crea informes para responsables de políticas ambientales. Trabajarás con científicos de datos e ingenieros ambientales para mejorar los sistemas de monitoreo de calidad del aire.",
     jobDesc3: "Desarrolla y entrega programas de educación ambiental basados en STEM en Madrid, enseñando a estudiantes sobre energía solar, robótica y sostenibilidad. Crearás currículos atractivos y trabajarás con escuelas para promover la conciencia ambiental.",
     jobDesc4: "Coordina operaciones de limpieza de ríos en Milán, gestionando equipos de voluntarios, asegurando protocolos de seguridad y organizando iniciativas de recolección de residuos. Trabajarás con organizaciones ambientales y autoridades locales para proteger los ecosistemas acuáticos.",
+    jobDesc5: "Diseña e implementa estrategias de economía circular para empresas en Ámsterdam. Extiende el ciclo de vida de productos, reduce residuos y crea flujos de materiales en circuito cerrado en colaboración con municipios y startups.",
+    jobDesc6: "Apoya programas de conservación marina desde Lisboa. Monitorea biodiversidad, analiza datos de sensores submarinos y coordina muestreos en playas con ONG y universidades.",
+    jobDesc7: "Lidera proyectos de arquitectura sostenible en Ámsterdam. Integra eficiencia energética, diseño pasivo y materiales de bajo carbono (LEED/BREEAM). Coordina con urbanismo y actores comunitarios.",
+    jobDesc8: "Únete a un instituto en Copenhague para evaluar pilotos de economía circular. Cuantifica impacto (ACV), publica resultados y apoya recomendaciones de política en los países nórdicos.",
+    jobDesc9: "Opera y optimiza parques eólicos en torno a Hamburgo. Gestiona planes de mantenimiento, monitoreo SCADA, seguridad y mejoras de rendimiento con fabricantes (OEM).",
     
     // Technical tags
     sensores: "sensores",

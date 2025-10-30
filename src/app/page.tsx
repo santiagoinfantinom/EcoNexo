@@ -67,6 +67,8 @@ export default function Home() {
             </Link>
           </div>
 
+          <div className="content-separator" />
+
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">

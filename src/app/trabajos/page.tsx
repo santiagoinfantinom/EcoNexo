@@ -8,7 +8,9 @@ type Job = {
   company: string;
   city: string;
   country: string;
-  salaryEur: number;
+  salaryMinEur: number;
+  salaryMaxEur: number;
+  level: 'junior' | 'mid' | 'senior' | 'lead';
   experienceYears: number;
   knowledgeAreas: string[];
   contract: "full-time" | "part-time" | "contract" | "internship";
@@ -30,7 +32,9 @@ const JOBS: Job[] = [
     company: "Green City Berlin",
     city: "Berlín",
     country: "Alemania",
-    salaryEur: 42000,
+    salaryMinEur: 38000,
+    salaryMaxEur: 46000,
+    level: 'mid',
     experienceYears: 2,
     knowledgeAreas: ["Silvicultura", "Biodiversidad", "Gestión de proyectos", "GIS", "Botánica"],
     contract: "full-time",
@@ -43,7 +47,9 @@ const JOBS: Job[] = [
     company: "Euro Air Lab",
     city: "París",
     country: "Francia",
-    salaryEur: 52000,
+    salaryMinEur: 48000,
+    salaryMaxEur: 60000,
+    level: 'mid',
     experienceYears: 3,
     knowledgeAreas: ["Python", "Sensores", "GIS", "Machine Learning", "Estadística"],
     contract: "full-time",
@@ -56,7 +62,9 @@ const JOBS: Job[] = [
     company: "SolarTech Academy",
     city: "Madrid",
     country: "España",
-    salaryEur: 28000,
+    salaryMinEur: 24000,
+    salaryMaxEur: 32000,
+    level: 'junior',
     experienceYears: 1,
     knowledgeAreas: ["Didáctica", "Energía solar", "Robótica educativa", "Comunicación"],
     contract: "part-time",
@@ -69,7 +77,9 @@ const JOBS: Job[] = [
     company: "River Guardians",
     city: "Milán",
     country: "Italia",
-    salaryEur: 35000,
+    salaryMinEur: 32000,
+    salaryMaxEur: 40000,
+    level: 'mid',
     experienceYears: 2,
     knowledgeAreas: ["Gestión de voluntariado", "Residuos", "Seguridad", "Logística"],
     contract: "contract",
@@ -82,7 +92,9 @@ const JOBS: Job[] = [
     company: "EcoTech Solutions",
     city: "Barcelona",
     country: "España",
-    salaryEur: 45000,
+    salaryMinEur: 42000,
+    salaryMaxEur: 52000,
+    level: 'mid',
     experienceYears: 3,
     knowledgeAreas: ["React Native", "Node.js", "Blockchain", "IoT", "UX/UI"],
     contract: "full-time",
@@ -95,7 +107,9 @@ const JOBS: Job[] = [
     company: "Ocean Conservation",
     city: "Lisboa",
     country: "Portugal",
-    salaryEur: 38000,
+    salaryMinEur: 34000,
+    salaryMaxEur: 42000,
+    level: 'mid',
     experienceYears: 4,
     knowledgeAreas: ["Biología marina", "Conservación", "Investigación", "Buceo"],
     contract: "full-time",
@@ -108,7 +122,9 @@ const JOBS: Job[] = [
     company: "Green Architecture Studio",
     city: "Ámsterdam",
     country: "Países Bajos",
-    salaryEur: 55000,
+    salaryMinEur: 52000,
+    salaryMaxEur: 65000,
+    level: 'senior',
     experienceYears: 5,
     knowledgeAreas: ["Arquitectura", "Sostenibilidad", "CAD", "Certificación LEED"],
     contract: "full-time",
@@ -121,7 +137,9 @@ const JOBS: Job[] = [
     company: "Circular Economy Institute",
     city: "Copenhague",
     country: "Dinamarca",
-    salaryEur: 48000,
+    salaryMinEur: 45000,
+    salaryMaxEur: 56000,
+    level: 'mid',
     experienceYears: 3,
     knowledgeAreas: ["Economía", "Sostenibilidad", "Análisis de datos", "Políticas públicas"],
     contract: "full-time",
@@ -134,7 +152,9 @@ const JOBS: Job[] = [
     company: "WindPower Europe",
     city: "Hamburgo",
     country: "Alemania",
-    salaryEur: 62000,
+    salaryMinEur: 58000,
+    salaryMaxEur: 72000,
+    level: 'senior',
     experienceYears: 4,
     knowledgeAreas: ["Ingeniería", "Energía eólica", "Automatización", "Mantenimiento"],
     contract: "full-time",
@@ -147,7 +167,9 @@ const JOBS: Job[] = [
     company: "Green Media Agency",
     city: "Londres",
     country: "Reino Unido",
-    salaryEur: 35000,
+    salaryMinEur: 30000,
+    salaryMaxEur: 42000,
+    level: 'junior',
     experienceYears: 2,
     knowledgeAreas: ["Comunicación", "Marketing digital", "Redes sociales", "Video producción"],
     contract: "contract",
@@ -160,7 +182,9 @@ const JOBS: Job[] = [
     company: "RegenAg Solutions",
     city: "Roma",
     country: "Italia",
-    salaryEur: 40000,
+    salaryMinEur: 36000,
+    salaryMaxEur: 46000,
+    level: 'mid',
     experienceYears: 3,
     knowledgeAreas: ["Agronomía", "Permacultura", "Suelos", "Biodiversidad"],
     contract: "full-time",
@@ -173,7 +197,9 @@ const JOBS: Job[] = [
     company: "ESG Consulting",
     city: "Zúrich",
     country: "Suiza",
-    salaryEur: 65000,
+    salaryMinEur: 62000,
+    salaryMaxEur: 78000,
+    level: 'senior',
     experienceYears: 4,
     knowledgeAreas: ["ESG", "Finanzas sostenibles", "Reporting", "Auditoría"],
     contract: "full-time",
@@ -212,7 +238,7 @@ export default function JobsPage() {
       j.title.toLowerCase().includes(query.toLowerCase()) ||
       j.company.toLowerCase().includes(query.toLowerCase()) ||
       j.knowledgeAreas.some(a => a.toLowerCase().includes(query.toLowerCase()))
-    ).filter(j => j.salaryEur >= minSalary && j.experienceYears >= minExperience)
+    ).filter(j => j.salaryMinEur >= minSalary && j.experienceYears >= minExperience)
     .filter(j => city === "all" ? true : j.city.toLowerCase() === city.toLowerCase())
     .filter(j => contract === "all" ? true : j.contract === contract)
     .filter(j => remoteOnly ? j.remote : true);
@@ -275,11 +301,7 @@ export default function JobsPage() {
     motivations: "", 
     expertiseAreas: "", 
     motivationLetter: null as File | null,
-    languages: {
-      spanish: { level: "", native: false },
-      english: { level: "", native: false },
-      german: { level: "", native: false }
-    }
+    languages: [] as { code: string; level: string; native: boolean }[]
   });
   const toggleSave = (id: string) => setSavedJobs((s)=> ({ ...s, [id]: !s[id] }));
   const submitApplication = async () => {
@@ -292,28 +314,27 @@ export default function JobsPage() {
       motivations: "", 
       expertiseAreas: "", 
       motivationLetter: null,
-      languages: {
-        spanish: { level: "", native: false },
-        english: { level: "", native: false },
-        german: { level: "", native: false }
-      }
+      languages: []
     });
   };
 
-  // Helper functions to get translated job data
+  // Helper functions to get translated job data with safe fallback
   const getJobTitle = (job: Job) => {
-    const titleKey = `jobTitle${job.id.charAt(1)}` as keyof typeof t;
-    return t(titleKey) || job.title;
+    const titleKey = `jobTitle${job.id.charAt(1)}`;
+    const translated = t(titleKey);
+    return translated === titleKey ? job.title : translated;
   };
 
   const getJobDescription = (job: Job) => {
-    const descKey = `jobDesc${job.id.charAt(1)}` as keyof typeof t;
-    return t(descKey) || job.description;
+    const descKey = `jobDesc${job.id.charAt(1)}`;
+    const translated = t(descKey);
+    return translated === descKey ? job.description : translated;
   };
 
   const getKnowledgeArea = (area: string) => {
-    const areaKey = area.toLowerCase().replace(/\s+/g, '') as keyof typeof t;
-    return t(areaKey) || area;
+    const areaKey = area.toLowerCase().replace(/\s+/g, '');
+    const translated = t(areaKey);
+    return translated === areaKey ? area : translated;
   };
 
   return (
@@ -372,6 +393,8 @@ export default function JobsPage() {
         <div className="mt-4 text-sm text-slate-500 dark:text-slate-400">{filtered.length} {t("results")}</div>
       </div>
 
+      <div className="content-separator" />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.map((job)=> (
           <div key={job.id} className="bg-white dark:bg-slate-800 rounded-xl shadow p-5">
@@ -381,8 +404,8 @@ export default function JobsPage() {
                 <p className="text-slate-600 dark:text-slate-400">{job.company} — {locationLabel(job.city, locale as any)}, {locationLabel(job.country, locale as any)}</p>
               </div>
               <div className="text-right">
-                <div className="text-green-600 font-bold">{fmtCurrency(job.salaryEur)}</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">{job.contract}{job.remote ? " · Remote" : ""}</div>
+                <div className="text-green-600 font-bold">{fmtCurrency(job.salaryMinEur)}–{fmtCurrency(job.salaryMaxEur)}</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">{t(job.level === 'junior' ? 'levelJunior' : job.level === 'mid' ? 'levelMid' : job.level === 'senior' ? 'levelSenior' : 'levelLead')} • {job.contract}{job.remote ? " · Remote" : ""}</div>
               </div>
             </div>
             <div className="mt-3 text-slate-700 dark:text-slate-300">{getJobDescription(job)}</div>
@@ -403,7 +426,7 @@ export default function JobsPage() {
       {applyFor && (
         <div className="fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4">
           <div className="bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto border border-slate-700">
-            <h2 className="text-xl font-bold mb-4 text-white">{t("applyForJob")}: {applyFor.title}</h2>
+            <h2 className="text-xl font-bold mb-4 text-white">{t("applyForJob")}: {getJobTitle(applyFor)}</h2>
             <div className="space-y-4">
               {/* Información Personal */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -435,7 +458,7 @@ export default function JobsPage() {
                   value={applicant.cv} 
                   onChange={(e)=>setApplicant({...applicant,cv:e.target.value})} 
                   className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white placeholder:text-slate-400" 
-                  placeholder="https://linkedin.com/in/tu-perfil"
+                  placeholder={locale === 'de' ? 'z. B. https://linkedin.com/in/dein-profil' : 'https://linkedin.com/in/tu-perfil'}
                 />
               </div>
 
@@ -463,136 +486,125 @@ export default function JobsPage() {
                 />
               </div>
 
-              {/* Lenguajes Naturales */}
+              {/* Lenguajes */}
               <div>
-                <label className="block text-sm font-medium mb-3 text-white">{t("naturalLanguages")}</label>
-                <div className="space-y-4">
-                  {/* Alemán primero - como el usuario pidió */}
-                  <div className="border border-slate-600 rounded-lg p-4 bg-slate-700">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">🇩🇪</span>
-                        <span className="font-medium text-white">{t("german")}</span>
-                      </div>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={applicant.languages.german.native}
-                          onChange={(e) => setApplicant({
-                            ...applicant,
-                            languages: {
-                              ...applicant.languages,
-                              german: { ...applicant.languages.german, native: e.target.checked }
-                            }
-                          })}
-                          className="rounded"
-                        />
-                        <span className="text-sm text-slate-300">{t("nativeLanguage")}</span>
-                      </label>
-                    </div>
-                    <select
-                      value={applicant.languages.german.level}
-                      onChange={(e) => setApplicant({
-                        ...applicant,
-                        languages: {
-                          ...applicant.languages,
-                          german: { ...applicant.languages.german, level: e.target.value }
-                        }
-                      })}
-                      className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
-                    >
-                      <option value="" className="bg-slate-700">{t("selectLevel")}</option>
-                      <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
-                      <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
-                      <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
-                      <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
-                    </select>
-                  </div>
+                <label className="block text-sm font-medium mb-3 text-white">{t("languages")}</label>
+                {(() => {
+                  const EUROPEAN_LANGUAGES = [
+                    { code: 'de', label: 'Deutsch' },
+                    { code: 'en', label: 'English' },
+                    { code: 'es', label: 'Español' },
+                    { code: 'fr', label: 'Français' },
+                    { code: 'it', label: 'Italiano' },
+                    { code: 'pt', label: 'Português' },
+                    { code: 'nl', label: 'Nederlands' },
+                    { code: 'pl', label: 'Polski' },
+                    { code: 'ro', label: 'Română' },
+                    { code: 'cs', label: 'Čeština' },
+                    { code: 'sk', label: 'Slovenčina' },
+                    { code: 'sl', label: 'Slovenščina' },
+                    { code: 'hr', label: 'Hrvatski' },
+                    { code: 'sr', label: 'Srpski' },
+                    { code: 'bs', label: 'Bosanski' },
+                    { code: 'mk', label: 'Македонски' },
+                    { code: 'bg', label: 'Български' },
+                    { code: 'ru', label: 'Русский' },
+                    { code: 'uk', label: 'Українська' },
+                    { code: 'be', label: 'Беларуская' },
+                    { code: 'el', label: 'Ελληνικά' },
+                    { code: 'da', label: 'Dansk' },
+                    { code: 'sv', label: 'Svenska' },
+                    { code: 'fi', label: 'Suomi' },
+                    { code: 'no', label: 'Norsk' },
+                    { code: 'et', label: 'Eesti' },
+                    { code: 'lv', label: 'Latviešu' },
+                    { code: 'lt', label: 'Lietuvių' },
+                    { code: 'ga', label: 'Gaeilge' },
+                    { code: 'mt', label: 'Malti' },
+                    { code: 'is', label: 'Íslenska' },
+                    { code: 'al', label: 'Shqip' }
+                  ];
 
-                  {/* Español */}
-                  <div className="border border-slate-600 rounded-lg p-4 bg-slate-700">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">🇪🇸</span>
-                        <span className="font-medium text-white">{t("spanish")}</span>
-                      </div>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={applicant.languages.spanish.native}
-                          onChange={(e) => setApplicant({
-                            ...applicant,
-                            languages: {
-                              ...applicant.languages,
-                              spanish: { ...applicant.languages.spanish, native: e.target.checked }
-                            }
-                          })}
-                          className="rounded"
-                        />
-                        <span className="text-sm text-slate-300">{t("nativeLanguage")}</span>
-                      </label>
-                    </div>
-                    <select
-                      value={applicant.languages.spanish.level}
-                      onChange={(e) => setApplicant({
-                        ...applicant,
-                        languages: {
-                          ...applicant.languages,
-                          spanish: { ...applicant.languages.spanish, level: e.target.value }
-                        }
-                      })}
-                      className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
-                    >
-                      <option value="" className="bg-slate-700">{t("selectLevel")}</option>
-                      <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
-                      <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
-                      <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
-                      <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
-                    </select>
-                  </div>
+                  const selectable = EUROPEAN_LANGUAGES.filter(l => !applicant.languages.some(sel => sel.code === l.code));
 
-                  {/* Inglés */}
-                  <div className="border border-slate-600 rounded-lg p-4 bg-slate-700">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">🇬🇧</span>
-                        <span className="font-medium text-white">{t("english")}</span>
+                  return (
+                    <div className="space-y-3">
+                      <div className="flex flex-col md:flex-row md:items-center gap-2">
+                        <select
+                          onChange={(e) => {
+                            const code = e.target.value;
+                            if (!code) return;
+                            if (applicant.languages.some(l => l.code === code)) return;
+                            setApplicant({
+                              ...applicant,
+                              languages: [...applicant.languages, { code, level: '', native: false }]
+                            });
+                            e.currentTarget.value = '';
+                          }}
+                          defaultValue=""
+                          className="w-full md:w-1/2 border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white"
+                        >
+                          <option value="" className="bg-slate-700">{t("selectLanguage") ?? 'Selecciona un lenguaje'}</option>
+                          {selectable.map(l => (
+                            <option key={l.code} value={l.code} className="bg-slate-700">{l.label}</option>
+                          ))}
+                        </select>
                       </div>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={applicant.languages.english.native}
-                          onChange={(e) => setApplicant({
-                            ...applicant,
-                            languages: {
-                              ...applicant.languages,
-                              english: { ...applicant.languages.english, native: e.target.checked }
-                            }
+
+                      {applicant.languages.length > 0 && (
+                        <div className="space-y-2">
+                          {applicant.languages.map((l, idx) => {
+                            const meta = EUROPEAN_LANGUAGES.find(x => x.code === l.code);
+                            return (
+                              <div key={l.code} className="border border-slate-600 rounded-lg p-3 bg-slate-700 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                                <div className="text-white font-medium">{meta?.label || l.code.toUpperCase()}</div>
+                                <div className="flex items-center gap-2">
+                                  <select
+                                    value={l.level}
+                                    onChange={(e) => {
+                                      const next = [...applicant.languages];
+                                      next[idx] = { ...l, level: e.target.value };
+                                      setApplicant({ ...applicant, languages: next });
+                                    }}
+                                    className="border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
+                                  >
+                                    <option value="" className="bg-slate-700">{t("selectLevel")}</option>
+                                    <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
+                                    <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
+                                    <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
+                                    <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
+                                  </select>
+                                  <label className="flex items-center gap-2 text-slate-300">
+                                    <input
+                                      type="checkbox"
+                                      checked={l.native}
+                                      onChange={(e) => {
+                                        const next = [...applicant.languages];
+                                        next[idx] = { ...l, native: e.target.checked };
+                                        setApplicant({ ...applicant, languages: next });
+                                      }}
+                                      className="rounded"
+                                    />
+                                    <span>{t("nativeLanguage")}</span>
+                                  </label>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setApplicant({ ...applicant, languages: applicant.languages.filter(x => x.code !== l.code) });
+                                    }}
+                                    className="text-red-300 hover:text-red-200 text-sm"
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
+                              </div>
+                            );
                           })}
-                          className="rounded"
-                        />
-                        <span className="text-sm text-slate-300">{t("nativeLanguage")}</span>
-                      </label>
+                        </div>
+                      )}
                     </div>
-                    <select
-                      value={applicant.languages.english.level}
-                      onChange={(e) => setApplicant({
-                        ...applicant,
-                        languages: {
-                          ...applicant.languages,
-                          english: { ...applicant.languages.english, level: e.target.value }
-                        }
-                      })}
-                      className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
-                    >
-                      <option value="" className="bg-slate-700">{t("selectLevel")}</option>
-                      <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
-                      <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
-                      <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
-                      <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
-                    </select>
-                  </div>
-                </div>
+                  );
+                })()}
               </div>
 
               {/* Carta de Motivación PDF */}

@@ -40,6 +40,7 @@ export default function RootLayout({
       <body
         className={`${interTight.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-gls-primary`}
       >
+        <div className="animated-gradient-bg" />
         <PlausibleProvider domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "econexo.app"}>
           <ThemeProvider>
             <I18nProvider>
