@@ -6,6 +6,7 @@ import { useI18n, categoryLabel, projectNameLabel, locationLabel } from "@/lib/i
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
 import MapFilters from "./MapFilters";
+import MapSearch from "./MapSearch";
 import MapLayers from "./MapLayers";
 
 type Project = {
@@ -227,7 +228,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
               )}
               <div className="flex gap-2 mt-1">
                 <Link href={`/projects/${p.id}`} className="text-green-700 underline text-sm">
-                  {t("viewDetails")}
+                  {locale === 'es' ? 'Detalles' : 'Details'}
                 </Link>
                 {(p as any).info_url && (
                   <a href={(p as any).info_url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline text-sm">
@@ -246,6 +247,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     <div className="absolute top-4 left-4 right-4 z-[5000] flex justify-between items-start pointer-events-none">
       {/* Map Filters */}
       <div className="pointer-events-auto flex items-center gap-2">
+        <MapSearch allProjects={projects} onResults={setFilteredProjects} />
         <MapFilters 
           allProjects={projects}
           onFilterChange={setFilteredProjects}

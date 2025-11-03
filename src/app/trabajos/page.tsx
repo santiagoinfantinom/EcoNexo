@@ -332,6 +332,46 @@ export default function JobsPage() {
     languages: [] as { code: string; level: string; native: boolean }[]
   });
   const [newLanguage, setNewLanguage] = useState<{ code: string; level: string }>({ code: '', level: '' });
+
+  // Persist/restore application form state
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('econexo:jobApplication');
+      if (raw) {
+        const saved = JSON.parse(raw);
+        setApplicant((prev) => ({
+          ...prev,
+          name: typeof saved.name === 'string' ? saved.name : prev.name,
+          email: typeof saved.email === 'string' ? saved.email : prev.email,
+          cv: typeof saved.cv === 'string' ? saved.cv : prev.cv,
+          motivations: typeof saved.motivations === 'string' ? saved.motivations : prev.motivations,
+          expertiseAreas: typeof saved.expertiseAreas === 'string' ? saved.expertiseAreas : prev.expertiseAreas,
+          motivationLetter: null,
+          languages: Array.isArray(saved.languages) ? saved.languages : prev.languages,
+        }));
+        if (saved.newLanguage && typeof saved.newLanguage === 'object') {
+          setNewLanguage({
+            code: typeof saved.newLanguage.code === 'string' ? saved.newLanguage.code : '',
+            level: typeof saved.newLanguage.level === 'string' ? saved.newLanguage.level : '',
+          });
+        }
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('econexo:jobApplication', JSON.stringify({
+        name: applicant.name,
+        email: applicant.email,
+        cv: applicant.cv,
+        motivations: applicant.motivations,
+        expertiseAreas: applicant.expertiseAreas,
+        languages: applicant.languages,
+        newLanguage,
+      }));
+    } catch {}
+  }, [applicant.name, applicant.email, applicant.cv, applicant.motivations, applicant.expertiseAreas, applicant.languages, newLanguage]);
   const toggleSave = (id: string) => setSavedJobs((s)=> ({ ...s, [id]: !s[id] }));
   const submitApplication = async () => {
     setApplyFor(null);
@@ -345,6 +385,8 @@ export default function JobsPage() {
       motivationLetter: null,
       languages: []
     });
+    setNewLanguage({ code: '', level: '' });
+    try { localStorage.removeItem('econexo:jobApplication'); } catch {}
   };
 
   // Helper functions to get translated job data with safe fallback

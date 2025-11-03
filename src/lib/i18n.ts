@@ -50,6 +50,9 @@ const DICTS: Record<Locale, Dict> = {
     pronouns: "Pronouns",
     gender: "Gender",
     selectPronouns: "Select pronouns",
+    pronounHe: "He",
+    pronounShe: "She",
+    pronounThey: "They",
     heShe: "he/she",
     theyThem: "they/them",
     erSie: "er/sie",
@@ -98,6 +101,21 @@ const DICTS: Record<Locale, Dict> = {
     featuredProjects: "Featured Projects",
     exploreCategories: "Explore Categories",
     ecoTipsTitle: "Eco Tips",
+    ecoTipsDescription: "Practical ideas to reduce your footprint and live sustainably.",
+    // Map filters/search
+    filters: "Filters",
+    search: "Search",
+    searchProjects: "Search projects, cities or countries",
+    categories: "Categories",
+    onlyAvailableSpots: "Only with available spots",
+    maxDistance: "Max distance",
+    anyDistance: "Any distance",
+    dateRange: "Date range",
+    
+    type: "Type",
+    permanent: "Permanent",
+    centerOnLocation: "Center on my location",
+    clearFilters: "Clear filters",
     joinCommunity: "Join Community",
     readyToMakeDifference: "Ready to make a difference?",
     readyDescription: "Explore projects, join events and connect with a community committed to our planet's future",
@@ -733,6 +751,9 @@ const DICTS: Record<Locale, Dict> = {
     pronouns: "Pronomen",
     gender: "Geschlecht",
     selectPronouns: "Pronomen auswählen",
+    pronounHe: "Er",
+    pronounShe: "Sie",
+    pronounThey: "They",
     heShe: "er/sie",
     theyThem: "they/them",
     erSie: "er/sie",
@@ -1054,6 +1075,21 @@ const DICTS: Record<Locale, Dict> = {
     
     // Eco Tips
     ecoTipCategoryFinance: "Finanzen",
+    ecoTipsDescription: "Praktische Ideen, um deinen Fußabdruck zu senken und nachhaltig zu leben.",
+    // Map filters/search
+    filters: "Filter",
+    search: "Suche",
+    searchProjects: "Suche nach Projekten, Städten oder Ländern",
+    categories: "Kategorien",
+    onlyAvailableSpots: "Nur mit freien Plätzen",
+    maxDistance: "Maximale Entfernung",
+    anyDistance: "Beliebige Entfernung",
+    dateRange: "Datumsbereich",
+    
+    type: "Typ",
+    permanent: "Dauerhaft",
+    centerOnLocation: "Auf meinen Standort zentrieren",
+    clearFilters: "Filter zurücksetzen",
     ecoTipBankTitle: "Wähle nachhaltiges Banking",
     ecoTipBankDescription: "Wechsle zu Banken, die in erneuerbare Energien investieren und fossile Brennstoffe vermeiden.",
     ecoTipCategoryTransport: "Transport",
@@ -1396,6 +1432,9 @@ const DICTS: Record<Locale, Dict> = {
     pronouns: "Pronombres",
     gender: "Género",
     selectPronouns: "Seleccionar pronombres",
+    pronounHe: "Él",
+    pronounShe: "Ella",
+    pronounThey: "Elle",
     heShe: "él/ella",
     theyThem: "they/them",
     erSie: "er/sie",
@@ -2373,11 +2412,59 @@ export function projectNameLabel(id: string, name: string, locale: Locale) {
 }
 
 export function projectDescriptionLabel(projectId: string, original: string, locale: Locale) {
+  if (!original) return original;
   if (locale === "es") return original;
-  
-  // For now, return the original description
-  // In the future, this could be enhanced with a database lookup
-  return original;
+
+  // Lightweight auto-translation fallback for common project phrasing
+  const ES_EN: Record<string, string> = {
+    "Huertos": "Gardens",
+    "urbanos": "urban",
+    "Jardín": "Garden",
+    "comunitario": "community",
+    "comunitarios": "community",
+    "barrio": "neighborhood",
+    "barriales": "neighborhood",
+    "alimentos": "food",
+    "sostenible": "sustainable",
+    "sostenibles": "sustainable",
+    "educación": "education",
+    "ambiental": "environmental",
+    "reciclaje": "recycling",
+    "reutilización": "reuse",
+    "economía circular": "circular economy",
+    "plantación": "planting",
+    "árboles": "trees",
+  };
+  const ES_DE: Record<string, string> = {
+    "Huertos": "Gärten",
+    "urbanos": "urban",
+    "Jardín": "Garten",
+    "comunitario": "gemeinschaftlich",
+    "comunitarios": "gemeinschaftlich",
+    "barrio": "Stadtteil",
+    "barriales": "Stadtteil",
+    "alimentos": "Lebensmittel",
+    "sostenible": "nachhaltig",
+    "sostenibles": "nachhaltig",
+    "educación": "Bildung",
+    "ambiental": "Umwelt",
+    "reciclaje": "Recycling",
+    "reutilización": "Wiederverwendung",
+    "economía circular": "Kreislaufwirtschaft",
+    "plantación": "Pflanzung",
+    "árboles": "Bäume",
+  };
+  const dict = locale === "en" ? ES_EN : ES_DE;
+  const entries = Object.entries(dict).sort((a, b) => b[0].length - a[0].length);
+  let out = original;
+  for (const [es, tr] of entries) {
+    const re = new RegExp(`${es.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")}`, "gi");
+    out = out.replace(re, (m) => {
+      const cap = m[0] === m[0].toUpperCase();
+      return cap ? tr.charAt(0).toUpperCase() + tr.slice(1) : tr;
+    });
+  }
+  return out;
 }
 
 export function impactTagLabel(original: string, locale: Locale) {
@@ -2394,9 +2481,19 @@ export function impactTagLabel(original: string, locale: Locale) {
     "Salud": { en: "Health", de: "Gesundheit", es: "Salud", fr: "Santé", it: "Salute", pl: "Zdrowie", nl: "Gezondheid" },
     "Océanos": { en: "Oceans", de: "Ozeane", es: "Océanos", fr: "Océans", it: "Oceani", pl: "Oceany", nl: "Oceanen" },
     "Alimentación": { en: "Food", de: "Nahrung", es: "Alimentación", fr: "Alimentation", it: "Alimentazione", pl: "Żywność", nl: "Voedsel" },
+    "Integración": { en: "Integration", de: "Integration", es: "Integración", fr: "Intégration", it: "Integrazione", pl: "Integracja", nl: "Integratie" },
+    "Cultura": { en: "Culture", de: "Kultur", es: "Cultura", fr: "Culture", it: "Cultura", pl: "Kultura", nl: "Cultuur" },
   };
   
-  return impactMap[original]?.[locale] || original;
+  if (impactMap[original]?.[locale]) return impactMap[original][locale];
+
+  // Humanize fallback if unknown tag comes in camelCase or with separators
+  const spaced = original
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/[-_.]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
@@ -2423,11 +2520,128 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   const t = useMemo(() => {
     const dict = DICTS[locale];
+    const FALLBACKS: Record<Locale, Record<string, string>> = {
+      en: {
+        // General
+        all: "All",
+        apply: "Apply",
+        filters: "Filters",
+        search: "Search",
+        searchProjects: "Search projects, cities or countries",
+        categories: "Categories",
+        onlyAvailableSpots: "Only with available spots",
+        maxDistance: "Max distance",
+        anyDistance: "Any distance",
+        dateRange: "Date range",
+        country: "Country",
+        city: "City",
+        type: "Type",
+        events: "Events",
+        permanent: "Permanent",
+        centerOnLocation: "Center on my location",
+        clearFilters: "Clear filters",
+        availableSpots: "Available spots",
+        category: "Category",
+        // EcoTips
+        ecoTips: "Eco Tips",
+        ecoTipsDescription: "Practical ideas to reduce your footprint and live sustainably.",
+        ecoTipCategoryFinance: "Finance",
+        ecoTipCategoryTransport: "Transport",
+        ecoTipCategoryFood: "Food",
+        ecoTipCategoryEnergy: "Energy",
+        ecoTipCategoryWaste: "Waste",
+        ecoTipCategoryWater: "Water",
+        highImpact: "High impact",
+        mediumImpact: "Medium impact",
+        lowImpact: "Low impact",
+        easy: "Easy",
+        medium: "Medium",
+        hard: "Hard",
+        // Event detail common
+        date: "Date",
+        time: "Time",
+        location: "Location",
+        contact: "Contact",
+        volunteerProgress: "Volunteer progress",
+        volunteers: "volunteers",
+        spotsLeft: "spots left",
+        fullyBooked: "Fully booked",
+        requirements: "Requirements",
+        benefits: "Benefits",
+        joinEvent: "Join event",
+        shareEvent: "Share",
+        backToEvents: "Back to events",
+        backToMap: "Back to map",
+      },
+      de: {
+        // General
+        all: "Alle",
+        apply: "Anwenden",
+        filters: "Filter",
+        search: "Suche",
+        searchProjects: "Suche nach Projekten, Städten oder Ländern",
+        categories: "Kategorien",
+        onlyAvailableSpots: "Nur mit freien Plätzen",
+        maxDistance: "Maximale Entfernung",
+        anyDistance: "Beliebige Entfernung",
+        dateRange: "Datumsbereich",
+        country: "Land",
+        city: "Stadt",
+        type: "Typ",
+        events: "Veranstaltungen",
+        permanent: "Dauerhaft",
+        centerOnLocation: "Auf meinen Standort zentrieren",
+        clearFilters: "Filter zurücksetzen",
+        availableSpots: "Freie Plätze",
+        category: "Kategorie",
+        // EcoTips
+        ecoTips: "Eco‑Tipps",
+        ecoTipsDescription: "Praktische Ideen, um deinen Fußabdruck zu senken und nachhaltig zu leben.",
+        ecoTipCategoryFinance: "Finanzen",
+        ecoTipCategoryTransport: "Verkehr",
+        ecoTipCategoryFood: "Ernährung",
+        ecoTipCategoryEnergy: "Energie",
+        ecoTipCategoryWaste: "Abfall",
+        ecoTipCategoryWater: "Wasser",
+        highImpact: "Hohe Wirkung",
+        mediumImpact: "Mittlere Wirkung",
+        lowImpact: "Geringe Wirkung",
+        easy: "Leicht",
+        medium: "Mittel",
+        hard: "Schwierig",
+        // Event detail common
+        date: "Datum",
+        time: "Zeit",
+        location: "Ort",
+        contact: "Kontakt",
+        volunteerProgress: "Freiwilligen‑Fortschritt",
+        volunteers: "Freiwillige",
+        spotsLeft: "Plätze frei",
+        fullyBooked: "Ausgebucht",
+        requirements: "Voraussetzungen",
+        benefits: "Vorteile",
+        joinEvent: "Teilnehmen",
+        shareEvent: "Teilen",
+        backToEvents: "Zurück zu Veranstaltungen",
+        backToMap: "Zurück zur Karte",
+      },
+      es: {},
+    } as any;
+    const humanizeKey = (key: string) => {
+      if (!key) return key;
+      const spaced = key
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/[-_.]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+    };
     return (k: string) => {
       const translation = dict[k];
       if (!translation) {
         console.warn(`Missing translation key "${k}" for locale "${locale}"`);
-        return k; // Return the key itself as fallback
+        const fb = (FALLBACKS as any)[locale]?.[k];
+        return fb || humanizeKey(k);
       }
       return translation;
     };

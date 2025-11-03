@@ -89,12 +89,12 @@ export default function Home() {
 
       {/* Interactive Map Section */}
       {showMap && isClient && (
-        <section className="py-8 px-4 bg-white/50 dark:bg-slate-800/50">
+        <section className="py-8 px-6 md:px-10 xl:px-16 bg-white/50 dark:bg-slate-800/50">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-8">
               🗺️ {t('interactiveMap')}
             </h2>
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden" style={{ height: "600px" }}>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden" style={{ height: "650px", width: "100%" }}>
               <EuropeMap projects={PROJECTS} />
             </div>
           </div>
