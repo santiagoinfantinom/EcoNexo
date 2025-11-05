@@ -121,6 +121,7 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
       showOnlyAvailable: false,
       country: null,
       city: null,
+      type: 'all',
     });
   };
 

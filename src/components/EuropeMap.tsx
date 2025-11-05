@@ -44,6 +44,7 @@ if (typeof window !== "undefined") {
 export default function EuropeMap({ projects }: { projects: Project[] }) {
   const mapRef = useRef<LeafletMap | null>(null);
   const { t, locale } = useI18n();
+  const [baseFilteredProjects, setBaseFilteredProjects] = useState<Project[]>(projects);
   const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
   const [filterMode, setFilterMode] = useState<'all' | 'today' | 'permanent'>('all');
   const [heatOn, setHeatOn] = useState<boolean>(false);
@@ -51,6 +52,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
   // Calendar overlay removed; calendar lives on its own page now
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
+  const [frequencyFilters, setFrequencyFilters] = useState<{ once: boolean; regular: boolean; permanent: boolean }>({ once: true, regular: true, permanent: true });
   // Listen to external center events from the page-level search bar
   useEffect(() => {
     function onCenter(e: Event) {
@@ -124,7 +126,61 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     }
   };
 
-  // Recompute filtered list when filter mode changes
+  // Frequency helpers
+  function getFrequency(p: Project): 'once' | 'regular' | 'permanent' {
+    // permanent if flagged or lacks dates
+    const isPermanent = Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
+    if (isPermanent) return 'permanent';
+    // consider long range (> 7 days) as regular
+    if (p.startsAt && p.endsAt) {
+      const diffMs = new Date(p.endsAt).getTime() - new Date(p.startsAt).getTime();
+      if (diffMs > 7 * 24 * 60 * 60 * 1000) return 'regular';
+    }
+    // heuristic: description mentions weekly/every/cada
+    const text = ((p as any).description || '').toString().toLowerCase();
+    if (/\b(cada|semanal|weekly|every|mensual|monthly)\b/.test(text)) return 'regular';
+    return 'once';
+  }
+
+  function colorForFrequency(freq: 'once' | 'regular' | 'permanent'): string {
+    if (freq === 'once') return '#ef4444'; // red
+    if (freq === 'regular') return '#3b82f6'; // blue
+    return '#16a34a'; // green
+  }
+
+  function gradientForFrequency(freq: 'once' | 'regular' | 'permanent'): string {
+    // Modern, vibrant gradients per frequency
+    if (freq === 'once') return 'linear-gradient(135deg, #f97316 0%, #ef4444 100%)'; // orange → red
+    if (freq === 'regular') return 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)'; // cyan → blue
+    return 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)'; // green → emerald
+  }
+
+  function createGradientIcon(freq: 'once' | 'regular' | 'permanent'): L.DivIcon {
+    const size = 18;
+    const gradient = gradientForFrequency(freq);
+    // Soft glow using box-shadow; inner ring for contrast
+    const html = `
+      <span style="
+        display:inline-block; width:${size}px; height:${size}px;
+        border-radius:9999px; background:${gradient};
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.9), 0 8px 14px rgba(0,0,0,0.18);
+        position: relative;
+      ">
+        <span style="
+          position:absolute; inset:2px; border-radius:9999px;
+          background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.45), rgba(255,255,255,0) 60%);
+        "></span>
+      </span>`;
+    return L.divIcon({
+      html,
+      className: "econexo-gradient-pin",
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+      popupAnchor: [0, -size / 2],
+    });
+  }
+
+  // Recompute filtered list when base filters, frequency or mode changes
   useEffect(() => {
     const now = new Date();
     const isToday = (p: Project) => {
@@ -138,13 +194,16 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     };
     const isPermanent = (p: Project) => Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
 
-    const next = projects.filter((p) => {
+    // Start with base filtered list
+    let next = baseFilteredProjects.filter((p) => {
       if (filterMode === 'all') return true;
       if (filterMode === 'today') return isToday(p);
       return isPermanent(p);
     });
+    // Apply frequency filters
+    next = next.filter((p) => frequencyFilters[getFrequency(p)]);
     setFilteredProjects(next);
-  }, [projects, filterMode]);
+  }, [baseFilteredProjects, filterMode, frequencyFilters]);
 
   // Heatmap toggle effect
   useEffect(() => {
@@ -204,8 +263,11 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <MapLayers />
       
       {/* Individual markers */}
-      {filteredProjects.map((p) => (
-        <Marker key={p.id} position={[p.lat, p.lng]}>
+      {filteredProjects.map((p) => {
+        const freq = getFrequency(p);
+        const icon = createGradientIcon(freq);
+        return (
+          <Marker key={p.id} position={[p.lat, p.lng]} icon={icon}>
           <Popup>
             <div className="grid gap-1">
               {p && (p as any).image_url && (
@@ -223,6 +285,9 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
                 </div>
               )}
               <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
+              <div className="text-xs">
+                {locale==='es'?'Frecuencia':locale==='de'?'Häufigkeit':'Frequency'}: {freq==='once'?(locale==='es'?'Una vez':locale==='de'?'Einmalig':'One-time'):freq==='regular'?(locale==='es'?'Regularmente':locale==='de'?'Regelmäßig':'Regular'):(locale==='es'?'Permanente':locale==='de'?'Dauerhaft':'Permanent')}
+              </div>
               {p.spots !== undefined && (
                 <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
               )}
@@ -239,7 +304,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
             </div>
           </Popup>
         </Marker>
-      ))}
+        );
+      })}
     </MapContainer>
     
     {/* Controles superpuestos - VISIBLES */}
@@ -247,12 +313,30 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     <div className="absolute top-4 left-4 right-4 z-[5000] flex justify-between items-start pointer-events-none">
       {/* Map Filters */}
       <div className="pointer-events-auto flex items-center gap-2">
-        <MapSearch allProjects={projects} onResults={setFilteredProjects} />
+        <MapSearch allProjects={projects} onResults={setBaseFilteredProjects} />
         <MapFilters 
           allProjects={projects}
-          onFilterChange={setFilteredProjects}
+          onFilterChange={setBaseFilteredProjects}
           onCenterOnLocation={handleCenterOnLocation}
         />
+        {/* Frequency legend & filter */}
+        <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
+          {([
+            { key: 'once', labelEs: 'Una vez', labelEn: 'One-time', labelDe: 'Einmalig', color: '#ef4444' },
+            { key: 'regular', labelEs: 'Regular', labelEn: 'Regular', labelDe: 'Regelmäßig', color: '#3b82f6' },
+            { key: 'permanent', labelEs: 'Permanente', labelEn: 'Permanent', labelDe: 'Dauerhaft', color: '#16a34a' },
+          ] as const).map((opt) => (
+            <button
+              key={opt.key}
+              className={`px-2 py-1 rounded text-xs border flex items-center gap-1 ${frequencyFilters[opt.key] ? 'bg-black text-white border-black' : 'text-black border-black'}`}
+              onClick={() => setFrequencyFilters((prev) => ({ ...prev, [opt.key]: !prev[opt.key] }))}
+              title={locale==='es'?opt.labelEs:locale==='de'?opt.labelDe:opt.labelEn}
+            >
+              <span className="inline-block w-3 h-3 rounded-full" style={{ background: opt.key==='once' ? 'linear-gradient(135deg, #f97316, #ef4444)' : opt.key==='regular' ? 'linear-gradient(135deg, #06b6d4, #3b82f6)' : 'linear-gradient(135deg, #22c55e, #10b981)' }} />
+              <span>{locale==='es'?opt.labelEs:locale==='de'?opt.labelDe:opt.labelEn}</span>
+            </button>
+          ))}
+        </div>
         {/* Events toggle */}
         <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
           <button className={`px-2 py-1 rounded text-xs border ${filterMode==='all' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('all')}>

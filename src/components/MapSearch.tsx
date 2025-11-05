@@ -13,12 +13,15 @@ type Project = {
   lng: number;
   city: string;
   country: string;
+  description?: string;
 };
 
 type Suggestion =
   | { type: "project"; id: string; label: string; lat: number; lng: number }
   | { type: "city"; label: string }
-  | { type: "country"; label: string };
+  | { type: "country"; label: string }
+  | { type: "category"; label: string }
+  | { type: "tag"; label: string };
 
 export default function MapSearch({
   allProjects,
@@ -61,7 +64,26 @@ export default function MapSearch({
     allProjects.forEach((p) => countryNames.add(locationLabel(p.country, locale as any)));
     const countrySugs: Suggestion[] = Array.from(countryNames).map((n) => ({ type: "country", label: n }));
 
-    return [...projSugs, ...citySugs, ...countrySugs];
+    // Categories as suggestions
+    const categories = Array.from(new Set(allProjects.map((p) => p.category).filter(Boolean)));
+    const categorySugs: Suggestion[] = categories.map((c) => ({ type: "category", label: c }));
+
+    // Tags: naive extraction of #hashtags and significant words from name/description
+    const tagSet = new Set<string>();
+    allProjects.forEach((p) => {
+      const source = `${p.name} ${(p as any).description || ''}`;
+      // Extract #hashtags (ASCII + common latin letters)
+      const hashtags = source.match(/#([A-Za-z0-9_\-ÁÉÍÓÚÜÑáéíóúüñÀ-ÖØ-öø-ÿ]+)/g) || [];
+      hashtags.forEach((h) => tagSet.add(h.replace(/^#/, '')));
+      // Split on non-alphanumeric (keeping common latin letters)
+      source
+        .split(/[^A-Za-z0-9ÁÉÍÓÚÜÑáéíóúüñÀ-ÖØ-öø-ÿ]+/)
+        .filter((w) => w && w.length >= 4)
+        .forEach((w) => tagSet.add(w));
+    });
+    const tagSugs: Suggestion[] = Array.from(tagSet).slice(0, 100).map((t) => ({ type: "tag", label: t }));
+
+    return [...projSugs, ...citySugs, ...countrySugs, ...categorySugs, ...tagSugs];
   }, [allProjects, locale]);
 
   const filtered = useMemo(() => {
@@ -108,6 +130,29 @@ export default function MapSearch({
       }
       return;
     }
+    if (s.type === "category") {
+      const list = allProjects.filter((p) => p.category === s.label);
+      if (list.length) {
+        const lat = list.reduce((a, p) => a + p.lat, 0) / list.length;
+        const lon = list.reduce((a, p) => a + p.lng, 0) / list.length;
+        centerOn(lat, lon);
+        onResults(list);
+      }
+      return;
+    }
+    if (s.type === "tag") {
+      const q = s.label.toLowerCase();
+      const list = allProjects.filter((p) =>
+        p.name.toLowerCase().includes(q) || ((p as any).description || '').toLowerCase().includes(q)
+      );
+      if (list.length) {
+        const lat = list.reduce((a, p) => a + p.lat, 0) / list.length;
+        const lon = list.reduce((a, p) => a + p.lng, 0) / list.length;
+        centerOn(lat, lon);
+        onResults(list);
+      }
+      return;
+    }
   };
 
   return (
@@ -119,19 +164,19 @@ export default function MapSearch({
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
-        placeholder="Search projects, cities, countries..."
-        className="w-64 md:w-80 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+        placeholder="Buscar eventos, ciudades, categorías y tags..."
+        className="w-64 md:w-80 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900 placeholder:text-gray-500"
       />
       {open && filtered.length > 0 && (
-        <div className="absolute z-[6000] mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-64 overflow-auto">
+        <div className="absolute z-[6000] mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-64 overflow-auto text-gray-900">
           {filtered.map((s, i) => (
             <button
               key={i}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => onSelect(s)}
-              className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
+              className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm flex items-center gap-2 text-gray-800"
             >
-              <span>{s.type === "project" ? "📌" : s.type === "city" ? "🏙️" : "🏳️"}</span>
+              <span>{s.type === "project" ? "📌" : s.type === "city" ? "🏙️" : s.type === "country" ? "🏳️" : s.type === "category" ? "🏷️" : "#"}</span>
               <span>{s.label}</span>
             </button>
           ))}
