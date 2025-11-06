@@ -53,6 +53,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [frequencyFilters, setFrequencyFilters] = useState<{ once: boolean; regular: boolean; permanent: boolean }>({ once: true, regular: true, permanent: true });
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   // Listen to external center events from the page-level search bar
   useEffect(() => {
     function onCenter(e: Event) {
@@ -180,7 +181,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     });
   }
 
-  // Recompute filtered list when base filters, frequency or mode changes
+  // Recompute filtered list when base filters, frequency, category or mode change
   useEffect(() => {
     const now = new Date();
     const isToday = (p: Project) => {
@@ -200,10 +201,15 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       if (filterMode === 'today') return isToday(p);
       return isPermanent(p);
     });
+    // Quick category chips filter (optional)
+    if (selectedCategories.length > 0) {
+      next = next.filter((p) => selectedCategories.includes(p.category));
+    }
+
     // Apply frequency filters
     next = next.filter((p) => frequencyFilters[getFrequency(p)]);
     setFilteredProjects(next);
-  }, [baseFilteredProjects, filterMode, frequencyFilters]);
+  }, [baseFilteredProjects, filterMode, frequencyFilters, selectedCategories]);
 
   // Heatmap toggle effect
   useEffect(() => {
@@ -319,6 +325,7 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
           onFilterChange={setBaseFilteredProjects}
           onCenterOnLocation={handleCenterOnLocation}
         />
+        {/* Quick Category chips (moved to bottom overlay) */}
         {/* Frequency legend & filter */}
         <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
           {([
@@ -375,6 +382,34 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
           {geoError}
         </div>
       )}
+    </div>
+
+    {/* Bottom Category Chips */}
+    <div className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-4 z-[2500]">
+      <div className="flex items-center gap-1 bg-white/90 rounded-full px-2 py-2 shadow-md max-w-[88vw] overflow-x-auto">
+        {Array.from(new Set(projects.map((p) => p.category))).map((cat) => {
+          const active = selectedCategories.includes(cat);
+          return (
+            <button
+              key={cat}
+              className={`px-3 py-1.5 rounded-full text-xs border whitespace-nowrap ${active ? 'bg-black text-white border-black' : 'text-black border-black'}`}
+              onClick={() => setSelectedCategories((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat])}
+              title={categoryLabel(cat as any, locale as any)}
+            >
+              {categoryLabel(cat as any, locale as any)}
+            </button>
+          );
+        })}
+        {selectedCategories.length > 0 && (
+          <button
+            className="ml-1 px-3 py-1.5 rounded-full text-xs border text-black border-black"
+            onClick={() => setSelectedCategories([])}
+            title={locale==='es'?'Limpiar':locale==='de'?'Zurücksetzen':'Clear'}
+          >
+            {locale==='es'?'Limpiar':locale==='de'?'Zurücksetzen':'Clear'}
+          </button>
+        )}
+      </div>
     </div>
 
     {/* Pan Controls */}
