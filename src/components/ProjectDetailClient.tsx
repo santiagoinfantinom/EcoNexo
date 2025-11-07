@@ -130,8 +130,8 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
   return (
     <div className="grid gap-6 max-w-6xl mx-auto">
       <div className="grid gap-2 place-items-center text-center">
-        <div className="text-3xl font-semibold">{projectNameLabel(details.id, details.name, locale)}</div>
-        <div className="text-sm text-gray-400">
+        <div className="text-3xl font-semibold text-white">{(locale === 'en' && details.name_en) ? details.name_en : (locale === 'de' && details.name_de) ? details.name_de : projectNameLabel(details.id, details.name, locale)}</div>
+        <div className="text-sm text-white">
           {locationLabel(details.city, locale)}, {locationLabel(details.country, locale)} · {t("category")}: {categoryLabel(details.category, locale)}
         </div>
         {details.address && (
@@ -148,7 +148,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 place-items-center sm:place-items-stretch">
             <div className="border rounded p-5 bg-white shadow-sm">
               <div className="text-[11px] uppercase tracking-wide text-gray-500">{t("volunteers")}</div>
-              <div className="text-4xl font-black text-gray-50 bg-gray-900 inline-block px-3 rounded leading-tight">{details.volunteers.toLocaleString("es-ES")}</div>
+              <div className="text-4xl font-black text-white bg-gray-900 inline-block px-3 rounded leading-tight">{details.volunteers.toLocaleString("es-ES")}</div>
             </div>
             <div className="border rounded p-5 bg-white shadow-sm">
               <div className="text-[11px] uppercase tracking-wide text-gray-500">{t("raised")}</div>
@@ -156,7 +156,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
             </div>
             <div className="border rounded p-5 bg-white shadow-sm">
               <div className="text-[11px] uppercase tracking-wide text-gray-500">{t("goal")}</div>
-              <div className="text-4xl font-black text-gray-900 bg-amber-200 inline-block px-3 rounded leading-tight">€ {details.budgetGoalEur.toLocaleString("es-ES")}</div>
+              <div className="text-4xl font-black text-white bg-amber-200 inline-block px-3 rounded leading-tight">€ {details.budgetGoalEur.toLocaleString("es-ES")}</div>
             </div>
           </div>
 
@@ -185,7 +185,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
           </div>
 
           {typeof details.spots === "number" && (
-            <div className="text-sm text-white">{t("availableSpots")}: <span className="font-extrabold text-gray-50 bg-gray-900 px-2 rounded">{details.spots}</span></div>
+            <div className="text-sm text-white">{t("availableSpots")}: <span className="font-extrabold text-white bg-gray-900 px-2 rounded">{details.spots}</span></div>
           )}
 
           <div className="flex gap-3 justify-center sm:justify-start">
