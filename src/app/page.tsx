@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamic import to avoid SSR issues with Leaflet
-const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
+const InteractiveMap = dynamic(() => import("@/components/EuropeMap").then(mod => ({ default: mod.default })), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
@@ -95,7 +95,16 @@ export default function Home() {
               🗺️ {t('interactiveMap')}
             </h2>
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden" style={{ height: "650px", width: "100%" }}>
-              <EuropeMap projects={PROJECTS} />
+              {/* 
+                Map region options:
+                - region="europe" (default)
+                - region="americas" (entire Americas)
+                - region="northAmerica" (USA/Canada/Mexico)
+                - region="southAmerica" (South America)
+                - region="asia" or region="africa"
+                Or use custom: center={[lat, lng]} zoom={level}
+              */}
+              <InteractiveMap projects={PROJECTS} region="europe" />
             </div>
           </div>
         </section>

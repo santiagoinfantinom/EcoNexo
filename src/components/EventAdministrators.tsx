@@ -105,7 +105,7 @@ export default function EventAdministrators({ eventId, isCreator }: EventAdminis
   return (
     <div className="mt-6 border-t pt-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">{t("eventAdministrators")}</h3>
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("eventAdministrators")}</h3>
         {(isCreator || isCurrentUserAdmin) && (
           <button
             onClick={() => setShowAddForm(!showAddForm)}

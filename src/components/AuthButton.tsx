@@ -104,6 +104,13 @@ export default function AuthButton({
                 >
                   💼 {t("myJobs")}
                 </a>
+                <a
+                  href="/comunidad"
+                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  👥 {locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community'}
+                </a>
                 <div className="border-t border-gray-200 dark:border-slate-700 my-1"></div>
                 <button
                   onClick={handleSignOut}

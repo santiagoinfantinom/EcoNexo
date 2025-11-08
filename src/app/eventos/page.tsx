@@ -43,7 +43,7 @@ const CATEGORIES: Category[] = [
 export default function EventosPage() {
   const { t, locale } = useI18n();
   const { user } = useAuth();
-  const [viewMode, setViewMode] = useState<'form' | 'calendar'>('form');
+  const [viewMode, setViewMode] = useState<'form' | 'calendar'>('calendar');
   const [form, setForm] = useState<EventInput>({
     title: "",
     date: "",
@@ -187,22 +187,12 @@ export default function EventosPage() {
   }, []);
 
   return (
-    <div className="grid gap-6 max-w-2xl mx-auto text-center mt-8 md:mt-10">
-      <div className="flex flex-col items-center gap-4">
+    <div className="w-full max-w-4xl mx-auto text-center mt-8 md:mt-10 px-4">
+      <div className="flex flex-col items-center gap-4 mb-6">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 capitalize">
           {viewMode === 'form' ? t("createEvent") : t("calendar")}
         </h1>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setViewMode('form')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
-              viewMode === 'form' 
-                ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
-                : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-500'
-            }`}
-          >
-            {t("createEvent")}
-          </button>
+        <div className="flex gap-2 justify-center">
           <button
             onClick={() => setViewMode('calendar')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
@@ -218,7 +208,7 @@ export default function EventosPage() {
       
       {viewMode === 'form' && (
         <>
-          <form onSubmit={submit} className="grid gap-4 mx-auto text-left max-w-xl">
+          <form onSubmit={submit} className="grid gap-4 mx-auto text-left max-w-2xl">
         <div className="grid gap-1">
           <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("title")} ({t("required")})</label>
           <input
@@ -459,6 +449,14 @@ export default function EventosPage() {
             projects={[]} 
             onProjectSelect={() => {}} 
           />
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={() => setViewMode('form')}
+              className="px-6 py-3 rounded-lg text-sm font-medium transition-all capitalize bg-green-600 text-white shadow-md hover:bg-green-700"
+            >
+              {t("createEvent")}
+            </button>
+          </div>
         </div>
       )}
     </div>

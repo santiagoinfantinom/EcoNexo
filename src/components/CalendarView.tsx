@@ -1124,7 +1124,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
     if (filters.searchText) {
       filtered = filtered.filter(event => 
-        t(event.title).toLowerCase().includes(filters.searchText.toLowerCase()) ||
+        event.title.toLowerCase().includes(filters.searchText.toLowerCase()) ||
         event.location.toLowerCase().includes(filters.searchText.toLowerCase()) ||
         event.organizer.toLowerCase().includes(filters.searchText.toLowerCase())
       );
@@ -1158,12 +1158,9 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <BaseCard variant="default" className="max-w-4xl mx-auto">
+    <BaseCard variant="default" className="w-full my-6">
       {/* Header */}
       <div className="flex flex-col items-center mb-4">
-        <BaseTitle level="h2" className="mb-3 capitalize">
-          {t("calendar")}
-        </BaseTitle>
         <div className="flex gap-2">
           <BaseButton 
             variant={viewMode === 'month' ? 'primary' : 'secondary'}
@@ -1248,7 +1245,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                             key={event.id}
                             href={`/eventos/${event.id}`}
                             className="text-xs px-1.5 py-0.5 rounded cursor-pointer truncate block hover:opacity-95 font-medium"
-                            title={t(event.title)}
+                            title={event.title}
                             style={{
                               backgroundColor: event.category === 'environment' ? '#dcfce7' : event.category === 'education' ? '#dbeafe' : '#f3e8ff',
                               color: event.category === 'environment' ? '#166534' : event.category === 'education' ? '#1e3a8a' : '#6b21a8'
@@ -1258,7 +1255,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                               <span className={`w-2 h-2 rounded-full ${
                                 event.category === 'environment' ? 'bg-green-600' : event.category === 'education' ? 'bg-blue-700' : 'bg-purple-700'
                               }`} />
-                              {t(event.title)}
+                              {event.title}
                               <span className="ml-1 opacity-90">
                                 ({event.registered}/{event.spots})
                               </span>
@@ -1439,7 +1436,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   href={`/eventos/${event.id}`}
                                   className={getEventClasses('title')}
                                 >
-                                  {t(event.title)}
+                                  {event.title}
                                 </Link>
                                 <p className={getEventClasses('location')}>{event.location}</p>
                                 <div className={getEventClasses('details')}>
@@ -1473,7 +1470,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   <div className="w-32 h-20 overflow-hidden rounded-md border border-gray-200">
                                     <img
                                       src={headerImageSrc}
-                                      alt={t(event.title)}
+                                      alt={event.title}
                                       className="w-full h-full object-cover"
                                       loading="lazy"
                                       referrerPolicy="no-referrer"

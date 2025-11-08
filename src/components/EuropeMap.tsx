@@ -41,7 +41,64 @@ if (typeof window !== "undefined") {
     DefaultIcon;
 }
 
-export default function EuropeMap({ projects }: { projects: Project[] }) {
+/**
+ * Map region presets for common geographic areas
+ * 
+ * Usage examples:
+ * - <InteractiveMap projects={projects} region="europe" />
+ * - <InteractiveMap projects={projects} region="americas" />
+ * - <InteractiveMap projects={projects} center={[39.8283, -98.5795]} zoom={4} />
+ */
+export const MAP_REGIONS = {
+  europe: {
+    center: [50.1109, 8.6821] as [number, number], // Frankfurt, Germany
+    zoom: 4,
+  },
+  americas: {
+    center: [20.0, -80.0] as [number, number], // Center of Americas
+    zoom: 3,
+  },
+  northAmerica: {
+    center: [39.8283, -98.5795] as [number, number], // Center of USA
+    zoom: 4,
+  },
+  southAmerica: {
+    center: [-15.0, -60.0] as [number, number], // Center of South America
+    zoom: 4,
+  },
+  asia: {
+    center: [35.0, 105.0] as [number, number], // Center of Asia
+    zoom: 3,
+  },
+  africa: {
+    center: [0.0, 20.0] as [number, number], // Center of Africa
+    zoom: 3,
+  },
+} as const;
+
+export type MapRegion = keyof typeof MAP_REGIONS;
+
+interface InteractiveMapProps {
+  /** Array of projects to display on the map */
+  projects: Project[];
+  /** Predefined region preset (europe, americas, northAmerica, southAmerica, asia, africa) */
+  region?: MapRegion;
+  /** Custom center coordinates [latitude, longitude]. Overrides region preset if provided */
+  center?: [number, number];
+  /** Custom zoom level. Overrides region preset if provided */
+  zoom?: number;
+}
+
+export default function InteractiveMap({ 
+  projects, 
+  region = 'europe',
+  center,
+  zoom 
+}: InteractiveMapProps) {
+  // Determine center and zoom from props or region preset
+  const mapCenter = center || MAP_REGIONS[region].center;
+  const mapZoom = zoom ?? MAP_REGIONS[region].zoom;
+
   const mapRef = useRef<LeafletMap | null>(null);
   const { t, locale } = useI18n();
   const [baseFilteredProjects, setBaseFilteredProjects] = useState<Project[]>(projects);
@@ -249,8 +306,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     <>
     <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
     <MapContainer
-      center={[50.1109, 8.6821]} // centro aproximado de Europa (Frankfurt)
-      zoom={4}
+      center={mapCenter}
+      zoom={mapZoom}
       scrollWheelZoom={true}
       zoomControl={false}
       style={{ height: "100%", width: "100%", display: "block", position: "relative" }}

@@ -18,7 +18,7 @@ type Project = {
 
 type Suggestion =
   | { type: "project"; id: string; label: string; lat: number; lng: number }
-  | { type: "city"; label: string }
+  | { type: "city"; label: string; city: string; country: string; lat: number; lng: number }
   | { type: "country"; label: string }
   | { type: "category"; label: string }
   | { type: "tag"; label: string };
@@ -45,8 +45,36 @@ export default function MapSearch({
       lng: p.lng,
     }));
 
-    const citySet = Array.from(new Set(allProjects.map((p) => p.city).filter(Boolean)));
-    const citySugs: Suggestion[] = citySet.map((c) => ({ type: "city", label: locationLabel(c, locale as any) }));
+    // Extract unique cities with their coordinates and country
+    const cityMap = new Map<string, { city: string; country: string; lat: number; lng: number; count: number }>();
+    allProjects.forEach((p) => {
+      if (p.city) {
+        const key = `${p.city}|${p.country}`;
+        if (!cityMap.has(key)) {
+          cityMap.set(key, {
+            city: p.city,
+            country: p.country,
+            lat: p.lat,
+            lng: p.lng,
+            count: 1,
+          });
+        } else {
+          const existing = cityMap.get(key)!;
+          // Average coordinates for cities with multiple projects
+          existing.lat = (existing.lat * existing.count + p.lat) / (existing.count + 1);
+          existing.lng = (existing.lng * existing.count + p.lng) / (existing.count + 1);
+          existing.count++;
+        }
+      }
+    });
+    const citySugs: Suggestion[] = Array.from(cityMap.values()).map((c) => ({
+      type: "city",
+      label: `${locationLabel(c.city, locale as any)}, ${locationLabel(c.country, locale as any)}`,
+      city: c.city,
+      country: c.country,
+      lat: c.lat,
+      lng: c.lng,
+    }));
 
     const countryNames = new Set<string>();
     COUNTRIES.forEach((c) => {
@@ -83,14 +111,33 @@ export default function MapSearch({
     });
     const tagSugs: Suggestion[] = Array.from(tagSet).slice(0, 100).map((t) => ({ type: "tag", label: t }));
 
-    return [...projSugs, ...citySugs, ...countrySugs, ...categorySugs, ...tagSugs];
+    // Prioritize cities and countries in suggestions
+    return [...citySugs, ...countrySugs, ...projSugs, ...categorySugs, ...tagSugs];
   }, [allProjects, locale]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [] as Suggestion[];
-    return suggestions
-      .filter((s) => s.label.toLowerCase().includes(q))
+    // Prioritize exact matches and matches at the start of the label
+    const scored = suggestions.map((s) => {
+      const labelLower = s.label.toLowerCase();
+      const index = labelLower.indexOf(q);
+      let score = 0;
+      if (index === 0) score = 100; // Starts with query
+      else if (index > 0) score = 50; // Contains query
+      else score = 0;
+      
+      // Boost cities and countries
+      if (s.type === "city") score += 20;
+      if (s.type === "country") score += 15;
+      
+      return { suggestion: s, score };
+    });
+    
+    return scored
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((item) => item.suggestion)
       .slice(0, 12);
   }, [query, suggestions]);
 
@@ -111,11 +158,14 @@ export default function MapSearch({
       return;
     }
     if (s.type === "city") {
-      const list = allProjects.filter((p) => locationLabel(p.city, locale as any) === s.label);
+      // Filter by city and country to handle cities with same name in different countries
+      const list = allProjects.filter((p) => 
+        locationLabel(p.city, locale as any) === locationLabel(s.city, locale as any) &&
+        locationLabel(p.country, locale as any) === locationLabel(s.country, locale as any)
+      );
       if (list.length) {
-        const lat = list.reduce((a, p) => a + p.lat, 0) / list.length;
-        const lon = list.reduce((a, p) => a + p.lng, 0) / list.length;
-        centerOn(lat, lon);
+        // Use the city's coordinates from the suggestion
+        centerOn(s.lat, s.lng);
         onResults(list);
       }
       return;
@@ -164,7 +214,7 @@ export default function MapSearch({
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
-        placeholder="Buscar eventos, ciudades, categorías y tags..."
+        placeholder="Buscar ciudades, países, eventos, categorías..."
         className="w-64 md:w-80 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900 placeholder:text-gray-500"
       />
       {open && filtered.length > 0 && (

@@ -10,6 +10,11 @@ import AuthButton from "./AuthButton";
 export default function HeaderNav() {
   const { t, locale } = useI18n();
   const [showWelcome, setShowWelcome] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleShowWelcome = () => {
     setShowWelcome(true);
@@ -18,6 +23,30 @@ export default function HeaderNav() {
   const handleCloseWelcome = () => {
     setShowWelcome(false);
   };
+
+  // Prevent hydration mismatch by ensuring consistent rendering
+  if (!mounted) {
+    return (
+      <header className="bg-gls-primary text-gls-primary px-6 py-4 relative">
+        <div className="flex items-center justify-center relative">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">🌿</span>
+            <span className="text-2xl text-brand font-black text-gls-primary">EcoNexo</span>
+          </div>
+        </div>
+        <nav className="flex gap-6 text-base mt-4 justify-center">
+          <Link href="/" className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium">MAP</Link>
+          <Link href="/eventos" className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium">EVENTS</Link>
+          <Link href="/calendario" className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium">📅 CALENDAR</Link>
+          <Link href="/trabajos" className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium">JOBS</Link>
+          <Link href="/chat" className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium">CHAT</Link>
+          <Link href="/comunidad" className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium">👥 COMMUNITY</Link>
+          <Link href="/perfil" className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium">PROFILE</Link>
+          <Link href="/about" className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium">ABOUT US</Link>
+        </nav>
+      </header>
+    );
+  }
 
   return (
     <>
@@ -72,6 +101,12 @@ export default function HeaderNav() {
           href="/chat"
         >
           {t("chat")}
+        </Link>
+        <Link 
+          className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
+          href="/comunidad"
+        >
+          {locale === 'es' ? '👥 Comunidad' : locale === 'de' ? '👥 Gemeinschaft' : '👥 Community'}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-colors duration-200 text-gls-primary font-medium" 
