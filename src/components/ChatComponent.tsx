@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import Link from "next/link";
 
 interface Message {
   id: string;
@@ -22,6 +24,7 @@ interface Topic {
 
 export default function ChatComponent() {
   const { t, locale } = useI18n();
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
@@ -371,11 +374,18 @@ export default function ChatComponent() {
   }, [messages]);
 
   const handleSendMessage = () => {
+    if (!user) {
+      // Show alert to sign in
+      const key = locale === 'es' ? 'pleaseSignInFirstEs' : locale === 'de' ? 'pleaseSignInFirstDe' : 'pleaseSignInFirstEn';
+      alert(t(key));
+      return;
+    }
+    
     if (newMessage.trim()) {
       const message: Message = {
         id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         text: newMessage,
-        sender: "Tú", // This would be the actual user name
+        sender: user.email?.split("@")[0] || "Tú",
         timestamp: new Date(),
         avatar: "👤",
         topic: selectedTopic
@@ -548,27 +558,47 @@ export default function ChatComponent() {
 
           {/* Message Input */}
           <div className="border-t border-slate-200 dark:border-slate-600 p-4 bg-slate-50 dark:bg-slate-700">
-            <div className="flex space-x-3">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={t("typeMessage")}
-                className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-600 dark:text-slate-100"
-                disabled={!isConnected}
-              />
-              <button
-                onClick={handleSendMessage}
-                disabled={!newMessage.trim() || !isConnected}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors font-medium"
-              >
-                {t("sendMessage")}
-              </button>
-            </div>
-            <div className="mt-2 text-xs text-slate-500 dark:text-slate-400 text-center">
-              {t("onlineUsers")}: {onlineUsersCount} • {t("currentTopic")}: {currentTopic?.name}
-            </div>
+            {!user ? (
+              <div className="text-center py-4">
+                <p className="text-slate-600 dark:text-slate-300 mb-4">
+                  {locale === 'es' 
+                    ? 'Debes iniciar sesión para participar en el chat'
+                    : locale === 'de'
+                    ? 'Sie müssen sich anmelden, um am Chat teilzunehmen'
+                    : 'You must sign in to participate in the chat'}
+                </p>
+                <Link
+                  href="/perfil"
+                  className="inline-block px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                >
+                  {t("signIn")}
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className="flex space-x-3">
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder={t("typeMessage")}
+                    className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-600 dark:text-slate-100"
+                    disabled={!isConnected}
+                  />
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!newMessage.trim() || !isConnected}
+                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors font-medium"
+                  >
+                    {t("sendMessage")}
+                  </button>
+                </div>
+                <div className="mt-2 text-xs text-slate-500 dark:text-slate-400 text-center">
+                  {t("onlineUsers")}: {onlineUsersCount} • {t("currentTopic")}: {currentTopic?.name}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
