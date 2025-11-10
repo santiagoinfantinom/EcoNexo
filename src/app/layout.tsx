@@ -14,7 +14,7 @@ import SimpleIntro from "@/components/SimpleIntro";
 import PlausibleProvider from "next-plausible";
 import DynamicManifest from "@/components/DynamicManifest";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { generateMetadata } from "@/lib/metadata";
+import { generateMetadata, generateViewport } from "@/lib/metadata";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +29,7 @@ const geistMono = Geist_Mono({
 const interTight = Inter_Tight({ subsets: ["latin"] });
 
 export const metadata: Metadata = generateMetadata("en");
+export const viewport = generateViewport();
 
 export default function RootLayout({
   children,

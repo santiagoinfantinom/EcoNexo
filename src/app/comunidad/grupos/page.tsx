@@ -15,7 +15,7 @@ export default function GruposPage() {
 
   useEffect(() => {
     loadGroups();
-  }, [filter, searchQuery]);
+  }, [filter, searchQuery, locale]);
 
   const loadGroups = async () => {
     try {
@@ -24,10 +24,10 @@ export default function GruposPage() {
       const mockGroups: LocalGroup[] = [
         {
           id: '1',
-          name: 'Berlín Sostenible',
-          description: 'Comunidad de activistas ambientales en Berlín',
-          city: 'Berlín',
-          country: 'Alemania',
+          name: t('groupBerlinName'),
+          description: t('groupBerlinDescription'),
+          city: locale === 'es' ? 'Berlín' : locale === 'de' ? 'Berlin' : 'Berlin',
+          country: locale === 'es' ? 'Alemania' : locale === 'de' ? 'Deutschland' : 'Germany',
           region: 'Berlin',
           avatar_url: '/logo-econexo.png',
           cover_image_url: undefined,
@@ -36,15 +36,15 @@ export default function GruposPage() {
           members_count: 45,
           events_count: 12,
           is_public: true,
-          tags: ['Medio ambiente', 'Comunidad'],
+          tags: [t('environmentTitle'), t('communityTitle')],
           created_at: new Date().toISOString()
         },
         {
           id: '2',
-          name: 'Madrid Verde',
-          description: 'Iniciativas ecológicas en Madrid',
-          city: 'Madrid',
-          country: 'España',
+          name: t('groupMadridName'),
+          description: t('groupMadridDescription'),
+          city: locale === 'es' ? 'Madrid' : 'Madrid',
+          country: locale === 'es' ? 'España' : locale === 'de' ? 'Spanien' : 'Spain',
           region: 'Madrid',
           avatar_url: '/logo-econexo.png',
           cover_image_url: undefined,
@@ -53,7 +53,7 @@ export default function GruposPage() {
           members_count: 32,
           events_count: 8,
           is_public: true,
-          tags: ['Sostenibilidad', 'Educación'],
+          tags: [t('sustainabilityTitle'), t('educationTitle')],
           created_at: new Date().toISOString()
         }
       ];
@@ -85,14 +85,10 @@ export default function GruposPage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-2">
-              {locale === 'es' ? '👥 Grupos Locales' : locale === 'de' ? '👥 Lokale Gruppen' : '👥 Local Groups'}
+              👥 {t('localGroupsTitle')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              {locale === 'es'
-                ? 'Conecta con comunidades locales en tu ciudad o región'
-                : locale === 'de'
-                ? 'Verbinde dich mit lokalen Gemeinschaften in deiner Stadt oder Region'
-                : 'Connect with local communities in your city or region'}
+              {t('localGroupsSubtitle')}
             </p>
           </div>
           {user && (
@@ -100,7 +96,7 @@ export default function GruposPage() {
               href="/comunidad/grupos/nuevo"
               className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
             >
-              {locale === 'es' ? '+ Crear Grupo' : locale === 'de' ? '+ Gruppe erstellen' : '+ Create Group'}
+              + {t('createGroup')}
             </Link>
           )}
         </div>
@@ -109,9 +105,9 @@ export default function GruposPage() {
         <div className="mb-6 flex flex-col md:flex-row gap-4">
           <div className="flex gap-2 flex-wrap">
             {[
-              { id: 'all', label: locale === 'es' ? 'Todos' : locale === 'de' ? 'Alle' : 'All' },
-              { id: 'my_groups', label: locale === 'es' ? 'Mis Grupos' : locale === 'de' ? 'Meine Gruppen' : 'My Groups' },
-              { id: 'nearby', label: locale === 'es' ? 'Cercanos' : locale === 'de' ? 'In der Nähe' : 'Nearby' }
+              { id: 'all', label: t('allGroups') },
+              { id: 'my_groups', label: t('myGroups') },
+              { id: 'nearby', label: t('nearbyGroups') }
             ].map((f) => (
               <button
                 key={f.id}
@@ -130,7 +126,7 @@ export default function GruposPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={locale === 'es' ? 'Buscar grupos...' : locale === 'de' ? 'Gruppen suchen...' : 'Search groups...'}
+            placeholder={t('searchGroups')}
             className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
@@ -143,18 +139,14 @@ export default function GruposPage() {
         ) : filteredGroups.length === 0 ? (
           <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-lg shadow-lg">
             <p className="text-gray-600 dark:text-gray-400 text-lg">
-              {locale === 'es'
-                ? 'No se encontraron grupos'
-                : locale === 'de'
-                ? 'Keine Gruppen gefunden'
-                : 'No groups found'}
+              {t('noGroupsFound')}
             </p>
             {user && (
               <Link
                 href="/comunidad/grupos/nuevo"
                 className="mt-4 inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
-                {locale === 'es' ? 'Crear el primer grupo' : locale === 'de' ? 'Erste Gruppe erstellen' : 'Create the first group'}
+                {t('createFirstGroup')}
               </Link>
             )}
           </div>
@@ -222,7 +214,7 @@ export default function GruposPage() {
                     </div>
                     <div className="flex items-center gap-1">
                       <span>📅</span>
-                      <span>{group.events_count} {locale === 'es' ? 'eventos' : locale === 'de' ? 'Events' : 'events'}</span>
+                      <span>{group.events_count} {t('eventsLabel')}</span>
                     </div>
                   </div>
                 </div>

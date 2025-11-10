@@ -62,6 +62,6 @@
     "supabase": "^2.48.3",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vercel": "^48.2.9"
+    "vercel": "^48.9.0"
   }
 }

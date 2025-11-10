@@ -42,7 +42,7 @@ export default function ComunidadPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-8">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow mb-8">
           {locale === 'es' ? '🌍 Comunidad EcoNexo' : locale === 'de' ? '🌍 EcoNexo Gemeinschaft' : '🌍 EcoNexo Community'}
         </h1>
 
@@ -73,20 +73,20 @@ export default function ComunidadPage() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             {activeTab === 'feed' && (
-              <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-bold mb-4">
+              <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
+                <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4">
                   {locale === 'es' ? 'Actividad Reciente' : locale === 'de' ? 'Aktuelle Aktivität' : 'Recent Activity'}
                 </h2>
                 {loading ? (
                   <div className="text-center py-8">Loading...</div>
                 ) : feed.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-gray-200">
                     {locale === 'es' ? 'No hay actividad aún' : locale === 'de' ? 'Noch keine Aktivität' : 'No activity yet'}
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {feed.map((item) => (
-                      <div key={item.id} className="border-b border-gray-200 dark:border-gray-700 pb-4">
+                      <div key={item.id} className="border-b border-white/30 dark:border-gray-700 pb-4">
                         <div className="flex items-start gap-3">
                           <img
                             src={item.user_avatar || '/logo-econexo.png'}
@@ -94,12 +94,12 @@ export default function ComunidadPage() {
                             className="w-12 h-12 rounded-full"
                           />
                           <div className="flex-1">
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <p className="text-sm text-gray-100 dark:text-gray-300">
                               <span className="font-semibold">{item.user_name}</span>{' '}
                               {locale === 'es' ? 'creó un evento' : locale === 'de' ? 'hat ein Event erstellt' : 'created an event'}
                             </p>
-                            <p className="font-medium mt-1">{item.activity_data.event_name}</p>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="font-medium mt-1 text-white">{item.activity_data.event_name}</p>
+                            <p className="text-xs text-gray-300 mt-1">
                               {new Date(item.created_at).toLocaleDateString(locale)}
                             </p>
                           </div>
@@ -112,9 +112,9 @@ export default function ComunidadPage() {
             )}
 
             {activeTab === 'groups' && (
-              <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
+              <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold">
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-white">
                     {locale === 'es' ? 'Grupos Locales' : locale === 'de' ? 'Lokale Gruppen' : 'Local Groups'}
                   </h2>
                   <Link
@@ -124,7 +124,7 @@ export default function ComunidadPage() {
                     {locale === 'es' ? '+ Crear Grupo' : locale === 'de' ? '+ Gruppe erstellen' : '+ Create Group'}
                   </Link>
                 </div>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-gray-100 dark:text-gray-300 mb-4">
                   {locale === 'es' 
                     ? 'Conecta con comunidades locales en tu ciudad o región'
                     : locale === 'de'
@@ -141,11 +141,11 @@ export default function ComunidadPage() {
             )}
 
             {activeTab === 'mentoring' && (
-              <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-bold mb-4">
+              <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
+                <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4">
                   {locale === 'es' ? 'Mentoring' : locale === 'de' ? 'Mentoring' : 'Mentoring'}
                 </h2>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-gray-100 dark:text-gray-300 mb-4">
                   {locale === 'es'
                     ? 'Conecta con expertos o encuentra aprendices en sostenibilidad'
                     : locale === 'de'
@@ -155,23 +155,23 @@ export default function ComunidadPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Link
                     href="/comunidad/mentoring/buscar-mentor"
-                    className="p-4 border-2 border-green-600 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20"
+                    className="p-4 border-2 border-green-500 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 bg-white/70 dark:bg-slate-800/60"
                   >
-                    <h3 className="font-bold mb-2">
+                    <h3 className="font-bold text-white mb-2">
                       {locale === 'es' ? '🔍 Buscar Mentor' : locale === 'de' ? '🔍 Mentor suchen' : '🔍 Find Mentor'}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-gray-100 dark:text-gray-300">
                       {locale === 'es' ? 'Encuentra un experto que te guíe' : locale === 'de' ? 'Finde einen Experten, der dich führt' : 'Find an expert to guide you'}
                     </p>
                   </Link>
                   <Link
                     href="/comunidad/mentoring/convertirse-mentor"
-                    className="p-4 border-2 border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                    className="p-4 border-2 border-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-white/70 dark:bg-slate-800/60"
                   >
-                    <h3 className="font-bold mb-2">
+                    <h3 className="font-bold text-white mb-2">
                       {locale === 'es' ? '🎓 Convertirse en Mentor' : locale === 'de' ? '🎓 Mentor werden' : '🎓 Become a Mentor'}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-gray-100 dark:text-gray-300">
                       {locale === 'es' ? 'Comparte tu conocimiento' : locale === 'de' ? 'Teile dein Wissen' : 'Share your knowledge'}
                     </p>
                   </Link>
@@ -180,9 +180,9 @@ export default function ComunidadPage() {
             )}
 
             {activeTab === 'marketplace' && (
-              <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
+              <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold">
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-white">
                     {locale === 'es' ? 'Marketplace Ecológico' : locale === 'de' ? 'Öko-Marktplatz' : 'Eco Marketplace'}
                   </h2>
                   <Link
@@ -192,7 +192,7 @@ export default function ComunidadPage() {
                     {locale === 'es' ? '+ Publicar' : locale === 'de' ? '+ Veröffentlichen' : '+ Publish'}
                   </Link>
                 </div>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-100 dark:text-gray-300">
                   {locale === 'es'
                     ? 'Compra, vende o intercambia productos y servicios sostenibles'
                     : locale === 'de'
@@ -206,33 +206,33 @@ export default function ComunidadPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Stats Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
-              <h3 className="font-bold mb-4">
+            <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-extrabold text-white mb-4 drop-shadow">
                 {locale === 'es' ? 'Tu Impacto' : locale === 'de' ? 'Dein Impact' : 'Your Impact'}
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Karma</span>
-                  <span className="font-bold">0</span>
+                  <span className="text-gray-100 dark:text-gray-300">Karma</span>
+                  <span className="font-bold text-white">0</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-gray-100 dark:text-gray-300">
                     {locale === 'es' ? 'Reputación' : locale === 'de' ? 'Reputation' : 'Reputation'}
                   </span>
-                  <span className="font-bold">0.0</span>
+                  <span className="font-bold text-white">0.0</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-gray-100 dark:text-gray-300">
                     {locale === 'es' ? 'Seguidores' : locale === 'de' ? 'Follower' : 'Followers'}
                   </span>
-                  <span className="font-bold">0</span>
+                  <span className="font-bold text-white">0</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Links */}
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
-              <h3 className="font-bold mb-4">
+            <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-extrabold text-white mb-4 drop-shadow">
                 {locale === 'es' ? 'Enlaces Rápidos' : locale === 'de' ? 'Schnelllinks' : 'Quick Links'}
               </h3>
               <div className="space-y-2">
