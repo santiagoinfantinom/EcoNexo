@@ -108,18 +108,43 @@ export class GoogleOAuthService {
         }
       }
       
-      // Delay MUY largo para que los mensajes se vean claramente (30 segundos)
-      console.log('⏳ Esperando 30 segundos antes de redirigir... (para que puedas ver los logs)');
-      console.log('⏳ Tienes tiempo suficiente para leer todos los mensajes arriba ↑');
-      console.log('⏳ Iniciando countdown...');
+      // ALERT que PAUSA la ejecución para que puedas leer los mensajes
+      const redirectUriInfo = `
+═══════════════════════════════════════════════════════
+🔐 INFORMACIÓN DE REDIRECT URI
+═══════════════════════════════════════════════════════
+
+📍 Dominio actual: ${currentOrigin}
+📍 Redirect URI usado: ${this.redirectUri}
+📍 Redirect URI esperado: ${typeof window !== 'undefined' ? `${window.location.origin}/auth/google/callback` : 'N/A'}
+
+${typeof window !== 'undefined' && !this.redirectUri.includes(window.location.hostname) ? '❌ ERROR: Redirect URI NO coincide con el dominio actual!' : '✅ Redirect URI correcto'}
+
+═══════════════════════════════════════════════════════
+Revisa la consola para más detalles.
+Haz clic en OK para continuar con el countdown...
+═══════════════════════════════════════════════════════`;
       
-      // Countdown visible cada segundo
-      for (let i = 30; i > 0; i--) {
+      alert(redirectUriInfo);
+      
+      // Delay MUY largo para que los mensajes se vean claramente (60 segundos)
+      console.log('⏳ Esperando 60 segundos antes de redirigir... (para que puedas ver los logs)');
+      console.log('⏳ Tienes tiempo suficiente para leer todos los mensajes arriba ↑');
+      console.log('⏳ Iniciando countdown de 60 segundos...');
+      
+      // Countdown visible cada segundo - 60 segundos
+      for (let i = 60; i > 0; i--) {
         await new Promise(resolve => setTimeout(resolve, 1000));
         console.log(`⏳ Redirigiendo en ${i} segundos...`);
+        
+        // Alert cada 10 segundos para asegurar que se vea
+        if (i === 50 || i === 40 || i === 30 || i === 20 || i === 10) {
+          alert(`⏳ Redirigiendo en ${i} segundos...\n\nRevisa la consola para ver el redirect URI.`);
+        }
       }
       
       console.log('⏳ ¡Redirigiendo ahora!');
+      alert('⏳ ¡Redirigiendo ahora a Google OAuth!');
       
       // Verify we're in a browser environment
       if (typeof window === 'undefined') {
