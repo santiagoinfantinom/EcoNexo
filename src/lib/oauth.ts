@@ -108,9 +108,10 @@ export class GoogleOAuthService {
         }
       }
       
-      // Delay más largo para que los mensajes se vean (3 segundos)
-      console.log('⏳ Esperando 3 segundos antes de redirigir... (para que puedas ver los logs)');
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Delay MUY largo para que los mensajes se vean claramente (15 segundos)
+      console.log('⏳ Esperando 15 segundos antes de redirigir... (para que puedas ver los logs)');
+      console.log('⏳ Tienes tiempo suficiente para leer todos los mensajes arriba ↑');
+      await new Promise(resolve => setTimeout(resolve, 15000));
       
       // Verify we're in a browser environment
       if (typeof window === 'undefined') {
