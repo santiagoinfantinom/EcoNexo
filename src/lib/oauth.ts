@@ -108,10 +108,18 @@ export class GoogleOAuthService {
         }
       }
       
-      // Delay MUY largo para que los mensajes se vean claramente (15 segundos)
-      console.log('⏳ Esperando 15 segundos antes de redirigir... (para que puedas ver los logs)');
+      // Delay MUY largo para que los mensajes se vean claramente (30 segundos)
+      console.log('⏳ Esperando 30 segundos antes de redirigir... (para que puedas ver los logs)');
       console.log('⏳ Tienes tiempo suficiente para leer todos los mensajes arriba ↑');
-      await new Promise(resolve => setTimeout(resolve, 15000));
+      console.log('⏳ Iniciando countdown...');
+      
+      // Countdown visible cada segundo
+      for (let i = 30; i > 0; i--) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log(`⏳ Redirigiendo en ${i} segundos...`);
+      }
+      
+      console.log('⏳ ¡Redirigiendo ahora!');
       
       // Verify we're in a browser environment
       if (typeof window === 'undefined') {
@@ -124,6 +132,7 @@ export class GoogleOAuthService {
       
       // Redirect to Google OAuth
       try {
+        console.log('📍 Ejecutando window.location.href =', authUrl.toString());
         window.location.href = authUrl.toString();
         // Give it a moment to redirect
         await new Promise(resolve => setTimeout(resolve, 500));
