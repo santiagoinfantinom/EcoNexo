@@ -69,17 +69,30 @@ export class GoogleOAuthService {
 
       console.log('📍 Creando URL de Google OAuth...');
       
-      // CRÍTICO: Forzar el uso del dominio actual del navegador, sin importar qué venga del constructor
-      let finalRedirectUri = this.redirectUri;
+      // CRÍTICO: SIEMPRE calcular el redirect_uri directamente desde window.location.origin
+      // No confiar en ningún valor previo, caché, o configuración
+      let finalRedirectUri: string;
       if (typeof window !== 'undefined') {
+        // FORZAR el uso del dominio actual del navegador
         const currentOrigin = window.location.origin;
         finalRedirectUri = `${currentOrigin}/auth/google/callback`;
-        if (this.redirectUri !== finalRedirectUri) {
-          console.warn('⚠️ CORRIGIENDO redirect_uri:', {
-            anterior: this.redirectUri,
-            nuevo: finalRedirectUri,
-            currentOrigin: currentOrigin
-          });
+        console.log('🔧 FORZANDO redirect_uri desde window.location.origin:', {
+          currentOrigin,
+          finalRedirectUri,
+          windowLocationHref: window.location.href
+        });
+      } else {
+        // En servidor, usar el valor del constructor (pero esto no debería ejecutarse en cliente)
+        finalRedirectUri = this.redirectUri;
+        console.warn('⚠️ Ejecutándose en servidor, usando redirectUri del constructor:', finalRedirectUri);
+      }
+      
+      // Verificación final: asegurar que el redirect_uri es válido
+      if (!finalRedirectUri || finalRedirectUri.includes('econexo.app')) {
+        console.error('❌ ERROR CRÍTICO: redirect_uri inválido detectado:', finalRedirectUri);
+        if (typeof window !== 'undefined') {
+          finalRedirectUri = `${window.location.origin}/auth/google/callback`;
+          console.log('✅ Corregido a:', finalRedirectUri);
         }
       }
       
@@ -137,22 +150,26 @@ export class GoogleOAuthService {
       console.log('═══════════════════════════════════════════════════════');
       
       // Verificación crítica: asegurar que estamos usando el dominio correcto
-      if (typeof window !== 'undefined' && !this.redirectUri.includes(window.location.hostname)) {
+      if (typeof window !== 'undefined' && !finalRedirectUri.includes(window.location.hostname)) {
         console.error('═══════════════════════════════════════════════════════');
         console.error('❌ ERROR: Redirect URI no coincide con el dominio actual!');
-        console.error('   Redirect URI actual:', this.redirectUri);
+        console.error('   Redirect URI actual:', finalRedirectUri);
         console.error('   Dominio esperado:', window.location.origin);
         console.error('   Hostname actual:', window.location.hostname);
         console.error('═══════════════════════════════════════════════════════');
         
-        // Alert para debugging (solo en desarrollo)
-        if (process.env.NODE_ENV === 'development' || currentOrigin.includes('localhost') || currentOrigin.includes('vercel.app')) {
-          alert(`⚠️ Redirect URI Error!\n\nActual: ${this.redirectUri}\nEsperado: ${window.location.origin}/auth/google/callback\n\nRevisa la consola para más detalles.`);
-          return {
-            success: false,
-            error: 'Redirect URI no coincide con el dominio actual'
-          };
-        }
+        // Forzar corrección
+        finalRedirectUri = `${window.location.origin}/auth/google/callback`;
+        authUrl.searchParams.set('redirect_uri', finalRedirectUri);
+        console.log('✅ Redirect URI corregido a:', finalRedirectUri);
+      }
+      
+      // Verificación adicional: asegurar que no contiene econexo.app
+      if (finalRedirectUri.includes('econexo.app') && typeof window !== 'undefined') {
+        console.error('❌ ERROR: redirect_uri contiene econexo.app, corrigiendo...');
+        finalRedirectUri = `${window.location.origin}/auth/google/callback`;
+        authUrl.searchParams.set('redirect_uri', finalRedirectUri);
+        console.log('✅ Redirect URI corregido a:', finalRedirectUri);
       }
       
       // Logging final antes de redirigir
