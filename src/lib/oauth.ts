@@ -128,10 +128,12 @@ export class GoogleOAuthService {
       console.log('🔐 REDIRECTING TO GOOGLE OAUTH');
       console.log('═══════════════════════════════════════════════════════');
       console.log('📍 Current window.location.origin:', currentOrigin);
+      console.log('📍 Current window.location.href:', typeof window !== 'undefined' ? window.location.href : 'SERVER');
       console.log('📍 Client ID:', this.clientId);
-      console.log('📍 Redirect URI being used:', this.redirectUri);
+      console.log('📍 Redirect URI being used:', finalRedirectUri);
       console.log('📍 Expected redirect URI:', typeof window !== 'undefined' ? `${window.location.origin}/auth/google/callback` : 'N/A (server)');
       console.log('📍 Full URL:', authUrl.toString());
+      console.log('📍 redirect_uri parameter in URL:', authUrl.searchParams.get('redirect_uri'));
       console.log('═══════════════════════════════════════════════════════');
       
       // Verificación crítica: asegurar que estamos usando el dominio correcto
