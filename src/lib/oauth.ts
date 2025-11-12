@@ -509,6 +509,23 @@ let cachedConfig: OAuthConfig | null = null;
 let configPromise: Promise<OAuthConfig> | null = null;
 
 async function fetchOAuthConfig(): Promise<OAuthConfig> {
+  // Si hay caché pero estamos en el cliente, siempre recalcular el redirectUri
+  // para usar el dominio actual del navegador (evita problemas con caché de econexo.app)
+  if (cachedConfig && typeof window !== 'undefined') {
+    // Recalcular el redirectUri basado en el dominio actual
+    const currentOrigin = window.location.origin;
+    return {
+      google: {
+        clientId: cachedConfig.google.clientId,
+        redirectUri: `${currentOrigin}/auth/google/callback`,
+      },
+      outlook: {
+        clientId: cachedConfig.outlook.clientId,
+        redirectUri: `${currentOrigin}/auth/outlook/callback`,
+      },
+    };
+  }
+
   if (cachedConfig) {
     return cachedConfig;
   }
