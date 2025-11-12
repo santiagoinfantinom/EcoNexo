@@ -76,9 +76,6 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   };
 
   const handleGoogleAuth = async () => {
-    // ALERT INMEDIATO al inicio para confirmar que se ejecuta
-    alert('🚀 handleGoogleAuth INICIADO\n\nRevisa la consola para ver los logs.\n\nHaz clic en OK para continuar...');
-    
     console.log('🚀 handleGoogleAuth llamado');
     console.log('📍 window.location:', typeof window !== 'undefined' ? window.location.href : 'SERVER');
     console.log('📍 window.location.origin:', typeof window !== 'undefined' ? window.location.origin : 'SERVER');
