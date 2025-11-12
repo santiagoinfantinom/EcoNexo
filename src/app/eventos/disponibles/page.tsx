@@ -26,7 +26,7 @@ type Event = {
 
 type EventWithAvailability = Event & {
   currentRegistrations: number;
-  spotsAvailable: number;
+  spotsAvailable: number | null;
   isAvailable: boolean;
 };
 
