@@ -76,12 +76,18 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   };
 
   const handleGoogleAuth = async () => {
+    console.log('🚀 handleGoogleAuth llamado');
+    console.log('📍 window.location:', typeof window !== 'undefined' ? window.location.href : 'SERVER');
+    console.log('📍 window.location.origin:', typeof window !== 'undefined' ? window.location.origin : 'SERVER');
+    
     setIsLoading(true);
     setError("");
     
     try {
       // Check if Google Client ID is configured
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+      console.log('📍 process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID:', clientId);
+      
       if (!clientId || clientId === 'demo-client-id' || clientId === 'your_google_client_id_here') {
         setError(t("errorStartingGoogleAuth") + " - Google Client ID no configurado");
         setIsLoading(false);
@@ -91,9 +97,13 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
 
       console.log('🔐 Iniciando autenticación con Google...');
       console.log('📍 Client ID:', clientId);
+      console.log('📍 Creando OAuth Service...');
       
       const oauthService = await createOAuthService();
+      console.log('📍 OAuth Service creado, llamando authenticateWithGoogle...');
+      
       const result = await oauthService.authenticateWithGoogle();
+      console.log('📍 Resultado de authenticateWithGoogle:', result);
       
       if (!result.success) {
         setError(result.error || t("errorStartingGoogleAuth"));
