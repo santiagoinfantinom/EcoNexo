@@ -41,6 +41,10 @@ export class GoogleOAuthService {
   }
 
   async authenticate(): Promise<OAuthResult> {
+    console.log('🚀 authenticate() llamado - INICIO');
+    console.log('📍 this.clientId:', this.clientId);
+    console.log('📍 this.redirectUri:', this.redirectUri);
+    
     try {
       // Check if we should use demo mode
       if (this.clientId === 'demo-client-id') {
@@ -48,10 +52,12 @@ export class GoogleOAuthService {
         return await this.authenticateDemo();
       }
 
+      console.log('📍 Creando URL de Google OAuth...');
       // Create Google OAuth URL
       const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
       authUrl.searchParams.set('client_id', this.clientId);
       authUrl.searchParams.set('redirect_uri', this.redirectUri);
+      console.log('📍 URL creada, redirect_uri configurado:', this.redirectUri);
       authUrl.searchParams.set('response_type', 'code');
       authUrl.searchParams.set('scope', [
         'openid',
@@ -77,10 +83,15 @@ export class GoogleOAuthService {
       // Store state in sessionStorage for verification
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('google_oauth_state', state);
+        console.log('📍 State guardado en sessionStorage');
       }
 
       // Logging detallado para debugging - hacer múltiples logs para que se vean
       const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'SERVER';
+      
+      console.log('📍 Llegamos a la sección de logging detallado');
+      console.log('📍 typeof window:', typeof window);
+      console.log('📍 currentOrigin:', currentOrigin);
       
       // Logs múltiples y visibles
       console.log('═══════════════════════════════════════════════════════');
@@ -92,6 +103,9 @@ export class GoogleOAuthService {
       console.log('📍 Expected redirect URI:', typeof window !== 'undefined' ? `${window.location.origin}/auth/google/callback` : 'N/A (server)');
       console.log('📍 Full URL:', authUrl.toString());
       console.log('═══════════════════════════════════════════════════════');
+      
+      // ALERT INMEDIATO para asegurar que se vea
+      alert('🔐 INICIANDO GOOGLE OAUTH\n\nRevisa la consola para ver los detalles del redirect URI.\n\nHaz clic en OK para continuar...');
       
       // Verificación crítica: asegurar que estamos usando el dominio correcto
       if (typeof window !== 'undefined' && !this.redirectUri.includes(window.location.hostname)) {
