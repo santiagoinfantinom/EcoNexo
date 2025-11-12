@@ -79,10 +79,22 @@ export class GoogleOAuthService {
         sessionStorage.setItem('google_oauth_state', state);
       }
 
+      // Logging detallado para debugging
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'SERVER';
       console.log('🔐 Redirecting to Google OAuth');
+      console.log('📍 Current window.location.origin:', currentOrigin);
       console.log('📍 Client ID:', this.clientId);
-      console.log('📍 Redirect URI:', this.redirectUri);
+      console.log('📍 Redirect URI being used:', this.redirectUri);
+      console.log('📍 Expected redirect URI:', typeof window !== 'undefined' ? `${window.location.origin}/auth/google/callback` : 'N/A (server)');
       console.log('📍 Full URL:', authUrl.toString());
+      
+      // Verificación crítica: asegurar que estamos usando el dominio correcto
+      if (typeof window !== 'undefined' && !this.redirectUri.includes(window.location.hostname)) {
+        console.error('❌ ERROR: Redirect URI no coincide con el dominio actual!');
+        console.error('   Redirect URI actual:', this.redirectUri);
+        console.error('   Dominio esperado:', window.location.origin);
+        console.error('   Hostname actual:', window.location.hostname);
+      }
       
       // Small delay to ensure everything is ready
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -562,12 +574,15 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
           },
         };
         
+        const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'SERVER';
         console.log('✅ OAuth Config loaded from API:', {
           googleClientId: cachedConfig.google.clientId === 'demo-client-id' ? 'NOT CONFIGURED' : 'CONFIGURED',
           source: data.googleClientId ? 'API_ENV' : 'API_FALLBACK',
           siteUrl,
           redirectUri: cachedConfig.google.redirectUri,
+          currentWindowOrigin: currentOrigin,
           usingCurrentOrigin: typeof window !== 'undefined',
+          matchesCurrentOrigin: typeof window !== 'undefined' ? cachedConfig.google.redirectUri.includes(window.location.hostname) : 'N/A',
         });
         
         return cachedConfig;
@@ -591,12 +606,15 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
       },
     };
     
+    const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'SERVER';
     console.log('✅ OAuth Config using fallback:', {
       googleClientId: cachedConfig.google.clientId === 'demo-client-id' ? 'NOT CONFIGURED' : 'CONFIGURED',
       source: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ? 'ENV_VAR' : 'HARDCODED_FALLBACK',
       siteUrl,
       redirectUri: cachedConfig.google.redirectUri,
+      currentWindowOrigin: currentOrigin,
       usingCurrentOrigin: typeof window !== 'undefined',
+      matchesCurrentOrigin: typeof window !== 'undefined' ? cachedConfig.google.redirectUri.includes(window.location.hostname) : 'N/A',
     });
     
     return cachedConfig;
