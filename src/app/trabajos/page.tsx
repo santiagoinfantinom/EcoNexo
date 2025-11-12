@@ -261,16 +261,72 @@ export default function JobsPage() {
     } catch {}
   }, [query, minSalary, minExperience, city, contract, remoteOnly, levelFilter]);
   const filtered = useMemo(() => {
-    return JOBS.filter((j) =>
-      j.title.toLowerCase().includes(query.toLowerCase()) ||
-      j.company.toLowerCase().includes(query.toLowerCase()) ||
-      j.knowledgeAreas.some(a => a.toLowerCase().includes(query.toLowerCase()))
-    ).filter(j => j.salaryMinEur >= minSalary && j.experienceYears >= minExperience)
+    const queryLower = query.toLowerCase().trim();
+    
+    return JOBS.filter((j) => {
+      // Si no hay query, mostrar todos (solo aplicar filtros)
+      if (!queryLower) return true;
+      
+      // Buscar en título del trabajo
+      const titleMatch = j.title.toLowerCase().includes(queryLower) || 
+                        getJobTitle(j).toLowerCase().includes(queryLower);
+      
+      // Buscar en nombre de la empresa
+      const companyMatch = j.company.toLowerCase().includes(queryLower);
+      
+      // Buscar en descripción del trabajo
+      const descriptionMatch = j.description.toLowerCase().includes(queryLower) ||
+                              getJobDescription(j).toLowerCase().includes(queryLower);
+      
+      // Buscar en áreas de conocimiento
+      const knowledgeMatch = j.knowledgeAreas.some(a => 
+        a.toLowerCase().includes(queryLower) || 
+        getKnowledgeArea(a).toLowerCase().includes(queryLower)
+      );
+      
+      // Buscar en nivel de experiencia (junior, mid, senior, lead)
+      const levelMatch = 
+        (queryLower.includes('junior') && j.level === 'junior') ||
+        (queryLower.includes('mid') && j.level === 'mid') ||
+        (queryLower.includes('senior') && j.level === 'senior') ||
+        (queryLower.includes('lead') && j.level === 'lead') ||
+        (queryLower.includes('principiante') && j.level === 'junior') ||
+        (queryLower.includes('intermedio') && j.level === 'mid') ||
+        (queryLower.includes('avanzado') && j.level === 'senior') ||
+        (queryLower.includes('líder') && j.level === 'lead');
+      
+      // Buscar en tipo de contrato
+      const contractMatch = 
+        (queryLower.includes('full-time') || queryLower.includes('tiempo completo') || queryLower.includes('vollzeit')) && j.contract === 'full-time' ||
+        (queryLower.includes('part-time') || queryLower.includes('medio tiempo') || queryLower.includes('teilzeit')) && j.contract === 'part-time' ||
+        (queryLower.includes('contract') || queryLower.includes('contrato') || queryLower.includes('freelance')) && j.contract === 'contract' ||
+        (queryLower.includes('internship') || queryLower.includes('pasantía') || queryLower.includes('praktikum')) && j.contract === 'internship';
+      
+      // Buscar en ubicación (ciudad y país)
+      const locationMatch = 
+        j.city.toLowerCase().includes(queryLower) ||
+        j.country.toLowerCase().includes(queryLower) ||
+        locationLabel(j.city, locale as any).toLowerCase().includes(queryLower) ||
+        locationLabel(j.country, locale as any).toLowerCase().includes(queryLower);
+      
+      // Buscar en años de experiencia (como texto)
+      const experienceMatch = 
+        queryLower.includes(`${j.experienceYears}`) ||
+        (queryLower.includes('año') && j.experienceYears.toString().includes(queryLower.match(/\d+/)?.[0] || '')) ||
+        (queryLower.includes('year') && j.experienceYears.toString().includes(queryLower.match(/\d+/)?.[0] || ''));
+      
+      // Buscar si es remoto
+      const remoteMatch = 
+        (queryLower.includes('remote') || queryLower.includes('remoto') || queryLower.includes('teletrabajo')) && j.remote;
+      
+      return titleMatch || companyMatch || descriptionMatch || knowledgeMatch || 
+             levelMatch || contractMatch || locationMatch || experienceMatch || remoteMatch;
+    }).filter(j => j.salaryMinEur >= minSalary && j.experienceYears >= minExperience)
     .filter(j => city === "all" ? true : j.city.toLowerCase() === city.toLowerCase())
     .filter(j => contract === "all" ? true : j.contract === contract)
     .filter(j => levelFilter === 'all' ? true : j.level === levelFilter)
     .filter(j => remoteOnly ? j.remote : true);
-  }, [query, minSalary, minExperience, city, contract, levelFilter, remoteOnly]);
+  }, [query, minSalary, minExperience, city, contract, levelFilter, remoteOnly, locale]);
 
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES', { style: 'currency', currency: 'EUR' }).format(v);
