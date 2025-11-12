@@ -556,7 +556,12 @@ export class OAuthService {
   }
 
   async authenticateWithGoogle(): Promise<OAuthResult> {
-    return this.googleService.authenticate();
+    console.log('🚀 authenticateWithGoogle() llamado');
+    console.log('📍 this.googleService:', this.googleService);
+    console.log('📍 Llamando a this.googleService.authenticate()...');
+    const result = await this.googleService.authenticate();
+    console.log('📍 Resultado de authenticate():', result);
+    return result;
   }
 
   async authenticateWithOutlook(): Promise<OAuthResult> {
