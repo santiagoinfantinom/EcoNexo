@@ -408,6 +408,16 @@ export default function JobsPage() {
     return translated === areaKey ? area : translated;
   };
 
+  // Función para generar URL de búsqueda de la empresa
+  const getCompanyUrl = (companyName: string) => {
+    // Buscar en LinkedIn primero, luego Google
+    const linkedinUrl = `https://www.linkedin.com/company/${companyName.toLowerCase().replace(/\s+/g, '-')}`;
+    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(companyName)}`;
+    
+    // Por ahora usamos Google Search como fallback, pero podrías intentar LinkedIn primero
+    return googleSearchUrl;
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">{t("jobs")}</h1>
@@ -482,7 +492,18 @@ export default function JobsPage() {
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{getJobTitle(job)}</h2>
-                <p className="text-slate-600 dark:text-slate-400">{job.company} — {locationLabel(job.city, locale as any)}, {locationLabel(job.country, locale as any)}</p>
+                <p className="text-slate-600 dark:text-slate-400">
+                  <a 
+                    href={getCompanyUrl(job.company)} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:underline font-medium transition-colors"
+                  >
+                    {job.company}
+                  </a>
+                  {' — '}
+                  {locationLabel(job.city, locale as any)}, {locationLabel(job.country, locale as any)}
+                </p>
               </div>
               <div className="text-right">
                 <div className="text-green-600 font-bold">{fmtCurrency(job.salaryMinEur)}–{fmtCurrency(job.salaryMaxEur)}</div>
