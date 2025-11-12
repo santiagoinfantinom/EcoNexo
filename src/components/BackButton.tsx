@@ -12,9 +12,9 @@ export default function BackButton({ href = "/", label, className }: BackButtonP
     <Link
       href={href}
       aria-label={label}
-      className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-600 text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white transition-colors ${className ?? ""}`}
+      className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full border-2 border-emerald-600 text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white transition-colors text-sm sm:text-base font-medium shadow-sm hover:shadow-md ${className ?? ""}`}
     >
-      ← {label}
+      <span className="text-lg">←</span> <span>{label}</span>
     </Link>
   );
 }

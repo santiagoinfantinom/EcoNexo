@@ -27,8 +27,13 @@ export function generateMetadata(locale: string = "en"): Metadata {
     manifest: "/api/manifest?locale=" + locale,
     appleWebApp: {
       capable: true,
-      statusBarStyle: "default",
-      title,
+      statusBarStyle: "black-translucent",
+      title: "EcoNexo",
+    },
+    icons: {
+      apple: [
+        { url: "/logo-econexo.png", sizes: "180x180", type: "image/png" },
+      ],
     },
     openGraph: {
       title,
@@ -48,8 +53,9 @@ export function generateViewport(): Viewport {
   return {
     width: "device-width",
     initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
+    maximumScale: 5,
+    userScalable: true,
     themeColor: "#1a5f3f",
+    viewportFit: "cover", // Para iPhone X y posteriores
   };
 }

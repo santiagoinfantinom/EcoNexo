@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useGlobalConfig } from "@/hooks/useGlobalConfig";
 import { BaseCard, BaseButton, BaseSelect, BaseTitle, BaseFilterPanel, BaseEmptyState, BaseLabel, BaseInput } from "@/components/ui";
@@ -8,6 +8,22 @@ import Link from "next/link";
 type CalendarViewProps = {
   projects: any[];
   onProjectSelect: (project: any) => void;
+};
+
+type CalendarEvent = {
+  id: string;
+  projectId?: string;
+  title: string;
+  date: Date;
+  time: string;
+  duration: number;
+  spots: number;
+  registered: number;
+  location: string;
+  category: 'environment' | 'education' | 'community';
+  organizer?: string;
+  website?: string;
+  image_url?: string;
 };
 
 export default function CalendarView({ projects, onProjectSelect }: CalendarViewProps) {
@@ -27,6 +43,10 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
   const [monthCategory, setMonthCategory] = useState<'' | 'environment' | 'education' | 'community'>('');
+  const [realEvents, setRealEvents] = useState<CalendarEvent[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(false);
+  const [subscriptionEndpoint, setSubscriptionEndpoint] = useState<string | null>(null);
   
   // Filter states for list view
   const [showFilters, setShowFilters] = useState(false);
@@ -1018,6 +1038,114 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     }
   ];
 
+  // Load real events from API
+  useEffect(() => {
+    // Transform API event to calendar event format
+    const transformEvent = (apiEvent: any): CalendarEvent | null => {
+      try {
+        const eventDate = new Date(apiEvent.date);
+        if (isNaN(eventDate.getTime())) return null;
+
+        // Map category from Spanish/English to calendar format
+        const categoryMap: Record<string, 'environment' | 'education' | 'community'> = {
+          'Medio ambiente': 'environment',
+          'Environment': 'environment',
+          'Umwelt': 'environment',
+          'Educación': 'education',
+          'Education': 'education',
+          'Bildung': 'education',
+          'Comunidad': 'community',
+          'Community': 'community',
+          'Gemeinschaft': 'community',
+          'Salud': 'community',
+          'Health': 'community',
+          'Gesundheit': 'community',
+          'Océanos': 'environment',
+          'Oceans': 'environment',
+          'Ozeane': 'environment',
+          'Alimentación': 'community',
+          'Food': 'community',
+          'Ernährung': 'community',
+        };
+
+        const category = categoryMap[apiEvent.category] || 'community';
+        
+        // Calculate duration from start_time and end_time
+        let duration = 2; // default
+        if (apiEvent.start_time && apiEvent.end_time) {
+          const start = apiEvent.start_time.split(':').map(Number);
+          const end = apiEvent.end_time.split(':').map(Number);
+          const startMinutes = start[0] * 60 + start[1];
+          const endMinutes = end[0] * 60 + end[1];
+          duration = Math.round((endMinutes - startMinutes) / 60);
+          if (duration <= 0) duration = 2;
+        }
+
+        // Format time display
+        const timeDisplay = apiEvent.start_time 
+          ? (apiEvent.end_time ? `${apiEvent.start_time}–${apiEvent.end_time}` : apiEvent.start_time)
+          : '09:00';
+
+        // Build location string
+        const locationParts = [apiEvent.city, apiEvent.country].filter(Boolean);
+        const location = locationParts.length > 0 
+          ? locationParts.join(', ')
+          : (apiEvent.address || 'Location TBD');
+
+        // Get localized title
+        const title = locale === 'es' 
+          ? (apiEvent.title || apiEvent.title_en || 'Untitled Event')
+          : locale === 'de'
+          ? (apiEvent.title_de || apiEvent.title || apiEvent.title_en || 'Untitled Event')
+          : (apiEvent.title_en || apiEvent.title || 'Untitled Event');
+
+        return {
+          id: apiEvent.id || `event_${Date.now()}_${Math.random()}`,
+          title,
+          date: eventDate,
+          time: timeDisplay,
+          duration,
+          spots: apiEvent.capacity || 50,
+          registered: 0, // TODO: Get from API if available
+          location,
+          category,
+          website: apiEvent.website,
+          image_url: apiEvent.image_url,
+        };
+      } catch (error) {
+        console.error('Error transforming event:', error, apiEvent);
+        return null;
+      }
+    };
+
+    const loadEvents = async () => {
+      setLoadingEvents(true);
+      try {
+        const res = await fetch("/api/events");
+        if (res.ok) {
+          const data = await res.json();
+          const events = Array.isArray(data) 
+            ? data.map(transformEvent).filter((e): e is CalendarEvent => e !== null)
+            : [];
+          setRealEvents(events);
+        } else {
+          console.warn("API not available, using mock events as fallback");
+          setRealEvents([]);
+        }
+      } catch (error) {
+        console.warn("Failed to load events:", error);
+        setRealEvents([]);
+      } finally {
+        setLoadingEvents(false);
+      }
+    };
+
+    loadEvents();
+  }, [locale]);
+
+  // Combine real events with mock events (mock as fallback if no real events)
+  const allEvents = realEvents.length > 0 ? realEvents : mockEvents;
+
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -1042,7 +1170,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   };
 
   const getEventsForDate = (date: Date) => {
-    return mockEvents.filter(event => 
+    return allEvents.filter(event => 
       event.date.toDateString() === date.toDateString() &&
       (monthCategory ? event.category === monthCategory : true)
     );
@@ -1069,7 +1197,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
   // Filter functions
   const getFilteredEvents = () => {
-    let filtered = mockEvents.filter(event => 
+    let filtered = allEvents.filter(event => 
       event.date.getMonth() === currentMonth.getMonth() && 
       event.date.getFullYear() === currentMonth.getFullYear()
     );
@@ -1144,11 +1272,11 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   };
 
   const getUniqueCategories = () => {
-    return [...new Set(mockEvents.map(event => event.category))];
+    return [...new Set(allEvents.map(event => event.category))];
   };
 
   const getUniqueLocations = () => {
-    return [...new Set(mockEvents.map(event => event.location))];
+    return [...new Set(allEvents.map(event => event.location))];
   };
 
   const weekDays = locale === 'es' ? 
@@ -1159,6 +1287,12 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
   return (
     <BaseCard variant="default" className="w-full my-6">
+      {/* Loading indicator */}
+      {loadingEvents && realEvents.length === 0 && (
+        <div className="text-center py-4 text-slate-600 dark:text-slate-400">
+          {locale === 'es' ? 'Cargando eventos...' : locale === 'de' ? 'Veranstaltungen werden geladen...' : 'Loading events...'}
+        </div>
+      )}
       {/* Header */}
       <div className="flex flex-col items-center mb-4">
         <div className="flex gap-2">
@@ -1173,6 +1307,87 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             onClick={() => setViewMode('list')}
           >
             {t("list")}
+          </BaseButton>
+          <BaseButton
+            variant={notificationsEnabled ? 'secondary' : 'primary'}
+            onClick={async () => {
+              try {
+                if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+                  alert(t('notificationsNotSupported'));
+                  return;
+                }
+
+                // Request notification permission
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') {
+                  alert(t('notificationsBlocked'));
+                  return;
+                }
+
+                // Register service worker
+                let registration = await navigator.serviceWorker.getRegistration('/sw.js');
+                if (!registration) {
+                  registration = await navigator.serviceWorker.register('/sw.js');
+                  await navigator.serviceWorker.ready;
+                }
+
+                // Get VAPID public key from environment (available in client via NEXT_PUBLIC_)
+                const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+                if (!vapidPublicKey) {
+                  alert(locale === 'es' 
+                    ? 'VAPID keys no configuradas. Contacta al administrador.'
+                    : locale === 'de'
+                    ? 'VAPID-Schlüssel nicht konfiguriert. Kontaktieren Sie den Administrator.'
+                    : 'VAPID keys not configured. Contact administrator.');
+                  return;
+                }
+
+                // Convert VAPID key to Uint8Array
+                const urlBase64ToUint8Array = (base64String: string) => {
+                  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                  const base64 = (base64String + padding)
+                    .replace(/\-/g, '+')
+                    .replace(/_/g, '/');
+                  const rawData = window.atob(base64);
+                  const outputArray = new Uint8Array(rawData.length);
+                  for (let i = 0; i < rawData.length; ++i) {
+                    outputArray[i] = rawData.charCodeAt(i);
+                  }
+                  return outputArray;
+                };
+
+                // Subscribe to push notifications
+                const subscription = await registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+                });
+
+                // Send subscription to server
+                const response = await fetch('/api/push/subscribe', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(subscription)
+                });
+
+                if (response.ok) {
+                  setNotificationsEnabled(true);
+                  setSubscriptionEndpoint(subscription.endpoint);
+                  alert(t('subscribedToPushNotifications'));
+                } else {
+                  throw new Error('Failed to save subscription');
+                }
+              } catch (error: any) {
+                console.error('Error enabling notifications:', error);
+                alert(locale === 'es'
+                  ? `Error al activar notificaciones: ${error.message}`
+                  : locale === 'de'
+                  ? `Fehler beim Aktivieren von Benachrichtigungen: ${error.message}`
+                  : `Error enabling notifications: ${error.message}`);
+              }
+            }}
+          >
+            {notificationsEnabled ? (locale === 'es' ? 'Notificaciones activas' : locale === 'de' ? 'Benachrichtigungen aktiv' : 'Notifications on')
+                                  : (locale === 'es' ? 'Activar notificaciones' : locale === 'de' ? 'Benachrichtigungen aktivieren' : 'Enable notifications')}
           </BaseButton>
         </div>
       </div>
@@ -1255,7 +1470,9 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                               <span className={`w-2 h-2 rounded-full ${
                                 event.category === 'environment' ? 'bg-green-600' : event.category === 'education' ? 'bg-blue-700' : 'bg-purple-700'
                               }`} />
-                              {event.title}
+                              {/* Show time before title if available */}
+                              {event.time ? <span className="opacity-90">{event.time}</span> : null}
+                              <span className="truncate">{event.title}</span>
                               <span className="ml-1 opacity-90">
                                 ({event.registered}/{event.spots})
                               </span>

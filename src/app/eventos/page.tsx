@@ -22,6 +22,8 @@ type EventInput = {
   image_url?: string;
   website?: string;
   date: string;
+  start_time?: string; // HH:MM
+  end_time?: string;   // HH:MM (opcional)
   city: string;
   country: string;
   address?: string;
@@ -47,6 +49,8 @@ export default function EventosPage() {
   const [form, setForm] = useState<EventInput>({
     title: "",
     date: "",
+    start_time: "",
+    end_time: "",
     city: "",
     country: "",
     address: "",
@@ -123,6 +127,8 @@ export default function EventosPage() {
         body: JSON.stringify({
           title: form.title,
           date: form.date,
+          start_time: form.start_time || null,
+          end_time: form.end_time || null,
           city: form.city,
           country: form.country,
           address: form.address,
@@ -144,7 +150,7 @@ export default function EventosPage() {
         };
         setCreated(mockEvent);
         setList((prev) => [mockEvent, ...prev]);
-        setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", address: "", website: "", image_url: "", capacity: undefined, notes: "" }));
+        setForm((f) => ({ ...f, title: "", date: "", start_time: "", end_time: "", city: "", country: "", address: "", website: "", image_url: "", capacity: undefined, notes: "" }));
         return;
       }
       const saved = await res.json();
@@ -160,7 +166,7 @@ export default function EventosPage() {
         });
       } catch {}
       // reset parcial
-      setForm((f) => ({ ...f, title: "", date: "", city: "", country: "", address: "", website: "", image_url: "", capacity: undefined, notes: "" }));
+      setForm((f) => ({ ...f, title: "", date: "", start_time: "", end_time: "", city: "", country: "", address: "", website: "", image_url: "", capacity: undefined, notes: "" }));
     } catch (err) {
       console.error(err);
       setCreated(form); // fallback en memoria
@@ -229,6 +235,25 @@ export default function EventosPage() {
               value={form.date}
               onChange={(e) => update("date", e.target.value)}
             />
+          </div>
+          <div className="grid gap-1">
+            <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("time")} ({t("optional")})</label>
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="time"
+                className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
+                value={form.start_time ?? ""}
+                onChange={(e) => update("start_time", e.target.value)}
+                placeholder="HH:MM"
+              />
+              <input
+                type="time"
+                className="border border-gray-300 dark:border-slate-600 rounded px-3 py-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
+                value={form.end_time ?? ""}
+                onChange={(e) => update("end_time", e.target.value)}
+                placeholder="HH:MM"
+              />
+            </div>
           </div>
           <div className="grid gap-1">
             <label className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("mainCategory")} ({t("required")})</label>
@@ -391,7 +416,7 @@ export default function EventosPage() {
         <div className="border border-green-200 dark:border-green-800 rounded-lg p-4 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100 shadow-md">
           <div className="font-bold mb-2 text-lg">{t("createdEvent")}</div>
           <div className="text-sm">
-            <span className="font-semibold">{created.title}</span> {t('eventCreatedMessage')} <span className="font-semibold">{created.date}</span> en <span className="font-semibold">{created.city}, {created.country}</span>{created.address ? `, ${created.address}` : ""}.
+            <span className="font-semibold">{created.title}</span> {t('eventCreatedMessage')} <span className="font-semibold">{created.date}</span>{created.start_time ? ` ${t('time')}: ${created.start_time}${created.end_time ? `–${created.end_time}` : ""}` : ""} en <span className="font-semibold">{created.city}, {created.country}</span>{created.address ? `, ${created.address}` : ""}.
           </div>
         </div>
       )}
@@ -428,7 +453,7 @@ export default function EventosPage() {
                 list.map((ev, idx) => (
                   <tr key={idx} className="odd:bg-white even:bg-gray-50 dark:odd:bg-slate-800 dark:even:bg-slate-700">
                     <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.title}</td>
-                    <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.date}</td>
+                    <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.date}{ev.start_time ? ` ${ev.start_time}${ev.end_time ? `–${ev.end_time}` : ""}` : ""}</td>
                     <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.city}</td>
                     <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{ev.country}</td>
                     <td className="p-2 border-b border-gray-300 dark:border-slate-600 text-slate-900 dark:text-slate-100">{categoryLabel(ev.category as Category, locale)}</td>

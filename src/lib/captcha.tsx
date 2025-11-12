@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useI18n } from '@/lib/i18n';
 
 export interface CaptchaProps {
   onVerify: (token: string) => void;
@@ -19,6 +20,7 @@ export function CaptchaComponent({
   size = 'normal',
   className = '',
 }: CaptchaProps) {
+  const { t } = useI18n();
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
   if (!siteKey) {
@@ -26,7 +28,7 @@ export function CaptchaComponent({
     return (
       <div className={`p-4 border border-yellow-300 bg-yellow-50 rounded-lg ${className}`}>
         <p className="text-yellow-800 text-sm">
-          ⚠️ reCAPTCHA no configurado. Contacta al administrador.
+          ⚠️ {t("captchaNotConfigured")}
         </p>
       </div>
     );
@@ -77,7 +79,7 @@ export async function verifyCaptchaToken(token: string): Promise<boolean> {
 /**
  * Simple math captcha as fallback
  */
-export function generateMathCaptcha(): { question: string; answer: number } {
+export function generateMathCaptcha(locale: string = 'en'): { question: string; answer: number } {
   const operations = ['+', '-', '*'];
   const operation = operations[Math.floor(Math.random() * operations.length)];
   
@@ -105,8 +107,10 @@ export function generateMathCaptcha(): { question: string; answer: number } {
       answer = 2;
   }
   
+  const howMuchIs = locale === 'de' ? 'Wie viel ist' : locale === 'es' ? '¿Cuánto es' : 'How much is';
+  
   return {
-    question: `¿Cuánto es ${num1} ${operation} ${num2}?`,
+    question: `${howMuchIs} ${num1} ${operation} ${num2}?`,
     answer,
   };
 }
@@ -117,7 +121,8 @@ export interface MathCaptchaProps {
 }
 
 export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaProps) {
-  const [captcha, setCaptcha] = useState(() => generateMathCaptcha());
+  const { t, locale } = useI18n();
+  const [captcha, setCaptcha] = useState(() => generateMathCaptcha(locale));
   const [userAnswer, setUserAnswer] = useState('');
   const [isVerified, setIsVerified] = useState(false);
 
@@ -129,7 +134,7 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
     
     if (!isValid) {
       // Generate new captcha on wrong answer
-      setCaptcha(generateMathCaptcha());
+      setCaptcha(generateMathCaptcha(locale));
       setUserAnswer('');
     }
   };
@@ -139,7 +144,7 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
       <div className={`p-3 bg-green-50 border border-green-200 rounded-lg ${className}`}>
         <div className="flex items-center gap-2 text-green-800">
           <span>✅</span>
-          <span className="text-sm font-medium">Verificación completada</span>
+          <span className="text-sm font-medium">{t("verificationCompleted")}</span>
         </div>
       </div>
     );
@@ -149,7 +154,7 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
     <div className={`p-4 bg-gray-50 border border-gray-200 rounded-lg ${className}`}>
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="text-sm text-gray-700">
-          <p className="font-medium mb-2">Verificación de seguridad:</p>
+          <p className="font-medium mb-2">{t("securityVerification")}</p>
           <p className="text-lg font-mono bg-white p-2 rounded border">
             {captcha.question}
           </p>
@@ -160,7 +165,7 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
             type="number"
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
-            placeholder="Tu respuesta"
+            placeholder={t("yourAnswer")}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
@@ -168,7 +173,7 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
             type="submit"
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
-            Verificar
+            {t("verify")}
           </button>
         </div>
       </form>

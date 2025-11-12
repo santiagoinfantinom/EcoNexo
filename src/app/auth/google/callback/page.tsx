@@ -60,6 +60,9 @@ function GoogleCallbackContent() {
             provider: 'google',
             locale: user.locale || 'en',
             verified_email: user.verified_email || true,
+            birthdate: user.birthdate,
+            gender: user.gender,
+            pronouns: user.pronouns,
           }));
           
           // Store profile data with all available fields
@@ -68,10 +71,13 @@ function GoogleCallbackContent() {
             first_name: user.given_name || '',
             last_name: user.family_name || '',
             email: user.email,
-                   avatar_url: user.picture || '/logo-econexo.png',
+            avatar_url: user.picture || '/logo-econexo.png',
             preferred_language: user.locale || 'en',
             oauth_provider: 'google',
             oauth_imported: true,
+            birthdate: user.birthdate || '',
+            gender: user.gender || '',
+            pronouns: user.pronouns || '',
           }));
           
           setStatus('success');

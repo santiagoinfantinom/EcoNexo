@@ -38,7 +38,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     
     try {
       if (mode === "register" && !captchaVerified) {
-        setError("Por favor, completa la verificación de seguridad");
+        setError(t("pleaseCompleteSecurityVerification"));
         setIsLoading(false);
         return;
       }
@@ -66,10 +66,10 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           onClose();
         }, 3000);
       } else {
-        setError(result.message || 'Error al enviar el email');
+        setError(result.message || t("errorSendingEmail"));
       }
     } catch (err) {
-      setError("Error inesperado. Intenta de nuevo.");
+      setError(t("unexpectedError"));
     } finally {
       setIsLoading(false);
     }
@@ -80,17 +80,35 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     setError("");
     
     try {
-      const oauthService = createOAuthService();
+      // Check if Google Client ID is configured
+      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+      if (!clientId || clientId === 'demo-client-id' || clientId === 'your_google_client_id_here') {
+        setError(t("errorStartingGoogleAuth") + " - Google Client ID no configurado");
+        setIsLoading(false);
+        console.error('❌ Google Client ID no configurado:', clientId);
+        return;
+      }
+
+      console.log('🔐 Iniciando autenticación con Google...');
+      console.log('📍 Client ID:', clientId);
+      
+      const oauthService = await createOAuthService();
       const result = await oauthService.authenticateWithGoogle();
       
       if (!result.success) {
-        setError(result.error || "Error al iniciar autenticación con Google");
+        setError(result.error || t("errorStartingGoogleAuth"));
         setIsLoading(false);
+        console.error('❌ Error en autenticación:', result.error);
+      } else {
+        console.log('✅ Redirección iniciada a Google OAuth');
+        // If successful, user will be redirected to Google OAuth
+        // Don't set loading to false, let the redirect happen
       }
-      // If successful, user will be redirected to Google OAuth
     } catch (err) {
-      setError("Error inesperado. Intenta de nuevo.");
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(t("unexpectedError") + ": " + errorMessage);
       setIsLoading(false);
+      console.error('❌ Error inesperado:', err);
     }
   };
 
@@ -99,16 +117,16 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     setError("");
     
     try {
-      const oauthService = createOAuthService();
+      const oauthService = await createOAuthService();
       const result = await oauthService.authenticateWithOutlook();
       
       if (!result.success) {
-        setError(result.error || "Error al iniciar autenticación con Outlook");
+        setError(result.error || t("errorStartingOutlookAuth"));
         setIsLoading(false);
       }
       // If successful, user will be redirected to Outlook OAuth
     } catch (err) {
-      setError("Error inesperado. Intenta de nuevo.");
+      setError(t("unexpectedError"));
       setIsLoading(false);
     }
   };
@@ -121,7 +139,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   const handleMathCaptchaVerify = (isValid: boolean) => {
     setCaptchaVerified(isValid);
     if (!isValid) {
-      setError("Verificación de seguridad incorrecta. Intenta de nuevo.");
+      setError(t("securityVerificationIncorrect"));
     }
   };
 
@@ -138,7 +156,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
               </div>
               <div>
                 <h2 className="text-2xl font-bold">
-                  {mode === "login" ? t("welcomeBack") : `🌿 EcoNexo`}
+                  {mode === "login" ? t("welcomeBack") : t("joinEcoNexo")}
                 </h2>
                 <p className="text-green-100 text-sm mt-1">
                   {mode === "login" 
@@ -169,8 +187,8 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 </div>
                 <span className="text-sm font-medium">
                   {showEmailVerification 
-                    ? "¡Email de bienvenida enviado! Por favor revisa tu bandeja de entrada y verifica tu cuenta haciendo clic en el enlace."
-                    : "¡Autenticación exitosa!"
+                    ? t("welcomeEmailSent")
+                    : t("authenticationSuccessful")
                   }
                 </span>
               </div>
@@ -192,7 +210,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           {/* OAuth Buttons */}
           <div className="mb-8">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center font-medium">
-              {mode === "login" ? "O continúa con" : "Regístrate con"}
+              {mode === "login" ? t("orContinueWith") : t("registerWith")}
             </p>
             
             <div className="space-y-3">
@@ -230,7 +248,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
               <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-slate-800 text-gray-500">O</span>
+              <span className="px-2 bg-white dark:bg-slate-800 text-gray-500">{t("or")}</span>
             </div>
           </div>
 
@@ -238,14 +256,14 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           <form onSubmit={handleEmailAuth} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email
+                {t("email")}
               </label>
               <input
                 type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu@email.com"
+                placeholder={t("emailPlaceholder")}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-700 dark:text-white"
                 required
               />
@@ -257,7 +275,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 {/* Google reCAPTCHA */}
                 <CaptchaComponent
                   onVerify={handleCaptchaVerify}
-                  onError={() => setError("Error en la verificación de seguridad")}
+                  onError={() => setError(t("errorInSecurityVerification"))}
                   onExpire={() => {
                     setCaptchaVerified(false);
                     setCaptchaToken("");
@@ -266,7 +284,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 />
                 
                 {/* Math Captcha as fallback */}
-                <div className="text-center text-sm text-gray-500">O</div>
+                <div className="text-center text-sm text-gray-500">{t("or")}</div>
                 <MathCaptchaComponent
                   onVerify={handleMathCaptchaVerify}
                 />
@@ -281,10 +299,10 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Procesando...
+                  {t("processing")}
                 </div>
               ) : (
-                mode === "login" ? "Iniciar Sesión" : "Crear Cuenta"
+                mode === "login" ? t("signInButton") : t("createAccountButton")
               )}
             </button>
           </form>
@@ -292,13 +310,13 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           {/* Additional Info */}
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Al {mode === "login" ? "iniciar sesión" : "registrarte"}, aceptas nuestros{" "}
+              {mode === "login" ? t("bySigningIn") : t("byRegistering")}{" "}
               <a href="/terms" className="text-green-600 hover:text-green-700">
-                Términos de Servicio
+                {t("termsOfService")}
               </a>{" "}
-              y{" "}
+              {t("and")}{" "}
               <a href="/privacy" className="text-green-600 hover:text-green-700">
-                Política de Privacidad
+                {t("privacyPolicy")}
               </a>
             </p>
           </div>

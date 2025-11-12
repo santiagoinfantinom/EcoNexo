@@ -53,7 +53,20 @@ export class GoogleOAuthService {
       authUrl.searchParams.set('client_id', this.clientId);
       authUrl.searchParams.set('redirect_uri', this.redirectUri);
       authUrl.searchParams.set('response_type', 'code');
-      authUrl.searchParams.set('scope', 'openid email profile https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
+      authUrl.searchParams.set('scope', [
+        'openid',
+        'email',
+        'profile',
+        // Basic userinfo
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.email',
+        // Google People API granular scopes for extended profile
+        'https://www.googleapis.com/auth/user.birthday.read',
+        'https://www.googleapis.com/auth/user.gender.read',
+        'https://www.googleapis.com/auth/user.emails.read',
+        'https://www.googleapis.com/auth/user.addresses.read',
+        'https://www.googleapis.com/auth/user.phonenumbers.read'
+      ].join(' '));
       authUrl.searchParams.set('access_type', 'offline');
       authUrl.searchParams.set('prompt', 'consent');
       
@@ -74,10 +87,28 @@ export class GoogleOAuthService {
       // Small delay to ensure everything is ready
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      // Redirect to Google OAuth
-      window.location.href = authUrl.toString();
+      // Verify we're in a browser environment
+      if (typeof window === 'undefined') {
+        console.error('❌ window is undefined - cannot redirect');
+        return { 
+          success: false, 
+          error: 'No se puede redirigir fuera del navegador' 
+        };
+      }
       
-      return { success: true };
+      // Redirect to Google OAuth
+      try {
+        window.location.href = authUrl.toString();
+        // Give it a moment to redirect
+        await new Promise(resolve => setTimeout(resolve, 500));
+        return { success: true };
+      } catch (redirectError) {
+        console.error('❌ Error al redirigir:', redirectError);
+        return { 
+          success: false, 
+          error: 'Error al redirigir a Google: ' + (redirectError instanceof Error ? redirectError.message : String(redirectError))
+        };
+      }
     } catch (error) {
       console.error('Google OAuth error:', error);
       // Fallback to demo mode on error
@@ -470,15 +501,113 @@ export class OAuthService {
 /**
  * Create OAuth service instance
  */
-export function createOAuthService(): OAuthService {
+// Fallback Client ID - usar el valor real de Google Cloud Console
+const FALLBACK_GOOGLE_CLIENT_ID = '1059183045627-qjmnmcghdbl5duk25vgvd5olomqgs8vb.apps.googleusercontent.com';
+
+// Cache for OAuth config to avoid multiple API calls
+let cachedConfig: OAuthConfig | null = null;
+let configPromise: Promise<OAuthConfig> | null = null;
+
+async function fetchOAuthConfig(): Promise<OAuthConfig> {
+  if (cachedConfig) {
+    return cachedConfig;
+  }
+
+  if (configPromise) {
+    return configPromise;
+  }
+
+  configPromise = (async () => {
+    try {
+      // Try to get from API endpoint (works in both server and client)
+      const response = await fetch('/api/config/oauth');
+      if (response.ok) {
+        const data = await response.json();
+        
+        // IMPORTANTE: En el cliente (navegador), siempre usar window.location.origin
+        // para que funcione con cualquier dominio (Vercel, localhost, etc.)
+        // Esto permite que OAuth funcione incluso si econexo.app no está configurado aún
+        const siteUrl = typeof window !== 'undefined' 
+          ? window.location.origin  // Usar el dominio actual del navegador
+          : (data.siteUrl || 'https://econexo.app');  // En servidor, usar el del API
+        
+        // Use API value or fallback
+        const googleClientId = data.googleClientId || FALLBACK_GOOGLE_CLIENT_ID;
+        
+        cachedConfig = {
+          google: {
+            clientId: googleClientId,
+            redirectUri: `${siteUrl}/auth/google/callback`,
+          },
+          outlook: {
+            clientId: process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID || 'demo-client-id',
+            redirectUri: `${siteUrl}/auth/outlook/callback`,
+          },
+        };
+        
+        console.log('✅ OAuth Config loaded from API:', {
+          googleClientId: cachedConfig.google.clientId === 'demo-client-id' ? 'NOT CONFIGURED' : 'CONFIGURED',
+          source: data.googleClientId ? 'API_ENV' : 'API_FALLBACK',
+          siteUrl,
+          usingCurrentOrigin: typeof window !== 'undefined',
+        });
+        
+        return cachedConfig;
+      }
+    } catch (error) {
+      console.warn('⚠️ Could not fetch OAuth config from API, using fallback:', error);
+    }
+
+    // Fallback: use environment variables or hardcoded value
+    // En cliente, usar dominio actual; en servidor, usar env var
+    const siteUrl = typeof window !== 'undefined' 
+      ? window.location.origin  // En cliente, usar dominio actual
+      : (process.env.NEXT_PUBLIC_SITE_URL || 'https://econexo.app');  // En servidor
+    
+    const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || FALLBACK_GOOGLE_CLIENT_ID;
+    
+    cachedConfig = {
+      google: {
+        clientId: googleClientId,
+        redirectUri: `${siteUrl}/auth/google/callback`,
+      },
+      outlook: {
+        clientId: process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID || 'demo-client-id',
+        redirectUri: `${siteUrl}/auth/outlook/callback`,
+      },
+    };
+    
+    console.log('✅ OAuth Config using fallback:', {
+      googleClientId: cachedConfig.google.clientId === 'demo-client-id' ? 'NOT CONFIGURED' : 'CONFIGURED',
+      source: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ? 'ENV_VAR' : 'HARDCODED_FALLBACK',
+      siteUrl,
+      usingCurrentOrigin: typeof window !== 'undefined',
+    });
+    
+    return cachedConfig;
+  })();
+
+  return configPromise;
+}
+
+export async function createOAuthService(): Promise<OAuthService> {
+  const config = await fetchOAuthConfig();
+  return new OAuthService(config);
+}
+
+// Synchronous version for backwards compatibility (will use fallback)
+export function createOAuthServiceSync(): OAuthService {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+    (typeof window !== 'undefined' ? window.location.origin : 'https://econexo.app');
+  
   const config: OAuthConfig = {
     google: {
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || 'demo-client-id',
-      redirectUri: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/google/callback`,
+      redirectUri: `${siteUrl}/auth/google/callback`,
     },
     outlook: {
       clientId: process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID || 'demo-client-id',
-      redirectUri: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/outlook/callback`,
+      redirectUri: `${siteUrl}/auth/outlook/callback`,
     },
   };
 

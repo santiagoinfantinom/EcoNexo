@@ -13,7 +13,8 @@ export async function GET() {
       const { data: eventsData, error } = await supabase
         .from("events")
         .select("*")
-        .order("date", { ascending: true });
+        .order("date", { ascending: true })
+        .order("start_time", { ascending: true });
       if (error) throw error;
       data = eventsData;
     } catch {

@@ -14,6 +14,7 @@ import SimpleIntro from "@/components/SimpleIntro";
 import PlausibleProvider from "next-plausible";
 import DynamicManifest from "@/components/DynamicManifest";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import IOSMetaTags from "@/components/IOSMetaTags";
 import { generateMetadata, generateViewport } from "@/lib/metadata";
 
 const geistSans = Geist({
@@ -38,6 +39,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="apple-touch-icon" href="/logo-econexo.png" />
+      </head>
       <body
         className={`${interTight.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-gls-primary`}
       >
@@ -47,6 +51,7 @@ export default function RootLayout({
             <I18nProvider>
               <AuthProvider>
                 <ErrorBoundary>
+                  <IOSMetaTags />
                   <ServiceWorkerRegistration />
                   <DynamicManifest />
                   <SimpleIntro />

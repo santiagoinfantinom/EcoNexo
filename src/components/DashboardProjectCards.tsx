@@ -1,5 +1,6 @@
 "use client";
 import { useI18n } from "@/lib/i18n";
+import Link from "next/link";
 
 export default function DashboardProjectCards() {
   const { t, locale } = useI18n();
@@ -34,7 +35,11 @@ export default function DashboardProjectCards() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
       {projects.map((project) => (
-        <div key={project.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
+        <Link 
+          key={project.id} 
+          href={`/projects/${project.id}`}
+          className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 hover:scale-[1.02] cursor-pointer"
+        >
           {/* Header with icon */}
           <div className="bg-green-500 p-4 text-white">
             <div className="flex items-center gap-2">
@@ -66,7 +71,7 @@ export default function DashboardProjectCards() {
               </div>
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

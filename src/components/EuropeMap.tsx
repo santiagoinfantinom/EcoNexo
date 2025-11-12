@@ -424,18 +424,19 @@ export default function InteractiveMap({
       <div className="flex gap-2 pointer-events-auto" />
     </div>
 
-    {/* Botón de ubicación (esquina inferior derecha) */}
-    <div className={`pointer-events-auto absolute bottom-4 right-4 transition-all duration-300 z-[1500] opacity-100`}>
+    {/* Botón de ubicación (esquina inferior derecha) - Mejorado y más visible */}
+    <div className={`pointer-events-auto absolute bottom-20 right-4 transition-all duration-300 z-[1500] opacity-100`}>
       <button
         onClick={handleCenterOnLocation}
-        className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200"
-        title={t("centerOnMyLocation")}
-        aria-label={t("centerOnMyLocation")}
+        className="px-4 py-2 rounded-full bg-blue-600 text-white shadow-lg flex items-center gap-2 text-sm font-semibold hover:bg-blue-700 hover:shadow-xl hover:scale-105 transition-all duration-200 border-2 border-white"
+        title={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
+        aria-label={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
       >
-        📍
+        <span className="text-lg">📍</span>
+        <span className="hidden sm:inline">{locale === 'de' ? 'Standort' : locale === 'es' ? 'Ubicación' : 'Location'}</span>
       </button>
       {geoError && (
-        <div className="absolute top-full mt-2 p-2 bg-red-500 text-white text-xs rounded shadow">
+        <div className="absolute top-full mt-2 left-0 p-3 bg-red-500 text-white text-sm rounded-lg shadow-xl max-w-xs whitespace-normal z-[1600]">
           {geoError}
         </div>
       )}
