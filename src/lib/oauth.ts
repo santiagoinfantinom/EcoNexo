@@ -79,25 +79,38 @@ export class GoogleOAuthService {
         sessionStorage.setItem('google_oauth_state', state);
       }
 
-      // Logging detallado para debugging
+      // Logging detallado para debugging - hacer múltiples logs para que se vean
       const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'SERVER';
-      console.log('🔐 Redirecting to Google OAuth');
+      
+      // Logs múltiples y visibles
+      console.log('═══════════════════════════════════════════════════════');
+      console.log('🔐 REDIRECTING TO GOOGLE OAUTH');
+      console.log('═══════════════════════════════════════════════════════');
       console.log('📍 Current window.location.origin:', currentOrigin);
       console.log('📍 Client ID:', this.clientId);
       console.log('📍 Redirect URI being used:', this.redirectUri);
       console.log('📍 Expected redirect URI:', typeof window !== 'undefined' ? `${window.location.origin}/auth/google/callback` : 'N/A (server)');
       console.log('📍 Full URL:', authUrl.toString());
+      console.log('═══════════════════════════════════════════════════════');
       
       // Verificación crítica: asegurar que estamos usando el dominio correcto
       if (typeof window !== 'undefined' && !this.redirectUri.includes(window.location.hostname)) {
+        console.error('═══════════════════════════════════════════════════════');
         console.error('❌ ERROR: Redirect URI no coincide con el dominio actual!');
         console.error('   Redirect URI actual:', this.redirectUri);
         console.error('   Dominio esperado:', window.location.origin);
         console.error('   Hostname actual:', window.location.hostname);
+        console.error('═══════════════════════════════════════════════════════');
+        
+        // Alert para debugging (solo en desarrollo)
+        if (process.env.NODE_ENV === 'development' || currentOrigin.includes('localhost') || currentOrigin.includes('vercel.app')) {
+          alert(`⚠️ Redirect URI Error!\n\nActual: ${this.redirectUri}\nEsperado: ${window.location.origin}/auth/google/callback\n\nRevisa la consola para más detalles.`);
+        }
       }
       
-      // Small delay to ensure everything is ready
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Delay más largo para que los mensajes se vean (3 segundos)
+      console.log('⏳ Esperando 3 segundos antes de redirigir... (para que puedas ver los logs)');
+      await new Promise(resolve => setTimeout(resolve, 3000));
       
       // Verify we're in a browser environment
       if (typeof window === 'undefined') {
