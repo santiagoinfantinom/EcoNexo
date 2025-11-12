@@ -41,9 +41,24 @@ export class GoogleOAuthService {
   }
 
   async authenticate(): Promise<OAuthResult> {
+    // CRÍTICO: SIEMPRE usar window.location.origin en el cliente, sin importar qué venga del constructor
+    if (typeof window !== 'undefined') {
+      const currentOrigin = window.location.origin;
+      const correctRedirectUri = `${currentOrigin}/auth/google/callback`;
+      
+      // Si el redirectUri no coincide con el dominio actual, corregirlo
+      if (this.redirectUri !== correctRedirectUri) {
+        console.warn('⚠️ Redirect URI incorrecto detectado, corrigiendo...');
+        console.warn('   Anterior:', this.redirectUri);
+        console.warn('   Correcto:', correctRedirectUri);
+        this.redirectUri = correctRedirectUri;
+      }
+    }
+    
     console.log('🚀 authenticate() llamado - INICIO');
     console.log('📍 this.clientId:', this.clientId);
-    console.log('📍 this.redirectUri:', this.redirectUri);
+    console.log('📍 this.redirectUri (CORREGIDO):', this.redirectUri);
+    console.log('📍 window.location.origin:', typeof window !== 'undefined' ? window.location.origin : 'SERVER');
     
     try {
       // Check if we should use demo mode
