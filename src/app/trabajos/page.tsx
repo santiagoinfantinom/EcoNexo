@@ -410,12 +410,25 @@ export default function JobsPage() {
 
   // Función para generar URL de búsqueda de la empresa
   const getCompanyUrl = (companyName: string) => {
-    // Buscar en LinkedIn primero, luego Google
-    const linkedinUrl = `https://www.linkedin.com/company/${companyName.toLowerCase().replace(/\s+/g, '-')}`;
-    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(companyName)}`;
+    // Primero intentar LinkedIn (formato estándar de LinkedIn)
+    const linkedinSlug = companyName.toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
+    const linkedinUrl = `https://www.linkedin.com/company/${linkedinSlug}`;
     
-    // Por ahora usamos Google Search como fallback, pero podrías intentar LinkedIn primero
-    return googleSearchUrl;
+    // Si no está en LinkedIn, usar Ecosia como búsqueda alternativa
+    // Ecosia usa el mismo formato que Google: ?q=query
+    const ecosiaSearchUrl = `https://www.ecosia.org/search?q=${encodeURIComponent(companyName)}`;
+    
+    // Por defecto intentamos LinkedIn primero, pero el usuario puede buscar en Ecosia si no encuentra
+    // Para una mejor experiencia, podríamos verificar si existe en LinkedIn, pero por ahora
+    // usamos LinkedIn directamente y Ecosia como alternativa manual
+    return linkedinUrl;
+  };
+
+  // Función para obtener URL de búsqueda en Ecosia (alternativa)
+  const getEcosiaSearchUrl = (companyName: string) => {
+    return `https://www.ecosia.org/search?q=${encodeURIComponent(companyName)}`;
   };
 
   return (
@@ -493,16 +506,28 @@ export default function JobsPage() {
               <div>
                 <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{getJobTitle(job)}</h2>
                 <p className="text-slate-600 dark:text-slate-400">
-                  <a 
-                    href={getCompanyUrl(job.company)} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:underline font-medium transition-colors"
-                  >
-                    {job.company}
-                  </a>
-                  {' — '}
-                  {locationLabel(job.city, locale as any)}, {locationLabel(job.country, locale as any)}
+                  <span className="flex items-center gap-2 flex-wrap">
+                    <a 
+                      href={getCompanyUrl(job.company)} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:underline font-medium transition-colors"
+                      title={`Ver ${job.company} en LinkedIn`}
+                    >
+                      {job.company}
+                    </a>
+                    <a 
+                      href={getEcosiaSearchUrl(job.company)} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-xs transition-colors"
+                      title={`Buscar ${job.company} en Ecosia`}
+                    >
+                      🔍
+                    </a>
+                    {' — '}
+                    {locationLabel(job.city, locale as any)}, {locationLabel(job.country, locale as any)}
+                  </span>
                 </p>
               </div>
               <div className="text-right">
