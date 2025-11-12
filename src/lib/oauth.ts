@@ -535,22 +535,22 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
   }
 
   configPromise = (async () => {
+    // CRÍTICO: En el cliente, SIEMPRE usar window.location.origin, sin importar qué
+    // venga del API o de las variables de entorno
+    const siteUrl = typeof window !== 'undefined' 
+      ? window.location.origin  // SIEMPRE usar el dominio actual del navegador en cliente
+      : (process.env.NEXT_PUBLIC_SITE_URL || 'https://econexo.app');  // En servidor, usar env var
+    
     try {
       // Try to get from API endpoint (works in both server and client)
       const response = await fetch('/api/config/oauth');
       if (response.ok) {
         const data = await response.json();
         
-        // IMPORTANTE: En el cliente (navegador), siempre usar window.location.origin
-        // para que funcione con cualquier dominio (Vercel, localhost, etc.)
-        // Esto permite que OAuth funcione incluso si econexo.app no está configurado aún
-        const siteUrl = typeof window !== 'undefined' 
-          ? window.location.origin  // Usar el dominio actual del navegador
-          : (data.siteUrl || 'https://econexo.app');  // En servidor, usar el del API
-        
-        // Use API value or fallback
+        // Use API value or fallback para Client ID
         const googleClientId = data.googleClientId || FALLBACK_GOOGLE_CLIENT_ID;
         
+        // IMPORTANTE: siteUrl ya está calculado arriba usando window.location.origin en cliente
         cachedConfig = {
           google: {
             clientId: googleClientId,
@@ -566,6 +566,7 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
           googleClientId: cachedConfig.google.clientId === 'demo-client-id' ? 'NOT CONFIGURED' : 'CONFIGURED',
           source: data.googleClientId ? 'API_ENV' : 'API_FALLBACK',
           siteUrl,
+          redirectUri: cachedConfig.google.redirectUri,
           usingCurrentOrigin: typeof window !== 'undefined',
         });
         
@@ -576,11 +577,7 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
     }
 
     // Fallback: use environment variables or hardcoded value
-    // En cliente, usar dominio actual; en servidor, usar env var
-    const siteUrl = typeof window !== 'undefined' 
-      ? window.location.origin  // En cliente, usar dominio actual
-      : (process.env.NEXT_PUBLIC_SITE_URL || 'https://econexo.app');  // En servidor
-    
+    // siteUrl ya está calculado arriba usando window.location.origin en cliente
     const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || FALLBACK_GOOGLE_CLIENT_ID;
     
     cachedConfig = {
@@ -598,6 +595,7 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
       googleClientId: cachedConfig.google.clientId === 'demo-client-id' ? 'NOT CONFIGURED' : 'CONFIGURED',
       source: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ? 'ENV_VAR' : 'HARDCODED_FALLBACK',
       siteUrl,
+      redirectUri: cachedConfig.google.redirectUri,
       usingCurrentOrigin: typeof window !== 'undefined',
     });
     
