@@ -68,11 +68,26 @@ export class GoogleOAuthService {
       }
 
       console.log('📍 Creando URL de Google OAuth...');
+      
+      // CRÍTICO: Forzar el uso del dominio actual del navegador, sin importar qué venga del constructor
+      let finalRedirectUri = this.redirectUri;
+      if (typeof window !== 'undefined') {
+        const currentOrigin = window.location.origin;
+        finalRedirectUri = `${currentOrigin}/auth/google/callback`;
+        if (this.redirectUri !== finalRedirectUri) {
+          console.warn('⚠️ CORRIGIENDO redirect_uri:', {
+            anterior: this.redirectUri,
+            nuevo: finalRedirectUri,
+            currentOrigin: currentOrigin
+          });
+        }
+      }
+      
       // Create Google OAuth URL
       const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
       authUrl.searchParams.set('client_id', this.clientId);
-      authUrl.searchParams.set('redirect_uri', this.redirectUri);
-      console.log('📍 URL creada, redirect_uri configurado:', this.redirectUri);
+      authUrl.searchParams.set('redirect_uri', finalRedirectUri);
+      console.log('📍 URL creada, redirect_uri configurado:', finalRedirectUri);
       authUrl.searchParams.set('response_type', 'code');
       authUrl.searchParams.set('scope', [
         'openid',
