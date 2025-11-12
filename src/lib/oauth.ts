@@ -140,10 +140,7 @@ export class GoogleOAuthService {
       
       // Logging final antes de redirigir
       console.log('✅ Redirect URI verificado correctamente');
-      console.log('🚀 Redirigiendo a Google OAuth en 2 segundos...');
-      
-      // Pequeño delay para asegurar que todo esté listo (2 segundos)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('🚀 Redirigiendo a Google OAuth AHORA...');
       
       // Verify we're in a browser environment
       if (typeof window === 'undefined') {
@@ -154,12 +151,15 @@ export class GoogleOAuthService {
         };
       }
       
-      // Redirect to Google OAuth
+      // Redirect to Google OAuth INMEDIATAMENTE
       try {
         console.log('📍 Ejecutando window.location.href =', authUrl.toString());
+        console.log('📍 URL completa:', authUrl.toString());
+        
+        // Redirigir inmediatamente
         window.location.href = authUrl.toString();
-        // Give it a moment to redirect
-        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // No esperar nada más, la redirección ya comenzó
         return { success: true };
       } catch (redirectError) {
         console.error('❌ Error al redirigir:', redirectError);
