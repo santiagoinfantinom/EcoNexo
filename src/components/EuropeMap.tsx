@@ -349,18 +349,18 @@ export default function InteractiveMap({
               )}
               <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
               <div className="text-xs">
-                {locale==='es'?'Frecuencia':locale==='de'?'Häufigkeit':'Frequency'}: {freq==='once'?(locale==='es'?'Una vez':locale==='de'?'Einmalig':'One-time'):freq==='regular'?(locale==='es'?'Regularmente':locale==='de'?'Regelmäßig':'Regular'):(locale==='es'?'Permanente':locale==='de'?'Dauerhaft':'Permanent')}
+                {t("frequency")}: {freq==='once' ? t("once") : freq==='regular' ? t("regular") : t("permanent")}
               </div>
               {p.spots !== undefined && (
                 <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
               )}
               <div className="flex gap-2 mt-1">
                 <Link href={`/projects/${p.id}`} className="text-green-700 underline text-sm">
-                  {locale === 'es' ? 'Detalles' : 'Details'}
+                  {t("viewDetails")}
                 </Link>
                 {(p as any).info_url && (
                   <a href={(p as any).info_url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline text-sm">
-                    {locale === 'de' ? 'Mehr Info' : locale === 'en' ? 'More info' : 'Más info'}
+                    {t("moreInfo")}
                   </a>
                 )}
               </div>

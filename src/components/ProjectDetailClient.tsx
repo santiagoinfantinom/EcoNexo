@@ -155,15 +155,15 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="border rounded-lg p-4 sm:p-5 bg-white shadow-sm">
               <div className="text-[10px] sm:text-[11px] uppercase tracking-wide text-gray-500 mb-2">{t("volunteers")}</div>
-              <div className="text-3xl sm:text-4xl font-black text-white bg-gray-900 inline-block px-2 sm:px-3 rounded leading-tight">{details.volunteers.toLocaleString("es-ES")}</div>
+              <div className="text-3xl sm:text-4xl font-black text-white bg-gray-900 inline-block px-2 sm:px-3 rounded leading-tight">{details.volunteers.toLocaleString(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES')}</div>
             </div>
             <div className="border rounded-lg p-4 sm:p-5 bg-white shadow-sm">
               <div className="text-[10px] sm:text-[11px] uppercase tracking-wide text-gray-500 mb-2">{t("raised")}</div>
-              <div className="text-3xl sm:text-4xl font-black text-white bg-green-700 inline-block px-2 sm:px-3 rounded leading-tight break-words">€ {details.budgetRaisedEur.toLocaleString("es-ES")}</div>
+              <div className="text-3xl sm:text-4xl font-black text-white bg-green-700 inline-block px-2 sm:px-3 rounded leading-tight break-words">€ {details.budgetRaisedEur.toLocaleString(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES')}</div>
             </div>
             <div className="border rounded-lg p-4 sm:p-5 bg-white shadow-sm">
               <div className="text-[10px] sm:text-[11px] uppercase tracking-wide text-gray-500 mb-2">{t("goal")}</div>
-              <div className="text-3xl sm:text-4xl font-black text-white bg-amber-200 inline-block px-2 sm:px-3 rounded leading-tight break-words">€ {details.budgetGoalEur.toLocaleString("es-ES")}</div>
+              <div className="text-3xl sm:text-4xl font-black text-white bg-amber-200 inline-block px-2 sm:px-3 rounded leading-tight break-words">€ {details.budgetGoalEur.toLocaleString(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES')}</div>
             </div>
           </div>
 
@@ -208,7 +208,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
             <a href={stripeLink} target="_blank" rel="noopener noreferrer" className="bg-indigo-600 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg border-2 border-indigo-700 text-center text-sm sm:text-base">{t("donateStripe")}</a>
             {details.info_url && (
               <a href={details.info_url} target="_blank" rel="noopener noreferrer" className="bg-gray-700 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-gray-800 transition-colors shadow-md hover:shadow-lg border-2 border-gray-800 text-center text-sm sm:text-base">
-                {locale === 'de' ? 'Mehr Info' : locale === 'en' ? 'More info' : 'Más info'}
+                {t("moreInfo")}
               </a>
             )}
             <button onClick={toggleFavorite} className={`rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold transition-colors shadow-md hover:shadow-lg text-sm sm:text-base ${favorite ? 'bg-amber-500 text-white hover:bg-amber-600 border-2 border-amber-600' : 'bg-white text-gray-800 border-2 border-gray-300 hover:bg-gray-50'}`}>
