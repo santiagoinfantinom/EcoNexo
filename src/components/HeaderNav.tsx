@@ -214,6 +214,18 @@ export default function HeaderNav() {
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
+          href="/matching"
+        >
+          {locale === 'es' ? '🎯 Matching' : locale === 'de' ? '🎯 Matching' : '🎯 Matching'}
+        </Link>
+        <Link 
+          className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
+          href="/rooms"
+        >
+          {locale === 'es' ? '💬 Rooms' : locale === 'de' ? '💬 Räume' : '💬 Rooms'}
+        </Link>
+        <Link 
+          className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
           href="/comunidad"
         >
           {locale === 'es' ? '👥 Comunidad' : locale === 'de' ? '👥 Gemeinschaft' : '👥 Community'}
