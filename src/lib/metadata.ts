@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DICTS } from "@/lib/i18n";
 
 export function generateMetadata(locale: string = "en"): Metadata {
@@ -25,12 +25,15 @@ export function generateMetadata(locale: string = "en"): Metadata {
     title,
     description,
     manifest: "/api/manifest?locale=" + locale,
-    themeColor: "#1a5f3f",
-    viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
     appleWebApp: {
       capable: true,
-      statusBarStyle: "default",
-      title,
+      statusBarStyle: "black-translucent",
+      title: "EcoNexo",
+    },
+    icons: {
+      apple: [
+        { url: "/logo-econexo.png", sizes: "180x180", type: "image/png" },
+      ],
     },
     openGraph: {
       title,
@@ -43,5 +46,16 @@ export function generateMetadata(locale: string = "en"): Metadata {
       title,
       description,
     },
+  };
+}
+
+export function generateViewport(): Viewport {
+  return {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+    themeColor: "#1a5f3f",
+    viewportFit: "cover", // Para iPhone X y posteriores
   };
 }

@@ -14,7 +14,9 @@ import SimpleIntro from "@/components/SimpleIntro";
 import PlausibleProvider from "next-plausible";
 import DynamicManifest from "@/components/DynamicManifest";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { generateMetadata } from "@/lib/metadata";
+import IOSMetaTags from "@/components/IOSMetaTags";
+import { generateMetadata, generateViewport } from "@/lib/metadata";
+import { ToastProvider } from "@/components/ToastNotification";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +31,7 @@ const geistMono = Geist_Mono({
 const interTight = Inter_Tight({ subsets: ["latin"] });
 
 export const metadata: Metadata = generateMetadata("en");
+export const viewport = generateViewport();
 
 export default function RootLayout({
   children,
@@ -37,22 +40,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="apple-touch-icon" href="/logo-econexo.png" />
+      </head>
       <body
         className={`${interTight.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-gls-primary`}
       >
+        <div className="animated-gradient-bg" />
         <PlausibleProvider domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "econexo.app"}>
           <ThemeProvider>
             <I18nProvider>
               <AuthProvider>
-                <ErrorBoundary>
-                  <ServiceWorkerRegistration />
-                  <DynamicManifest />
-                  <SimpleIntro />
-                  <LanguageSwitcher />
-                  <HeaderNav />
-                  <main className="min-h-screen">{children}</main>
-                  <CreateEventFAB />
-                </ErrorBoundary>
+                <ToastProvider>
+                  <ErrorBoundary>
+                    <IOSMetaTags />
+                    <ServiceWorkerRegistration />
+                    <DynamicManifest />
+                    <SimpleIntro />
+                    <LanguageSwitcher />
+                    <HeaderNav />
+                    <main className="min-h-screen">{children}</main>
+                    <CreateEventFAB />
+                  </ErrorBoundary>
+                </ToastProvider>
               </AuthProvider>
             </I18nProvider>
           </ThemeProvider>

@@ -1,5 +1,5 @@
 // Service Worker para EcoNexo PWA
-const CACHE_NAME = 'econexo-v1';
+const CACHE_NAME = 'econexo-v2';
 const urlsToCache = [
   '/',
   '/eventos',

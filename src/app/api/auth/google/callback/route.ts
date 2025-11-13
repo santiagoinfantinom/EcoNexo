@@ -60,9 +60,9 @@ export async function GET(request: NextRequest) {
     console.log('🔍 User info from Google:', userInfo);
     
     // Try to get more detailed info from People API if available
-    let detailedInfo = {};
+    let detailedInfo: any = {};
     try {
-      const peopleResponse = await fetch('https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses,photos', {
+      const peopleResponse = await fetch('https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses,photos,birthdays,genders,pronouns,locales', {
         headers: {
           Authorization: `Bearer ${tokens.access_token}`,
         },
@@ -79,6 +79,10 @@ export async function GET(request: NextRequest) {
     let fullName = userInfo.name || '';
     let givenName = userInfo.given_name || '';
     let familyName = userInfo.family_name || '';
+    let avatarUrl = userInfo.picture || '';
+    let birthdate: string | undefined = undefined;
+    let gender: string | undefined = undefined;
+    let pronouns: string | undefined = undefined;
     
     // Try to get detailed info from People API
     if (detailedInfo.names && detailedInfo.names.length > 0) {
@@ -86,6 +90,28 @@ export async function GET(request: NextRequest) {
       fullName = primaryName.displayName || fullName;
       givenName = primaryName.givenName || givenName;
       familyName = primaryName.familyName || familyName;
+    }
+    if (detailedInfo.photos && detailedInfo.photos.length > 0) {
+      const primaryPhoto = detailedInfo.photos.find((p: any) => p.metadata?.primary) || detailedInfo.photos[0];
+      avatarUrl = primaryPhoto.url || avatarUrl;
+    }
+    if (detailedInfo.birthdays && detailedInfo.birthdays.length > 0) {
+      // Pick primary or first with date
+      const bd = detailedInfo.birthdays.find((b: any) => b.metadata?.primary) || detailedInfo.birthdays.find((b: any) => b.date) || detailedInfo.birthdays[0];
+      if (bd?.date) {
+        const y = bd.date.year || '0000';
+        const m = String(bd.date.month || 1).padStart(2, '0');
+        const d = String(bd.date.day || 1).padStart(2, '0');
+        birthdate = `${y}-${m}-${d}`;
+      }
+    }
+    if (detailedInfo.genders && detailedInfo.genders.length > 0) {
+      const g = detailedInfo.genders.find((x: any) => x.metadata?.primary) || detailedInfo.genders[0];
+      gender = g?.value;
+    }
+    if (detailedInfo.pronouns && detailedInfo.pronouns.length > 0) {
+      const p = detailedInfo.pronouns.find((x: any) => x.metadata?.primary) || detailedInfo.pronouns[0];
+      pronouns = p?.pronouns;
     }
     
     // Split full name if given/family names are not available
@@ -109,10 +135,13 @@ export async function GET(request: NextRequest) {
         name: userInfo.name,
         given_name: firstName,
         family_name: lastName,
-        picture: userInfo.picture,
+        picture: avatarUrl,
         provider: 'google',
         locale: userInfo.locale,
         verified_email: userInfo.verified_email,
+        birthdate,
+        gender,
+        pronouns,
       },
     });
   } catch (error) {

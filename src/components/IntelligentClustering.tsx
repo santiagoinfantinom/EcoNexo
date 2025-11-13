@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from 'react-leaflet';
 import L from 'leaflet';
+import { ensureEventImage } from "@/lib/eventImages";
 
 interface Event {
   id: string;
@@ -354,9 +355,12 @@ export default function IntelligentClustering({
                   {event.title}
                 </h3>
                 {(() => {
-                  const websitePreview = event.website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(event.website)}?w=560` : undefined;
-                  const headerImageSrc = event.image_url || websitePreview;
-                  return headerImageSrc ? (
+                  const headerImageSrc = ensureEventImage({
+                    image_url: event.image_url,
+                    category: event.category,
+                    website: event.website
+                  });
+                  return (
                     <div className="w-full h-28 overflow-hidden rounded mb-2 border border-gray-200">
                       <img
                         src={headerImageSrc}
@@ -368,7 +372,7 @@ export default function IntelligentClustering({
                         crossOrigin="anonymous"
                       />
                     </div>
-                  ) : null;
+                  );
                 })()}
                 <div className="text-sm text-slate-600 space-y-1">
                   <div>📅 {new Date(event.date).toLocaleDateString()}</div>

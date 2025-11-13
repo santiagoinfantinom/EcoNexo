@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { ensureEventImage } from "@/lib/eventImages";
 
 interface UserProfile {
   id: string;
@@ -351,11 +352,14 @@ export default function PersonalizedRecommendations({
                 </div>
               </div>
 
-              {/* Optional website/image preview */}
+              {/* Event image - Always show */}
               {(() => {
-                const websitePreview = event.website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(event.website)}?w=640` : undefined;
-                const headerImageSrc = event.image_url || websitePreview;
-                return headerImageSrc ? (
+                const headerImageSrc = ensureEventImage({
+                  image_url: event.image_url,
+                  category: event.category || 'community',
+                  website: event.website
+                });
+                return (
                   <div className="w-full h-36 overflow-hidden rounded-md border border-gray-200 mb-3">
                     <img
                       src={headerImageSrc}
@@ -367,7 +371,7 @@ export default function PersonalizedRecommendations({
                       crossOrigin="anonymous"
                     />
                   </div>
-                ) : null;
+                );
               })()}
 
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">

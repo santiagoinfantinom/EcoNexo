@@ -195,10 +195,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 async function fetchProject(id: string): Promise<Project | null> {
   try {
-    const res = await fetch(`/api/projects`, { cache: "no-store" });
+    const res = await fetch(`/api/projects?id=${encodeURIComponent(id)}` as any, { cache: "no-store" });
     if (!res.ok) return null;
-    const list: Project[] = await res.json();
-    return list.find((p) => String(p.id) === String(id)) ?? null;
+    const data: Project | { error?: string } = await res.json();
+    if ((data as any)?.error) return null;
+    return data as Project;
   } catch {
     return null;
   }

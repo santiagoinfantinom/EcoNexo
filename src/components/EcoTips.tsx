@@ -92,7 +92,11 @@ export default function EcoTips() {
   };
 
   const tips = getEcoTips();
-  const categories = [...new Set(tips.map(tip => tip.category))];
+  const categories = (() => {
+    const unique = [...new Set(tips.map(tip => tip.category))];
+    const food = t('ecoTipCategoryFood');
+    return unique.sort((a, b) => (a === food ? -1 : b === food ? 1 : 0));
+  })();
 
   const getImpactColor = (impact: string) => {
     switch (impact) {
@@ -115,6 +119,13 @@ export default function EcoTips() {
   const filteredTips = selectedCategory 
     ? tips.filter(tip => tip.category === selectedCategory)
     : tips;
+
+  const humanize = (label: string) => {
+    if (!label) return label;
+    // insert space between camelCase words and capitalize first letter
+    const spaced = label.replace(/([a-z])([A-Z])/g, '$1 $2');
+    return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+  };
 
   const renderDescriptionWithLinks = (description: string) => {
     // Split by "GLS Bank" and "Triodos Bank" to create clickable links
@@ -226,7 +237,7 @@ export default function EcoTips() {
                       </h3>
                       <div className="flex gap-2 flex-shrink-0">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(tip.impact)}`}>
-                          {tip.impact === "high" ? t("highImpact") : tip.impact === "medium" ? t("mediumImpact") : t("lowImpact")}
+                          {humanize(tip.impact === "high" ? t("highImpact") : tip.impact === "medium" ? t("mediumImpact") : t("lowImpact"))}
                         </span>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(tip.difficulty)}`}>
                           {tip.difficulty === "easy" ? t("easy") : tip.difficulty === "medium" ? t("medium") : t("hard")}

@@ -4,14 +4,15 @@ import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import WelcomeMessage from "@/components/WelcomeMessage";
-import DashboardProjectCards from "@/components/DashboardProjectCards";
+import FeaturedProjectsSlider from "@/components/FeaturedProjectsSlider";
 import EcoTips from "@/components/EcoTips";
+import EcoTipsBulletPoints from "@/components/EcoTipsBulletPoints";
 import { PROJECTS } from "@/data/projects";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamic import to avoid SSR issues with Leaflet
-const EuropeMap = dynamic(() => import("@/components/EuropeMap"), {
+const InteractiveMap = dynamic(() => import("@/components/EuropeMap").then(mod => ({ default: mod.default })), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
@@ -37,7 +38,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 bg-gradient-to-br from-green-600 via-green-700 to-blue-600">
+      <section className="relative py-20 px-4" style={{
+        background: 'linear-gradient(135deg, #16a34a 0%, #15803d 25%, #0ea5e9 50%, #0284c7 75%, #0369a1 100%)'
+      }}>
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
             {t('welcomeMessageTitle')}
@@ -67,6 +70,8 @@ export default function Home() {
             </Link>
           </div>
 
+          <div className="content-separator" />
+
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
@@ -87,13 +92,22 @@ export default function Home() {
 
       {/* Interactive Map Section */}
       {showMap && isClient && (
-        <section className="py-8 px-4 bg-white/50 dark:bg-slate-800/50">
+        <section className="py-8 px-6 md:px-10 xl:px-16 bg-white/50 dark:bg-slate-800/50">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-8">
               🗺️ {t('interactiveMap')}
             </h2>
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden" style={{ height: "600px" }}>
-              <EuropeMap projects={PROJECTS} />
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden" style={{ height: "650px", width: "100%" }}>
+              {/* 
+                Map region options:
+                - region="europe" (default)
+                - region="americas" (entire Americas)
+                - region="northAmerica" (USA/Canada/Mexico)
+                - region="southAmerica" (South America)
+                - region="asia" or region="africa"
+                Or use custom: center={[lat, lng]} zoom={level}
+              */}
+              <InteractiveMap projects={PROJECTS} region="europe" />
             </div>
           </div>
         </section>
@@ -105,7 +119,7 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-12">
             {t('featuredProjects')}
           </h2>
-          <DashboardProjectCards />
+          <FeaturedProjectsSlider />
         </div>
       </section>
 
@@ -204,11 +218,14 @@ export default function Home() {
             {t('ecoTipsTitle')}
           </h2>
           <EcoTips />
+          <EcoTipsBulletPoints />
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-green-600 to-blue-600 text-white">
+      <section className="py-20 px-4 text-white" style={{
+        background: 'linear-gradient(90deg, #16a34a 0%, #15803d 20%, #0ea5e9 50%, #0284c7 80%, #0369a1 100%)'
+      }}>
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             {t('readyToMakeDifference')}

@@ -1,6 +1,8 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useI18n, locationLabel } from "@/lib/i18n";
+import { useToast } from "@/components/ToastNotification";
+import { CardSkeleton } from "@/components/SkeletonLoader";
 
 type Job = {
   id: string;
@@ -8,7 +10,9 @@ type Job = {
   company: string;
   city: string;
   country: string;
-  salaryEur: number;
+  salaryMinEur: number;
+  salaryMaxEur: number;
+  level: 'junior' | 'mid' | 'senior' | 'lead';
   experienceYears: number;
   knowledgeAreas: string[];
   contract: "full-time" | "part-time" | "contract" | "internship";
@@ -30,7 +34,9 @@ const JOBS: Job[] = [
     company: "Green City Berlin",
     city: "Berlín",
     country: "Alemania",
-    salaryEur: 42000,
+    salaryMinEur: 38000,
+    salaryMaxEur: 46000,
+    level: 'mid',
     experienceYears: 2,
     knowledgeAreas: ["Silvicultura", "Biodiversidad", "Gestión de proyectos", "GIS", "Botánica"],
     contract: "full-time",
@@ -43,7 +49,9 @@ const JOBS: Job[] = [
     company: "Euro Air Lab",
     city: "París",
     country: "Francia",
-    salaryEur: 52000,
+    salaryMinEur: 48000,
+    salaryMaxEur: 60000,
+    level: 'mid',
     experienceYears: 3,
     knowledgeAreas: ["Python", "Sensores", "GIS", "Machine Learning", "Estadística"],
     contract: "full-time",
@@ -56,7 +64,9 @@ const JOBS: Job[] = [
     company: "SolarTech Academy",
     city: "Madrid",
     country: "España",
-    salaryEur: 28000,
+    salaryMinEur: 24000,
+    salaryMaxEur: 32000,
+    level: 'junior',
     experienceYears: 1,
     knowledgeAreas: ["Didáctica", "Energía solar", "Robótica educativa", "Comunicación"],
     contract: "part-time",
@@ -69,7 +79,9 @@ const JOBS: Job[] = [
     company: "River Guardians",
     city: "Milán",
     country: "Italia",
-    salaryEur: 35000,
+    salaryMinEur: 32000,
+    salaryMaxEur: 40000,
+    level: 'mid',
     experienceYears: 2,
     knowledgeAreas: ["Gestión de voluntariado", "Residuos", "Seguridad", "Logística"],
     contract: "contract",
@@ -82,7 +94,9 @@ const JOBS: Job[] = [
     company: "EcoTech Solutions",
     city: "Barcelona",
     country: "España",
-    salaryEur: 45000,
+    salaryMinEur: 42000,
+    salaryMaxEur: 52000,
+    level: 'mid',
     experienceYears: 3,
     knowledgeAreas: ["React Native", "Node.js", "Blockchain", "IoT", "UX/UI"],
     contract: "full-time",
@@ -95,7 +109,9 @@ const JOBS: Job[] = [
     company: "Ocean Conservation",
     city: "Lisboa",
     country: "Portugal",
-    salaryEur: 38000,
+    salaryMinEur: 34000,
+    salaryMaxEur: 42000,
+    level: 'mid',
     experienceYears: 4,
     knowledgeAreas: ["Biología marina", "Conservación", "Investigación", "Buceo"],
     contract: "full-time",
@@ -108,7 +124,9 @@ const JOBS: Job[] = [
     company: "Green Architecture Studio",
     city: "Ámsterdam",
     country: "Países Bajos",
-    salaryEur: 55000,
+    salaryMinEur: 52000,
+    salaryMaxEur: 65000,
+    level: 'senior',
     experienceYears: 5,
     knowledgeAreas: ["Arquitectura", "Sostenibilidad", "CAD", "Certificación LEED"],
     contract: "full-time",
@@ -121,7 +139,9 @@ const JOBS: Job[] = [
     company: "Circular Economy Institute",
     city: "Copenhague",
     country: "Dinamarca",
-    salaryEur: 48000,
+    salaryMinEur: 45000,
+    salaryMaxEur: 56000,
+    level: 'mid',
     experienceYears: 3,
     knowledgeAreas: ["Economía", "Sostenibilidad", "Análisis de datos", "Políticas públicas"],
     contract: "full-time",
@@ -134,7 +154,9 @@ const JOBS: Job[] = [
     company: "WindPower Europe",
     city: "Hamburgo",
     country: "Alemania",
-    salaryEur: 62000,
+    salaryMinEur: 58000,
+    salaryMaxEur: 72000,
+    level: 'senior',
     experienceYears: 4,
     knowledgeAreas: ["Ingeniería", "Energía eólica", "Automatización", "Mantenimiento"],
     contract: "full-time",
@@ -147,7 +169,9 @@ const JOBS: Job[] = [
     company: "Green Media Agency",
     city: "Londres",
     country: "Reino Unido",
-    salaryEur: 35000,
+    salaryMinEur: 30000,
+    salaryMaxEur: 42000,
+    level: 'junior',
     experienceYears: 2,
     knowledgeAreas: ["Comunicación", "Marketing digital", "Redes sociales", "Video producción"],
     contract: "contract",
@@ -160,7 +184,9 @@ const JOBS: Job[] = [
     company: "RegenAg Solutions",
     city: "Roma",
     country: "Italia",
-    salaryEur: 40000,
+    salaryMinEur: 36000,
+    salaryMaxEur: 46000,
+    level: 'mid',
     experienceYears: 3,
     knowledgeAreas: ["Agronomía", "Permacultura", "Suelos", "Biodiversidad"],
     contract: "full-time",
@@ -173,7 +199,9 @@ const JOBS: Job[] = [
     company: "ESG Consulting",
     city: "Zúrich",
     country: "Suiza",
-    salaryEur: 65000,
+    salaryMinEur: 62000,
+    salaryMaxEur: 78000,
+    level: 'senior',
     experienceYears: 4,
     knowledgeAreas: ["ESG", "Finanzas sostenibles", "Reporting", "Auditoría"],
     contract: "full-time",
@@ -184,12 +212,15 @@ const JOBS: Job[] = [
 
 export default function JobsPage() {
   const { t, locale } = useI18n();
+  const { showToast } = useToast();
+  const currentLocale = String(locale);
   const [query, setQuery] = useState("");
   const [minSalary, setMinSalary] = useState(0);
   const [minExperience, setMinExperience] = useState(0);
   const [city, setCity] = useState<string>("all");
   const [contract, setContract] = useState<string>("all");
   const [remoteOnly, setRemoteOnly] = useState(false);
+  const [levelFilter, setLevelFilter] = useState<'all' | 'junior' | 'mid' | 'senior' | 'lead'>("all");
   const [showJobForm, setShowJobForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -207,16 +238,98 @@ export default function JobsPage() {
     applicationDeadline: '',
     contactEmail: ''
   });
+
+  // Load saved filters on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('econexo:jobFilters');
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (typeof saved.query === 'string') setQuery(saved.query);
+        if (typeof saved.minSalary === 'number') setMinSalary(saved.minSalary);
+        if (typeof saved.minExperience === 'number') setMinExperience(saved.minExperience);
+        if (typeof saved.city === 'string') setCity(saved.city);
+        if (typeof saved.contract === 'string') setContract(saved.contract);
+        if (typeof saved.remoteOnly === 'boolean') setRemoteOnly(saved.remoteOnly);
+        if (typeof saved.levelFilter === 'string') setLevelFilter(saved.levelFilter);
+      }
+    } catch {}
+  }, []);
+
+  // Persist filters whenever they change
+  useEffect(() => {
+    try {
+      const toSave = { query, minSalary, minExperience, city, contract, remoteOnly, levelFilter };
+      localStorage.setItem('econexo:jobFilters', JSON.stringify(toSave));
+    } catch {}
+  }, [query, minSalary, minExperience, city, contract, remoteOnly, levelFilter]);
   const filtered = useMemo(() => {
-    return JOBS.filter((j) =>
-      j.title.toLowerCase().includes(query.toLowerCase()) ||
-      j.company.toLowerCase().includes(query.toLowerCase()) ||
-      j.knowledgeAreas.some(a => a.toLowerCase().includes(query.toLowerCase()))
-    ).filter(j => j.salaryEur >= minSalary && j.experienceYears >= minExperience)
+    const queryLower = query.toLowerCase().trim();
+    
+    return JOBS.filter((j) => {
+      // Si no hay query, mostrar todos (solo aplicar filtros)
+      if (!queryLower) return true;
+      
+      // Buscar en título del trabajo
+      const titleMatch = j.title.toLowerCase().includes(queryLower) || 
+                        getJobTitle(j).toLowerCase().includes(queryLower);
+      
+      // Buscar en nombre de la empresa
+      const companyMatch = j.company.toLowerCase().includes(queryLower);
+      
+      // Buscar en descripción del trabajo
+      const descriptionMatch = j.description.toLowerCase().includes(queryLower) ||
+                              getJobDescription(j).toLowerCase().includes(queryLower);
+      
+      // Buscar en áreas de conocimiento
+      const knowledgeMatch = j.knowledgeAreas.some(a => 
+        a.toLowerCase().includes(queryLower) || 
+        getKnowledgeArea(a).toLowerCase().includes(queryLower)
+      );
+      
+      // Buscar en nivel de experiencia (junior, mid, senior, lead)
+      const levelMatch = 
+        (queryLower.includes('junior') && j.level === 'junior') ||
+        (queryLower.includes('mid') && j.level === 'mid') ||
+        (queryLower.includes('senior') && j.level === 'senior') ||
+        (queryLower.includes('lead') && j.level === 'lead') ||
+        (queryLower.includes('principiante') && j.level === 'junior') ||
+        (queryLower.includes('intermedio') && j.level === 'mid') ||
+        (queryLower.includes('avanzado') && j.level === 'senior') ||
+        (queryLower.includes('líder') && j.level === 'lead');
+      
+      // Buscar en tipo de contrato
+      const contractMatch = 
+        (queryLower.includes('full-time') || queryLower.includes('tiempo completo') || queryLower.includes('vollzeit')) && j.contract === 'full-time' ||
+        (queryLower.includes('part-time') || queryLower.includes('medio tiempo') || queryLower.includes('teilzeit')) && j.contract === 'part-time' ||
+        (queryLower.includes('contract') || queryLower.includes('contrato') || queryLower.includes('freelance')) && j.contract === 'contract' ||
+        (queryLower.includes('internship') || queryLower.includes('pasantía') || queryLower.includes('praktikum')) && j.contract === 'internship';
+      
+      // Buscar en ubicación (ciudad y país)
+      const locationMatch = 
+        j.city.toLowerCase().includes(queryLower) ||
+        j.country.toLowerCase().includes(queryLower) ||
+        locationLabel(j.city, locale as any).toLowerCase().includes(queryLower) ||
+        locationLabel(j.country, locale as any).toLowerCase().includes(queryLower);
+      
+      // Buscar en años de experiencia (como texto)
+      const experienceMatch = 
+        queryLower.includes(`${j.experienceYears}`) ||
+        (queryLower.includes('año') && j.experienceYears.toString().includes(queryLower.match(/\d+/)?.[0] || '')) ||
+        (queryLower.includes('year') && j.experienceYears.toString().includes(queryLower.match(/\d+/)?.[0] || ''));
+      
+      // Buscar si es remoto
+      const remoteMatch = 
+        (queryLower.includes('remote') || queryLower.includes('remoto') || queryLower.includes('teletrabajo')) && j.remote;
+      
+      return titleMatch || companyMatch || descriptionMatch || knowledgeMatch || 
+             levelMatch || contractMatch || locationMatch || experienceMatch || remoteMatch;
+    }).filter(j => j.salaryMinEur >= minSalary && j.experienceYears >= minExperience)
     .filter(j => city === "all" ? true : j.city.toLowerCase() === city.toLowerCase())
     .filter(j => contract === "all" ? true : j.contract === contract)
+    .filter(j => levelFilter === 'all' ? true : j.level === levelFilter)
     .filter(j => remoteOnly ? j.remote : true);
-  }, [query, minSalary, minExperience, city, contract, remoteOnly]);
+  }, [query, minSalary, minExperience, city, contract, levelFilter, remoteOnly, locale]);
 
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES', { style: 'currency', currency: 'EUR' }).format(v);
@@ -242,7 +355,7 @@ export default function JobsPage() {
       jobs.push(newJob);
       localStorage.setItem('econexo:jobs', JSON.stringify(jobs));
       
-      setShowSuccess(true);
+      showToast(t("jobCreated") || "Trabajo creado exitosamente", "success");
       setShowJobForm(false);
       setJobForm({
         title: '',
@@ -258,7 +371,6 @@ export default function JobsPage() {
         contactEmail: ''
       });
       
-      setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error('Error creating job:', error);
     } finally {
@@ -275,16 +387,62 @@ export default function JobsPage() {
     motivations: "", 
     expertiseAreas: "", 
     motivationLetter: null as File | null,
-    languages: {
-      spanish: { level: "", native: false },
-      english: { level: "", native: false },
-      german: { level: "", native: false }
-    }
+    languages: [] as { code: string; level: string; native: boolean }[]
   });
-  const toggleSave = (id: string) => setSavedJobs((s)=> ({ ...s, [id]: !s[id] }));
+  const [newLanguage, setNewLanguage] = useState<{ code: string; level: string }>({ code: '', level: '' });
+
+  // Persist/restore application form state
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('econexo:jobApplication');
+      if (raw) {
+        const saved = JSON.parse(raw);
+        setApplicant((prev) => ({
+          ...prev,
+          name: typeof saved.name === 'string' ? saved.name : prev.name,
+          email: typeof saved.email === 'string' ? saved.email : prev.email,
+          cv: typeof saved.cv === 'string' ? saved.cv : prev.cv,
+          motivations: typeof saved.motivations === 'string' ? saved.motivations : prev.motivations,
+          expertiseAreas: typeof saved.expertiseAreas === 'string' ? saved.expertiseAreas : prev.expertiseAreas,
+          motivationLetter: null,
+          languages: Array.isArray(saved.languages) ? saved.languages : prev.languages,
+        }));
+        if (saved.newLanguage && typeof saved.newLanguage === 'object') {
+          setNewLanguage({
+            code: typeof saved.newLanguage.code === 'string' ? saved.newLanguage.code : '',
+            level: typeof saved.newLanguage.level === 'string' ? saved.newLanguage.level : '',
+          });
+        }
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('econexo:jobApplication', JSON.stringify({
+        name: applicant.name,
+        email: applicant.email,
+        cv: applicant.cv,
+        motivations: applicant.motivations,
+        expertiseAreas: applicant.expertiseAreas,
+        languages: applicant.languages,
+        newLanguage,
+      }));
+    } catch {}
+  }, [applicant.name, applicant.email, applicant.cv, applicant.motivations, applicant.expertiseAreas, applicant.languages, newLanguage]);
+  const toggleSave = (id: string) => {
+    setSavedJobs((s)=> {
+      const newState = { ...s, [id]: !s[id] };
+      showToast(
+        s[id] ? t("jobRemovedFromSaved") || "Trabajo eliminado de guardados" : t("jobSaved") || "Trabajo guardado",
+        "success"
+      );
+      return newState;
+    });
+  };
   const submitApplication = async () => {
     setApplyFor(null);
-    alert(t("applicationSent"));
+    showToast(t("applicationSent") || "Aplicación enviada", "success");
     setApplicant({ 
       name: "", 
       email: "", 
@@ -292,28 +450,52 @@ export default function JobsPage() {
       motivations: "", 
       expertiseAreas: "", 
       motivationLetter: null,
-      languages: {
-        spanish: { level: "", native: false },
-        english: { level: "", native: false },
-        german: { level: "", native: false }
-      }
+      languages: []
     });
+    setNewLanguage({ code: '', level: '' });
+    try { localStorage.removeItem('econexo:jobApplication'); } catch {}
   };
 
-  // Helper functions to get translated job data
+  // Helper functions to get translated job data with safe fallback
   const getJobTitle = (job: Job) => {
-    const titleKey = `jobTitle${job.id.charAt(1)}` as keyof typeof t;
-    return t(titleKey) || job.title;
+    const titleKey = `jobTitle${job.id.charAt(1)}`;
+    const translated = t(titleKey);
+    return translated === titleKey ? job.title : translated;
   };
 
   const getJobDescription = (job: Job) => {
-    const descKey = `jobDesc${job.id.charAt(1)}` as keyof typeof t;
-    return t(descKey) || job.description;
+    const descKey = `jobDesc${job.id.charAt(1)}`;
+    const translated = t(descKey);
+    return translated === descKey ? job.description : translated;
   };
 
   const getKnowledgeArea = (area: string) => {
-    const areaKey = area.toLowerCase().replace(/\s+/g, '') as keyof typeof t;
-    return t(areaKey) || area;
+    const areaKey = area.toLowerCase().replace(/\s+/g, '');
+    const translated = t(areaKey);
+    return translated === areaKey ? area : translated;
+  };
+
+  // Función para generar URL de búsqueda de la empresa
+  const getCompanyUrl = (companyName: string) => {
+    // Primero intentar LinkedIn (formato estándar de LinkedIn)
+    const linkedinSlug = companyName.toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
+    const linkedinUrl = `https://www.linkedin.com/company/${linkedinSlug}`;
+    
+    // Si no está en LinkedIn, usar Ecosia como búsqueda alternativa
+    // Ecosia usa el mismo formato que Google: ?q=query
+    const ecosiaSearchUrl = `https://www.ecosia.org/search?q=${encodeURIComponent(companyName)}`;
+    
+    // Por defecto intentamos LinkedIn primero, pero el usuario puede buscar en Ecosia si no encuentra
+    // Para una mejor experiencia, podríamos verificar si existe en LinkedIn, pero por ahora
+    // usamos LinkedIn directamente y Ecosia como alternativa manual
+    return linkedinUrl;
+  };
+
+  // Función para obtener URL de búsqueda en Ecosia (alternativa)
+  const getEcosiaSearchUrl = (companyName: string) => {
+    return `https://www.ecosia.org/search?q=${encodeURIComponent(companyName)}`;
   };
 
   return (
@@ -332,7 +514,7 @@ export default function JobsPage() {
         </div>
         
         {/* Segunda fila: Parámetros de búsqueda */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
           <div>
             <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("minSalary")}</label>
             <input type="number" value={minSalary} onChange={(e)=>setMinSalary(Number(e.target.value)||0)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100" />
@@ -348,6 +530,16 @@ export default function JobsPage() {
               {Array.from(new Set(JOBS.map(j=>j.city))).map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("experienceLevel")}</label>
+            <select value={levelFilter} onChange={(e)=>setLevelFilter(e.target.value as any)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
+              <option value="all">{t('all')}</option>
+              <option value="junior">{t('levelJunior')}</option>
+              <option value="mid">{t('levelMid')}</option>
+              <option value="senior">{t('levelSenior')}</option>
+              <option value="lead">{t('levelLead')}</option>
             </select>
           </div>
           <div>
@@ -372,29 +564,66 @@ export default function JobsPage() {
         <div className="mt-4 text-sm text-slate-500 dark:text-slate-400">{filtered.length} {t("results")}</div>
       </div>
 
+      <div className="content-separator" />
+
+      {filtered.length === 0 && query && (
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">🔍</div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            {t("noResults") || "No se encontraron resultados"}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            {t("tryDifferentSearch") || "Intenta con otros términos de búsqueda"}
+          </p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.map((job)=> (
-          <div key={job.id} className="bg-white dark:bg-slate-800 rounded-xl shadow p-5">
+          <div key={job.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-5 hover-lift border border-gray-200 dark:border-slate-700 transition-all duration-200">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{getJobTitle(job)}</h2>
-                <p className="text-slate-600 dark:text-slate-400">{job.company} — {locationLabel(job.city, locale as any)}, {locationLabel(job.country, locale as any)}</p>
+                <p className="text-slate-600 dark:text-slate-400">
+                  <span className="flex items-center gap-2 flex-wrap">
+                    <a 
+                      href={getCompanyUrl(job.company)} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:underline font-medium transition-colors"
+                      title={`Ver ${job.company} en LinkedIn`}
+                    >
+                      {job.company}
+                    </a>
+                    <a 
+                      href={getEcosiaSearchUrl(job.company)} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-xs transition-colors"
+                      title={`Buscar ${job.company} en Ecosia`}
+                    >
+                      🔍
+                    </a>
+                    {' — '}
+                    {locationLabel(job.city, locale as any)}, {locationLabel(job.country, locale as any)}
+                  </span>
+                </p>
               </div>
               <div className="text-right">
-                <div className="text-green-600 font-bold">{fmtCurrency(job.salaryEur)}</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">{job.contract}{job.remote ? " · Remote" : ""}</div>
+                <div className="text-green-600 font-bold">{fmtCurrency(job.salaryMinEur)}–{fmtCurrency(job.salaryMaxEur)}</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">{t(job.level === 'junior' ? 'levelJunior' : job.level === 'mid' ? 'levelMid' : job.level === 'senior' ? 'levelSenior' : 'levelLead')} • {job.contract}{job.remote ? " · Remote" : ""}</div>
               </div>
             </div>
             <div className="mt-3 text-slate-700 dark:text-slate-300">{getJobDescription(job)}</div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-800">{job.experienceYears} {t("yearsExp")}</span>
+              <span className="badge-modern px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">{job.experienceYears} {t("yearsExp")}</span>
               {job.knowledgeAreas.map((a) => (
-                <span key={a} className="px-2 py-1 rounded-full text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">{getKnowledgeArea(a)}</span>
+                <span key={a} className="badge-modern px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600">{getKnowledgeArea(a)}</span>
               ))}
             </div>
             <div className="mt-4 flex gap-3">
-              <button onClick={()=>setApplyFor(job)} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{t("applyBtn")}</button>
-              <button onClick={()=>toggleSave(job.id)} className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-50 dark:hover:bg-slate-700">{savedJobs[job.id] ? t("saved") : t("saveBtn")}</button>
+              <button onClick={()=>setApplyFor(job)} className="touch-target px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg hover-lift">{t("applyBtn")}</button>
+              <button onClick={()=>toggleSave(job.id)} className="touch-target px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 font-medium">{savedJobs[job.id] ? t("saved") : t("saveBtn")}</button>
             </div>
           </div>
         ))}
@@ -403,7 +632,7 @@ export default function JobsPage() {
       {applyFor && (
         <div className="fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4">
           <div className="bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto border border-slate-700">
-            <h2 className="text-xl font-bold mb-4 text-white">{t("applyForJob")}: {applyFor.title}</h2>
+            <h2 className="text-xl font-bold mb-4 text-white">{t("applyForJob")}: {getJobTitle(applyFor)}</h2>
             <div className="space-y-4">
               {/* Información Personal */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -435,7 +664,7 @@ export default function JobsPage() {
                   value={applicant.cv} 
                   onChange={(e)=>setApplicant({...applicant,cv:e.target.value})} 
                   className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white placeholder:text-slate-400" 
-                  placeholder="https://linkedin.com/in/tu-perfil"
+                  placeholder={locale === 'de' ? 'z. B. https://linkedin.com/in/dein-profil' : 'https://linkedin.com/in/tu-perfil'}
                 />
               </div>
 
@@ -446,7 +675,15 @@ export default function JobsPage() {
                   value={applicant.motivations} 
                   onChange={(e)=>setApplicant({...applicant,motivations:e.target.value})} 
                   className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white placeholder:text-slate-400 min-h-24" 
-                  placeholder={t("motivationsPlaceholder")}
+                  placeholder={
+                    currentLocale === 'de' ? 'Motivationsschreiben' :
+                    currentLocale === 'es' ? 'Carta de motivación' :
+                    currentLocale === 'en' ? 'Motivation letter' :
+                    currentLocale === 'fr' ? 'Lettre de motivation' :
+                    currentLocale === 'it' ? 'Lettera di motivazione' :
+                    currentLocale === 'pt' ? 'Carta de motivação' :
+                    t('motivationsPlaceholder')
+                  }
                   required
                 />
               </div>
@@ -463,141 +700,151 @@ export default function JobsPage() {
                 />
               </div>
 
-              {/* Lenguajes Naturales */}
+              {/* Lenguajes */}
               <div>
-                <label className="block text-sm font-medium mb-3 text-white">{t("naturalLanguages")}</label>
-                <div className="space-y-4">
-                  {/* Alemán primero - como el usuario pidió */}
-                  <div className="border border-slate-600 rounded-lg p-4 bg-slate-700">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">🇩🇪</span>
-                        <span className="font-medium text-white">{t("german")}</span>
-                      </div>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={applicant.languages.german.native}
-                          onChange={(e) => setApplicant({
-                            ...applicant,
-                            languages: {
-                              ...applicant.languages,
-                              german: { ...applicant.languages.german, native: e.target.checked }
-                            }
-                          })}
-                          className="rounded"
-                        />
-                        <span className="text-sm text-slate-300">{t("nativeLanguage")}</span>
-                      </label>
-                    </div>
-                    <select
-                      value={applicant.languages.german.level}
-                      onChange={(e) => setApplicant({
-                        ...applicant,
-                        languages: {
-                          ...applicant.languages,
-                          german: { ...applicant.languages.german, level: e.target.value }
-                        }
-                      })}
-                      className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
-                    >
-                      <option value="" className="bg-slate-700">{t("selectLevel")}</option>
-                      <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
-                      <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
-                      <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
-                      <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
-                    </select>
-                  </div>
+                <label className="block text-sm font-medium mb-3 text-white">{t("languages")}</label>
+                {(() => {
+                  const EUROPEAN_LANGUAGES = [
+                    { code: 'de', label: 'Deutsch' },
+                    { code: 'en', label: 'English' },
+                    { code: 'es', label: 'Español' },
+                    { code: 'fr', label: 'Français' },
+                    { code: 'it', label: 'Italiano' },
+                    { code: 'pt', label: 'Português' },
+                    { code: 'nl', label: 'Nederlands' },
+                    { code: 'pl', label: 'Polski' },
+                    { code: 'ro', label: 'Română' },
+                    { code: 'cs', label: 'Čeština' },
+                    { code: 'sk', label: 'Slovenčina' },
+                    { code: 'sl', label: 'Slovenščina' },
+                    { code: 'hr', label: 'Hrvatski' },
+                    { code: 'sr', label: 'Srpski' },
+                    { code: 'bs', label: 'Bosanski' },
+                    { code: 'mk', label: 'Македонски' },
+                    { code: 'bg', label: 'Български' },
+                    { code: 'ru', label: 'Русский' },
+                    { code: 'uk', label: 'Українська' },
+                    { code: 'be', label: 'Беларуская' },
+                    { code: 'el', label: 'Ελληνικά' },
+                    { code: 'da', label: 'Dansk' },
+                    { code: 'sv', label: 'Svenska' },
+                    { code: 'fi', label: 'Suomi' },
+                    { code: 'no', label: 'Norsk' },
+                    { code: 'et', label: 'Eesti' },
+                    { code: 'lv', label: 'Latviešu' },
+                    { code: 'lt', label: 'Lietuvių' },
+                    { code: 'ga', label: 'Gaeilge' },
+                    { code: 'mt', label: 'Malti' },
+                    { code: 'is', label: 'Íslenska' },
+                    { code: 'al', label: 'Shqip' }
+                  ];
 
-                  {/* Español */}
-                  <div className="border border-slate-600 rounded-lg p-4 bg-slate-700">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">🇪🇸</span>
-                        <span className="font-medium text-white">{t("spanish")}</span>
-                      </div>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={applicant.languages.spanish.native}
-                          onChange={(e) => setApplicant({
-                            ...applicant,
-                            languages: {
-                              ...applicant.languages,
-                              spanish: { ...applicant.languages.spanish, native: e.target.checked }
-                            }
-                          })}
-                          className="rounded"
-                        />
-                        <span className="text-sm text-slate-300">{t("nativeLanguage")}</span>
-                      </label>
-                    </div>
-                    <select
-                      value={applicant.languages.spanish.level}
-                      onChange={(e) => setApplicant({
-                        ...applicant,
-                        languages: {
-                          ...applicant.languages,
-                          spanish: { ...applicant.languages.spanish, level: e.target.value }
-                        }
-                      })}
-                      className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
-                    >
-                      <option value="" className="bg-slate-700">{t("selectLevel")}</option>
-                      <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
-                      <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
-                      <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
-                      <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
-                    </select>
-                  </div>
+                  const selectable = EUROPEAN_LANGUAGES.filter(l => !applicant.languages.some(sel => sel.code === l.code));
 
-                  {/* Inglés */}
-                  <div className="border border-slate-600 rounded-lg p-4 bg-slate-700">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">🇬🇧</span>
-                        <span className="font-medium text-white">{t("english")}</span>
+                  return (
+                    <div className="space-y-3">
+                      <div className="flex flex-col md:flex-row md:items-center gap-2">
+                        <select
+                          value={newLanguage.code}
+                          onChange={(e) => setNewLanguage({ ...newLanguage, code: e.target.value })}
+                          className="w-full md:w-1/2 border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white"
+                        >
+                          <option value="" className="bg-slate-700">{t("selectLanguage") ?? 'Selecciona un lenguaje'}</option>
+                          {selectable.map(l => (
+                            <option key={l.code} value={l.code} className="bg-slate-700">{l.label}</option>
+                          ))}
+                        </select>
+                        <select
+                          value={newLanguage.level}
+                          onChange={(e) => setNewLanguage({ ...newLanguage, level: e.target.value })}
+                          className="w-full md:w-1/3 border border-slate-600 rounded px-3 py-2 bg-slate-700 text-white"
+                        >
+                          <option value="" className="bg-slate-700">{t("selectLevel")}</option>
+                          <option value="A1" className="bg-slate-700">A1</option>
+                          <option value="A2" className="bg-slate-700">A2</option>
+                          <option value="B1" className="bg-slate-700">B1</option>
+                          <option value="B2" className="bg-slate-700">B2</option>
+                          <option value="C1" className="bg-slate-700">C1</option>
+                          <option value="C2" className="bg-slate-700">C2</option>
+                          <option value="Native" className="bg-slate-700">{t("native")}</option>
+                        </select>
+                        <button
+                          type="button"
+                          className="px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded"
+                          onClick={() => {
+                            if (!newLanguage.code) return;
+                            if (applicant.languages.some(l => l.code === newLanguage.code)) return;
+                            setApplicant({
+                              ...applicant,
+                              languages: [...applicant.languages, { code: newLanguage.code, level: newLanguage.level || '', native: newLanguage.level === 'Native' }]
+                            });
+                            setNewLanguage({ code: '', level: '' });
+                          }}
+                          aria-label="add-language"
+                        >
+                          +
+                        </button>
                       </div>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={applicant.languages.english.native}
-                          onChange={(e) => setApplicant({
-                            ...applicant,
-                            languages: {
-                              ...applicant.languages,
-                              english: { ...applicant.languages.english, native: e.target.checked }
-                            }
+
+                      {applicant.languages.length > 0 && (
+                        <div className="space-y-2">
+                          {applicant.languages.map((l, idx) => {
+                            const meta = EUROPEAN_LANGUAGES.find(x => x.code === l.code);
+                            return (
+                              <div key={l.code} className="border border-slate-600 rounded-lg p-3 bg-slate-700 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                                <div className="text-white font-medium">{meta?.label || l.code.toUpperCase()}</div>
+                                <div className="flex items-center gap-2">
+                                  <select
+                                    value={l.level}
+                                    onChange={(e) => {
+                                      const next = [...applicant.languages];
+                                      next[idx] = { ...l, level: e.target.value };
+                                      setApplicant({ ...applicant, languages: next });
+                                    }}
+                                    className="border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
+                                  >
+                                    <option value="" className="bg-slate-700">{t("selectLevel")}</option>
+                                    <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
+                                    <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
+                                    <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
+                                    <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
+                                  </select>
+                                  <label className="flex items-center gap-2 text-slate-300">
+                                    <input
+                                      type="checkbox"
+                                      checked={l.native}
+                                      onChange={(e) => {
+                                        const next = [...applicant.languages];
+                                        next[idx] = { ...l, native: e.target.checked };
+                                        setApplicant({ ...applicant, languages: next });
+                                      }}
+                                      className="rounded"
+                                    />
+                                    <span>{t("nativeLanguage")}</span>
+                                  </label>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setApplicant({ ...applicant, languages: applicant.languages.filter(x => x.code !== l.code) });
+                                    }}
+                                    className="text-red-300 hover:text-red-200 text-sm"
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
+                              </div>
+                            );
                           })}
-                          className="rounded"
-                        />
-                        <span className="text-sm text-slate-300">{t("nativeLanguage")}</span>
-                      </label>
+                        </div>
+                      )}
                     </div>
-                    <select
-                      value={applicant.languages.english.level}
-                      onChange={(e) => setApplicant({
-                        ...applicant,
-                        languages: {
-                          ...applicant.languages,
-                          english: { ...applicant.languages.english, level: e.target.value }
-                        }
-                      })}
-                      className="w-full border border-slate-600 rounded px-3 py-2 bg-slate-600 text-white"
-                    >
-                      <option value="" className="bg-slate-700">{t("selectLevel")}</option>
-                      <option value="beginner" className="bg-slate-700">{t("beginner")}</option>
-                      <option value="intermediate" className="bg-slate-700">{t("intermediate")}</option>
-                      <option value="advanced" className="bg-slate-700">{t("advanced")}</option>
-                      <option value="fluent" className="bg-slate-700">{t("fluent")}</option>
-                    </select>
-                  </div>
-                </div>
+                  );
+                })()}
               </div>
 
               {/* Carta de Motivación PDF */}
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">{t("motivationLetter")} ({t("optional")})</label>
+                <label className="block text-sm font-medium mb-1 text-white">{locale === 'de' ? 'Motivationsschreiben' : t("motivationLetter")} ({t("optional")})</label>
                 <div className="border-2 border-dashed border-slate-600 rounded-lg p-4 bg-slate-700">
                   <input
                     type="file"
@@ -655,7 +902,7 @@ export default function JobsPage() {
                   onClick={submitApplication} 
                   className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors font-medium"
                 >
-                  {t("sendApplication")}
+                  Send
                 </button>
               </div>
             </div>
@@ -900,12 +1147,6 @@ export default function JobsPage() {
         </div>
       )}
 
-      {/* Success Message */}
-      {showSuccess && (
-        <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-[10000]">
-          ✅ {t("jobCreated")}
-        </div>
-      )}
     </div>
   );
 }

@@ -30,7 +30,7 @@ export default function AuthButton({
   }
 
   const getButtonClasses = () => {
-    const baseClasses = "font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2";
+    const baseClasses = "font-medium transition-all focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2";
     
     const sizeClasses = {
       sm: "px-3 py-1.5 text-sm",
@@ -67,9 +67,6 @@ export default function AuthButton({
           <span className="hidden sm:inline">
             {user.email?.split("@")[0] || t("myAccount")}
           </span>
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
         </button>
 
         {showUserDropdown && (
@@ -104,6 +101,13 @@ export default function AuthButton({
                 >
                   💼 {t("myJobs")}
                 </a>
+                <a
+                  href="/comunidad"
+                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  👥 {locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community'}
+                </a>
                 <div className="border-t border-gray-200 dark:border-slate-700 my-1"></div>
                 <button
                   onClick={handleSignOut}
@@ -119,27 +123,60 @@ export default function AuthButton({
     );
   }
 
+  // Special styling for header buttons (outline + sm) to match Support Us button exactly
+  const isHeaderButton = variant === "outline" && size === "sm";
+  
+  // Exact same classes as Support Us button
+  const headerButtonClasses = "btn-gls-primary text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-2.5 shadow-md hover:shadow-lg";
+
   return (
     <>
       <div className="flex gap-2">
-        <button
-          onClick={() => {
-            setAuthMode("login");
-            setIsAuthModalOpen(true);
-          }}
-          className={`${getButtonClasses()} ${className}`}
-        >
-          {t("signIn")}
-        </button>
-        <button
-          onClick={() => {
-            setAuthMode("register");
-            setIsAuthModalOpen(true);
-          }}
-          className={`${getButtonClasses().replace("bg-green-600 hover:bg-green-700", "bg-green-100 hover:bg-green-200 text-green-700 dark:bg-green-900 dark:hover:bg-green-800 dark:text-green-300")} ${className}`}
-        >
-          {t("signUp")}
-        </button>
+        {isHeaderButton ? (
+          <>
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode("login");
+                setIsAuthModalOpen(true);
+              }}
+              className={headerButtonClasses}
+            >
+              {t("signIn")}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode("register");
+                setIsAuthModalOpen(true);
+              }}
+              className={headerButtonClasses}
+            >
+              {t("signUp")}
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => {
+                setAuthMode("login");
+                setIsAuthModalOpen(true);
+              }}
+              className={`${getButtonClasses()} ${className}`}
+            >
+              {t("signIn")}
+            </button>
+            <button
+              onClick={() => {
+                setAuthMode("register");
+                setIsAuthModalOpen(true);
+              }}
+              className={`${getButtonClasses().replace("bg-green-600 hover:bg-green-700", "bg-green-100 hover:bg-green-200 text-green-700 dark:bg-green-900 dark:hover:bg-green-800 dark:text-green-300")} ${className}`}
+            >
+              {t("signUp")}
+            </button>
+          </>
+        )}
       </div>
 
       <AuthModal

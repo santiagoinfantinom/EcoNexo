@@ -1,13 +1,30 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useGlobalConfig } from "@/hooks/useGlobalConfig";
 import { BaseCard, BaseButton, BaseSelect, BaseTitle, BaseFilterPanel, BaseEmptyState, BaseLabel, BaseInput } from "@/components/ui";
 import Link from "next/link";
+import { ensureEventImage } from "@/lib/eventImages";
 
 type CalendarViewProps = {
   projects: any[];
   onProjectSelect: (project: any) => void;
+};
+
+type CalendarEvent = {
+  id: string;
+  projectId?: string;
+  title: string;
+  date: Date;
+  time: string;
+  duration: number;
+  spots: number;
+  registered: number;
+  location: string;
+  category: 'environment' | 'education' | 'community' | 'technology';
+  organizer?: string;
+  website?: string;
+  image_url?: string;
 };
 
 export default function CalendarView({ projects, onProjectSelect }: CalendarViewProps) {
@@ -26,7 +43,11 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   } = useGlobalConfig();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
-  const [monthCategory, setMonthCategory] = useState<'' | 'environment' | 'education' | 'community'>('');
+  const [monthCategory, setMonthCategory] = useState<'' | 'environment' | 'education' | 'community' | 'technology'>('');
+  const [realEvents, setRealEvents] = useState<CalendarEvent[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(false);
+  const [subscriptionEndpoint, setSubscriptionEndpoint] = useState<string | null>(null);
   
   // Filter states for list view
   const [showFilters, setShowFilters] = useState(false);
@@ -749,6 +770,172 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       category: 'education',
       organizer: locale === 'es' ? 'Arte Reciclado' : locale === 'de' ? 'Recycling-Kunst' : 'Recycled Art'
     },
+    // Extra November spread for more realism
+    {
+      id: 'e26b',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Siembra urbana comunitaria' :
+             locale === 'de' ? 'Gemeinschaftliche urbane Aussaat' : 'Community urban seeding',
+      date: new Date(2025, 10, 1),
+      time: '10:00',
+      duration: 3,
+      spots: 25,
+      registered: 17,
+      location: locale === 'es' ? 'Huerto Urbano, Barcelona' :
+                locale === 'de' ? 'Urbaner Garten, Barcelona' : 'Urban Garden, Barcelona',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Huertos Vivos' : locale === 'de' ? 'Lebendige Gärten' : 'Living Gardens'
+    },
+    {
+      id: 'e26c',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Intercambio de libros verdes' :
+             locale === 'de' ? 'Grüner Büchertausch' : 'Green book swap',
+      date: new Date(2025, 10, 4),
+      time: '17:00',
+      duration: 2,
+      spots: 40,
+      registered: 22,
+      location: locale === 'es' ? 'Biblioteca Central, Londres' :
+                locale === 'de' ? 'Zentralbibliothek, London' : 'Central Library, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Lecturas Sostenibles' : locale === 'de' ? 'Nachhaltige Lektüren' : 'Sustainable Reads'
+    },
+    {
+      id: 'e26d',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Charla de eficiencia energética' :
+             locale === 'de' ? 'Energieeffizienz‑Vortrag' : 'Energy efficiency talk',
+      date: new Date(2025, 10, 6),
+      time: '18:30',
+      duration: 2,
+      spots: 60,
+      registered: 41,
+      location: locale === 'es' ? 'Ayuntamiento, Milán' :
+                locale === 'de' ? 'Rathaus, Mailand' : 'City Hall, Milan',
+      category: 'education',
+      organizer: locale === 'es' ? 'Eficiencia 360' : locale === 'de' ? 'Effizienz 360' : 'Efficiency 360'
+    },
+    {
+      id: 'e26e',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Taller de compost rápido' :
+             locale === 'de' ? 'Schnell‑Kompost Workshop' : 'Quick compost workshop',
+      date: new Date(2025, 10, 9),
+      time: '09:30',
+      duration: 2,
+      spots: 20,
+      registered: 14,
+      location: locale === 'es' ? 'Centro Verde, Madrid' :
+                locale === 'de' ? 'Grünes Zentrum, Madrid' : 'Green Center, Madrid',
+      category: 'education',
+      organizer: locale === 'es' ? 'Compost Masters' : locale === 'de' ? 'Kompost‑Meister' : 'Compost Masters'
+    },
+    {
+      id: 'e26f',
+      projectId: 'p1',
+      title: locale === 'es' ? 'Censo de aves al amanecer' :
+             locale === 'de' ? 'Vogelzählung bei Sonnenaufgang' : 'Dawn bird census',
+      date: new Date(2025, 10, 12),
+      time: '06:45',
+      duration: 2,
+      spots: 18,
+      registered: 13,
+      location: locale === 'es' ? 'Humedal Urbano, Berlín' :
+                locale === 'de' ? 'Stadtfeuchtgebiet, Berlin' : 'Urban Wetland, Berlin',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Aves de Ciudad' : locale === 'de' ? 'Stadtvögel' : 'City Birds'
+    },
+    {
+      id: 'e26g',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Trueque de ropa sostenible' :
+             locale === 'de' ? 'Nachhaltiger Kleidertausch' : 'Sustainable clothes swap',
+      date: new Date(2025, 10, 16),
+      time: '11:00',
+      duration: 4,
+      spots: 100,
+      registered: 68,
+      location: locale === 'es' ? 'Centro Comunitario, Londres' :
+                locale === 'de' ? 'Gemeindezentrum, London' : 'Community Center, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Armario Circular' : locale === 'de' ? 'Zirkulärer Kleiderschrank' : 'Circular Closet'
+    },
+    {
+      id: 'e26h',
+      projectId: 'p3',
+      title: locale === 'es' ? 'Taller de huertos en balcones' :
+             locale === 'de' ? 'Balkongarten‑Workshop' : 'Balcony gardening workshop',
+      date: new Date(2025, 10, 22),
+      time: '16:00',
+      duration: 2,
+      spots: 22,
+      registered: 16,
+      location: locale === 'es' ? 'Barrio Viejo, Barcelona' :
+                locale === 'de' ? 'Altstadtviertel, Barcelona' : 'Old Quarter, Barcelona',
+      category: 'education',
+      organizer: locale === 'es' ? 'Huertos Urbanos' : locale === 'de' ? 'Urbane Gärten' : 'Urban Gardens'
+    },
+    {
+      id: 'e26i',
+      projectId: 'p4',
+      title: locale === 'es' ? 'Reforestación participativa' :
+             locale === 'de' ? 'Partizipative Aufforstung' : 'Participatory reforestation',
+      date: new Date(2025, 10, 23),
+      time: '10:00',
+      duration: 4,
+      spots: 35,
+      registered: 19,
+      location: locale === 'es' ? 'Monte Bajo, Milán' :
+                locale === 'de' ? 'Niederwald, Mailand' : 'Low Forest, Milan',
+      category: 'environment',
+      organizer: locale === 'es' ? 'Bosques Vivos' : locale === 'de' ? 'Lebendige Wälder' : 'Living Forests'
+    },
+    {
+      id: 'e26j',
+      projectId: 'p5',
+      title: locale === 'es' ? 'Charla: salud y clima' :
+             locale === 'de' ? 'Vortrag: Gesundheit und Klima' : 'Talk: health and climate',
+      date: new Date(2025, 10, 27),
+      time: '19:00',
+      duration: 2,
+      spots: 90,
+      registered: 61,
+      location: locale === 'es' ? 'Hospital Universitario, París' :
+                locale === 'de' ? 'Universitätsklinikum, Paris' : 'University Hospital, Paris',
+      category: 'education',
+      organizer: locale === 'es' ? 'Salud Verde' : locale === 'de' ? 'Grüne Gesundheit' : 'Green Health'
+    },
+    {
+      id: 'e26k',
+      projectId: 'p2',
+      title: locale === 'es' ? 'Paseo comunitario por el río' :
+             locale === 'de' ? 'Gemeinschaftlicher Flussspaziergang' : 'Community river walk',
+      date: new Date(2025, 10, 29),
+      time: '10:00',
+      duration: 2,
+      spots: 40,
+      registered: 24,
+      location: locale === 'es' ? 'Ribera Verde, Madrid' :
+                locale === 'de' ? 'Grünes Ufer, Madrid' : 'Green Riverside, Madrid',
+      category: 'community',
+      organizer: locale === 'es' ? 'Amigos del Río' : locale === 'de' ? 'Flussfreunde' : 'River Friends'
+    },
+    {
+      id: 'e26l',
+      projectId: 'p6',
+      title: locale === 'es' ? 'Mercadillo de intercambio' :
+             locale === 'de' ? 'Tausch‑Flohmarkt' : 'Swap mini‑market',
+      date: new Date(2025, 10, 30),
+      time: '12:00',
+      duration: 4,
+      spots: 120,
+      registered: 77,
+      location: locale === 'es' ? 'Plaza Central, Londres' :
+                locale === 'de' ? 'Zentralplatz, London' : 'Central Square, London',
+      category: 'community',
+      organizer: locale === 'es' ? 'Circular UK' : locale === 'de' ? 'Zirkulär UK' : 'Circular UK'
+    },
 
     // December 2025 Events
     {
@@ -849,8 +1036,161 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                 locale === 'de' ? 'Nachhaltigkeitsplatz, Barcelona' : 'Sustainability Square, Barcelona',
       category: 'community',
       organizer: locale === 'es' ? 'Sostenibilidad Total' : locale === 'de' ? 'Totale Nachhaltigkeit' : 'Total Sustainability'
+    },
+    {
+      id: 'e34',
+      projectId: 'tech_1',
+      title: locale === 'es' ? 'Hackathon Verde' : locale === 'de' ? 'Grünes Hackathon' : 'Green Hackathon',
+      date: new Date(2025, 10, 15), // November 15, 2025
+      time: '09:00',
+      duration: 48,
+      spots: 100,
+      registered: 65,
+      location: locale === 'es' ? 'Centro de Innovación Tecnológica, Madrid' :
+                locale === 'de' ? 'Technologie-Innovationszentrum, Madrid' : 'Technology Innovation Center, Madrid',
+      category: 'technology',
+      organizer: locale === 'es' ? 'Green Tech Hub' : locale === 'de' ? 'Grünes Tech-Zentrum' : 'Green Tech Hub'
+    },
+    {
+      id: 'e35',
+      projectId: 'tech_2',
+      title: locale === 'es' ? 'Taller de IoT para Monitoreo Ambiental' : locale === 'de' ? 'IoT-Workshop für Umweltüberwachung' : 'IoT Workshop for Environmental Monitoring',
+      date: new Date(2025, 10, 22), // November 22, 2025
+      time: '10:00',
+      duration: 6,
+      spots: 25,
+      registered: 18,
+      location: locale === 'es' ? 'Fab Lab, Berlín' :
+                locale === 'de' ? 'Fab Lab, Berlin' : 'Fab Lab, Berlin',
+      category: 'technology',
+      organizer: locale === 'es' ? 'IoT Environmental' : locale === 'de' ? 'IoT Umwelt' : 'IoT Environmental'
+    },
+    {
+      id: 'e36',
+      projectId: 'tech_3',
+      title: locale === 'es' ? 'Desarrollo de Apps Sostenibles' : locale === 'de' ? 'Entwicklung nachhaltiger Apps' : 'Sustainable Apps Development',
+      date: new Date(2025, 10, 28), // November 28, 2025
+      time: '14:00',
+      duration: 4,
+      spots: 30,
+      registered: 22,
+      location: locale === 'es' ? 'Tech Campus, Barcelona' :
+                locale === 'de' ? 'Tech Campus, Barcelona' : 'Tech Campus, Barcelona',
+      category: 'technology',
+      organizer: locale === 'es' ? 'Sustainable Developers' : locale === 'de' ? 'Nachhaltige Entwickler' : 'Sustainable Developers'
     }
   ];
+
+  // Load real events from API
+  useEffect(() => {
+    // Transform API event to calendar event format
+    const transformEvent = (apiEvent: any): CalendarEvent | null => {
+      try {
+        const eventDate = new Date(apiEvent.date);
+        if (isNaN(eventDate.getTime())) return null;
+
+        // Map category from Spanish/English to calendar format
+        const categoryMap: Record<string, 'environment' | 'education' | 'community' | 'technology'> = {
+          'Medio ambiente': 'environment',
+          'Environment': 'environment',
+          'Umwelt': 'environment',
+          'Educación': 'education',
+          'Education': 'education',
+          'Bildung': 'education',
+          'Comunidad': 'community',
+          'Community': 'community',
+          'Gemeinschaft': 'community',
+          'Salud': 'community',
+          'Health': 'community',
+          'Gesundheit': 'community',
+          'Océanos': 'environment',
+          'Oceans': 'environment',
+          'Ozeane': 'environment',
+          'Alimentación': 'community',
+          'Food': 'community',
+          'Ernährung': 'community',
+          'Tecnología': 'technology',
+          'Technology': 'technology',
+          'Technologie': 'technology',
+        };
+
+        const category = categoryMap[apiEvent.category] || 'community';
+        
+        // Calculate duration from start_time and end_time
+        let duration = 2; // default
+        if (apiEvent.start_time && apiEvent.end_time) {
+          const start = apiEvent.start_time.split(':').map(Number);
+          const end = apiEvent.end_time.split(':').map(Number);
+          const startMinutes = start[0] * 60 + start[1];
+          const endMinutes = end[0] * 60 + end[1];
+          duration = Math.round((endMinutes - startMinutes) / 60);
+          if (duration <= 0) duration = 2;
+        }
+
+        // Format time display
+        const timeDisplay = apiEvent.start_time 
+          ? (apiEvent.end_time ? `${apiEvent.start_time}–${apiEvent.end_time}` : apiEvent.start_time)
+          : '09:00';
+
+        // Build location string
+        const locationParts = [apiEvent.city, apiEvent.country].filter(Boolean);
+        const location = locationParts.length > 0 
+          ? locationParts.join(', ')
+          : (apiEvent.address || 'Location TBD');
+
+        // Get localized title
+        const title = locale === 'es' 
+          ? (apiEvent.title || apiEvent.title_en || 'Untitled Event')
+          : locale === 'de'
+          ? (apiEvent.title_de || apiEvent.title || apiEvent.title_en || 'Untitled Event')
+          : (apiEvent.title_en || apiEvent.title || 'Untitled Event');
+
+        return {
+          id: apiEvent.id || `event_${Date.now()}_${Math.random()}`,
+          title,
+          date: eventDate,
+          time: timeDisplay,
+          duration,
+          spots: apiEvent.capacity || 50,
+          registered: 0, // TODO: Get from API if available
+          location,
+          category,
+          website: apiEvent.website,
+          image_url: apiEvent.image_url,
+        };
+      } catch (error) {
+        console.error('Error transforming event:', error, apiEvent);
+        return null;
+      }
+    };
+
+    const loadEvents = async () => {
+      setLoadingEvents(true);
+      try {
+        const res = await fetch("/api/events");
+        if (res.ok) {
+          const data = await res.json();
+          const events = Array.isArray(data) 
+            ? data.map(transformEvent).filter((e): e is CalendarEvent => e !== null)
+            : [];
+          setRealEvents(events);
+        } else {
+          console.warn("API not available, using mock events as fallback");
+          setRealEvents([]);
+        }
+      } catch (error) {
+        console.warn("Failed to load events:", error);
+        setRealEvents([]);
+      } finally {
+        setLoadingEvents(false);
+      }
+    };
+
+    loadEvents();
+  }, [locale]);
+
+  // Combine real events with mock events (mock as fallback if no real events)
+  const allEvents = realEvents.length > 0 ? realEvents : mockEvents;
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
@@ -876,7 +1216,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   };
 
   const getEventsForDate = (date: Date) => {
-    return mockEvents.filter(event => 
+    return allEvents.filter(event => 
       event.date.toDateString() === date.toDateString() &&
       (monthCategory ? event.category === monthCategory : true)
     );
@@ -903,7 +1243,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
   // Filter functions
   const getFilteredEvents = () => {
-    let filtered = mockEvents.filter(event => 
+    let filtered = allEvents.filter(event => 
       event.date.getMonth() === currentMonth.getMonth() && 
       event.date.getFullYear() === currentMonth.getFullYear()
     );
@@ -958,7 +1298,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
     if (filters.searchText) {
       filtered = filtered.filter(event => 
-        t(event.title).toLowerCase().includes(filters.searchText.toLowerCase()) ||
+        event.title.toLowerCase().includes(filters.searchText.toLowerCase()) ||
         event.location.toLowerCase().includes(filters.searchText.toLowerCase()) ||
         event.organizer.toLowerCase().includes(filters.searchText.toLowerCase())
       );
@@ -978,11 +1318,11 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   };
 
   const getUniqueCategories = () => {
-    return [...new Set(mockEvents.map(event => event.category))];
+    return [...new Set(allEvents.map(event => event.category))];
   };
 
   const getUniqueLocations = () => {
-    return [...new Set(mockEvents.map(event => event.location))];
+    return [...new Set(allEvents.map(event => event.location))];
   };
 
   const weekDays = locale === 'es' ? 
@@ -992,12 +1332,15 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <BaseCard variant="default" className="max-w-4xl mx-auto">
+    <BaseCard variant="default" className="w-full my-6">
+      {/* Loading indicator */}
+      {loadingEvents && realEvents.length === 0 && (
+        <div className="text-center py-4 text-slate-600 dark:text-slate-400">
+          {locale === 'es' ? 'Cargando eventos...' : locale === 'de' ? 'Veranstaltungen werden geladen...' : 'Loading events...'}
+        </div>
+      )}
       {/* Header */}
       <div className="flex flex-col items-center mb-4">
-        <BaseTitle level="h2" className="mb-3 capitalize">
-          {t("calendar")}
-        </BaseTitle>
         <div className="flex gap-2">
           <BaseButton 
             variant={viewMode === 'month' ? 'primary' : 'secondary'}
@@ -1010,6 +1353,87 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             onClick={() => setViewMode('list')}
           >
             {t("list")}
+          </BaseButton>
+          <BaseButton
+            variant={notificationsEnabled ? 'secondary' : 'primary'}
+            onClick={async () => {
+              try {
+                if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+                  alert(t('notificationsNotSupported'));
+                  return;
+                }
+
+                // Request notification permission
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') {
+                  alert(t('notificationsBlocked'));
+                  return;
+                }
+
+                // Register service worker
+                let registration = await navigator.serviceWorker.getRegistration('/sw.js');
+                if (!registration) {
+                  registration = await navigator.serviceWorker.register('/sw.js');
+                  await navigator.serviceWorker.ready;
+                }
+
+                // Get VAPID public key from environment (available in client via NEXT_PUBLIC_)
+                const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+                if (!vapidPublicKey) {
+                  alert(locale === 'es' 
+                    ? 'VAPID keys no configuradas. Contacta al administrador.'
+                    : locale === 'de'
+                    ? 'VAPID-Schlüssel nicht konfiguriert. Kontaktieren Sie den Administrator.'
+                    : 'VAPID keys not configured. Contact administrator.');
+                  return;
+                }
+
+                // Convert VAPID key to Uint8Array
+                const urlBase64ToUint8Array = (base64String: string) => {
+                  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                  const base64 = (base64String + padding)
+                    .replace(/\-/g, '+')
+                    .replace(/_/g, '/');
+                  const rawData = window.atob(base64);
+                  const outputArray = new Uint8Array(rawData.length);
+                  for (let i = 0; i < rawData.length; ++i) {
+                    outputArray[i] = rawData.charCodeAt(i);
+                  }
+                  return outputArray;
+                };
+
+                // Subscribe to push notifications
+                const subscription = await registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+                });
+
+                // Send subscription to server
+                const response = await fetch('/api/push/subscribe', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(subscription)
+                });
+
+                if (response.ok) {
+                  setNotificationsEnabled(true);
+                  setSubscriptionEndpoint(subscription.endpoint);
+                  alert(t('subscribedToPushNotifications'));
+                } else {
+                  throw new Error('Failed to save subscription');
+                }
+              } catch (error: any) {
+                console.error('Error enabling notifications:', error);
+                alert(locale === 'es'
+                  ? `Error al activar notificaciones: ${error.message}`
+                  : locale === 'de'
+                  ? `Fehler beim Aktivieren von Benachrichtigungen: ${error.message}`
+                  : `Error enabling notifications: ${error.message}`);
+              }
+            }}
+          >
+            {notificationsEnabled ? (locale === 'es' ? 'Notificaciones activas' : locale === 'de' ? 'Benachrichtigungen aktiv' : 'Notifications on')
+                                  : (locale === 'es' ? 'Activar notificaciones' : locale === 'de' ? 'Benachrichtigungen aktivieren' : 'Enable notifications')}
           </BaseButton>
         </div>
       </div>
@@ -1026,6 +1450,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
               <option value="environment">{locale === 'es' ? 'Medio Ambiente' : locale === 'de' ? 'Umwelt' : 'Environment'}</option>
               <option value="education">{locale === 'es' ? 'Educación' : locale === 'de' ? 'Bildung' : 'Education'}</option>
               <option value="community">{locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community'}</option>
+              <option value="technology">{locale === 'es' ? 'Tecnología' : locale === 'de' ? 'Technologie' : 'Technology'}</option>
             </BaseSelect>
           </div>
           {/* Month Navigation */}
@@ -1082,7 +1507,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                             key={event.id}
                             href={`/eventos/${event.id}`}
                             className="text-xs px-1.5 py-0.5 rounded cursor-pointer truncate block hover:opacity-95 font-medium"
-                            title={t(event.title)}
+                            title={event.title}
                             style={{
                               backgroundColor: event.category === 'environment' ? '#dcfce7' : event.category === 'education' ? '#dbeafe' : '#f3e8ff',
                               color: event.category === 'environment' ? '#166534' : event.category === 'education' ? '#1e3a8a' : '#6b21a8'
@@ -1092,7 +1517,9 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                               <span className={`w-2 h-2 rounded-full ${
                                 event.category === 'environment' ? 'bg-green-600' : event.category === 'education' ? 'bg-blue-700' : 'bg-purple-700'
                               }`} />
-                              {t(event.title)}
+                              {/* Show time before title if available */}
+                              {event.time ? <span className="opacity-90">{event.time}</span> : null}
+                              <span className="truncate">{event.title}</span>
                               <span className="ml-1 opacity-90">
                                 ({event.registered}/{event.spots})
                               </span>
@@ -1273,7 +1700,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   href={`/eventos/${event.id}`}
                                   className={getEventClasses('title')}
                                 >
-                                  {t(event.title)}
+                                  {event.title}
                                 </Link>
                                 <p className={getEventClasses('location')}>{event.location}</p>
                                 <div className={getEventClasses('details')}>
@@ -1299,15 +1726,18 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   </span>
                                 </div>
                               </div>
-                              {/* Optional website/image preview */}
+                              {/* Event image - Always show */}
                               {(() => {
-                                const websitePreview = (event as any).website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent((event as any).website)}?w=480` : undefined;
-                                const headerImageSrc = (event as any).image_url || websitePreview;
-                                return headerImageSrc ? (
+                                const headerImageSrc = ensureEventImage({
+                                  image_url: (event as any).image_url,
+                                  category: (event as any).category || 'community',
+                                  website: (event as any).website
+                                });
+                                return (
                                   <div className="w-32 h-20 overflow-hidden rounded-md border border-gray-200">
                                     <img
                                       src={headerImageSrc}
-                                      alt={t(event.title)}
+                                      alt={event.title}
                                       className="w-full h-full object-cover"
                                       loading="lazy"
                                       referrerPolicy="no-referrer"
@@ -1315,7 +1745,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                       crossOrigin="anonymous"
                                     />
                                   </div>
-                                ) : null;
+                                );
                               })()}
                               <div className={getEventClasses('actions')}>
                                 <Link

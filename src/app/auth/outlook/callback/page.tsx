@@ -11,7 +11,7 @@ export default function OutlookCallbackPage() {
   useEffect(() => {
     const handleRedirect = async () => {
       try {
-        const oauthService = createOAuthService();
+        const oauthService = await createOAuthService();
         const result = await oauthService.handleOutlookRedirect();
 
         if (result.success && result.user) {

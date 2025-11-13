@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
@@ -27,6 +27,77 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   // Check if Supabase is configured
   const isSupabaseReady = isSupabaseConfigured();
 
+  // Ocultar errores de reCAPTCHA que aparecen en el DOM
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    const hideRecaptchaErrors = () => {
+      // Ocultar mensajes de error comunes de reCAPTCHA
+      const errorSelectors = [
+        '.g-recaptcha-error',
+        '.g-recaptcha-error-message',
+        'div[class*="recaptcha-error"]',
+        'div[class*="recaptcha"][class*="error"]',
+        '[data-sitekey] + div[class*="error"]',
+        'iframe[src*="recaptcha"] + div',
+      ];
+      
+      errorSelectors.forEach(selector => {
+        try {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            const htmlEl = el as HTMLElement;
+            htmlEl.style.display = 'none';
+            htmlEl.style.visibility = 'hidden';
+            htmlEl.style.opacity = '0';
+            htmlEl.style.height = '0';
+            htmlEl.style.width = '0';
+            htmlEl.style.overflow = 'hidden';
+          });
+        } catch (e) {
+          // Ignorar errores de selector
+        }
+      });
+      
+      // Buscar por texto de error común en todos los elementos
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(el => {
+        const htmlEl = el as HTMLElement;
+        const text = htmlEl.textContent || '';
+        if (text.includes('ERROR for site owner') || 
+            text.includes('Invalid site key') ||
+            text.includes('Error in security verification') ||
+            text.includes('Error en la verificación de seguridad') ||
+            text.includes('Fehler bei der Sicherheitsüberprüfung')) {
+          htmlEl.style.display = 'none';
+          htmlEl.style.visibility = 'hidden';
+          htmlEl.style.opacity = '0';
+          htmlEl.style.height = '0';
+          htmlEl.style.width = '0';
+          htmlEl.style.overflow = 'hidden';
+        }
+      });
+    };
+    
+    // Ejecutar inmediatamente y luego periódicamente
+    hideRecaptchaErrors();
+    const interval = setInterval(hideRecaptchaErrors, 50);
+    
+    // También usar MutationObserver para detectar nuevos elementos
+    const observer = new MutationObserver(hideRecaptchaErrors);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'style'],
+    });
+    
+    return () => {
+      clearInterval(interval);
+      observer.disconnect();
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleEmailAuth = async (e: React.FormEvent) => {
@@ -38,7 +109,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     
     try {
       if (mode === "register" && !captchaVerified) {
-        setError("Por favor, completa la verificación de seguridad");
+        setError(t("pleaseCompleteSecurityVerification"));
         setIsLoading(false);
         return;
       }
@@ -66,31 +137,83 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           onClose();
         }, 3000);
       } else {
-        setError(result.message || 'Error al enviar el email');
+        // Don't show generic errors for configuration issues
+        const errorMessage = result.message || t("errorSendingEmail");
+        // Filter out reCAPTCHA errors and security verification errors if not configured
+        const isRecaptchaError = errorMessage.includes("Invalid site key") || 
+                                 errorMessage.includes("site owner") ||
+                                 errorMessage.includes("Error in security verification") ||
+                                 errorMessage.includes("Error en la verificación de seguridad") ||
+                                 errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
+        if (!isRecaptchaError) {
+          setError(errorMessage);
+        } else {
+          // If it's a reCAPTCHA error, just show a generic message
+          setError(t("errorSendingEmail"));
+        }
       }
     } catch (err) {
-      setError("Error inesperado. Intenta de nuevo.");
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      // Don't show reCAPTCHA-related errors if not configured
+      const isRecaptchaError = errorMessage.includes("Invalid site key") || 
+                               errorMessage.includes("site owner") ||
+                               errorMessage.includes("Error in security verification") ||
+                               errorMessage.includes("Error en la verificación de seguridad") ||
+                               errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
+      if (!isRecaptchaError) {
+        setError(t("unexpectedError") + (errorMessage ? `: ${errorMessage}` : ""));
+      } else {
+        setError(t("unexpectedError"));
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleAuth = async () => {
+    console.log('🚀 handleGoogleAuth llamado');
+    console.log('📍 window.location:', typeof window !== 'undefined' ? window.location.href : 'SERVER');
+    console.log('📍 window.location.origin:', typeof window !== 'undefined' ? window.location.origin : 'SERVER');
+    
     setIsLoading(true);
     setError("");
     
     try {
-      const oauthService = createOAuthService();
+      // Check if Google Client ID is configured
+      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+      console.log('📍 process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID:', clientId);
+      
+      if (!clientId || clientId === 'demo-client-id' || clientId === 'your_google_client_id_here') {
+        setError(t("errorStartingGoogleAuth") + " - Google Client ID no configurado");
+        setIsLoading(false);
+        console.error('❌ Google Client ID no configurado:', clientId);
+        return;
+      }
+
+      console.log('🔐 Iniciando autenticación con Google...');
+      console.log('📍 Client ID:', clientId);
+      console.log('📍 Creando OAuth Service...');
+      
+      const oauthService = await createOAuthService();
+      console.log('📍 OAuth Service creado, llamando authenticateWithGoogle...');
+      
       const result = await oauthService.authenticateWithGoogle();
+      console.log('📍 Resultado de authenticateWithGoogle:', result);
       
       if (!result.success) {
-        setError(result.error || "Error al iniciar autenticación con Google");
+        setError(result.error || t("errorStartingGoogleAuth"));
         setIsLoading(false);
+        console.error('❌ Error en autenticación:', result.error);
+      } else {
+        console.log('✅ Redirección iniciada a Google OAuth');
+        // If successful, user will be redirected to Google OAuth
+        // Don't set loading to false, let the redirect happen
       }
-      // If successful, user will be redirected to Google OAuth
     } catch (err) {
-      setError("Error inesperado. Intenta de nuevo.");
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(t("unexpectedError") + ": " + errorMessage);
       setIsLoading(false);
+      console.error('❌ Error inesperado:', err);
     }
   };
 
@@ -99,16 +222,16 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     setError("");
     
     try {
-      const oauthService = createOAuthService();
+      const oauthService = await createOAuthService();
       const result = await oauthService.authenticateWithOutlook();
       
       if (!result.success) {
-        setError(result.error || "Error al iniciar autenticación con Outlook");
+        setError(result.error || t("errorStartingOutlookAuth"));
         setIsLoading(false);
       }
       // If successful, user will be redirected to Outlook OAuth
     } catch (err) {
-      setError("Error inesperado. Intenta de nuevo.");
+      setError(t("unexpectedError"));
       setIsLoading(false);
     }
   };
@@ -121,7 +244,10 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   const handleMathCaptchaVerify = (isValid: boolean) => {
     setCaptchaVerified(isValid);
     if (!isValid) {
-      setError("Verificación de seguridad incorrecta. Intenta de nuevo.");
+      setError(t("securityVerificationIncorrect"));
+    } else {
+      // Clear any previous errors when verification succeeds
+      setError("");
     }
   };
 
@@ -134,7 +260,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                <EcoNexoLogo className="w-8 h-8" size={32} />
+                <span className="text-2xl">🌿</span>
               </div>
               <div>
                 <h2 className="text-2xl font-bold">
@@ -169,8 +295,8 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 </div>
                 <span className="text-sm font-medium">
                   {showEmailVerification 
-                    ? "¡Email de bienvenida enviado! Por favor revisa tu bandeja de entrada y verifica tu cuenta haciendo clic en el enlace."
-                    : "¡Autenticación exitosa!"
+                    ? t("welcomeEmailSent")
+                    : t("authenticationSuccessful")
                   }
                 </span>
               </div>
@@ -192,7 +318,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           {/* OAuth Buttons */}
           <div className="mb-8">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center font-medium">
-              {mode === "login" ? "O continúa con" : "Regístrate con"}
+              {mode === "login" ? t("orContinueWith") : t("registerWith")}
             </p>
             
             <div className="space-y-3">
@@ -210,17 +336,24 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 <span className="font-medium text-gray-700 dark:text-gray-200">Google</span>
               </button>
 
-              {/* Outlook Button - Disabled */}
-              {/* <button
+              {/* Outlook Button */}
+              <button
                 onClick={handleOutlookAuth}
                 disabled={isLoading}
                 className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#0078D4">
-                  <path d="M7.462 8.85h9.076c.398 0 .724-.326.724-.724V4.724c0-.398-.326-.724-.724-.724H7.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM7.462 15.15h9.076c.398 0 .724-.326.724-.724v-3.402c0-.398-.326-.724-.724-.724H7.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM2.462 8.85h4.076c.398 0 .724-.326.724-.724V4.724c0-.398-.326-.724-.724-.724H2.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM2.462 15.15h4.076c.398 0 .724-.326.724-.724v-3.402c0-.398-.326-.724-.724-.724H2.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724z"/>
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                  {/* Envelope body - main blue rectangle */}
+                  <rect x="3" y="5" width="18" height="13" rx="2" fill="#0078D4"/>
+                  {/* Envelope flap - darker blue triangle */}
+                  <path d="M3 5L12 11L21 5H3Z" fill="#005A9E"/>
+                  {/* O square with circle inside */}
+                  <rect x="3" y="3" width="9" height="9" rx="1.5" fill="#0078D4"/>
+                  <circle cx="7.5" cy="7.5" r="2.5" fill="white"/>
+                  <circle cx="7.5" cy="7.5" r="1.5" fill="#0078D4"/>
                 </svg>
                 <span className="font-medium text-gray-700 dark:text-gray-200">Microsoft Outlook</span>
-              </button> */}
+              </button>
             </div>
           </div>
 
@@ -230,7 +363,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
               <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-slate-800 text-gray-500">O</span>
+              <span className="px-2 bg-white dark:bg-slate-800 text-gray-500">{t("or")}</span>
             </div>
           </div>
 
@@ -238,15 +371,15 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           <form onSubmit={handleEmailAuth} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email
+                {t("email")}
               </label>
               <input
                 type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu@email.com"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-700 dark:text-white"
+                placeholder={t("emailPlaceholder")}
+                className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium"
                 required
               />
             </div>
@@ -254,19 +387,42 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             {/* Captcha for registration */}
             {mode === "register" && (
               <div className="space-y-3">
-                {/* Google reCAPTCHA */}
-                <CaptchaComponent
-                  onVerify={handleCaptchaVerify}
-                  onError={() => setError("Error en la verificación de seguridad")}
-                  onExpire={() => {
-                    setCaptchaVerified(false);
-                    setCaptchaToken("");
-                  }}
-                  theme={locale === "es" ? "light" : "light"}
-                />
+                {/* Google reCAPTCHA - only show if configured AND not localhost */}
+                {(() => {
+                  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+                  const isLocalhost = typeof window !== 'undefined' && 
+                                      (window.location.hostname === 'localhost' || 
+                                       window.location.hostname === '127.0.0.1');
+                  const isConfigured = siteKey && 
+                                       siteKey !== 'your_recaptcha_site_key_here' &&
+                                       siteKey !== 'demo-site-key' &&
+                                       !isLocalhost; // No mostrar reCAPTCHA en localhost
+                  
+                  if (isConfigured) {
+                    return (
+                      <>
+                        <CaptchaComponent
+                          onVerify={handleCaptchaVerify}
+                          onError={() => {
+                            // Silently handle errors - don't show them to users
+                            // Clear any previous errors
+                            setError("");
+                          }}
+                          onExpire={() => {
+                            setCaptchaVerified(false);
+                            setCaptchaToken("");
+                          }}
+                          theme={locale === "es" ? "light" : "light"}
+                        />
+                        {/* Math Captcha as fallback */}
+                        <div className="text-center text-sm text-gray-500">{t("or")}</div>
+                      </>
+                    );
+                  }
+                  return null;
+                })()}
                 
-                {/* Math Captcha as fallback */}
-                <div className="text-center text-sm text-gray-500">O</div>
+                {/* Math Captcha - always available */}
                 <MathCaptchaComponent
                   onVerify={handleMathCaptchaVerify}
                 />
@@ -281,10 +437,10 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Procesando...
+                  {t("processing")}
                 </div>
               ) : (
-                mode === "login" ? "Iniciar Sesión" : "Crear Cuenta"
+                mode === "login" ? t("signInButton") : t("createAccountButton")
               )}
             </button>
           </form>
@@ -292,13 +448,13 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           {/* Additional Info */}
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Al {mode === "login" ? "iniciar sesión" : "registrarte"}, aceptas nuestros{" "}
+              {mode === "login" ? t("bySigningIn") : t("byRegistering")}{" "}
               <a href="/terms" className="text-green-600 hover:text-green-700">
-                Términos de Servicio
+                {t("termsOfService")}
               </a>{" "}
-              y{" "}
+              {t("and")}{" "}
               <a href="/privacy" className="text-green-600 hover:text-green-700">
-                Política de Privacidad
+                {t("privacyPolicy")}
               </a>
             </p>
           </div>

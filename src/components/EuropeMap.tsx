@@ -6,6 +6,7 @@ import { useI18n, categoryLabel, projectNameLabel, locationLabel } from "@/lib/i
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
 import MapFilters from "./MapFilters";
+import MapSearch from "./MapSearch";
 import MapLayers from "./MapLayers";
 
 type Project = {
@@ -40,9 +41,67 @@ if (typeof window !== "undefined") {
     DefaultIcon;
 }
 
-export default function EuropeMap({ projects }: { projects: Project[] }) {
+/**
+ * Map region presets for common geographic areas
+ * 
+ * Usage examples:
+ * - <InteractiveMap projects={projects} region="europe" />
+ * - <InteractiveMap projects={projects} region="americas" />
+ * - <InteractiveMap projects={projects} center={[39.8283, -98.5795]} zoom={4} />
+ */
+export const MAP_REGIONS = {
+  europe: {
+    center: [50.1109, 8.6821] as [number, number], // Frankfurt, Germany
+    zoom: 4,
+  },
+  americas: {
+    center: [20.0, -80.0] as [number, number], // Center of Americas
+    zoom: 3,
+  },
+  northAmerica: {
+    center: [39.8283, -98.5795] as [number, number], // Center of USA
+    zoom: 4,
+  },
+  southAmerica: {
+    center: [-15.0, -60.0] as [number, number], // Center of South America
+    zoom: 4,
+  },
+  asia: {
+    center: [35.0, 105.0] as [number, number], // Center of Asia
+    zoom: 3,
+  },
+  africa: {
+    center: [0.0, 20.0] as [number, number], // Center of Africa
+    zoom: 3,
+  },
+} as const;
+
+export type MapRegion = keyof typeof MAP_REGIONS;
+
+interface InteractiveMapProps {
+  /** Array of projects to display on the map */
+  projects: Project[];
+  /** Predefined region preset (europe, americas, northAmerica, southAmerica, asia, africa) */
+  region?: MapRegion;
+  /** Custom center coordinates [latitude, longitude]. Overrides region preset if provided */
+  center?: [number, number];
+  /** Custom zoom level. Overrides region preset if provided */
+  zoom?: number;
+}
+
+export default function InteractiveMap({ 
+  projects, 
+  region = 'europe',
+  center,
+  zoom 
+}: InteractiveMapProps) {
+  // Determine center and zoom from props or region preset
+  const mapCenter = center || MAP_REGIONS[region].center;
+  const mapZoom = zoom ?? MAP_REGIONS[region].zoom;
+
   const mapRef = useRef<LeafletMap | null>(null);
   const { t, locale } = useI18n();
+  const [baseFilteredProjects, setBaseFilteredProjects] = useState<Project[]>(projects);
   const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
   const [filterMode, setFilterMode] = useState<'all' | 'today' | 'permanent'>('all');
   const [heatOn, setHeatOn] = useState<boolean>(false);
@@ -50,6 +109,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
   // Calendar overlay removed; calendar lives on its own page now
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
+  const [frequencyFilters, setFrequencyFilters] = useState<{ once: boolean; regular: boolean; permanent: boolean }>({ once: true, regular: true, permanent: true });
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   // Listen to external center events from the page-level search bar
   useEffect(() => {
     function onCenter(e: Event) {
@@ -123,7 +184,61 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     }
   };
 
-  // Recompute filtered list when filter mode changes
+  // Frequency helpers
+  function getFrequency(p: Project): 'once' | 'regular' | 'permanent' {
+    // permanent if flagged or lacks dates
+    const isPermanent = Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
+    if (isPermanent) return 'permanent';
+    // consider long range (> 7 days) as regular
+    if (p.startsAt && p.endsAt) {
+      const diffMs = new Date(p.endsAt).getTime() - new Date(p.startsAt).getTime();
+      if (diffMs > 7 * 24 * 60 * 60 * 1000) return 'regular';
+    }
+    // heuristic: description mentions weekly/every/cada
+    const text = ((p as any).description || '').toString().toLowerCase();
+    if (/\b(cada|semanal|weekly|every|mensual|monthly)\b/.test(text)) return 'regular';
+    return 'once';
+  }
+
+  function colorForFrequency(freq: 'once' | 'regular' | 'permanent'): string {
+    if (freq === 'once') return '#ef4444'; // red
+    if (freq === 'regular') return '#3b82f6'; // blue
+    return '#16a34a'; // green
+  }
+
+  function gradientForFrequency(freq: 'once' | 'regular' | 'permanent'): string {
+    // Modern, vibrant gradients per frequency
+    if (freq === 'once') return 'linear-gradient(135deg, #f97316 0%, #ef4444 100%)'; // orange → red
+    if (freq === 'regular') return 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)'; // cyan → blue
+    return 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)'; // green → emerald
+  }
+
+  function createGradientIcon(freq: 'once' | 'regular' | 'permanent'): L.DivIcon {
+    const size = 18;
+    const gradient = gradientForFrequency(freq);
+    // Soft glow using box-shadow; inner ring for contrast
+    const html = `
+      <span style="
+        display:inline-block; width:${size}px; height:${size}px;
+        border-radius:9999px; background:${gradient};
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.9), 0 8px 14px rgba(0,0,0,0.18);
+        position: relative;
+      ">
+        <span style="
+          position:absolute; inset:2px; border-radius:9999px;
+          background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.45), rgba(255,255,255,0) 60%);
+        "></span>
+      </span>`;
+    return L.divIcon({
+      html,
+      className: "econexo-gradient-pin",
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+      popupAnchor: [0, -size / 2],
+    });
+  }
+
+  // Recompute filtered list when base filters, frequency, category or mode change
   useEffect(() => {
     const now = new Date();
     const isToday = (p: Project) => {
@@ -137,13 +252,21 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     };
     const isPermanent = (p: Project) => Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
 
-    const next = projects.filter((p) => {
+    // Start with base filtered list
+    let next = baseFilteredProjects.filter((p) => {
       if (filterMode === 'all') return true;
       if (filterMode === 'today') return isToday(p);
       return isPermanent(p);
     });
+    // Quick category chips filter (optional)
+    if (selectedCategories.length > 0) {
+      next = next.filter((p) => selectedCategories.includes(p.category));
+    }
+
+    // Apply frequency filters
+    next = next.filter((p) => frequencyFilters[getFrequency(p)]);
     setFilteredProjects(next);
-  }, [projects, filterMode]);
+  }, [baseFilteredProjects, filterMode, frequencyFilters, selectedCategories]);
 
   // Heatmap toggle effect
   useEffect(() => {
@@ -183,8 +306,8 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     <>
     <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
     <MapContainer
-      center={[50.1109, 8.6821]} // centro aproximado de Europa (Frankfurt)
-      zoom={4}
+      center={mapCenter}
+      zoom={mapZoom}
       scrollWheelZoom={true}
       zoomControl={false}
       style={{ height: "100%", width: "100%", display: "block", position: "relative" }}
@@ -203,12 +326,15 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <MapLayers />
       
       {/* Individual markers */}
-      {filteredProjects.map((p) => (
-        <Marker key={p.id} position={[p.lat, p.lng]}>
+      {filteredProjects.map((p) => {
+        const freq = getFrequency(p);
+        const icon = createGradientIcon(freq);
+        return (
+          <Marker key={p.id} position={[p.lat, p.lng]} icon={icon}>
           <Popup>
             <div className="grid gap-1">
               {p && (p as any).image_url && (
-                <img src={(p as any).image_url} alt="project" className="mb-2 rounded w-full max-w-[220px] h-auto" />
+                <img src={(p as any).image_url} alt="Project" className="mb-2 rounded w-full max-w-[220px] h-auto" />
               )}
               <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
               <div className="text-xs text-gray-600">{locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}</div>
@@ -222,6 +348,9 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
                 </div>
               )}
               <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
+              <div className="text-xs">
+                {t("frequency")}: {freq==='once' ? t("once") : freq==='regular' ? t("regular") : t("permanent")}
+              </div>
               {p.spots !== undefined && (
                 <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
               )}
@@ -231,14 +360,15 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
                 </Link>
                 {(p as any).info_url && (
                   <a href={(p as any).info_url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline text-sm">
-                    {locale === 'de' ? 'Mehr Info' : locale === 'en' ? 'More info' : 'Más info'}
+                    {t("moreInfo")}
                   </a>
                 )}
               </div>
             </div>
           </Popup>
         </Marker>
-      ))}
+        );
+      })}
     </MapContainer>
     
     {/* Controles superpuestos - VISIBLES */}
@@ -246,11 +376,31 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
     <div className="absolute top-4 left-4 right-4 z-[5000] flex justify-between items-start pointer-events-none">
       {/* Map Filters */}
       <div className="pointer-events-auto flex items-center gap-2">
+        <MapSearch allProjects={projects} onResults={setBaseFilteredProjects} />
         <MapFilters 
           allProjects={projects}
-          onFilterChange={setFilteredProjects}
+          onFilterChange={setBaseFilteredProjects}
           onCenterOnLocation={handleCenterOnLocation}
         />
+        {/* Quick Category chips (moved to bottom overlay) */}
+        {/* Frequency legend & filter */}
+        <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
+          {([
+            { key: 'once', labelEs: 'Una vez', labelEn: 'One-time', labelDe: 'Einmalig', color: '#ef4444' },
+            { key: 'regular', labelEs: 'Regular', labelEn: 'Regular', labelDe: 'Regelmäßig', color: '#3b82f6' },
+            { key: 'permanent', labelEs: 'Permanente', labelEn: 'Permanent', labelDe: 'Dauerhaft', color: '#16a34a' },
+          ] as const).map((opt) => (
+            <button
+              key={opt.key}
+              className={`px-2 py-1 rounded text-xs border flex items-center gap-1 ${frequencyFilters[opt.key] ? 'bg-black text-white border-black' : 'text-black border-black'}`}
+              onClick={() => setFrequencyFilters((prev) => ({ ...prev, [opt.key]: !prev[opt.key] }))}
+              title={locale==='es'?opt.labelEs:locale==='de'?opt.labelDe:opt.labelEn}
+            >
+              <span className="inline-block w-3 h-3 rounded-full" style={{ background: opt.key==='once' ? 'linear-gradient(135deg, #f97316, #ef4444)' : opt.key==='regular' ? 'linear-gradient(135deg, #06b6d4, #3b82f6)' : 'linear-gradient(135deg, #22c55e, #10b981)' }} />
+              <span>{locale==='es'?opt.labelEs:locale==='de'?opt.labelDe:opt.labelEn}</span>
+            </button>
+          ))}
+        </div>
         {/* Events toggle */}
         <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
           <button className={`px-2 py-1 rounded text-xs border ${filterMode==='all' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('all')}>
@@ -274,21 +424,50 @@ export default function EuropeMap({ projects }: { projects: Project[] }) {
       <div className="flex gap-2 pointer-events-auto" />
     </div>
 
-    {/* Botón de ubicación (esquina inferior derecha) */}
-    <div className={`pointer-events-auto absolute bottom-4 right-4 transition-all duration-300 z-[1500] opacity-100`}>
+    {/* Botón de ubicación (esquina inferior derecha) - Mejorado y más visible */}
+    <div className={`pointer-events-auto absolute bottom-20 right-4 transition-all duration-300 z-[1500] opacity-100`}>
       <button
         onClick={handleCenterOnLocation}
-        className="h-10 w-10 rounded-full bg-white/95 backdrop-blur-sm border border-gray-300 shadow-md flex items-center justify-center text-lg text-gray-700 hover:bg-white hover:shadow-lg hover:scale-105 transition-all duration-200"
-        title={t("centerOnMyLocation")}
-        aria-label={t("centerOnMyLocation")}
+        className="px-4 py-2 rounded-full bg-blue-600 text-white shadow-lg flex items-center gap-2 text-sm font-semibold hover:bg-blue-700 hover:shadow-xl hover:scale-105 transition-all duration-200 border-2 border-white"
+        title={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
+        aria-label={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
       >
-        📍
+        <span className="text-lg">📍</span>
+        <span className="hidden sm:inline">{locale === 'de' ? 'Standort' : locale === 'es' ? 'Ubicación' : 'Location'}</span>
       </button>
       {geoError && (
-        <div className="absolute top-full mt-2 p-2 bg-red-500 text-white text-xs rounded shadow">
+        <div className="absolute top-full mt-2 left-0 p-3 bg-red-500 text-white text-sm rounded-lg shadow-xl max-w-xs whitespace-normal z-[1600]">
           {geoError}
         </div>
       )}
+    </div>
+
+    {/* Bottom Category Chips */}
+    <div className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-4 z-[2500]">
+      <div className="flex items-center gap-1 bg-white/90 rounded-full px-2 py-2 shadow-md max-w-[88vw] overflow-x-auto">
+        {Array.from(new Set(projects.map((p) => p.category))).map((cat) => {
+          const active = selectedCategories.includes(cat);
+          return (
+            <button
+              key={cat}
+              className={`px-3 py-1.5 rounded-full text-xs border whitespace-nowrap ${active ? 'bg-black text-white border-black' : 'text-black border-black'}`}
+              onClick={() => setSelectedCategories((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat])}
+              title={categoryLabel(cat as any, locale as any)}
+            >
+              {categoryLabel(cat as any, locale as any)}
+            </button>
+          );
+        })}
+        {selectedCategories.length > 0 && (
+          <button
+            className="ml-1 px-3 py-1.5 rounded-full text-xs border text-black border-black"
+            onClick={() => setSelectedCategories([])}
+            title={locale==='es'?'Limpiar':locale==='de'?'Zurücksetzen':'Clear'}
+          >
+            {locale==='es'?'Limpiar':locale==='de'?'Zurücksetzen':'Clear'}
+          </button>
+        )}
+      </div>
     </div>
 
     {/* Pan Controls */}

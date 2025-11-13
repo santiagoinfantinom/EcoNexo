@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sendVerificationEmail, generateVerificationToken } from '@/lib/emailVerification';
+import { generateVerificationToken, registerVerificationToken } from '@/lib/emailVerification';
 import { verifyCaptchaToken } from '@/lib/captcha';
 
 export async function POST(request: NextRequest) {
@@ -24,23 +24,40 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Generate verification token
+    // Generate and register verification token (in-memory demo store)
     const token = generateVerificationToken();
+    registerVerificationToken(token, email);
 
-    // Send verification email with welcome message
-    const result = await sendVerificationEmail(email, token, locale || 'en');
-
-    if (result.success) {
-      return NextResponse.json({
-        success: true,
-        message: 'Email de bienvenida enviado correctamente. Por favor verifica tu correo.',
-      });
-    } else {
-      return NextResponse.json(
-        { success: false, message: result.message },
-        { status: 500 }
-      );
+    // Try to send email on the server (dynamic import to avoid client bundling)
+    try {
+      const hasSmtp = !!(process.env.SMTP_USER && process.env.SMTP_PASS);
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+      const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
+      if (hasSmtp) {
+        const nodemailer = (await import('nodemailer')).default;
+        const transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST || 'smtp.gmail.com',
+          port: parseInt(process.env.SMTP_PORT || '587'),
+          secure: false,
+          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+        });
+        await transporter.sendMail({
+          from: process.env.NEXT_PUBLIC_EMAIL_FROM || 'noreply@econexo.app',
+          to: email,
+          subject: 'EcoNexo - Verifica tu cuenta',
+          html: `<p>Bienvenido a EcoNexo 🌿</p><p>Verifica tu cuenta: <a href="${verificationUrl}">${verificationUrl}</a></p>`,
+        });
+      } else {
+        console.log('📧 SMTP no configurado. URL de verificación:', verificationUrl);
+      }
+    } catch (e) {
+      console.warn('Fallo al enviar email (continuamos):', e);
     }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Email de bienvenida procesado. Revisa tu correo o usa el enlace de verificación.',
+    });
   } catch (error) {
     console.error('Email verification error:', error);
     return NextResponse.json(
