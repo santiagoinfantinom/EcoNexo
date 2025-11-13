@@ -10,7 +10,8 @@ type Category =
   | "Salud"
   | "Comunidad"
   | "Océanos"
-  | "Alimentación";
+  | "Alimentación"
+  | "Tecnología";
 
 type EventInput = {
   title: string;
@@ -40,6 +41,7 @@ const CATEGORIES: Category[] = [
   "Comunidad",
   "Océanos",
   "Alimentación",
+  "Tecnología",
 ];
 
 export default function EventosPage() {
@@ -103,6 +105,7 @@ export default function EventosPage() {
     "Comunidad": { bg: "bg-amber-100", text: "text-amber-900", border: "border-amber-200" },
     "Océanos": { bg: "bg-cyan-100", text: "text-cyan-800", border: "border-cyan-200" },
     "Alimentación": { bg: "bg-lime-100", text: "text-lime-800", border: "border-lime-200" },
+    "Tecnología": { bg: "bg-violet-100", text: "text-violet-800", border: "border-violet-200" },
   };
 
   function update<K extends keyof EventInput>(key: K, value: EventInput[K]) {

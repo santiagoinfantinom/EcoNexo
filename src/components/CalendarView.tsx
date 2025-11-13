@@ -21,7 +21,7 @@ type CalendarEvent = {
   spots: number;
   registered: number;
   location: string;
-  category: 'environment' | 'education' | 'community';
+  category: 'environment' | 'education' | 'community' | 'technology';
   organizer?: string;
   website?: string;
   image_url?: string;
@@ -43,7 +43,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
   } = useGlobalConfig();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
-  const [monthCategory, setMonthCategory] = useState<'' | 'environment' | 'education' | 'community'>('');
+  const [monthCategory, setMonthCategory] = useState<'' | 'environment' | 'education' | 'community' | 'technology'>('');
   const [realEvents, setRealEvents] = useState<CalendarEvent[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(false);
@@ -1036,6 +1036,48 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                 locale === 'de' ? 'Nachhaltigkeitsplatz, Barcelona' : 'Sustainability Square, Barcelona',
       category: 'community',
       organizer: locale === 'es' ? 'Sostenibilidad Total' : locale === 'de' ? 'Totale Nachhaltigkeit' : 'Total Sustainability'
+    },
+    {
+      id: 'e34',
+      projectId: 'tech_1',
+      title: locale === 'es' ? 'Hackathon Verde' : locale === 'de' ? 'Grünes Hackathon' : 'Green Hackathon',
+      date: new Date(2025, 10, 15), // November 15, 2025
+      time: '09:00',
+      duration: 48,
+      spots: 100,
+      registered: 65,
+      location: locale === 'es' ? 'Centro de Innovación Tecnológica, Madrid' :
+                locale === 'de' ? 'Technologie-Innovationszentrum, Madrid' : 'Technology Innovation Center, Madrid',
+      category: 'technology',
+      organizer: locale === 'es' ? 'Green Tech Hub' : locale === 'de' ? 'Grünes Tech-Zentrum' : 'Green Tech Hub'
+    },
+    {
+      id: 'e35',
+      projectId: 'tech_2',
+      title: locale === 'es' ? 'Taller de IoT para Monitoreo Ambiental' : locale === 'de' ? 'IoT-Workshop für Umweltüberwachung' : 'IoT Workshop for Environmental Monitoring',
+      date: new Date(2025, 10, 22), // November 22, 2025
+      time: '10:00',
+      duration: 6,
+      spots: 25,
+      registered: 18,
+      location: locale === 'es' ? 'Fab Lab, Berlín' :
+                locale === 'de' ? 'Fab Lab, Berlin' : 'Fab Lab, Berlin',
+      category: 'technology',
+      organizer: locale === 'es' ? 'IoT Environmental' : locale === 'de' ? 'IoT Umwelt' : 'IoT Environmental'
+    },
+    {
+      id: 'e36',
+      projectId: 'tech_3',
+      title: locale === 'es' ? 'Desarrollo de Apps Sostenibles' : locale === 'de' ? 'Entwicklung nachhaltiger Apps' : 'Sustainable Apps Development',
+      date: new Date(2025, 10, 28), // November 28, 2025
+      time: '14:00',
+      duration: 4,
+      spots: 30,
+      registered: 22,
+      location: locale === 'es' ? 'Tech Campus, Barcelona' :
+                locale === 'de' ? 'Tech Campus, Barcelona' : 'Tech Campus, Barcelona',
+      category: 'technology',
+      organizer: locale === 'es' ? 'Sustainable Developers' : locale === 'de' ? 'Nachhaltige Entwickler' : 'Sustainable Developers'
     }
   ];
 
@@ -1048,7 +1090,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
         if (isNaN(eventDate.getTime())) return null;
 
         // Map category from Spanish/English to calendar format
-        const categoryMap: Record<string, 'environment' | 'education' | 'community'> = {
+        const categoryMap: Record<string, 'environment' | 'education' | 'community' | 'technology'> = {
           'Medio ambiente': 'environment',
           'Environment': 'environment',
           'Umwelt': 'environment',
@@ -1067,6 +1109,9 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
           'Alimentación': 'community',
           'Food': 'community',
           'Ernährung': 'community',
+          'Tecnología': 'technology',
+          'Technology': 'technology',
+          'Technologie': 'technology',
         };
 
         const category = categoryMap[apiEvent.category] || 'community';
@@ -1405,6 +1450,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
               <option value="environment">{locale === 'es' ? 'Medio Ambiente' : locale === 'de' ? 'Umwelt' : 'Environment'}</option>
               <option value="education">{locale === 'es' ? 'Educación' : locale === 'de' ? 'Bildung' : 'Education'}</option>
               <option value="community">{locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community'}</option>
+              <option value="technology">{locale === 'es' ? 'Tecnología' : locale === 'de' ? 'Technologie' : 'Technology'}</option>
             </BaseSelect>
           </div>
           {/* Month Navigation */}

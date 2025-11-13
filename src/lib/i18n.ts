@@ -198,6 +198,7 @@ const DICTS: Record<Locale, Dict> = {
     categoryEnvironment: "Environment",
     categoryEducation: "Education",
     categoryCommunity: "Community",
+    categoryTechnology: "Technology",
     pleaseSignInFirstEs: "Por favor inicia sesión primero",
     pleaseSignInFirstEn: "Please sign in first",
     pleaseSignInFirstDe: "Bitte zuerst anmelden",
@@ -938,6 +939,7 @@ const DICTS: Record<Locale, Dict> = {
     categoryEnvironment: "Umwelt",
     categoryEducation: "Bildung",
     categoryCommunity: "Gemeinschaft",
+    categoryTechnology: "Technologie",
     pleaseSignInFirstEs: "Por favor inicia sesión primero",
     pleaseSignInFirstEn: "Please sign in first",
     pleaseSignInFirstDe: "Bitte zuerst anmelden",
@@ -1677,6 +1679,7 @@ const DICTS: Record<Locale, Dict> = {
     categoryEnvironment: "Medio ambiente",
     categoryEducation: "Educación",
     categoryCommunity: "Comunidad",
+    categoryTechnology: "Tecnología",
     pleaseSignInFirstEs: "Por favor inicia sesión primero",
     pleaseSignInFirstEn: "Please sign in first",
     pleaseSignInFirstDe: "Bitte zuerst anmelden",
@@ -2571,6 +2574,7 @@ export function categoryLabel(category: string, locale: Locale) {
     "Salud": { en: "Health", de: "Gesundheit", es: "Salud", fr: "Santé", it: "Salute", pl: "Zdrowie", nl: "Gezondheid" },
   "Océanos": { en: "Oceans", de: "Ozeane", es: "Océanos", fr: "Océans", it: "Oceani", pl: "Oceany", nl: "Oceanen" },
   "Alimentación": { en: "Food", de: "Ernährung", es: "Alimentación", fr: "Alimentation", it: "Alimentazione", pl: "Żywność", nl: "Voeding" },
+  "Tecnología": { en: "Technology", de: "Technologie", es: "Tecnología", fr: "Technologie", it: "Tecnologia", pl: "Technologia", nl: "Technologie" },
 };
 
   return categoryMap[category]?.[locale] || category;
