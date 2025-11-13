@@ -16,6 +16,7 @@ import DynamicManifest from "@/components/DynamicManifest";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import IOSMetaTags from "@/components/IOSMetaTags";
 import { generateMetadata, generateViewport } from "@/lib/metadata";
+import { ToastProvider } from "@/components/ToastNotification";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,16 +51,18 @@ export default function RootLayout({
           <ThemeProvider>
             <I18nProvider>
               <AuthProvider>
-                <ErrorBoundary>
-                  <IOSMetaTags />
-                  <ServiceWorkerRegistration />
-                  <DynamicManifest />
-                  <SimpleIntro />
-                  <LanguageSwitcher />
-                  <HeaderNav />
-                  <main className="min-h-screen">{children}</main>
-                  <CreateEventFAB />
-                </ErrorBoundary>
+                <ToastProvider>
+                  <ErrorBoundary>
+                    <IOSMetaTags />
+                    <ServiceWorkerRegistration />
+                    <DynamicManifest />
+                    <SimpleIntro />
+                    <LanguageSwitcher />
+                    <HeaderNav />
+                    <main className="min-h-screen">{children}</main>
+                    <CreateEventFAB />
+                  </ErrorBoundary>
+                </ToastProvider>
               </AuthProvider>
             </I18nProvider>
           </ThemeProvider>

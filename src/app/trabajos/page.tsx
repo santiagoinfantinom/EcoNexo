@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import { useI18n, locationLabel } from "@/lib/i18n";
+import { useToast } from "@/components/ToastNotification";
+import { CardSkeleton } from "@/components/SkeletonLoader";
 
 type Job = {
   id: string;
@@ -210,6 +212,7 @@ const JOBS: Job[] = [
 
 export default function JobsPage() {
   const { t, locale } = useI18n();
+  const { showToast } = useToast();
   const currentLocale = String(locale);
   const [query, setQuery] = useState("");
   const [minSalary, setMinSalary] = useState(0);
@@ -352,7 +355,7 @@ export default function JobsPage() {
       jobs.push(newJob);
       localStorage.setItem('econexo:jobs', JSON.stringify(jobs));
       
-      setShowSuccess(true);
+      showToast(t("jobCreated") || "Trabajo creado exitosamente", "success");
       setShowJobForm(false);
       setJobForm({
         title: '',
@@ -368,7 +371,6 @@ export default function JobsPage() {
         contactEmail: ''
       });
       
-      setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error('Error creating job:', error);
     } finally {
@@ -428,10 +430,19 @@ export default function JobsPage() {
       }));
     } catch {}
   }, [applicant.name, applicant.email, applicant.cv, applicant.motivations, applicant.expertiseAreas, applicant.languages, newLanguage]);
-  const toggleSave = (id: string) => setSavedJobs((s)=> ({ ...s, [id]: !s[id] }));
+  const toggleSave = (id: string) => {
+    setSavedJobs((s)=> {
+      const newState = { ...s, [id]: !s[id] };
+      showToast(
+        s[id] ? t("jobRemovedFromSaved") || "Trabajo eliminado de guardados" : t("jobSaved") || "Trabajo guardado",
+        "success"
+      );
+      return newState;
+    });
+  };
   const submitApplication = async () => {
     setApplyFor(null);
-    alert(t("applicationSent"));
+    showToast(t("applicationSent") || "Aplicación enviada", "success");
     setApplicant({ 
       name: "", 
       email: "", 
@@ -555,9 +566,21 @@ export default function JobsPage() {
 
       <div className="content-separator" />
 
+      {filtered.length === 0 && query && (
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">🔍</div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            {t("noResults") || "No se encontraron resultados"}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            {t("tryDifferentSearch") || "Intenta con otros términos de búsqueda"}
+          </p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.map((job)=> (
-          <div key={job.id} className="bg-white dark:bg-slate-800 rounded-xl shadow p-5">
+          <div key={job.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-5 hover-lift border border-gray-200 dark:border-slate-700 transition-all duration-200">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{getJobTitle(job)}</h2>
@@ -593,14 +616,14 @@ export default function JobsPage() {
             </div>
             <div className="mt-3 text-slate-700 dark:text-slate-300">{getJobDescription(job)}</div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-800">{job.experienceYears} {t("yearsExp")}</span>
+              <span className="badge-modern px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">{job.experienceYears} {t("yearsExp")}</span>
               {job.knowledgeAreas.map((a) => (
-                <span key={a} className="px-2 py-1 rounded-full text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">{getKnowledgeArea(a)}</span>
+                <span key={a} className="badge-modern px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600">{getKnowledgeArea(a)}</span>
               ))}
             </div>
             <div className="mt-4 flex gap-3">
-              <button onClick={()=>setApplyFor(job)} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{t("applyBtn")}</button>
-              <button onClick={()=>toggleSave(job.id)} className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-50 dark:hover:bg-slate-700">{savedJobs[job.id] ? t("saved") : t("saveBtn")}</button>
+              <button onClick={()=>setApplyFor(job)} className="touch-target px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg hover-lift">{t("applyBtn")}</button>
+              <button onClick={()=>toggleSave(job.id)} className="touch-target px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 font-medium">{savedJobs[job.id] ? t("saved") : t("saveBtn")}</button>
             </div>
           </div>
         ))}
@@ -1124,12 +1147,6 @@ export default function JobsPage() {
         </div>
       )}
 
-      {/* Success Message */}
-      {showSuccess && (
-        <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-[10000]">
-          ✅ {t("jobCreated")}
-        </div>
-      )}
     </div>
   );
 }

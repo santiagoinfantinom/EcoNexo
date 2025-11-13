@@ -4,8 +4,9 @@ import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import WelcomeMessage from "@/components/WelcomeMessage";
-import DashboardProjectCards from "@/components/DashboardProjectCards";
+import FeaturedProjectsSlider from "@/components/FeaturedProjectsSlider";
 import EcoTips from "@/components/EcoTips";
+import EcoTipsBulletPoints from "@/components/EcoTipsBulletPoints";
 import { PROJECTS } from "@/data/projects";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -116,7 +117,7 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-12">
             {t('featuredProjects')}
           </h2>
-          <DashboardProjectCards />
+          <FeaturedProjectsSlider />
         </div>
       </section>
 
@@ -215,6 +216,7 @@ export default function Home() {
             {t('ecoTipsTitle')}
           </h2>
           <EcoTips />
+          <EcoTipsBulletPoints />
         </div>
       </section>
 

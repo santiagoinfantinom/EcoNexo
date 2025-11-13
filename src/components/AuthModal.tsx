@@ -238,17 +238,24 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 <span className="font-medium text-gray-700 dark:text-gray-200">Google</span>
               </button>
 
-              {/* Outlook Button - Disabled */}
-              {/* <button
+              {/* Outlook Button */}
+              <button
                 onClick={handleOutlookAuth}
                 disabled={isLoading}
                 className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#0078D4">
-                  <path d="M7.462 8.85h9.076c.398 0 .724-.326.724-.724V4.724c0-.398-.326-.724-.724-.724H7.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM7.462 15.15h9.076c.398 0 .724-.326.724-.724v-3.402c0-.398-.326-.724-.724-.724H7.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM2.462 8.85h4.076c.398 0 .724-.326.724-.724V4.724c0-.398-.326-.724-.724-.724H2.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724zM2.462 15.15h4.076c.398 0 .724-.326.724-.724v-3.402c0-.398-.326-.724-.724-.724H2.462c-.398 0-.724.326-.724.724v3.402c0 .398.326.724.724.724z"/>
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                  {/* Envelope body - main blue rectangle */}
+                  <rect x="3" y="5" width="18" height="13" rx="2" fill="#0078D4"/>
+                  {/* Envelope flap - darker blue triangle */}
+                  <path d="M3 5L12 11L21 5H3Z" fill="#005A9E"/>
+                  {/* O square with circle inside */}
+                  <rect x="3" y="3" width="9" height="9" rx="1.5" fill="#0078D4"/>
+                  <circle cx="7.5" cy="7.5" r="2.5" fill="white"/>
+                  <circle cx="7.5" cy="7.5" r="1.5" fill="#0078D4"/>
                 </svg>
                 <span className="font-medium text-gray-700 dark:text-gray-200">Microsoft Outlook</span>
-              </button> */}
+              </button>
             </div>
           </div>
 
@@ -274,7 +281,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t("emailPlaceholder")}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-700 dark:text-white"
+                className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium"
                 required
               />
             </div>

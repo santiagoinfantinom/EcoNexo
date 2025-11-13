@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useI18n, categoryLabel, locationLabel } from "@/lib/i18n";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { CardSkeleton } from "@/components/SkeletonLoader";
 
 type Event = {
   id: string;
@@ -229,11 +230,8 @@ export default function EventosDisponiblesPage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">
-              {locale === 'de' ? 'Lade Veranstaltungen...' : locale === 'es' ? 'Cargando eventos...' : 'Loading events...'}
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <CardSkeleton count={3} />
           </div>
         )}
 
@@ -270,7 +268,7 @@ export default function EventosDisponiblesPage() {
                   <Link
                     key={event.id}
                     href={`/eventos/${event.id}`}
-                    className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 overflow-hidden border border-gray-200 dark:border-slate-700 hover:scale-[1.02]"
+                    className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 overflow-hidden border border-gray-200 dark:border-slate-700 hover-lift"
                   >
                     {/* Event Image */}
                     {event.image_url && (
@@ -288,7 +286,7 @@ export default function EventosDisponiblesPage() {
                     <div className="p-4 sm:p-6">
                       {/* Category Badge */}
                       <div className="mb-3">
-                        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
+                        <span className="badge-modern inline-block px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
                           {categoryLabel(event.category, locale)}
                         </span>
                       </div>

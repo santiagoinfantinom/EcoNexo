@@ -118,12 +118,12 @@ export default function HeaderNav() {
 
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden mt-3 mb-4 bg-white/98 dark:bg-slate-800/98 rounded-2xl shadow-2xl border border-white/30 dark:border-slate-700/50 overflow-hidden backdrop-blur-md animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="md:hidden mt-3 mb-4 glass rounded-2xl shadow-2xl overflow-hidden animate-fade-in-up">
           <nav className="flex flex-col py-1">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-6 py-3.5 text-gls-primary font-semibold hover:bg-green-50/80 dark:hover:bg-slate-700/80 transition-all duration-150 border-b border-gray-200/50 dark:border-slate-700/50 active:bg-green-100 dark:active:bg-slate-600"
+              className="touch-target px-6 py-3.5 text-gls-primary font-semibold hover:bg-green-50/80 dark:hover:bg-slate-700/80 transition-all duration-150 border-b border-gray-200/50 dark:border-slate-700/50 active:bg-green-100 dark:active:bg-slate-600"
             >
               <span className="mr-2">🗺️</span> {t("map")}
             </Link>
@@ -183,7 +183,7 @@ export default function HeaderNav() {
       {/* Desktop Navigation - Hidden on mobile */}
       <nav className="hidden md:flex gap-6 lg:gap-8 xl:gap-10 text-sm lg:text-base mt-5 justify-center flex-wrap pb-2">
         <Link 
-          className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
+          className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 hover-lift" 
           href="/"
         >
           {t("map")}
