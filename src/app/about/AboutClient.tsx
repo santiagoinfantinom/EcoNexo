@@ -88,7 +88,9 @@ export default function AboutClient() {
         </section>
 
         <section className="mb-16">
-          <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl shadow-lg p-8">
+          <div className="text-white rounded-xl shadow-lg p-8" style={{
+            background: 'linear-gradient(90deg, #16a34a 0%, #15803d 20%, #0ea5e9 50%, #0284c7 80%, #0369a1 100%)'
+          }}>
             <h2 className="text-3xl font-bold text-center mb-12">{t('aboutImpactTitle')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div>

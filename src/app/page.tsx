@@ -38,7 +38,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 bg-gradient-to-br from-green-600 via-green-700 to-blue-600">
+      <section className="relative py-20 px-4" style={{
+        background: 'linear-gradient(135deg, #16a34a 0%, #15803d 25%, #0ea5e9 50%, #0284c7 75%, #0369a1 100%)'
+      }}>
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
             {t('welcomeMessageTitle')}
@@ -221,7 +223,9 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-green-600 to-blue-600 text-white">
+      <section className="py-20 px-4 text-white" style={{
+        background: 'linear-gradient(90deg, #16a34a 0%, #15803d 20%, #0ea5e9 50%, #0284c7 80%, #0369a1 100%)'
+      }}>
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             {t('readyToMakeDifference')}
