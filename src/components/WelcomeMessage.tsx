@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
+import ProjectsCarousel from "./ProjectsCarousel";
 
 interface WelcomeMessageProps {
   onClose: () => void;
@@ -102,6 +103,9 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
               </div>
             ))}
           </div>
+
+          {/* Projects Carousel */}
+          <ProjectsCarousel />
 
           {/* Call to Action */}
           <div className="bg-ecosia-green/20 rounded-xl p-6 text-center">
