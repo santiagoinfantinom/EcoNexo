@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { useGlobalConfig } from "@/hooks/useGlobalConfig";
 import { BaseCard, BaseButton, BaseSelect, BaseTitle, BaseFilterPanel, BaseEmptyState, BaseLabel, BaseInput } from "@/components/ui";
 import Link from "next/link";
+import { ensureEventImage } from "@/lib/eventImages";
 
 type CalendarViewProps = {
   projects: any[];
@@ -1679,11 +1680,14 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   </span>
                                 </div>
                               </div>
-                              {/* Optional website/image preview */}
+                              {/* Event image - Always show */}
                               {(() => {
-                                const websitePreview = (event as any).website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent((event as any).website)}?w=480` : undefined;
-                                const headerImageSrc = (event as any).image_url || websitePreview;
-                                return headerImageSrc ? (
+                                const headerImageSrc = ensureEventImage({
+                                  image_url: (event as any).image_url,
+                                  category: (event as any).category || 'community',
+                                  website: (event as any).website
+                                });
+                                return (
                                   <div className="w-32 h-20 overflow-hidden rounded-md border border-gray-200">
                                     <img
                                       src={headerImageSrc}
@@ -1695,7 +1699,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                       crossOrigin="anonymous"
                                     />
                                   </div>
-                                ) : null;
+                                );
                               })()}
                               <div className={getEventClasses('actions')}>
                                 <Link

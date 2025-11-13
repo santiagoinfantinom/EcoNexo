@@ -8,6 +8,7 @@ import EventAdministrators from "./EventAdministrators";
 import { useAuth } from "@/lib/auth";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import { trackEvent } from "@/lib/analytics";
+import { ensureEventImage } from "@/lib/eventImages";
 
 type EventDetails = {
   id: string;
@@ -1349,9 +1350,12 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
   const spotsLeft = event.maxVolunteers - currentVolunteers;
   const [showRegistrationForm, setShowRegistrationForm] = React.useState(false);
 
-  // Prefer explicit image_url; otherwise, if website exists, use a live screenshot preview (WordPress mShots)
-  const websitePreview = event.website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(event.website)}?w=1600` : undefined;
-  const headerImageSrc = event.image_url || websitePreview;
+  // Ensure event has an image (use helper function)
+  const headerImageSrc = ensureEventImage({
+    image_url: event.image_url,
+    category: event.category,
+    website: (event as any).website
+  });
 
   const handleJoin = async () => {
     if (spotsLeft <= 0) return;
@@ -1580,20 +1584,18 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
 
         {/* Event Header */}
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 mb-6">
-          {/* Event Image: show only if we have either an explicit image or a website preview */}
-          {headerImageSrc && (
-            <div className="mb-6">
-              <img 
-                src={headerImageSrc}
-                alt={event.title}
-                className="w-full h-64 object-cover rounded-lg"
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                decoding="async"
-                crossOrigin="anonymous"
-              />
-            </div>
-          )}
+          {/* Event Image - Always show (ensureEventImage always returns an image) */}
+          <div className="mb-6">
+            <img 
+              src={headerImageSrc}
+              alt={event.title}
+              className="w-full h-64 object-cover rounded-lg"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              decoding="async"
+              crossOrigin="anonymous"
+            />
+          </div>
           
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">

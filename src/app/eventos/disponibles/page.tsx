@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useI18n, categoryLabel, locationLabel } from "@/lib/i18n";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import { CardSkeleton } from "@/components/SkeletonLoader";
+import { ensureEventImage } from "@/lib/eventImages";
 
 type Event = {
   id: string;
@@ -270,17 +271,15 @@ export default function EventosDisponiblesPage() {
                     href={`/eventos/${event.id}`}
                     className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 overflow-hidden border border-gray-200 dark:border-slate-700 hover-lift"
                   >
-                    {/* Event Image */}
-                    {event.image_url && (
-                      <div className="w-full h-48 overflow-hidden">
-                        <img
-                          src={event.image_url}
-                          alt={getEventTitle(event)}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      </div>
-                    )}
+                    {/* Event Image - Always show image */}
+                    <div className="w-full h-48 overflow-hidden">
+                      <img
+                        src={ensureEventImage(event)}
+                        alt={getEventTitle(event)}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
                     
                     {/* Event Content */}
                     <div className="p-4 sm:p-6">
