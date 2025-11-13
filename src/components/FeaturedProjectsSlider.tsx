@@ -131,17 +131,25 @@ export default function FeaturedProjectsSlider() {
                     href={`/projects/${project.id}`}
                     className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 hover-lift border border-gray-200 dark:border-slate-700"
                   >
-                    {/* Project Image */}
-                    {project.image_url && (
-                      <div className="w-full h-48 overflow-hidden">
+                    {/* Project Image - Always show image with fallback */}
+                    <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
+                      {project.image_url ? (
                         <img
                           src={project.image_url}
                           alt={project.title}
                           className="w-full h-full object-cover"
                           loading="lazy"
+                          onError={(e) => {
+                            // Fallback to gradient background if image fails to load
+                            e.currentTarget.style.display = 'none';
+                          }}
                         />
-                      </div>
-                    )}
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-6xl opacity-50">🌱</span>
+                        </div>
+                      )}
+                    </div>
                     
                     {/* Header with icon */}
                     <div className="bg-green-500 p-4 text-white">

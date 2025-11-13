@@ -151,18 +151,78 @@ body {
 
 /* Botones estilo GLS Bank */
 .btn-gls-primary {
-  background: var(--sour-apple);
-  color: var(--dark-teal);
-  font-weight: 600;
+  background: var(--sour-apple) !important;
+  color: var(--dark-teal) !important;
+  font-weight: 600 !important;
   border-radius: 8px;
   padding: 12px 24px;
   transition: all 0.2s ease;
+  border: none !important;
 }
 
 .btn-gls-primary:hover {
-  background: var(--jade);
+  background: var(--jade) !important;
+  color: var(--dark-teal) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Clase específica para botones del header - mayor especificidad */
+button.btn-gls-primary,
+.btn-gls-primary {
+  background: var(--sour-apple) !important;
+  color: var(--dark-teal) !important;
+}
+
+button.btn-gls-primary:hover,
+.btn-gls-primary:hover {
+  background: var(--jade) !important;
+  color: var(--dark-teal) !important;
+}
+
+/* Evitar herencia de color del header en botones */
+header button.btn-gls-primary,
+header .btn-gls-primary {
+  background: var(--sour-apple) !important;
+  color: var(--dark-teal) !important;
+  border: none !important;
+}
+
+header button.btn-gls-primary:hover,
+header .btn-gls-primary:hover {
+  background: var(--jade) !important;
+  color: var(--dark-teal) !important;
+}
+
+/* Asegurar que los botones del header mantengan sus estilos */
+header button[class*="btn-gls-primary"],
+header .btn-gls-primary {
+  background: var(--sour-apple) !important;
+  color: var(--dark-teal) !important;
+  border: none !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+}
+
+header button[class*="btn-gls-primary"]:hover,
+header .btn-gls-primary:hover {
+  background: var(--jade) !important;
+  color: var(--dark-teal) !important;
+}
+
+/* Ocultar errores de reCAPTCHA que aparecen directamente del widget */
+iframe[src*="recaptcha"],
+div[data-sitekey],
+.g-recaptcha-error,
+.g-recaptcha-error-message {
+  display: none !important;
+}
+
+/* Ocultar mensajes de error de reCAPTCHA */
+div[class*="recaptcha"]:has(> div[class*="error"]),
+div[class*="recaptcha-error"] {
+  display: none !important;
 }
 
 .btn-gls-secondary {

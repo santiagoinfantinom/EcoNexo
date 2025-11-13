@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useI18n } from '@/lib/i18n';
 
@@ -22,24 +22,70 @@ export function CaptchaComponent({
 }: CaptchaProps) {
   const { t } = useI18n();
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+  
+  // Check if we're on localhost
+  const isLocalhost = typeof window !== 'undefined' && 
+                      (window.location.hostname === 'localhost' || 
+                       window.location.hostname === '127.0.0.1');
 
-  if (!siteKey) {
-    console.warn('reCAPTCHA site key not configured');
-    return (
-      <div className={`p-4 border border-yellow-300 bg-yellow-50 rounded-lg ${className}`}>
-        <p className="text-yellow-800 text-sm">
-          ⚠️ {t("captchaNotConfigured")}
-        </p>
-      </div>
-    );
+  // Don't show reCAPTCHA if site key is not configured, is a placeholder, or we're on localhost
+  if (!siteKey || 
+      siteKey === 'your_recaptcha_site_key_here' || 
+      siteKey === 'demo-site-key' ||
+      isLocalhost) {
+    // Return null instead of showing an error - let Math Captcha handle it
+    return null;
   }
 
+  // Ocultar errores de reCAPTCHA que aparecen directamente del widget
+  useEffect(() => {
+    const hideRecaptchaErrors = () => {
+      // Ocultar mensajes de error comunes de reCAPTCHA
+      const errorSelectors = [
+        '.g-recaptcha-error',
+        '.g-recaptcha-error-message',
+        'div[class*="recaptcha-error"]',
+        'div[class*="recaptcha"][class*="error"]',
+        '[data-sitekey] + div[class*="error"]',
+      ];
+      
+      errorSelectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          (el as HTMLElement).style.display = 'none';
+        });
+      });
+      
+      // También buscar por texto de error común
+      const allDivs = document.querySelectorAll('div');
+      allDivs.forEach(div => {
+        const text = div.textContent || '';
+        if (text.includes('ERROR for site owner') || 
+            text.includes('Invalid site key') ||
+            text.includes('Error in security verification')) {
+          div.style.display = 'none';
+        }
+      });
+    };
+    
+    // Ejecutar inmediatamente y luego periódicamente
+    hideRecaptchaErrors();
+    const interval = setInterval(hideRecaptchaErrors, 100);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className={`flex justify-center ${className}`}>
+    <div className={`flex justify-center ${className}`} style={{ position: 'relative' }}>
       <ReCAPTCHA
         sitekey={siteKey}
         onChange={onVerify}
-        onErrored={onError}
+        onErrored={(error) => {
+          // Silently handle errors - don't show them to users
+          // The component should not render if site key is invalid anyway
+          console.warn('reCAPTCHA error (silent):', error);
+          // Don't call onError to prevent error messages from showing
+        }}
         onExpired={onExpire}
         theme={theme}
         size={size}

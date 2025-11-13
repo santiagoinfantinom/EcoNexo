@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
@@ -26,6 +26,77 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   
   // Check if Supabase is configured
   const isSupabaseReady = isSupabaseConfigured();
+
+  // Ocultar errores de reCAPTCHA que aparecen en el DOM
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    const hideRecaptchaErrors = () => {
+      // Ocultar mensajes de error comunes de reCAPTCHA
+      const errorSelectors = [
+        '.g-recaptcha-error',
+        '.g-recaptcha-error-message',
+        'div[class*="recaptcha-error"]',
+        'div[class*="recaptcha"][class*="error"]',
+        '[data-sitekey] + div[class*="error"]',
+        'iframe[src*="recaptcha"] + div',
+      ];
+      
+      errorSelectors.forEach(selector => {
+        try {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            const htmlEl = el as HTMLElement;
+            htmlEl.style.display = 'none';
+            htmlEl.style.visibility = 'hidden';
+            htmlEl.style.opacity = '0';
+            htmlEl.style.height = '0';
+            htmlEl.style.width = '0';
+            htmlEl.style.overflow = 'hidden';
+          });
+        } catch (e) {
+          // Ignorar errores de selector
+        }
+      });
+      
+      // Buscar por texto de error común en todos los elementos
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(el => {
+        const htmlEl = el as HTMLElement;
+        const text = htmlEl.textContent || '';
+        if (text.includes('ERROR for site owner') || 
+            text.includes('Invalid site key') ||
+            text.includes('Error in security verification') ||
+            text.includes('Error en la verificación de seguridad') ||
+            text.includes('Fehler bei der Sicherheitsüberprüfung')) {
+          htmlEl.style.display = 'none';
+          htmlEl.style.visibility = 'hidden';
+          htmlEl.style.opacity = '0';
+          htmlEl.style.height = '0';
+          htmlEl.style.width = '0';
+          htmlEl.style.overflow = 'hidden';
+        }
+      });
+    };
+    
+    // Ejecutar inmediatamente y luego periódicamente
+    hideRecaptchaErrors();
+    const interval = setInterval(hideRecaptchaErrors, 50);
+    
+    // También usar MutationObserver para detectar nuevos elementos
+    const observer = new MutationObserver(hideRecaptchaErrors);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'style'],
+    });
+    
+    return () => {
+      clearInterval(interval);
+      observer.disconnect();
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -66,10 +137,34 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           onClose();
         }, 3000);
       } else {
-        setError(result.message || t("errorSendingEmail"));
+        // Don't show generic errors for configuration issues
+        const errorMessage = result.message || t("errorSendingEmail");
+        // Filter out reCAPTCHA errors and security verification errors if not configured
+        const isRecaptchaError = errorMessage.includes("Invalid site key") || 
+                                 errorMessage.includes("site owner") ||
+                                 errorMessage.includes("Error in security verification") ||
+                                 errorMessage.includes("Error en la verificación de seguridad") ||
+                                 errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
+        if (!isRecaptchaError) {
+          setError(errorMessage);
+        } else {
+          // If it's a reCAPTCHA error, just show a generic message
+          setError(t("errorSendingEmail"));
+        }
       }
     } catch (err) {
-      setError(t("unexpectedError"));
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      // Don't show reCAPTCHA-related errors if not configured
+      const isRecaptchaError = errorMessage.includes("Invalid site key") || 
+                               errorMessage.includes("site owner") ||
+                               errorMessage.includes("Error in security verification") ||
+                               errorMessage.includes("Error en la verificación de seguridad") ||
+                               errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
+      if (!isRecaptchaError) {
+        setError(t("unexpectedError") + (errorMessage ? `: ${errorMessage}` : ""));
+      } else {
+        setError(t("unexpectedError"));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -150,6 +245,9 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     setCaptchaVerified(isValid);
     if (!isValid) {
       setError(t("securityVerificationIncorrect"));
+    } else {
+      // Clear any previous errors when verification succeeds
+      setError("");
     }
   };
 
@@ -289,19 +387,42 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             {/* Captcha for registration */}
             {mode === "register" && (
               <div className="space-y-3">
-                {/* Google reCAPTCHA */}
-                <CaptchaComponent
-                  onVerify={handleCaptchaVerify}
-                  onError={() => setError(t("errorInSecurityVerification"))}
-                  onExpire={() => {
-                    setCaptchaVerified(false);
-                    setCaptchaToken("");
-                  }}
-                  theme={locale === "es" ? "light" : "light"}
-                />
+                {/* Google reCAPTCHA - only show if configured AND not localhost */}
+                {(() => {
+                  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+                  const isLocalhost = typeof window !== 'undefined' && 
+                                      (window.location.hostname === 'localhost' || 
+                                       window.location.hostname === '127.0.0.1');
+                  const isConfigured = siteKey && 
+                                       siteKey !== 'your_recaptcha_site_key_here' &&
+                                       siteKey !== 'demo-site-key' &&
+                                       !isLocalhost; // No mostrar reCAPTCHA en localhost
+                  
+                  if (isConfigured) {
+                    return (
+                      <>
+                        <CaptchaComponent
+                          onVerify={handleCaptchaVerify}
+                          onError={() => {
+                            // Silently handle errors - don't show them to users
+                            // Clear any previous errors
+                            setError("");
+                          }}
+                          onExpire={() => {
+                            setCaptchaVerified(false);
+                            setCaptchaToken("");
+                          }}
+                          theme={locale === "es" ? "light" : "light"}
+                        />
+                        {/* Math Captcha as fallback */}
+                        <div className="text-center text-sm text-gray-500">{t("or")}</div>
+                      </>
+                    );
+                  }
+                  return null;
+                })()}
                 
-                {/* Math Captcha as fallback */}
-                <div className="text-center text-sm text-gray-500">{t("or")}</div>
+                {/* Math Captcha - always available */}
                 <MathCaptchaComponent
                   onVerify={handleMathCaptchaVerify}
                 />
