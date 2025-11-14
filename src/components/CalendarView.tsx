@@ -41,13 +41,20 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     getEmptyClasses,
     combineClasses
   } = useGlobalConfig();
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [mounted, setMounted] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState<Date | null>(null);
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'list'>('month');
   const [monthCategory, setMonthCategory] = useState<'' | 'environment' | 'education' | 'community' | 'technology'>('');
   const [realEvents, setRealEvents] = useState<CalendarEvent[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(false);
   const [subscriptionEndpoint, setSubscriptionEndpoint] = useState<string | null>(null);
+  
+  // Initialize currentMonth only on client to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+    setCurrentMonth(new Date());
+  }, []);
   
   // Filter states for list view
   const [showFilters, setShowFilters] = useState(false);
@@ -1224,6 +1231,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     setCurrentMonth(prev => {
+      if (!prev) return new Date();
       const newMonth = new Date(prev);
       if (direction === 'prev') {
         newMonth.setMonth(prev.getMonth() - 1);
@@ -1234,7 +1242,8 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     });
   };
 
-  const formatMonthYear = (date: Date) => {
+  const formatMonthYear = (date: Date | null) => {
+    if (!date) return '';
     return date.toLocaleDateString(locale === 'es' ? 'es-ES' : locale === 'de' ? 'de-DE' : 'en-US', {
       month: 'long',
       year: 'numeric'
@@ -1243,6 +1252,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
 
   // Filter functions
   const getFilteredEvents = () => {
+    if (!currentMonth) return [];
     let filtered = allEvents.filter(event => 
       event.date.getMonth() === currentMonth.getMonth() && 
       event.date.getFullYear() === currentMonth.getFullYear()
@@ -1300,7 +1310,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       filtered = filtered.filter(event => 
         event.title.toLowerCase().includes(filters.searchText.toLowerCase()) ||
         event.location.toLowerCase().includes(filters.searchText.toLowerCase()) ||
-        event.organizer.toLowerCase().includes(filters.searchText.toLowerCase())
+        (event.organizer && event.organizer.toLowerCase().includes(filters.searchText.toLowerCase()))
       );
     }
 
@@ -1330,6 +1340,17 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
     locale === 'de' ?
     ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'] :
     ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // Don't render calendar content until mounted to avoid hydration mismatch
+  if (!mounted || !currentMonth) {
+    return (
+      <BaseCard variant="default" className="w-full my-6">
+        <div className="text-center py-4 text-slate-600 dark:text-slate-400">
+          {locale === 'es' ? 'Cargando calendario...' : locale === 'de' ? 'Kalender wird geladen...' : 'Loading calendar...'}
+        </div>
+      </BaseCard>
+    );
+  }
 
   return (
     <BaseCard variant="default" className="w-full my-6">
@@ -1454,17 +1475,19 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             </BaseSelect>
           </div>
           {/* Month Navigation */}
-          <div className={getNavigationClasses('container')}>
+          <div className={`${getNavigationClasses('container')} bg-gradient-to-r from-green-600 via-green-700 to-blue-700 rounded-lg p-4 mb-4 shadow-lg`}>
             <button
               onClick={() => navigateMonth('prev')}
-              className={getNavigationClasses('button')}
+              className="p-2 hover:bg-white/20 rounded-md transition-colors text-white font-bold text-xl"
             >
               ←
             </button>
-            <h3 className="text-lg font-semibold text-white">{formatMonthYear(currentMonth)}</h3>
+            <h2 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
+              {formatMonthYear(currentMonth)}
+            </h2>
             <button
               onClick={() => navigateMonth('next')}
-              className={getNavigationClasses('button')}
+              className="p-2 hover:bg-white/20 rounded-md transition-colors text-white font-bold text-xl"
             >
               →
             </button>
@@ -1544,18 +1567,20 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                 {viewMode === 'list' && (
                   <>
                     {/* Month Navigation and Filter Toggle */}
-                    <div className={getNavigationClasses('container')}>
+                    <div className={`${getNavigationClasses('container')} bg-gradient-to-r from-green-600 via-green-700 to-blue-700 rounded-lg p-4 mb-4 shadow-lg`}>
                       <div className="flex items-center gap-4">
                         <button
                           onClick={() => navigateMonth('prev')}
-                          className={getNavigationClasses('button')}
+                          className="p-2 hover:bg-white/20 rounded-md transition-colors text-white font-bold text-xl"
                         >
                           ←
                         </button>
-                        <h3 className="text-lg font-semibold text-white">{formatMonthYear(currentMonth)}</h3>
+                        <h2 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
+                          {formatMonthYear(currentMonth)}
+                        </h2>
                         <button
                           onClick={() => navigateMonth('next')}
-                          className={getNavigationClasses('button')}
+                          className="p-2 hover:bg-white/20 rounded-md transition-colors text-white font-bold text-xl"
                         >
                           →
                         </button>
@@ -1565,7 +1590,10 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                         onClick={() => setShowFilters(!showFilters)}
                         className="px-3 py-1 text-sm"
                       >
-                        {showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'}
+                        {showFilters 
+                          ? (locale === 'es' ? 'Ocultar Filtros' : locale === 'de' ? 'Filter ausblenden' : 'Hide Filters')
+                          : (locale === 'es' ? 'Mostrar Filtros' : locale === 'de' ? 'Filter anzeigen' : 'Show Filters')
+                        }
                       </BaseButton>
                     </div>
 
@@ -1695,6 +1723,27 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                         return (
                           <BaseCard key={event.id} variant="default">
                             <div className="flex items-start justify-between gap-4">
+                              {/* Event image - Always show on the left */}
+                              {(() => {
+                                const headerImageSrc = ensureEventImage({
+                                  image_url: (event as any).image_url,
+                                  category: (event as any).category || 'community',
+                                  website: (event as any).website
+                                });
+                                return (
+                                  <div className="w-32 h-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-slate-700">
+                                    <img
+                                      src={headerImageSrc}
+                                      alt={event.title}
+                                      className="w-full h-full object-cover"
+                                      loading="lazy"
+                                      referrerPolicy="no-referrer"
+                                      decoding="async"
+                                      crossOrigin="anonymous"
+                                    />
+                                  </div>
+                                );
+                              })()}
                               <div className="flex-1 min-w-0">
                                 <Link 
                                   href={`/eventos/${event.id}`}
@@ -1726,27 +1775,6 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                                   </span>
                                 </div>
                               </div>
-                              {/* Event image - Always show */}
-                              {(() => {
-                                const headerImageSrc = ensureEventImage({
-                                  image_url: (event as any).image_url,
-                                  category: (event as any).category || 'community',
-                                  website: (event as any).website
-                                });
-                                return (
-                                  <div className="w-32 h-20 overflow-hidden rounded-md border border-gray-200">
-                                    <img
-                                      src={headerImageSrc}
-                                      alt={event.title}
-                                      className="w-full h-full object-cover"
-                                      loading="lazy"
-                                      referrerPolicy="no-referrer"
-                                      decoding="async"
-                                      crossOrigin="anonymous"
-                                    />
-                                  </div>
-                                );
-                              })()}
                               <div className={getEventClasses('actions')}>
                                 <Link
                                   href={`/eventos/${event.id}`}
