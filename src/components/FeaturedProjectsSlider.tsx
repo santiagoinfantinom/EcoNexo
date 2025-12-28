@@ -10,7 +10,14 @@ export default function FeaturedProjectsSlider() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   // Get active projects (filter out events that have ended)
+  // Also ensure each project has required fields (id, name, image_url, description)
   const activeProjects = PROJECTS.filter(project => {
+    // Validate required fields - each project must have at least id and name
+    if (!project.id || !project.name) {
+      console.warn(`Project missing required fields (id or name):`, project);
+      return false;
+    }
+    
     // If project has end date and it's in the past, exclude it
     if (project.endsAt) {
       const endDate = new Date(project.endsAt);
@@ -21,9 +28,70 @@ export default function FeaturedProjectsSlider() {
     return project.isPermanent !== false;
   });
 
+  // Format project function - must be defined before use
+  const formatProject = (project: typeof activeProjects[0]) => {
+    // Ensure project has all required fields
+    if (!project.id || !project.name) {
+      console.error('Invalid project in slider:', project);
+      return null;
+    }
+    
+    const title = locale === 'en' && project.name_en 
+      ? project.name_en 
+      : locale === 'de' && project.name_de 
+      ? project.name_de 
+      : project.name;
+    
+    const description = locale === 'en' && project.description_en 
+      ? project.description_en 
+      : locale === 'de' && project.description_de 
+      ? project.description_de 
+      : project.description || '';
+    
+    // Ensure location fields exist
+    const city = project.city || '';
+    const country = project.country || '';
+    const location = city && country ? `${city}, ${country}` : city || country || '';
+    
+    // Generate appropriate metric based on project category
+    let metric = '';
+    const category = (project.category || '').toLowerCase();
+    if (category.includes('medio ambiente') || category.includes('environment')) {
+      metric = locale === 'es' ? 'Proyecto ambiental' : locale === 'de' ? 'Umweltprojekt' : 'Environmental project';
+    } else if (category.includes('educación') || category.includes('education')) {
+      metric = locale === 'es' ? 'Proyecto educativo' : locale === 'de' ? 'Bildungsprojekt' : 'Educational project';
+    } else if (category.includes('salud') || category.includes('health')) {
+      metric = locale === 'es' ? 'Servicios de salud' : locale === 'de' ? 'Gesundheitsdienste' : 'Health services';
+    } else if (category.includes('comunidad') || category.includes('community')) {
+      metric = locale === 'es' ? 'Proyecto comunitario' : locale === 'de' ? 'Gemeinschaftsprojekt' : 'Community project';
+    } else if (category.includes('alimentación') || category.includes('food')) {
+      metric = locale === 'es' ? 'Proyecto alimentario' : locale === 'de' ? 'Ernährungsprojekt' : 'Food project';
+    } else {
+      metric = locale === 'es' ? 'Proyecto activo' : locale === 'de' ? 'Aktives Projekt' : 'Active project';
+    }
+    
+    const volunteers = project.spots 
+      ? `${project.spots} ${t('volunteersLabel') || 'volunteers'}`
+      : `50+ ${t('volunteersLabel') || 'volunteers'}`;
+    
+    return {
+      id: project.id,
+      title,
+      description,
+      location,
+      metric,
+      volunteers,
+      image_url: project.image_url
+    };
+  };
+
   // Show 3 projects at a time, rotate through all active projects
   const projectsPerView = 3;
-  const totalSlides = Math.ceil(activeProjects.length / projectsPerView);
+  // Format all projects first to filter out invalid ones, then calculate slides
+  const validFormattedProjects = activeProjects
+    .map(formatProject)
+    .filter((project): project is NonNullable<ReturnType<typeof formatProject>> => project !== null);
+  const totalSlides = Math.max(1, Math.ceil(validFormattedProjects.length / projectsPerView));
 
   // Auto-rotate every 5 seconds
   useEffect(() => {
@@ -55,60 +123,13 @@ export default function FeaturedProjectsSlider() {
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
-  // Get projects for current slide
+  // Get projects for current slide (already formatted and validated)
   const getCurrentProjects = () => {
     const start = currentIndex * projectsPerView;
-    return activeProjects.slice(start, start + projectsPerView);
+    return validFormattedProjects.slice(start, start + projectsPerView);
   };
 
-  const formatProject = (project: typeof activeProjects[0]) => {
-    const title = locale === 'en' && project.name_en 
-      ? project.name_en 
-      : locale === 'de' && project.name_de 
-      ? project.name_de 
-      : project.name;
-    
-    const description = locale === 'en' && project.description_en 
-      ? project.description_en 
-      : locale === 'de' && project.description_de 
-      ? project.description_de 
-      : project.description || '';
-    
-    const location = `${project.city}, ${project.country}`;
-    
-    // Generate appropriate metric based on project category
-    let metric = '';
-    const category = project.category.toLowerCase();
-    if (category.includes('medio ambiente') || category.includes('environment')) {
-      metric = locale === 'es' ? 'Proyecto ambiental' : locale === 'de' ? 'Umweltprojekt' : 'Environmental project';
-    } else if (category.includes('educación') || category.includes('education')) {
-      metric = locale === 'es' ? 'Proyecto educativo' : locale === 'de' ? 'Bildungsprojekt' : 'Educational project';
-    } else if (category.includes('salud') || category.includes('health')) {
-      metric = locale === 'es' ? 'Servicios de salud' : locale === 'de' ? 'Gesundheitsdienste' : 'Health services';
-    } else if (category.includes('comunidad') || category.includes('community')) {
-      metric = locale === 'es' ? 'Proyecto comunitario' : locale === 'de' ? 'Gemeinschaftsprojekt' : 'Community project';
-    } else if (category.includes('alimentación') || category.includes('food')) {
-      metric = locale === 'es' ? 'Proyecto alimentario' : locale === 'de' ? 'Ernährungsprojekt' : 'Food project';
-    } else {
-      metric = locale === 'es' ? 'Proyecto activo' : locale === 'de' ? 'Aktives Projekt' : 'Active project';
-    }
-    
-    const volunteers = project.spots 
-      ? `${project.spots} ${t('volunteersLabel') || 'volunteers'}`
-      : `50+ ${t('volunteersLabel') || 'volunteers'}`;
-    
-    return {
-      id: project.id,
-      title,
-      description,
-      location,
-      metric,
-      volunteers,
-      image_url: project.image_url
-    };
-  };
-
-  const currentProjects = getCurrentProjects().map(formatProject);
+  const currentProjects = getCurrentProjects();
 
   return (
     <div className="relative">
@@ -116,9 +137,11 @@ export default function FeaturedProjectsSlider() {
       <div className="relative overflow-hidden rounded-xl">
         <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {Array.from({ length: totalSlides }).map((_, slideIndex) => {
-            const slideProjects = activeProjects
-              .slice(slideIndex * projectsPerView, (slideIndex + 1) * projectsPerView)
-              .map(formatProject);
+            const slideProjects = validFormattedProjects
+              .slice(slideIndex * projectsPerView, (slideIndex + 1) * projectsPerView);
+            
+            // Skip empty slides
+            if (slideProjects.length === 0) return null;
             
             return (
               <div
@@ -236,10 +259,10 @@ export default function FeaturedProjectsSlider() {
       {/* Project Counter */}
       <div className="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">
         {locale === 'es' 
-          ? `Mostrando ${currentProjects.length} de ${activeProjects.length} proyectos activos`
+          ? `Mostrando ${currentProjects.length} de ${validFormattedProjects.length} proyectos activos`
           : locale === 'de'
-          ? `${currentProjects.length} von ${activeProjects.length} aktiven Projekten angezeigt`
-          : `Showing ${currentProjects.length} of ${activeProjects.length} active projects`
+          ? `${currentProjects.length} von ${validFormattedProjects.length} aktiven Projekten angezeigt`
+          : `Showing ${currentProjects.length} of ${validFormattedProjects.length} active projects`
         }
       </div>
     </div>

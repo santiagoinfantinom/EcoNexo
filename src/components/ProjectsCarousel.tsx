@@ -34,7 +34,7 @@ export default function ProjectsCarousel() {
     return project.description || '';
   };
 
-  const scrollLeft = () => {
+  const handleScrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({
         left: -400,
@@ -43,7 +43,7 @@ export default function ProjectsCarousel() {
     }
   };
 
-  const scrollRight = () => {
+  const handleScrollRight = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({
         left: 400,
@@ -88,14 +88,14 @@ export default function ProjectsCarousel() {
         </h3>
         <div className="flex gap-2">
           <button
-            onClick={scrollLeft}
+            onClick={handleScrollLeft}
             className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-gls-primary flex items-center justify-center transition-colors"
             aria-label={locale === 'es' ? 'Anterior' : locale === 'de' ? 'Vorherige' : 'Previous'}
           >
             ←
           </button>
           <button
-            onClick={scrollRight}
+            onClick={handleScrollRight}
             className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-gls-primary flex items-center justify-center transition-colors"
             aria-label={locale === 'es' ? 'Siguiente' : locale === 'de' ? 'Nächste' : 'Next'}
           >

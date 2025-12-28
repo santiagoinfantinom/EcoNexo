@@ -3,7 +3,9 @@
 import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 import WelcomeMessage from "@/components/WelcomeMessage";
+import AuthModal from "@/components/AuthModal";
 import FeaturedProjectsSlider from "@/components/FeaturedProjectsSlider";
 import EcoTips from "@/components/EcoTips";
 import EcoTipsBulletPoints from "@/components/EcoTipsBulletPoints";
@@ -12,24 +14,50 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamic import to avoid SSR issues with Leaflet
-const InteractiveMap = dynamic(() => import("@/components/EuropeMap").then(mod => ({ default: mod.default })), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-        <p className="text-gray-600 dark:text-gray-400">Cargando mapa...</p>
+const InteractiveMap = dynamic(
+  () => import("@/components/EuropeMap").then(mod => ({ default: mod.default })).catch(err => {
+    console.error('Error loading EuropeMap:', err);
+    // Return a fallback component if the map fails to load
+    return {
+      default: () => (
+        <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
+          <div className="text-center p-8">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              El mapa no está disponible temporalmente.
+            </p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              Recargar página
+            </button>
+          </div>
+        </div>
+      )
+    };
+  }),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Cargando mapa...</p>
+        </div>
       </div>
-    </div>
-  )
-});
+    )
+  }
+);
 
 export default function Home() {
   const { t, locale } = useI18n();
   const { user } = useAuth();
+  const router = useRouter();
   const [showWelcome, setShowWelcome] = useState(false);
   const [showMap, setShowMap] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("register");
 
   useEffect(() => {
     setIsClient(true);
@@ -91,7 +119,7 @@ export default function Home() {
       </section>
 
       {/* Interactive Map Section */}
-      {showMap && isClient && (
+      {showMap && isClient && typeof window !== 'undefined' && (
         <section className="py-8 px-6 md:px-10 xl:px-16 bg-white/50 dark:bg-slate-800/50">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-8">
@@ -116,9 +144,18 @@ export default function Home() {
       {/* Featured Projects */}
       <section className="py-16 px-4 bg-white/50 dark:bg-slate-800/50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-12">
-            {t('featuredProjects')}
-          </h2>
+          <div className="flex items-center justify-center gap-4 mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center">
+              {t('featuredProjects')}
+            </h2>
+            <Link
+              href="/slider-demo"
+              className="text-sm text-green-600 dark:text-green-400 hover:underline opacity-70 hover:opacity-100"
+              title="Ver página de demo del slider"
+            >
+              🔍 Demo
+            </Link>
+          </div>
           <FeaturedProjectsSlider />
         </div>
       </section>
@@ -235,7 +272,16 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
-              onClick={() => setShowWelcome(true)}
+              onClick={() => {
+                // Si el usuario está autenticado, redirigir a eventos
+                if (user) {
+                  router.push('/eventos');
+                } else {
+                  // Si no está autenticado, abrir modal de registro
+                  setAuthMode("register");
+                  setIsAuthModalOpen(true);
+                }
+              }}
               className="bg-white text-green-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               {t('letsGo')}
@@ -252,6 +298,13 @@ export default function Home() {
 
       {/* Welcome Modal */}
       {showWelcome && <WelcomeMessage onClose={() => setShowWelcome(false)} />}
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        mode={authMode}
+      />
     </div>
   );
 }

@@ -28,17 +28,22 @@ type Project = {
 };
 
 // Fix default marker icons in Leaflet when used with bundlers
-const DefaultIcon = L.icon({
-  iconUrl: typeof window !== "undefined" ? "/leaflet/marker-icon.png" : "",
-  iconRetinaUrl:
-    typeof window !== "undefined" ? "/leaflet/marker-icon-2x.png" : "",
-  shadowUrl: typeof window !== "undefined" ? "/leaflet/marker-shadow.png" : "",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
-if (typeof window !== "undefined") {
-  (L.Marker.prototype as unknown as { options: { icon: L.Icon } }).options.icon =
-    DefaultIcon;
+// Only initialize on client side - moved inside component to avoid SSR issues
+function initializeLeafletIcons() {
+  if (typeof window === "undefined" || !L) return;
+  try {
+    const DefaultIcon = L.icon({
+      iconUrl: "/leaflet/marker-icon.png",
+      iconRetinaUrl: "/leaflet/marker-icon-2x.png",
+      shadowUrl: "/leaflet/marker-shadow.png",
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+    });
+    (L.Marker.prototype as unknown as { options: { icon: L.Icon } }).options.icon =
+      DefaultIcon;
+  } catch (error) {
+    console.warn('Error initializing Leaflet icons:', error);
+  }
 }
 
 /**
@@ -95,10 +100,9 @@ export default function InteractiveMap({
   center,
   zoom 
 }: InteractiveMapProps) {
-  // Determine center and zoom from props or region preset
-  const mapCenter = center || MAP_REGIONS[region].center;
-  const mapZoom = zoom ?? MAP_REGIONS[region].zoom;
-
+  // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
+  // This is required by React's Rules of Hooks
+  const [isMounted, setIsMounted] = useState(false);
   const mapRef = useRef<LeafletMap | null>(null);
   const { t, locale } = useI18n();
   const [baseFilteredProjects, setBaseFilteredProjects] = useState<Project[]>(projects);
@@ -111,8 +115,20 @@ export default function InteractiveMap({
   const [geoError, setGeoError] = useState<string | null>(null);
   const [frequencyFilters, setFrequencyFilters] = useState<{ once: boolean; regular: boolean; permanent: boolean }>({ once: true, regular: true, permanent: true });
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  
+  // ALL useEffect hooks MUST be called before any conditional returns
+  useEffect(() => {
+    setIsMounted(true);
+    // Initialize Leaflet icons only on client side
+    if (typeof window !== 'undefined') {
+      initializeLeafletIcons();
+    }
+  }, []);
+  
   // Listen to external center events from the page-level search bar
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     function onCenter(e: Event) {
       const ce = e as CustomEvent<{ lat: number; lon: number }>;
       if (!mapRef.current || !ce.detail) return;
@@ -123,7 +139,9 @@ export default function InteractiveMap({
     window.addEventListener("econexo:center", onCenter as EventListener);
     return () => window.removeEventListener("econexo:center", onCenter as EventListener);
   }, []);
+  
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const handle = () => {
       if (mapRef.current) mapRef.current.invalidateSize();
     };
@@ -136,15 +154,94 @@ export default function InteractiveMap({
     };
   }, []);
 
-  const containerRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (typeof window === 'undefined' || !containerRef.current) return;
     const ro = new ResizeObserver(() => {
       if (mapRef.current) mapRef.current.invalidateSize();
     });
     ro.observe(containerRef.current);
     return () => ro.disconnect();
   }, []);
+
+  // Recompute filtered list when base filters, frequency, category or mode change
+  useEffect(() => {
+    const now = new Date();
+    const isToday = (p: Project) => {
+      if (p.isPermanent) return false;
+      if (!p.startsAt && !p.endsAt) return false;
+      const start = p.startsAt ? new Date(p.startsAt) : now;
+      const end = p.endsAt ? new Date(p.endsAt) : now;
+      const startDay = new Date(now); startDay.setHours(0,0,0,0);
+      const endDay = new Date(now); endDay.setHours(23,59,59,999);
+      return (start <= endDay) && (end >= startDay);
+    };
+    const isPermanent = (p: Project) => Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
+
+    // Start with base filtered list
+    let next = baseFilteredProjects.filter((p) => {
+      if (filterMode === 'all') return true;
+      if (filterMode === 'today') return isToday(p);
+      return isPermanent(p);
+    });
+    // Quick category chips filter (optional)
+    if (selectedCategories.length > 0) {
+      next = next.filter((p) => selectedCategories.includes(p.category));
+    }
+
+    // Apply frequency filters
+    next = next.filter((p) => frequencyFilters[getFrequency(p)]);
+    setFilteredProjects(next);
+  }, [baseFilteredProjects, filterMode, frequencyFilters, selectedCategories]);
+
+  // Heatmap toggle effect
+  useEffect(() => {
+    if (!mapRef.current || typeof window === 'undefined') return;
+    if (!heatOn) {
+      if (heatLayerRef.current) {
+        mapRef.current.removeLayer(heatLayerRef.current);
+        heatLayerRef.current = null;
+      }
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      // Load leaflet.heat dynamically from CDN to keep bundle small
+      if (!(L as any).heatLayer) {
+        await new Promise<void>((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://unpkg.com/leaflet.heat/dist/leaflet-heat.js';
+          s.async = true;
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error('Failed to load heatmap lib'));
+          document.head.appendChild(s);
+        });
+      }
+      if (cancelled) return;
+      const points = filteredProjects.map((p) => [p.lat, p.lng, 0.6]);
+      const layer = (L as any).heatLayer(points, { radius: 22, blur: 15, maxZoom: 12, minOpacity: 0.25 });
+      layer.addTo(mapRef.current!);
+      heatLayerRef.current = layer;
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [heatOn, filteredProjects]);
+  
+  // Determine center and zoom from props or region preset
+  const mapCenter = center || MAP_REGIONS[region].center;
+  const mapZoom = zoom ?? MAP_REGIONS[region].zoom;
+  
+  // NOW we can do conditional rendering AFTER all hooks are called
+  if (!isMounted || typeof window === 'undefined') {
+    return (
+      <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Cargando mapa...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleCenterOnLocation = () => {
     if (!("geolocation" in navigator)) {
@@ -237,70 +334,6 @@ export default function InteractiveMap({
       popupAnchor: [0, -size / 2],
     });
   }
-
-  // Recompute filtered list when base filters, frequency, category or mode change
-  useEffect(() => {
-    const now = new Date();
-    const isToday = (p: Project) => {
-      if (p.isPermanent) return false;
-      if (!p.startsAt && !p.endsAt) return false;
-      const start = p.startsAt ? new Date(p.startsAt) : now;
-      const end = p.endsAt ? new Date(p.endsAt) : now;
-      const startDay = new Date(now); startDay.setHours(0,0,0,0);
-      const endDay = new Date(now); endDay.setHours(23,59,59,999);
-      return (start <= endDay) && (end >= startDay);
-    };
-    const isPermanent = (p: Project) => Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
-
-    // Start with base filtered list
-    let next = baseFilteredProjects.filter((p) => {
-      if (filterMode === 'all') return true;
-      if (filterMode === 'today') return isToday(p);
-      return isPermanent(p);
-    });
-    // Quick category chips filter (optional)
-    if (selectedCategories.length > 0) {
-      next = next.filter((p) => selectedCategories.includes(p.category));
-    }
-
-    // Apply frequency filters
-    next = next.filter((p) => frequencyFilters[getFrequency(p)]);
-    setFilteredProjects(next);
-  }, [baseFilteredProjects, filterMode, frequencyFilters, selectedCategories]);
-
-  // Heatmap toggle effect
-  useEffect(() => {
-    if (!mapRef.current) return;
-    if (!heatOn) {
-      if (heatLayerRef.current) {
-        mapRef.current.removeLayer(heatLayerRef.current);
-        heatLayerRef.current = null;
-      }
-      return;
-    }
-    let cancelled = false;
-    (async () => {
-      // Load leaflet.heat dynamically from CDN to keep bundle small
-      if (!(L as any).heatLayer) {
-        await new Promise<void>((resolve, reject) => {
-          const s = document.createElement('script');
-          s.src = 'https://unpkg.com/leaflet.heat/dist/leaflet-heat.js';
-          s.async = true;
-          s.onload = () => resolve();
-          s.onerror = () => reject(new Error('Failed to load heatmap lib'));
-          document.head.appendChild(s);
-        });
-      }
-      if (cancelled) return;
-      const points = filteredProjects.map((p) => [p.lat, p.lng, 0.6]);
-      const layer = (L as any).heatLayer(points, { radius: 22, blur: 15, maxZoom: 12, minOpacity: 0.25 });
-      layer.addTo(mapRef.current!);
-      heatLayerRef.current = layer;
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [heatOn, filteredProjects]);
 
   return (
     <>

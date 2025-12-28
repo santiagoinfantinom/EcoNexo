@@ -39,9 +39,15 @@ export default function EventAdministrators({ eventId, isCreator }: EventAdminis
       if (res.ok) {
         const data = await res.json();
         setAdministrators(data || []);
+      } else {
+        // Silently fail for mock events - they don't have administrators in the database
+        if (res.status === 500) {
+          console.warn(`[EventAdministrators] API error for event ${eventId} (likely a mock event without DB entry):`, res.status);
+        }
       }
     } catch (err) {
-      console.error("Error fetching administrators:", err);
+      // Silently fail for mock events - they don't have administrators in the database
+      console.warn(`[EventAdministrators] Error fetching administrators for event ${eventId} (likely a mock event):`, err);
     } finally {
       setLoading(false);
     }

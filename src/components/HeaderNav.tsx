@@ -49,14 +49,15 @@ export default function HeaderNav() {
           </div>
         </div>
         <nav className="hidden md:flex gap-6 lg:gap-8 xl:gap-10 text-sm lg:text-base mt-5 justify-center flex-wrap pb-2">
-          <Link href="/" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10">MAP</Link>
-          <Link href="/eventos" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10">EVENTS</Link>
-          <Link href="/calendario" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10">📅 CALENDAR</Link>
-          <Link href="/trabajos" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10">JOBS</Link>
-          <Link href="/chat" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10">CHAT</Link>
-          <Link href="/comunidad" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10">👥 COMMUNITY</Link>
-          <Link href="/perfil" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10">PROFILE</Link>
-          <Link href="/about" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10">ABOUT US</Link>
+          <Link href="/" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10"><span className="mr-1">🗺️</span> MAP</Link>
+          <Link href="/calendario" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10"><span className="mr-1">📅</span> CALENDAR</Link>
+          <Link href="/trabajos" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10"><span className="mr-1">💼</span> JOBS</Link>
+          <Link href="/chat" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10"><span className="mr-1">💬</span> CHAT</Link>
+          <Link href="/matching" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10"><span className="mr-1">🎯</span> MATCHING</Link>
+          <Link href="/rooms" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10"><span className="mr-1">🏠</span> ROOMS</Link>
+          <Link href="/comunidad" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10"><span className="mr-1">👥</span> COMMUNITY</Link>
+          <Link href="/perfil" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10"><span className="mr-1">👤</span> PROFILE</Link>
+          <Link href="/about" className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10"><span className="mr-1">ℹ️</span> ABOUT US</Link>
         </nav>
       </header>
     );
@@ -128,13 +129,6 @@ export default function HeaderNav() {
               <span className="mr-2">🗺️</span> {t("map")}
             </Link>
             <Link
-              href="/eventos"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-6 py-3.5 text-gls-primary font-semibold hover:bg-green-50/80 dark:hover:bg-slate-700/80 transition-all duration-150 border-b border-gray-200/50 dark:border-slate-700/50 active:bg-green-100 dark:active:bg-slate-600"
-            >
-              <span className="mr-2">📅</span> {t("events")}
-            </Link>
-            <Link
               href="/calendario"
               onClick={() => setMobileMenuOpen(false)}
               className="px-6 py-3.5 text-gls-primary font-semibold hover:bg-green-50/80 dark:hover:bg-slate-700/80 transition-all duration-150 border-b border-gray-200/50 dark:border-slate-700/50 active:bg-green-100 dark:active:bg-slate-600"
@@ -154,6 +148,20 @@ export default function HeaderNav() {
               className="px-6 py-3.5 text-gls-primary font-semibold hover:bg-green-50/80 dark:hover:bg-slate-700/80 transition-all duration-150 border-b border-gray-200/50 dark:border-slate-700/50 active:bg-green-100 dark:active:bg-slate-600"
             >
               <span className="mr-2">💬</span> {t("chat")}
+            </Link>
+            <Link
+              href="/matching"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-6 py-3.5 text-gls-primary font-semibold hover:bg-green-50/80 dark:hover:bg-slate-700/80 transition-all duration-150 border-b border-gray-200/50 dark:border-slate-700/50 active:bg-green-100 dark:active:bg-slate-600"
+            >
+              <span className="mr-2">🎯</span> {locale === 'es' ? 'Matching' : locale === 'de' ? 'Matching' : 'Matching'}
+            </Link>
+            <Link
+              href="/rooms"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-6 py-3.5 text-gls-primary font-semibold hover:bg-green-50/80 dark:hover:bg-slate-700/80 transition-all duration-150 border-b border-gray-200/50 dark:border-slate-700/50 active:bg-green-100 dark:active:bg-slate-600"
+            >
+              <span className="mr-2">🏠</span> {locale === 'es' ? 'Rooms' : locale === 'de' ? 'Räume' : 'Rooms'}
             </Link>
             <Link
               href="/comunidad"
@@ -186,13 +194,7 @@ export default function HeaderNav() {
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 hover-lift" 
           href="/"
         >
-          {t("map")}
-        </Link>
-        <Link 
-          className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
-          href="/eventos"
-        >
-          {t("events")}
+          <span className="mr-1">🗺️</span> {t("map")}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
@@ -204,43 +206,43 @@ export default function HeaderNav() {
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
           href="/trabajos"
         >
-          {t("jobs")}
+          <span className="mr-1">💼</span> {t("jobs")}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
           href="/chat"
         >
-          {t("chat")}
+          <span className="mr-1">💬</span> {t("chat")}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
           href="/matching"
         >
-          {locale === 'es' ? '🎯 Matching' : locale === 'de' ? '🎯 Matching' : '🎯 Matching'}
+          <span className="mr-1">🎯</span> {locale === 'es' ? 'Matching' : locale === 'de' ? 'Matching' : 'Matching'}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
           href="/rooms"
         >
-          {locale === 'es' ? '💬 Rooms' : locale === 'de' ? '💬 Räume' : '💬 Rooms'}
+          <span className="mr-1">🏠</span> {locale === 'es' ? 'Rooms' : locale === 'de' ? 'Räume' : 'Rooms'}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
           href="/comunidad"
         >
-          {locale === 'es' ? '👥 Comunidad' : locale === 'de' ? '👥 Gemeinschaft' : '👥 Community'}
+          <span className="mr-1">👥</span> {locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community'}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
           href="/perfil"
         >
-          {t("profile")}
+          <span className="mr-1">👤</span> {t("profile")}
         </Link>
         <Link 
           className="text-nav hover:text-ecosia-green transition-all duration-200 text-gls-primary font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 active:bg-white/15" 
           href="/about"
         >
-          {t("aboutUs")}
+          <span className="mr-1">ℹ️</span> {t("aboutUs")}
         </Link>
       </nav>
     </header>

@@ -2,12 +2,19 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useI18n } from '@/lib/i18n';
+import { useAuth } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import AuthModal from './AuthModal';
 
 export default function WelcomeIntro() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const { t, locale, setLocale } = useI18n();
+  const { user } = useAuth();
+  const router = useRouter();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("register");
 
   useEffect(() => {
     // Show intro after a short delay
@@ -66,7 +73,18 @@ export default function WelcomeIntro() {
     if (currentStep < features.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      // Cuando es el último paso y se hace clic en "Get Started"
       setIsVisible(false);
+      // Si el usuario está autenticado, redirigir a eventos
+      if (user) {
+        router.push('/eventos');
+      } else {
+        // Si no está autenticado, abrir modal de registro
+        setTimeout(() => {
+          setAuthMode("register");
+          setIsAuthModalOpen(true);
+        }, 300);
+      }
     }
   };
 
@@ -160,6 +178,13 @@ export default function WelcomeIntro() {
           )}
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        mode={authMode}
+      />
     </div>
   );
 }

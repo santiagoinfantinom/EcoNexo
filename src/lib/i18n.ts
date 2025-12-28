@@ -1601,7 +1601,7 @@ const DICTS: Record<Locale, Dict> = {
     exploreCategories: "Explorar Categorías",
     ecoTipsTitle: "Consejos Ecológicos",
     joinCommunity: "Unirse a la Comunidad",
-    readyToMakeDifference: "¿Listo para hacer la diferencia?",
+    readyToMakeDifference: "Vuélvete agente de cambio!",
     readyDescription: "Explora proyectos, únete a eventos y conecta con una comunidad comprometida con el futuro del planeta",
     letsGo: "¡Empezar!",
     viewMap: "Ver Mapa",

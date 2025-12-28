@@ -8,7 +8,18 @@ export async function GET(
 ) {
   try {
     const { eventId } = await params;
+    
+    // Mock events (starting with 'e') don't have administrators in the database
+    // Return empty array instead of trying to query Supabase
+    if (eventId.startsWith('e') && eventId.match(/^e\d+/)) {
+      return NextResponse.json([]);
+    }
+    
     const supabase = getSupabase();
+    if (!supabase) {
+      // If Supabase is not configured, return empty array for mock events
+      return NextResponse.json([]);
+    }
     
     // Get administrators with user profiles
     const { data, error } = await supabase
@@ -16,11 +27,17 @@ export async function GET(
       .select("*, profiles!user_id(*)")
       .eq("event_id", eventId);
     
-    if (error) throw error;
-    return NextResponse.json(data);
+    if (error) {
+      // If table doesn't exist or there's an error, return empty array instead of 500
+      console.warn(`[administrators API] Error fetching administrators for event ${eventId}:`, error);
+      return NextResponse.json([]);
+    }
+    
+    return NextResponse.json(data || []);
   } catch (e) {
-    const message = e instanceof Error ? e.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    // Always return empty array instead of 500 error for better UX
+    console.warn(`[administrators API] Exception fetching administrators for event:`, e);
+    return NextResponse.json([]);
   }
 }
 

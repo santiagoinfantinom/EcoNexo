@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import AuthModal from "./AuthModal";
 import ProjectsCarousel from "./ProjectsCarousel";
 
 interface WelcomeMessageProps {
@@ -9,7 +12,11 @@ interface WelcomeMessageProps {
 
 export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
   const { t, locale } = useI18n();
+  const { user } = useAuth();
+  const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("register");
   const paypalUrl = process.env.NEXT_PUBLIC_PAYPAL_URL || '#';
 
   useEffect(() => {
@@ -119,13 +126,16 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
               <button
                 onClick={() => {
                   handleClose();
-                  // Scroll to the main content area to start exploring
-                  setTimeout(() => {
-                    const mainContent = document.querySelector('.layout-gls-left');
-                    if (mainContent) {
-                      mainContent.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }, 100);
+                  // Si el usuario está autenticado, redirigir a eventos
+                  if (user) {
+                    router.push('/eventos');
+                  } else {
+                    // Si no está autenticado, abrir modal de registro
+                    setTimeout(() => {
+                      setAuthMode("register");
+                      setIsAuthModalOpen(true);
+                    }, 300);
+                  }
                 }}
                 className="btn-gls-primary px-8 py-3 text-lg"
               >
@@ -185,6 +195,13 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
           </div>
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        mode={authMode}
+      />
     </div>
   );
 }
