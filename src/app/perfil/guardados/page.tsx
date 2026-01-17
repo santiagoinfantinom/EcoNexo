@@ -53,7 +53,7 @@ export default function SavedPage() {
   return (
     <div className="min-h-screen bg-modern">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6">Guardados</h1>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Guardados</h1>
 
         <div className="flex gap-2 mb-6">
           <button onClick={() => setFilter('all')} className={`px-3 py-1 rounded ${filter==='all'?'bg-slate-900 text-white':'border text-slate-700 dark:text-slate-300'}`}>Todos</button>

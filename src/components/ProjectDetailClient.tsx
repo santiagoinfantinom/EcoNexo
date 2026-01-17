@@ -54,7 +54,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
             return;
           }
         }
-      } catch {}
+      } catch { }
 
       // 2) If logged in + Supabase, reconcile and fetch from DB
       if (!user || !isSupabaseConfigured()) return;
@@ -71,7 +71,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
             localStorage.removeItem('econexo:saved');
           }
         }
-      } catch {}
+      } catch { }
 
       const { data } = await supabase
         .from('favorites')
@@ -90,19 +90,28 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
     if (!user || !isSupabaseConfigured()) {
       try {
         const raw = typeof window !== 'undefined' ? localStorage.getItem('econexo:saved') : null;
-        const list: { type: 'project' | 'event'; id: string }[] = raw ? JSON.parse(raw) : [];
+        const list: any[] = raw ? JSON.parse(raw) : [];
         const idx = list.findIndex((i) => i.type === 'project' && i.id === id);
         if (idx >= 0) {
           list.splice(idx, 1);
           setFavorite(false);
-          try { trackEvent('save_item', { type: 'project', id, action: 'remove', auth: 0 }); } catch {}
+          try { trackEvent('save_item', { type: 'project', id, action: 'remove', auth: 0 }); } catch { }
         } else {
-          list.push({ type: 'project', id });
+          list.push({
+            type: 'project',
+            id,
+            name: details.name,
+            title: details.name,
+            image_url: details.image,
+            category: details.category,
+            city: details.city,
+            country: details.country
+          });
           setFavorite(true);
-          try { trackEvent('save_item', { type: 'project', id, action: 'add', auth: 0 }); } catch {}
+          try { trackEvent('save_item', { type: 'project', id, action: 'add', auth: 0 }); } catch { }
         }
         if (typeof window !== 'undefined') localStorage.setItem('econexo:saved', JSON.stringify(list));
-      } catch {}
+      } catch { }
       return;
     }
 
@@ -116,13 +125,13 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
         .eq('item_type', 'project')
         .eq('item_id', id);
       setFavorite(false);
-      try { trackEvent('save_item', { type: 'project', id, action: 'remove', auth: 1 }); } catch {}
+      try { trackEvent('save_item', { type: 'project', id, action: 'remove', auth: 1 }); } catch { }
     } else {
       const { error } = await supabase
         .from('favorites')
         .insert({ user_id: user.id, item_type: 'project', item_id: id });
       if (!error) setFavorite(true);
-      try { trackEvent('save_item', { type: 'project', id, action: 'add', auth: 1 }); } catch {}
+      try { trackEvent('save_item', { type: 'project', id, action: 'add', auth: 1 }); } catch { }
     }
   };
   const progress = Math.min(100, Math.round((details.budgetRaisedEur / details.budgetGoalEur) * 100));
@@ -205,15 +214,16 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center sm:justify-start">
             <Link href={`/projects/${details.id}/voluntariado`} className="bg-green-700 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-green-800 transition-colors shadow-md hover:shadow-lg text-center text-sm sm:text-base">{t("beVolunteer")}</Link>
             <a href={paypalLink} target="_blank" rel="noopener noreferrer" className="bg-blue-600 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg border-2 border-blue-700 text-center text-sm sm:text-base">{t("donatePaypal")}</a>
+            <a href="https://www.klarna.com" target="_blank" rel="noopener noreferrer" className="bg-pink-500 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-pink-600 transition-colors shadow-md hover:shadow-lg border-2 border-pink-600 text-center text-sm sm:text-base">{t("donateKlarna")}</a>
             <a href={stripeLink} target="_blank" rel="noopener noreferrer" className="bg-indigo-600 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg border-2 border-indigo-700 text-center text-sm sm:text-base">{t("donateStripe")}</a>
+            <button onClick={toggleFavorite} className={`rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold transition-colors shadow-md hover:shadow-lg text-sm sm:text-base ${favorite ? 'bg-amber-500 text-white hover:bg-amber-600 border-2 border-amber-600' : 'bg-white text-gray-800 border-2 border-gray-300 hover:bg-gray-50'}`}>
+              {favorite ? '★ ' + t('saved') : '☆ ' + t('save')}
+            </button>
             {details.info_url && (
               <a href={details.info_url} target="_blank" rel="noopener noreferrer" className="bg-gray-700 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-gray-800 transition-colors shadow-md hover:shadow-lg border-2 border-gray-800 text-center text-sm sm:text-base">
                 {t("moreInfo")}
               </a>
             )}
-            <button onClick={toggleFavorite} className={`rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold transition-colors shadow-md hover:shadow-lg text-sm sm:text-base ${favorite ? 'bg-amber-500 text-white hover:bg-amber-600 border-2 border-amber-600' : 'bg-white text-gray-800 border-2 border-gray-300 hover:bg-gray-50'}`}>
-              {favorite ? '★ ' + t('saved') : '☆ ' + t('save')}
-            </button>
           </div>
         </div>
       </div>

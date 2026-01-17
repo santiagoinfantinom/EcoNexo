@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, categoryLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { PROJECTS } from "@/data/projects";
 
@@ -17,7 +17,7 @@ export default function FeaturedProjectsSlider() {
       console.warn(`Project missing required fields (id or name):`, project);
       return false;
     }
-    
+
     // If project has end date and it's in the past, exclude it
     if (project.endsAt) {
       const endDate = new Date(project.endsAt);
@@ -35,45 +35,45 @@ export default function FeaturedProjectsSlider() {
       console.error('Invalid project in slider:', project);
       return null;
     }
-    
-    const title = locale === 'en' && project.name_en 
-      ? project.name_en 
-      : locale === 'de' && project.name_de 
-      ? project.name_de 
-      : project.name;
-    
-    const description = locale === 'en' && project.description_en 
-      ? project.description_en 
-      : locale === 'de' && project.description_de 
-      ? project.description_de 
-      : project.description || '';
-    
+
+    const title = locale === 'en' && project.name_en
+      ? project.name_en
+      : locale === 'de' && project.name_de
+        ? project.name_de
+        : project.name;
+
+    const description = locale === 'en' && project.description_en
+      ? project.description_en
+      : locale === 'de' && project.description_de
+        ? project.description_de
+        : project.description || '';
+
     // Ensure location fields exist
     const city = project.city || '';
     const country = project.country || '';
     const location = city && country ? `${city}, ${country}` : city || country || '';
-    
+
     // Generate appropriate metric based on project category
     let metric = '';
     const category = (project.category || '').toLowerCase();
     if (category.includes('medio ambiente') || category.includes('environment')) {
-      metric = locale === 'es' ? 'Proyecto ambiental' : locale === 'de' ? 'Umweltprojekt' : 'Environmental project';
+      metric = t('environmentalProject');
     } else if (category.includes('educación') || category.includes('education')) {
-      metric = locale === 'es' ? 'Proyecto educativo' : locale === 'de' ? 'Bildungsprojekt' : 'Educational project';
+      metric = t('educationalProject');
     } else if (category.includes('salud') || category.includes('health')) {
-      metric = locale === 'es' ? 'Servicios de salud' : locale === 'de' ? 'Gesundheitsdienste' : 'Health services';
+      metric = t('healthServices');
     } else if (category.includes('comunidad') || category.includes('community')) {
-      metric = locale === 'es' ? 'Proyecto comunitario' : locale === 'de' ? 'Gemeinschaftsprojekt' : 'Community project';
+      metric = t('communityProject');
     } else if (category.includes('alimentación') || category.includes('food')) {
-      metric = locale === 'es' ? 'Proyecto alimentario' : locale === 'de' ? 'Ernährungsprojekt' : 'Food project';
+      metric = t('foodProject');
     } else {
-      metric = locale === 'es' ? 'Proyecto activo' : locale === 'de' ? 'Aktives Projekt' : 'Active project';
+      metric = t('activeProject');
     }
-    
-    const volunteers = project.spots 
+
+    const volunteers = project.spots
       ? `${project.spots} ${t('volunteersLabel') || 'volunteers'}`
       : `50+ ${t('volunteersLabel') || 'volunteers'}`;
-    
+
     return {
       id: project.id,
       title,
@@ -96,7 +96,7 @@ export default function FeaturedProjectsSlider() {
   // Auto-rotate every 5 seconds
   useEffect(() => {
     if (!isAutoPlaying) return;
-    
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % totalSlides);
     }, 5000);
@@ -139,10 +139,10 @@ export default function FeaturedProjectsSlider() {
           {Array.from({ length: totalSlides }).map((_, slideIndex) => {
             const slideProjects = validFormattedProjects
               .slice(slideIndex * projectsPerView, (slideIndex + 1) * projectsPerView);
-            
+
             // Skip empty slides
             if (slideProjects.length === 0) return null;
-            
+
             return (
               <div
                 key={slideIndex}
@@ -173,7 +173,7 @@ export default function FeaturedProjectsSlider() {
                         </div>
                       )}
                     </div>
-                    
+
                     {/* Header with icon */}
                     <div className="bg-green-500 p-4 text-white">
                       <div className="flex items-center gap-2">
@@ -181,24 +181,24 @@ export default function FeaturedProjectsSlider() {
                         <h3 className="text-lg font-bold line-clamp-2">{project.title}</h3>
                       </div>
                     </div>
-                    
+
                     {/* Content */}
                     <div className="p-6 bg-yellow-50 dark:bg-slate-700">
                       <p className="text-gray-700 dark:text-gray-300 mb-4 text-sm leading-relaxed line-clamp-3">
                         {project.description}
                       </p>
-                      
+
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                           <span>📍</span>
                           <span className="line-clamp-1">{project.location}</span>
                         </div>
-                        
+
                         <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-medium">
                           <span>🍃</span>
                           <span>{project.metric}</span>
                         </div>
-                        
+
                         <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                           <span>👥</span>
                           <span>{project.volunteers}</span>
@@ -225,7 +225,7 @@ export default function FeaturedProjectsSlider() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          
+
           <button
             onClick={goToNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white dark:bg-slate-800 rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover-lift z-10 border border-gray-200 dark:border-slate-700"
@@ -245,11 +245,10 @@ export default function FeaturedProjectsSlider() {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex
+              className={`h-2 rounded-full transition-all duration-300 ${index === currentIndex
                   ? 'w-8 bg-green-600'
                   : 'w-2 bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
-              }`}
+                }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
@@ -258,11 +257,11 @@ export default function FeaturedProjectsSlider() {
 
       {/* Project Counter */}
       <div className="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">
-        {locale === 'es' 
+        {locale === 'es'
           ? `Mostrando ${currentProjects.length} de ${validFormattedProjects.length} proyectos activos`
           : locale === 'de'
-          ? `${currentProjects.length} von ${validFormattedProjects.length} aktiven Projekten angezeigt`
-          : `Showing ${currentProjects.length} of ${validFormattedProjects.length} active projects`
+            ? `${currentProjects.length} von ${validFormattedProjects.length} aktiven Projekten angezeigt`
+            : `Showing ${currentProjects.length} of ${validFormattedProjects.length} active projects`
         }
       </div>
     </div>

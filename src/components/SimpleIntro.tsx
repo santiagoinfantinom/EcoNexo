@@ -10,14 +10,14 @@ export default function SimpleIntro() {
 
   useEffect(() => {
     console.log('🔧 SimpleIntro: useEffect ejecutándose');
-    
+
     // Check if intro has been shown before
     const hasSeenIntro = localStorage.getItem('econexo-intro-shown');
     console.log('🔧 SimpleIntro: hasSeenIntro =', hasSeenIntro);
-    
+
     if (!hasSeenIntro) {
       console.log('🔧 SimpleIntro: Mostrando intro...');
-      
+
       // Show intro immediately (no delay)
       console.log('🔧 SimpleIntro: Mostrando intro inmediatamente');
       setShowIntro(true);
@@ -32,10 +32,15 @@ export default function SimpleIntro() {
       title: t('welcomeIntroLanguageTitle'),
       description: t('welcomeIntroLanguageDescription'),
       buttons: [
-        { label: '🇪🇸 Español', locale: 'es' },
-        { label: '🇬🇧 English', locale: 'en' },
-        { label: '🇩🇪 Deutsch', locale: 'de' }
+        { label: '🇪🇸 Español', locale: 'es' as const },
+        { label: '🇬🇧 English', locale: 'en' as const },
+        { label: '🇩🇪 Deutsch', locale: 'de' as const }
       ]
+    },
+    {
+      icon: '👤',
+      title: t('welcomeIntroProfileTitle'),
+      description: t('welcomeIntroProfileDescription')
     },
     {
       icon: '🗺️',
@@ -56,11 +61,6 @@ export default function SimpleIntro() {
       icon: '💬',
       title: t('welcomeIntroChatTitle'),
       description: t('welcomeIntroChatDescription')
-    },
-    {
-      icon: '👤',
-      title: t('welcomeIntroProfileTitle'),
-      description: t('welcomeIntroProfileDescription')
     }
   ];
 
@@ -92,7 +92,7 @@ export default function SimpleIntro() {
   console.log('🔧 SimpleIntro: RENDERIZANDO MODAL con step =', currentStep);
 
   return (
-    <div 
+    <div
       data-intro-modal="true"
       style={{
         position: 'fixed',
@@ -113,7 +113,7 @@ export default function SimpleIntro() {
         pointerEvents: 'auto'
       }}
     >
-      <div 
+      <div
         style={{
           backgroundColor: 'white',
           borderRadius: '16px',
@@ -143,10 +143,10 @@ export default function SimpleIntro() {
 
         {/* Progress bar */}
         <div style={{ width: '100%', backgroundColor: '#e5e7eb', borderRadius: '8px', height: '8px', marginBottom: '32px' }}>
-          <div 
-            style={{ 
-              backgroundColor: '#10b981', 
-              height: '8px', 
+          <div
+            style={{
+              backgroundColor: '#10b981',
+              height: '8px',
               borderRadius: '8px',
               transition: 'width 0.5s ease',
               width: `${((currentStep + 1) / steps.length) * 100}%`
@@ -158,11 +158,11 @@ export default function SimpleIntro() {
         <div style={{ fontSize: '80px', marginBottom: '24px' }}>
           {currentStepData.icon}
         </div>
-        
+
         <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#111827', marginBottom: '16px' }}>
           {currentStepData.title}
         </h2>
-        
+
         <p style={{ fontSize: '18px', color: '#6b7280', marginBottom: '32px', lineHeight: '1.6' }}>
           {currentStepData.description}
         </p>

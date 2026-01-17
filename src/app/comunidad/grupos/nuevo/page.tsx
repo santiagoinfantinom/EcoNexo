@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useSmartContext } from "@/context/SmartContext";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function NuevoGrupoPage() {
   const { t, locale } = useI18n();
+  const { addPoints, unlockBadge, gamification } = useSmartContext();
   const { user } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -23,18 +25,18 @@ export default function NuevoGrupoPage() {
   const [tagInput, setTagInput] = useState("");
 
   const availableTags = [
-    locale === 'es' ? 'Medio ambiente' : locale === 'de' ? 'Umwelt' : 'Environment',
-    locale === 'es' ? 'Educación' : locale === 'de' ? 'Bildung' : 'Education',
-    locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community',
-    locale === 'es' ? 'Sostenibilidad' : locale === 'de' ? 'Nachhaltigkeit' : 'Sustainability',
-    locale === 'es' ? 'Energía renovable' : locale === 'de' ? 'Erneuerbare Energie' : 'Renewable Energy',
-    locale === 'es' ? 'Reciclaje' : locale === 'de' ? 'Recycling' : 'Recycling',
+    t('environmentTopic'),
+    t('educationTopic'),
+    t('communityTopic'),
+    t('sustainabilityTitle'),
+    'Renewable Energy', // Needs key
+    'Recycling', // Needs key
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
-      setError(locale === 'es' ? 'Debes iniciar sesión' : locale === 'de' ? 'Du musst dich anmelden' : 'You must sign in');
+      setError(t('mustSignInToCreateGroup'));
       return;
     }
 
@@ -54,6 +56,14 @@ export default function NuevoGrupoPage() {
       }
 
       const data = await response.json();
+
+      // Award points for community group creation
+      addPoints(100, locale === 'es' ? 'Crear proyecto comunitario' : 'Create community project');
+      if (!gamification.badges.includes('project_creator')) {
+        unlockBadge('project_creator');
+        addPoints(200, locale === 'es' ? 'Insignia: Creador' : 'Badge: Creator');
+      }
+
       router.push(`/comunidad/grupos/${data.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error creating group");
@@ -78,17 +88,13 @@ export default function NuevoGrupoPage() {
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 max-w-md text-center">
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {locale === 'es'
-              ? 'Debes iniciar sesión para crear un grupo'
-              : locale === 'de'
-              ? 'Du musst dich anmelden, um eine Gruppe zu erstellen'
-              : 'You must sign in to create a group'}
+            {t('mustSignInToCreateGroup')}
           </p>
           <Link
             href="/perfil"
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors inline-block"
           >
-            {locale === 'es' ? 'Iniciar Sesión' : locale === 'de' ? 'Anmelden' : 'Sign In'}
+            {t('signIn')}
           </Link>
         </div>
       </div>
@@ -102,11 +108,11 @@ export default function NuevoGrupoPage() {
           href="/comunidad/grupos"
           className="text-green-600 hover:text-green-700 mb-4 inline-block"
         >
-          ← {locale === 'es' ? 'Volver a Grupos' : locale === 'de' ? 'Zurück zu Gruppen' : 'Back to Groups'}
+          ← {t('backToGroups')}
         </Link>
 
         <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-8">
-          {locale === 'es' ? 'Crear Nuevo Grupo' : locale === 'de' ? 'Neue Gruppe erstellen' : 'Create New Group'}
+          {t('createGroup')}
         </h1>
 
         <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 space-y-6">
@@ -119,7 +125,7 @@ export default function NuevoGrupoPage() {
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {locale === 'es' ? 'Nombre del Grupo' : locale === 'de' ? 'Gruppenname' : 'Group Name'} *
+              {t('groupName')} *
             </label>
             <input
               type="text"
@@ -127,14 +133,14 @@ export default function NuevoGrupoPage() {
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
               className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder={locale === 'es' ? 'Ej: Berlín Sostenible' : locale === 'de' ? 'z.B. Berlin Nachhaltig' : 'e.g. Berlin Sustainable'}
+              placeholder={t('groupNamePh')}
             />
           </div>
 
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {locale === 'es' ? 'Descripción' : locale === 'de' ? 'Beschreibung' : 'Description'} *
+              {t('description')} *
             </label>
             <textarea
               value={formData.description}
@@ -142,7 +148,7 @@ export default function NuevoGrupoPage() {
               required
               rows={4}
               className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder={locale === 'es' ? 'Describe el propósito y objetivos del grupo...' : locale === 'de' ? 'Beschreibe den Zweck und die Ziele der Gruppe...' : 'Describe the purpose and goals of the group...'}
+              placeholder={t('groupDescriptionPh')}
             />
           </div>
 
@@ -150,7 +156,7 @@ export default function NuevoGrupoPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {locale === 'es' ? 'Ciudad' : locale === 'de' ? 'Stadt' : 'City'} *
+                {t('city')} *
               </label>
               <input
                 type="text"
@@ -162,7 +168,7 @@ export default function NuevoGrupoPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {locale === 'es' ? 'País' : locale === 'de' ? 'Land' : 'Country'} *
+                {t('country')} *
               </label>
               <input
                 type="text"
@@ -174,7 +180,7 @@ export default function NuevoGrupoPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {locale === 'es' ? 'Región' : locale === 'de' ? 'Region' : 'Region'}
+                {t('region')}
               </label>
               <input
                 type="text"
@@ -188,7 +194,7 @@ export default function NuevoGrupoPage() {
           {/* Tags */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {locale === 'es' ? 'Etiquetas' : locale === 'de' ? 'Tags' : 'Tags'}
+              {t('tagsLabel')}
             </label>
             <div className="flex flex-wrap gap-2 mb-2">
               {formData.tags.map((tag, idx) => (
@@ -218,7 +224,7 @@ export default function NuevoGrupoPage() {
                     addTag(tagInput);
                   }
                 }}
-                placeholder={locale === 'es' ? 'Agregar etiqueta...' : locale === 'de' ? 'Tag hinzufügen...' : 'Add tag...'}
+                placeholder={t('addTagPh')}
                 className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <button
@@ -226,7 +232,7 @@ export default function NuevoGrupoPage() {
                 onClick={() => addTag(tagInput)}
                 className="px-4 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600"
               >
-                {locale === 'es' ? 'Agregar' : locale === 'de' ? 'Hinzufügen' : 'Add'}
+                {t('add')}
               </button>
             </div>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -258,8 +264,8 @@ export default function NuevoGrupoPage() {
               {locale === 'es'
                 ? 'Grupo público (cualquiera puede unirse)'
                 : locale === 'de'
-                ? 'Öffentliche Gruppe (jeder kann beitreten)'
-                : 'Public group (anyone can join)'}
+                  ? 'Öffentliche Gruppe (jeder kann beitreten)'
+                  : 'Public group (anyone can join)'}
             </label>
           </div>
 
@@ -271,14 +277,14 @@ export default function NuevoGrupoPage() {
               className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-50"
             >
               {loading
-                ? (locale === 'es' ? 'Creando...' : locale === 'de' ? 'Erstellen...' : 'Creating...')
-                : (locale === 'es' ? 'Crear Grupo' : locale === 'de' ? 'Gruppe erstellen' : 'Create Group')}
+                ? t('creatingEllipsis')
+                : t('createGroup')}
             </button>
             <Link
               href="/comunidad/grupos"
               className="px-6 py-3 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors"
             >
-              {locale === 'es' ? 'Cancelar' : locale === 'de' ? 'Abbrechen' : 'Cancel'}
+              {t('cancel')}
             </Link>
           </div>
         </form>

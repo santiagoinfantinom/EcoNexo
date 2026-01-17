@@ -279,7 +279,7 @@ export default function RoomsPage() {
                     type="text"
                     value={roomName}
                     onChange={(e) => setRoomName(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                     placeholder={locale === 'es' ? 'Mi sala privada' : locale === 'de' ? 'Mein privater Raum' : 'My private room'}
                   />
                 </div>
@@ -292,7 +292,7 @@ export default function RoomsPage() {
                     value={roomDescription}
                     onChange={(e) => setRoomDescription(e.target.value)}
                     rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                     placeholder={locale === 'es' ? 'Descripción de la sala...' : locale === 'de' ? 'Raumbeschreibung...' : 'Room description...'}
                   />
                 </div>
@@ -308,7 +308,7 @@ export default function RoomsPage() {
                   <select
                     value={autoDestroyMinutes}
                     onChange={(e) => setAutoDestroyMinutes(parseInt(e.target.value))}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                   >
                     <option value={5}>5 {locale === 'es' ? 'minutos' : locale === 'de' ? 'Minuten' : 'minutes'}</option>
                     <option value={15}>15 {locale === 'es' ? 'minutos' : locale === 'de' ? 'Minuten' : 'minutes'}</option>

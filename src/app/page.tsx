@@ -1,6 +1,6 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
+import { useI18n, categoryLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,13 @@ import EcoTipsBulletPoints from "@/components/EcoTipsBulletPoints";
 import { PROJECTS } from "@/data/projects";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useSmartContext } from "@/context/SmartContext";
+
+// New Smart Components
+import GamificationHub from "@/components/GamificationHub";
+import PreferencesModal from "@/components/PreferencesModal";
+import RecommendedProjects from "@/components/RecommendedProjects";
+import CityLeaderboard from "@/components/CityLeaderboard";
 
 // Dynamic import to avoid SSR issues with Leaflet
 const InteractiveMap = dynamic(
@@ -25,8 +32,8 @@ const InteractiveMap = dynamic(
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               El mapa no está disponible temporalmente.
             </p>
-            <button 
-              onClick={() => window.location.reload()} 
+            <button
+              onClick={() => window.location.reload()}
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
               Recargar página
@@ -59,40 +66,53 @@ export default function Home() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("register");
 
+  // Context Hook
+  const { showOnboarding, completeOnboarding } = useSmartContext();
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 relative">
+
+      {/* Gamification Sidebar */}
+      <GamificationHub />
+
+      {/* Onboarding Modal */}
+      <PreferencesModal
+        isOpen={showOnboarding}
+        onClose={completeOnboarding}
+      />
+
       {/* Hero Section */}
-      <section className="relative py-20 px-4" style={{
+      <section className="relative py-12 sm:py-16 md:py-20 px-4" style={{
         background: 'linear-gradient(135deg, #16a34a 0%, #15803d 25%, #0ea5e9 50%, #0284c7 75%, #0369a1 100%)'
       }}>
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6">
             {t('welcomeMessageTitle')}
           </h1>
-          <p className="text-xl md:text-2xl text-white opacity-95 max-w-4xl mx-auto mb-8">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white opacity-95 max-w-4xl mx-auto mb-6 sm:mb-8 px-2">
             {t('welcomeMessageDescription')}
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <button 
+
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-12 px-4">
+            <button
               onClick={() => setShowMap(!showMap)}
-              className="btn-gls-primary text-lg px-8 py-4"
+              className="btn-gls-primary text-sm sm:text-base md:text-lg px-6 sm:px-8 py-3 sm:py-4 min-h-[44px]"
             >
               {showMap ? t('hideMap') : t('showMap')}
             </button>
-            <Link 
+            <Link
               href="/eventos"
-              className="btn-gls-secondary text-lg px-8 py-4"
+              className="btn-gls-secondary text-sm sm:text-base md:text-lg px-6 sm:px-8 py-3 sm:py-4 min-h-[44px] inline-block text-center"
             >
               {t('exploreEvents')}
             </Link>
-            <Link 
+            <Link
               href="/trabajos"
-              className="btn-gls-secondary text-lg px-8 py-4"
+              className="btn-gls-secondary text-sm sm:text-base md:text-lg px-6 sm:px-8 py-3 sm:py-4 min-h-[44px] inline-block text-center"
             >
               {t('findJobs')}
             </Link>
@@ -101,73 +121,95 @@ export default function Home() {
           <div className="content-separator" />
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
-              <div className="text-3xl font-bold text-green-600 mb-2">500+</div>
-              <div className="text-gray-800 dark:text-white font-medium">{t('activeProjects')}</div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto px-4">
+            <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-4 sm:p-6 shadow-lg">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-1 sm:mb-2">500+</div>
+              <div className="text-sm sm:text-base text-gray-800 dark:text-white font-medium">{t('activeProjects')}</div>
             </div>
-            <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
-              <div className="text-3xl font-bold text-blue-600 mb-2">2,500+</div>
-              <div className="text-gray-800 dark:text-white font-medium">{t('volunteers')}</div>
+            <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-4 sm:p-6 shadow-lg">
+              <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-1 sm:mb-2">2,500+</div>
+              <div className="text-sm sm:text-base text-gray-800 dark:text-white font-medium">{t('volunteers')}</div>
             </div>
-            <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-6 shadow-lg">
-              <div className="text-3xl font-bold text-purple-600 mb-2">50+</div>
-              <div className="text-gray-800 dark:text-white font-medium">{t('cities')}</div>
+            <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-4 sm:p-6 shadow-lg">
+              <div className="text-2xl sm:text-3xl font-bold text-purple-600 mb-1 sm:mb-2">50+</div>
+              <div className="text-sm sm:text-base text-gray-800 dark:text-white font-medium">{t('cities')}</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Interactive Map Section */}
-      {showMap && isClient && typeof window !== 'undefined' && (
-        <section className="py-8 px-6 md:px-10 xl:px-16 bg-white/50 dark:bg-slate-800/50">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-8">
-              🗺️ {t('interactiveMap')}
-            </h2>
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden" style={{ height: "650px", width: "100%" }}>
-              {/* 
-                Map region options:
-                - region="europe" (default)
-                - region="americas" (entire Americas)
-                - region="northAmerica" (USA/Canada/Mexico)
-                - region="southAmerica" (South America)
-                - region="asia" or region="africa"
-                Or use custom: center={[lat, lng]} zoom={level}
-              */}
-              <InteractiveMap projects={PROJECTS} region="europe" />
+      {/* Recommended Projects (Smart Matching) */}
+      <RecommendedProjects />
+
+      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+          {/* Interactive Map Section */}
+          {showMap && isClient && typeof window !== 'undefined' && (
+            <section className="bg-white/50 dark:bg-slate-800/50 rounded-2xl p-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white mb-3 sm:mb-4 px-3 sm:px-4 pt-3 sm:pt-4">
+                🗺️ {t('interactiveMap')}
+              </h2>
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
+                <InteractiveMap projects={PROJECTS} region="europe" />
+              </div>
+            </section>
+          )}
+
+          {/* Featured Projects */}
+          <section className="bg-white/50 dark:bg-slate-800/50 rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                {t('featuredProjects')}
+              </h2>
+              <Link
+                href="/slider-demo"
+                className="text-sm text-green-600 dark:text-green-400 hover:underline opacity-70 hover:opacity-100"
+                title="Ver página de demo del slider"
+              >
+                🔍 Demo
+              </Link>
+            </div>
+            <FeaturedProjectsSlider />
+          </section>
+        </div>
+
+        {/* Sidebar Column: Leaderboard & Categories */}
+        <div className="space-y-8">
+          <CityLeaderboard />
+
+          {/* Categories Mini-Grid */}
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">{t('categories')}</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <Link href="/categorias/medio-ambiente" className="p-3 bg-green-50 dark:bg-slate-700/50 rounded-lg text-center hover:bg-green-100 transition-colors">
+                <div className="text-2xl mb-1">🌱</div>
+                <span className="text-xs font-medium">{categoryLabel('environment', locale)}</span>
+              </Link>
+              <Link href="/categorias/educacion" className="p-3 bg-blue-50 dark:bg-slate-700/50 rounded-lg text-center hover:bg-blue-100 transition-colors">
+                <div className="text-2xl mb-1">📚</div>
+                <span className="text-xs font-medium">{categoryLabel('education', locale)}</span>
+              </Link>
+              <Link href="/categorias/comunidad" className="p-3 bg-purple-50 dark:bg-slate-700/50 rounded-lg text-center hover:bg-purple-100 transition-colors">
+                <div className="text-2xl mb-1">🤝</div>
+                <span className="text-xs font-medium">{categoryLabel('community', locale)}</span>
+              </Link>
+              <Link href="/categorias/salud" className="p-3 bg-red-50 dark:bg-slate-700/50 rounded-lg text-center hover:bg-red-100 transition-colors">
+                <div className="text-2xl mb-1">🏥</div>
+                <span className="text-xs font-medium">{categoryLabel('health', locale)}</span>
+              </Link>
             </div>
           </div>
-        </section>
-      )}
-
-      {/* Featured Projects */}
-      <section className="py-16 px-4 bg-white/50 dark:bg-slate-800/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center gap-4 mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center">
-              {t('featuredProjects')}
-            </h2>
-            <Link
-              href="/slider-demo"
-              className="text-sm text-green-600 dark:text-green-400 hover:underline opacity-70 hover:opacity-100"
-              title="Ver página de demo del slider"
-            >
-              🔍 Demo
-            </Link>
-          </div>
-          <FeaturedProjectsSlider />
         </div>
-      </section>
+      </div>
 
-      {/* Categories */}
+      {/* Categories (Full) */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-12">
             {t('exploreCategories')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link 
+            <Link
               href="/categorias/medio-ambiente"
               className="group bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
             >
@@ -180,7 +222,7 @@ export default function Home() {
               </p>
             </Link>
 
-            <Link 
+            <Link
               href="/categorias/educacion"
               className="group bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
             >
@@ -193,7 +235,7 @@ export default function Home() {
               </p>
             </Link>
 
-            <Link 
+            <Link
               href="/categorias/comunidad"
               className="group bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
             >
@@ -206,7 +248,7 @@ export default function Home() {
               </p>
             </Link>
 
-            <Link 
+            <Link
               href="/categorias/salud"
               className="group bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900 dark:to-red-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
             >
@@ -219,7 +261,7 @@ export default function Home() {
               </p>
             </Link>
 
-            <Link 
+            <Link
               href="/categorias/oceanos"
               className="group bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-900 dark:to-cyan-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
             >
@@ -232,7 +274,7 @@ export default function Home() {
               </p>
             </Link>
 
-            <Link 
+            <Link
               href="/categorias/alimentacion"
               className="group bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300"
             >
@@ -271,7 +313,7 @@ export default function Home() {
             {t('readyDescription')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
+            <button
               onClick={() => {
                 // Si el usuario está autenticado, redirigir a eventos
                 if (user) {
@@ -286,7 +328,7 @@ export default function Home() {
             >
               {t('letsGo')}
             </button>
-            <Link 
+            <Link
               href="/chat"
               className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors"
             >

@@ -5,7 +5,7 @@
 export function getDefaultEventImage(category: string): string {
   // Normalize category name (handle different languages and formats)
   const normalizedCategory = category.toLowerCase().trim();
-  
+
   // Map categories to default Unsplash images
   if (
     normalizedCategory.includes('medio ambiente') ||
@@ -15,7 +15,7 @@ export function getDefaultEventImage(category: string): string {
   ) {
     return 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop';
   }
-  
+
   if (
     normalizedCategory.includes('educación') ||
     normalizedCategory.includes('education') ||
@@ -24,7 +24,7 @@ export function getDefaultEventImage(category: string): string {
   ) {
     return 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop';
   }
-  
+
   if (
     normalizedCategory.includes('salud') ||
     normalizedCategory.includes('health') ||
@@ -33,7 +33,7 @@ export function getDefaultEventImage(category: string): string {
   ) {
     return 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=600&fit=crop';
   }
-  
+
   if (
     normalizedCategory.includes('océanos') ||
     normalizedCategory.includes('oceans') ||
@@ -42,7 +42,7 @@ export function getDefaultEventImage(category: string): string {
   ) {
     return 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop';
   }
-  
+
   if (
     normalizedCategory.includes('alimentación') ||
     normalizedCategory.includes('food') ||
@@ -51,7 +51,7 @@ export function getDefaultEventImage(category: string): string {
   ) {
     return 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&h=600&fit=crop';
   }
-  
+
   if (
     normalizedCategory.includes('comunidad') ||
     normalizedCategory.includes('community') ||
@@ -60,9 +60,9 @@ export function getDefaultEventImage(category: string): string {
   ) {
     return 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&h=600&fit=crop';
   }
-  
-  // Default fallback image (nature/community)
-  return 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&h=600&fit=crop';
+
+  // Default fallback image (local asset)
+  return '/assets/default-event.png';
 }
 
 /**
@@ -70,17 +70,12 @@ export function getDefaultEventImage(category: string): string {
  */
 export function ensureEventImage(event: { image_url?: string | null; category: string; website?: string }): string {
   // If event has explicit image_url, use it
-  if (event.image_url) {
+  if (event.image_url && event.image_url.trim() !== '') {
     return event.image_url;
   }
-  
-  // If event has website, use website preview as fallback
-  if (event.website) {
-    return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(event.website)}?w=800`;
-  }
-  
-  // Otherwise, use default image based on category
-  return getDefaultEventImage(event.category);
+
+  // Otherwise, use default image based on category (which falls back to local asset)
+  return getDefaultEventImage(event.category || '');
 }
 
 

@@ -1,9 +1,10 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, categoryLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { PROJECTS } from "@/data/projects";
 import { ensureEventImage } from "@/lib/eventImages";
+import ImageWithFallback from "@/components/ImageWithFallback";
 
 export default function ProjectsCarousel() {
   const { t, locale } = useI18n();
@@ -80,11 +81,7 @@ export default function ProjectsCarousel() {
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-2xl font-bold text-gls-primary">
-          {locale === 'es'
-            ? 'Proyectos Destacados'
-            : locale === 'de'
-            ? 'Ausgewählte Projekte'
-            : 'Featured Projects'}
+          {t('featuredProjects')}
         </h3>
         <div className="flex gap-2">
           <button
@@ -107,9 +104,8 @@ export default function ProjectsCarousel() {
       {/* Scrollable Carousel */}
       <div
         ref={scrollContainerRef}
-        className={`flex gap-4 overflow-x-auto pb-4 scroll-smooth hide-scrollbar ${
-          isDragging ? 'cursor-grabbing' : 'cursor-grab'
-        } select-none`}
+        className={`flex gap-4 overflow-x-auto pb-4 scroll-smooth hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          } select-none`}
         style={{
           WebkitOverflowScrolling: 'touch',
         }}
@@ -133,18 +129,13 @@ export default function ProjectsCarousel() {
             >
               {/* Project Image */}
               <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
-                {project.image_url ? (
-                  <img
-                    src={imageSrc}
-                    alt={getProjectName(project)}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-6xl">
-                    🌿
-                  </div>
-                )}
+                <ImageWithFallback
+                  src={imageSrc}
+                  alt={getProjectName(project)}
+                  category={project.category}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
               </div>
 
               {/* Project Info */}
@@ -173,7 +164,7 @@ export default function ProjectsCarousel() {
                 {/* Category Badge */}
                 <div className="mt-3">
                   <span className="inline-block px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800 rounded-full text-xs font-medium">
-                    {project.category}
+                    {categoryLabel(project.category, locale)}
                   </span>
                 </div>
               </div>

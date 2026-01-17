@@ -42,26 +42,25 @@ export default function ComunidadPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow mb-8">
-          {locale === 'es' ? '🌍 Comunidad EcoNexo' : locale === 'de' ? '🌍 EcoNexo Gemeinschaft' : '🌍 EcoNexo Community'}
+        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-8">
+          {t('communityPageTitle')}
         </h1>
 
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700">
           {[
-            { id: 'feed', label: locale === 'es' ? '📰 Feed' : locale === 'de' ? '📰 Feed' : '📰 Feed' },
-            { id: 'groups', label: locale === 'es' ? '👥 Grupos' : locale === 'de' ? '👥 Gruppen' : '👥 Groups' },
-            { id: 'mentoring', label: locale === 'es' ? '🎓 Mentoring' : locale === 'de' ? '🎓 Mentoring' : '🎓 Mentoring' },
-            { id: 'marketplace', label: locale === 'es' ? '🛒 Marketplace' : locale === 'de' ? '🛒 Marktplatz' : '🛒 Marketplace' }
+            { id: 'feed', label: t('tabFeed') },
+            { id: 'groups', label: t('tabGroups') },
+            { id: 'mentoring', label: t('tabMentoring') },
+            { id: 'marketplace', label: t('tabMarketplace') }
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors ${
-                activeTab === tab.id
-                  ? 'border-green-600 text-green-600 dark:text-green-400'
-                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
-              }`}
+              className={`px-4 py-2 font-medium border-b-2 transition-colors ${activeTab === tab.id
+                ? 'border-green-600 text-green-600 dark:text-green-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                }`}
             >
               {tab.label}
             </button>
@@ -74,19 +73,19 @@ export default function ComunidadPage() {
           <div className="lg:col-span-2">
             {activeTab === 'feed' && (
               <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4">
-                  {locale === 'es' ? 'Actividad Reciente' : locale === 'de' ? 'Aktuelle Aktivität' : 'Recent Activity'}
+                <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white mb-4">
+                  {t('recentActivity')}
                 </h2>
                 {loading ? (
-                  <div className="text-center py-8">Loading...</div>
+                  <div className="text-center py-8">{t('loading')}</div>
                 ) : feed.length === 0 ? (
-                  <div className="text-center py-8 text-gray-200">
-                    {locale === 'es' ? 'No hay actividad aún' : locale === 'de' ? 'Noch keine Aktivität' : 'No activity yet'}
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    {t('noActivityYet')}
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {feed.map((item) => (
-                      <div key={item.id} className="border-b border-white/30 dark:border-gray-700 pb-4">
+                      <div key={item.id} className="border-b border-gray-200 dark:border-gray-700 pb-4">
                         <div className="flex items-start gap-3">
                           <img
                             src={item.user_avatar || '/logo-econexo.png'}
@@ -94,12 +93,12 @@ export default function ComunidadPage() {
                             className="w-12 h-12 rounded-full"
                           />
                           <div className="flex-1">
-                            <p className="text-sm text-gray-100 dark:text-gray-300">
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
                               <span className="font-semibold">{item.user_name}</span>{' '}
-                              {locale === 'es' ? 'creó un evento' : locale === 'de' ? 'hat ein Event erstellt' : 'created an event'}
+                              {t('createdAnEvent')}
                             </p>
-                            <p className="font-medium mt-1 text-white">{item.activity_data.event_name}</p>
-                            <p className="text-xs text-gray-300 mt-1">
+                            <p className="font-medium mt-1 text-gray-800 dark:text-white">{item.activity_data.event_name}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                               {new Date(item.created_at).toLocaleDateString(locale)}
                             </p>
                           </div>
@@ -114,65 +113,57 @@ export default function ComunidadPage() {
             {activeTab === 'groups' && (
               <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-white">
-                    {locale === 'es' ? 'Grupos Locales' : locale === 'de' ? 'Lokale Gruppen' : 'Local Groups'}
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white">
+                    {t('localGroupsTitle')}
                   </h2>
                   <Link
                     href="/comunidad/grupos/nuevo"
                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                   >
-                    {locale === 'es' ? '+ Crear Grupo' : locale === 'de' ? '+ Gruppe erstellen' : '+ Create Group'}
+                    {t('createGroupBtn')}
                   </Link>
                 </div>
-                <p className="text-gray-100 dark:text-gray-300 mb-4">
-                  {locale === 'es' 
-                    ? 'Conecta con comunidades locales en tu ciudad o región'
-                    : locale === 'de'
-                    ? 'Verbinde dich mit lokalen Gemeinschaften in deiner Stadt oder Region'
-                    : 'Connect with local communities in your city or region'}
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  {t('localGroupsDesc')}
                 </p>
                 <Link
                   href="/comunidad/grupos"
                   className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
-                  {locale === 'es' ? 'Ver Todos los Grupos' : locale === 'de' ? 'Alle Gruppen anzeigen' : 'View All Groups'}
+                  {t('viewAllGroups')}
                 </Link>
               </div>
             )}
 
             {activeTab === 'mentoring' && (
               <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4">
-                  {locale === 'es' ? 'Mentoring' : locale === 'de' ? 'Mentoring' : 'Mentoring'}
+                <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white mb-4">
+                  {t('mentoringTitle')}
                 </h2>
-                <p className="text-gray-100 dark:text-gray-300 mb-4">
-                  {locale === 'es'
-                    ? 'Conecta con expertos o encuentra aprendices en sostenibilidad'
-                    : locale === 'de'
-                    ? 'Verbinde dich mit Experten oder finde Lernende in Nachhaltigkeit'
-                    : 'Connect with experts or find learners in sustainability'}
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  {t('mentoringDesc')}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Link
                     href="/comunidad/mentoring/buscar-mentor"
                     className="p-4 border-2 border-green-500 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 bg-white/70 dark:bg-slate-800/60"
                   >
-                    <h3 className="font-bold text-white mb-2">
-                      {locale === 'es' ? '🔍 Buscar Mentor' : locale === 'de' ? '🔍 Mentor suchen' : '🔍 Find Mentor'}
+                    <h3 className="font-bold text-gray-800 dark:text-white mb-2">
+                      {t('findMentorBtn')}
                     </h3>
-                    <p className="text-sm text-gray-100 dark:text-gray-300">
-                      {locale === 'es' ? 'Encuentra un experto que te guíe' : locale === 'de' ? 'Finde einen Experten, der dich führt' : 'Find an expert to guide you'}
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {t('findMentorDesc')}
                     </p>
                   </Link>
                   <Link
                     href="/comunidad/mentoring/convertirse-mentor"
                     className="p-4 border-2 border-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-white/70 dark:bg-slate-800/60"
                   >
-                    <h3 className="font-bold text-white mb-2">
-                      {locale === 'es' ? '🎓 Convertirse en Mentor' : locale === 'de' ? '🎓 Mentor werden' : '🎓 Become a Mentor'}
+                    <h3 className="font-bold text-gray-800 dark:text-white mb-2">
+                      {t('becomeMentorBtn')}
                     </h3>
-                    <p className="text-sm text-gray-100 dark:text-gray-300">
-                      {locale === 'es' ? 'Comparte tu conocimiento' : locale === 'de' ? 'Teile dein Wissen' : 'Share your knowledge'}
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {t('shareKnowledgeDesc')}
                     </p>
                   </Link>
                 </div>
@@ -182,22 +173,18 @@ export default function ComunidadPage() {
             {activeTab === 'marketplace' && (
               <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-white">
-                    {locale === 'es' ? 'Marketplace Ecológico' : locale === 'de' ? 'Öko-Marktplatz' : 'Eco Marketplace'}
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white">
+                    {t('marketplaceTitle')}
                   </h2>
                   <Link
                     href="/comunidad/marketplace/nuevo"
                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                   >
-                    {locale === 'es' ? '+ Publicar' : locale === 'de' ? '+ Veröffentlichen' : '+ Publish'}
+                    {t('publishBtn')}
                   </Link>
                 </div>
-                <p className="text-gray-100 dark:text-gray-300">
-                  {locale === 'es'
-                    ? 'Compra, vende o intercambia productos y servicios sostenibles'
-                    : locale === 'de'
-                    ? 'Kaufe, verkaufe oder tausche nachhaltige Produkte und Dienstleistungen'
-                    : 'Buy, sell or exchange sustainable products and services'}
+                <p className="text-gray-600 dark:text-gray-300">
+                  {t('marketplaceDesc')}
                 </p>
               </div>
             )}
@@ -207,43 +194,43 @@ export default function ComunidadPage() {
           <div className="space-y-6">
             {/* Stats Card */}
             <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-extrabold text-white mb-4 drop-shadow">
-                {locale === 'es' ? 'Tu Impacto' : locale === 'de' ? 'Dein Impact' : 'Your Impact'}
+              <h3 className="text-xl font-extrabold text-gray-800 dark:text-white mb-4 drop-shadow-sm">
+                {t('yourImpact')}
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-100 dark:text-gray-300">Karma</span>
-                  <span className="font-bold text-white">0</span>
+                  <span className="text-gray-600 dark:text-gray-300">{t('karma')}</span>
+                  <span className="font-bold text-gray-800 dark:text-white">0</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-100 dark:text-gray-300">
-                    {locale === 'es' ? 'Reputación' : locale === 'de' ? 'Reputation' : 'Reputation'}
+                  <span className="text-gray-600 dark:text-gray-300">
+                    {t('reputation')}
                   </span>
-                  <span className="font-bold text-white">0.0</span>
+                  <span className="font-bold text-gray-800 dark:text-white">0.0</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-100 dark:text-gray-300">
-                    {locale === 'es' ? 'Seguidores' : locale === 'de' ? 'Follower' : 'Followers'}
+                  <span className="text-gray-600 dark:text-gray-300">
+                    {t('followers')}
                   </span>
-                  <span className="font-bold text-white">0</span>
+                  <span className="font-bold text-gray-800 dark:text-white">0</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Links */}
             <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-extrabold text-white mb-4 drop-shadow">
-                {locale === 'es' ? 'Enlaces Rápidos' : locale === 'de' ? 'Schnelllinks' : 'Quick Links'}
+              <h3 className="text-xl font-extrabold text-gray-800 dark:text-white mb-4 drop-shadow-sm">
+                {t('quickLinks')}
               </h3>
               <div className="space-y-2">
                 <Link href="/perfil" className="block text-green-600 hover:underline">
-                  {locale === 'es' ? 'Mi Perfil' : locale === 'de' ? 'Mein Profil' : 'My Profile'}
+                  {t('myProfileLabel')}
                 </Link>
                 <Link href="/eventos" className="block text-green-600 hover:underline">
-                  {locale === 'es' ? 'Eventos' : locale === 'de' ? 'Events' : 'Events'}
+                  {t('events')}
                 </Link>
                 <Link href="/proyectos" className="block text-green-600 hover:underline">
-                  {locale === 'es' ? 'Proyectos' : locale === 'de' ? 'Projekte' : 'Projects'}
+                  {t('adminProjects')}
                 </Link>
               </div>
             </div>

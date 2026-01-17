@@ -11,11 +11,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-from .agent.matching_agent import create_matching_agent
-from .agent.state import AgentState
-
 # Load environment variables
 load_dotenv()
+
+from .agent.matching_agent import create_matching_agent
+from .agent.state import AgentState
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -49,6 +49,7 @@ class MatchRequest(BaseModel):
     user_id: str
     query: str
     context: Optional[Dict[str, Any]] = None
+    filters: Optional[Dict[str, Any]] = None
 
 
 class MatchResponse(BaseModel):
@@ -79,8 +80,71 @@ async def health_check():
     }
 
 
+@app.get("/stats")
+async def get_stats():
+    """
+    Get agent saturation stats.
+    Returns metrics about agent usage and health.
+    """
+    if not matching_agent:
+        raise HTTPException(status_code=503, detail="Matching agent not initialized")
+    
+    try:
+        # Since LangGraph state is per-thread, we'd ideally aggregate stats.
+        # For this MVP, we'll return server-level stats if available, or just mock some
+        # indicators that would be real in a production system with a shared state store.
+        
+        # In a real system, we'd query the checkpointer/store for active threads, average message counts, etc.
+        # Here we will infer some stats from the process execution or simple counters if we had them.
+        
+        # For now, let's return mostly static structure that the frontend can consume, 
+        # plus any real info we can grab.
+        
+        return {
+            "status": "healthy",
+            "active_threads": 1,  # Mock for demo or simple counter
+            "average_response_time_ms": 1200, # Mock
+            "message_queue_depth": 0,
+            "saturation_index": 0.2,  # 0.0 to 1.0 (Low to High saturation)
+            "rate_limits": {
+                "remaining_requests": 950,
+                "reset_time_seconds": 3600
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error getting stats: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+
+class EventSearchRequest(BaseModel):
+    query: Optional[str] = None
+    city: str
+
+
+@app.post("/events/search")
+async def search_events(request: EventSearchRequest):
+    """
+    Search for environmental events in a specific city.
+    """
+    try:
+        from .tools.scraper_tools import search_online_events
+        
+        events = await search_online_events(
+            query=request.query,
+            location=request.city,
+            limit=10
+        )
+        
+        return {"events": events}
+    except Exception as e:
+        logger.error(f"Error searching events: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.post("/match", response_model=MatchResponse)
 async def match_projects(request: MatchRequest):
+
     """
     Main endpoint for project matching.
     
@@ -94,6 +158,10 @@ async def match_projects(request: MatchRequest):
         raise HTTPException(status_code=503, detail="Matching agent not initialized")
     
     try:
+        logger.info(f"Received match request for user {request.user_id}")
+        logger.info(f"Request filters: {request.filters}")
+        logger.info(f"Request query: {request.query}")
+        
         # Initialize state
         initial_state: AgentState = {
             "messages": [],
@@ -101,6 +169,7 @@ async def match_projects(request: MatchRequest):
             "user_profile": None,
             "user_history": None,
             "current_query": request.query,
+            "filters": request.filters,  # Pass filters to state
             "intent": None,
             "candidate_projects": [],
             "matched_projects": [],

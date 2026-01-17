@@ -45,7 +45,7 @@ export class GoogleOAuthService {
     if (typeof window !== 'undefined') {
       const currentOrigin = window.location.origin;
       const correctRedirectUri = `${currentOrigin}/auth/google/callback`;
-      
+
       // Si el redirectUri no coincide con el dominio actual, corregirlo
       if (this.redirectUri !== correctRedirectUri) {
         console.warn('⚠️ Redirect URI incorrecto detectado, corrigiendo...');
@@ -54,12 +54,12 @@ export class GoogleOAuthService {
         this.redirectUri = correctRedirectUri;
       }
     }
-    
+
     console.log('🚀 authenticate() llamado - INICIO');
     console.log('📍 this.clientId:', this.clientId);
     console.log('📍 this.redirectUri (CORREGIDO):', this.redirectUri);
     console.log('📍 window.location.origin:', typeof window !== 'undefined' ? window.location.origin : 'SERVER');
-    
+
     try {
       // Check if we should use demo mode
       if (this.clientId === 'demo-client-id') {
@@ -68,7 +68,7 @@ export class GoogleOAuthService {
       }
 
       console.log('📍 Creando URL de Google OAuth...');
-      
+
       // CRÍTICO: SIEMPRE calcular el redirect_uri directamente desde window.location.origin
       // No confiar en ningún valor previo, caché, o configuración
       let finalRedirectUri: string;
@@ -86,7 +86,7 @@ export class GoogleOAuthService {
         finalRedirectUri = this.redirectUri;
         console.warn('⚠️ Ejecutándose en servidor, usando redirectUri del constructor:', finalRedirectUri);
       }
-      
+
       // Verificación final: asegurar que el redirect_uri es válido
       if (!finalRedirectUri || finalRedirectUri.includes('econexo.app')) {
         console.error('❌ ERROR CRÍTICO: redirect_uri inválido detectado:', finalRedirectUri);
@@ -95,7 +95,7 @@ export class GoogleOAuthService {
           console.log('✅ Corregido a:', finalRedirectUri);
         }
       }
-      
+
       // Create Google OAuth URL
       const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
       authUrl.searchParams.set('client_id', this.clientId);
@@ -118,11 +118,11 @@ export class GoogleOAuthService {
       ].join(' '));
       authUrl.searchParams.set('access_type', 'offline');
       authUrl.searchParams.set('prompt', 'consent');
-      
+
       // Generate state parameter for security
       const state = Math.random().toString(36).substring(2, 15);
       authUrl.searchParams.set('state', state);
-      
+
       // Store state in sessionStorage for verification
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('google_oauth_state', state);
@@ -131,11 +131,11 @@ export class GoogleOAuthService {
 
       // Logging detallado para debugging - hacer múltiples logs para que se vean
       const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'SERVER';
-      
+
       console.log('📍 Llegamos a la sección de logging detallado');
       console.log('📍 typeof window:', typeof window);
       console.log('📍 currentOrigin:', currentOrigin);
-      
+
       // Logs múltiples y visibles
       console.log('═══════════════════════════════════════════════════════');
       console.log('🔐 REDIRECTING TO GOOGLE OAUTH');
@@ -148,7 +148,7 @@ export class GoogleOAuthService {
       console.log('📍 Full URL:', authUrl.toString());
       console.log('📍 redirect_uri parameter in URL:', authUrl.searchParams.get('redirect_uri'));
       console.log('═══════════════════════════════════════════════════════');
-      
+
       // Verificación crítica: asegurar que estamos usando el dominio correcto
       if (typeof window !== 'undefined' && !finalRedirectUri.includes(window.location.hostname)) {
         console.error('═══════════════════════════════════════════════════════');
@@ -157,13 +157,13 @@ export class GoogleOAuthService {
         console.error('   Dominio esperado:', window.location.origin);
         console.error('   Hostname actual:', window.location.hostname);
         console.error('═══════════════════════════════════════════════════════');
-        
+
         // Forzar corrección
         finalRedirectUri = `${window.location.origin}/auth/google/callback`;
         authUrl.searchParams.set('redirect_uri', finalRedirectUri);
         console.log('✅ Redirect URI corregido a:', finalRedirectUri);
       }
-      
+
       // Verificación adicional: asegurar que no contiene econexo.app
       if (finalRedirectUri.includes('econexo.app') && typeof window !== 'undefined') {
         console.error('❌ ERROR: redirect_uri contiene econexo.app, corrigiendo...');
@@ -171,34 +171,34 @@ export class GoogleOAuthService {
         authUrl.searchParams.set('redirect_uri', finalRedirectUri);
         console.log('✅ Redirect URI corregido a:', finalRedirectUri);
       }
-      
+
       // Logging final antes de redirigir
       console.log('✅ Redirect URI verificado correctamente');
       console.log('🚀 Redirigiendo a Google OAuth AHORA...');
-      
+
       // Verify we're in a browser environment
       if (typeof window === 'undefined') {
         console.error('❌ window is undefined - cannot redirect');
-        return { 
-          success: false, 
-          error: 'No se puede redirigir fuera del navegador' 
+        return {
+          success: false,
+          error: 'No se puede redirigir fuera del navegador'
         };
       }
-      
+
       // Redirect to Google OAuth INMEDIATAMENTE
       try {
         console.log('📍 Ejecutando window.location.href =', authUrl.toString());
         console.log('📍 URL completa:', authUrl.toString());
-        
+
         // Redirigir inmediatamente
         window.location.href = authUrl.toString();
-        
+
         // No esperar nada más, la redirección ya comenzó
         return { success: true };
       } catch (redirectError) {
         console.error('❌ Error al redirigir:', redirectError);
-        return { 
-          success: false, 
+        return {
+          success: false,
           error: 'Error al redirigir a Google: ' + (redirectError instanceof Error ? redirectError.message : String(redirectError))
         };
       }
@@ -233,7 +233,7 @@ export class GoogleOAuthService {
         city: 'Madrid',
         country: 'Spain'
       }));
-      
+
       // Also store profile data directly
       localStorage.setItem('econexo:profile', JSON.stringify({
         full_name: mockUser.name,
@@ -276,7 +276,7 @@ export class GoogleOAuthService {
       // For development, simulate successful authentication
       if (this.clientId === 'demo-client-id' || !process.env.GOOGLE_CLIENT_SECRET) {
         console.log('Using demo mode for Google OAuth');
-        
+
         // Simulate user data
         const mockUser = {
           id: 'demo-user-' + Date.now(),
@@ -300,7 +300,7 @@ export class GoogleOAuthService {
             city: 'Madrid',
             country: 'Spain'
           }));
-          
+
           // Also store profile data directly
           localStorage.setItem('econexo:profile', JSON.stringify({
             full_name: mockUser.name,
@@ -340,7 +340,7 @@ export class GoogleOAuthService {
       });
 
       const tokens = await tokenResponse.json();
-      
+
       if (tokens.error) {
         return {
           success: false,
@@ -376,7 +376,7 @@ export class GoogleOAuthService {
           locale: userInfo.locale || 'en',
           verified_email: userInfo.verified_email || true,
         }));
-        
+
         // Also store profile data directly
         localStorage.setItem('econexo:profile', JSON.stringify({
           full_name: userInfo.name,
@@ -420,7 +420,7 @@ export class OutlookOAuthService {
   constructor(config: OAuthConfig['outlook']) {
     this.clientId = config.clientId;
     this.redirectUri = config.redirectUri;
-    
+
     this.msalInstance = new PublicClientApplication({
       auth: {
         clientId: this.clientId,
@@ -432,7 +432,7 @@ export class OutlookOAuthService {
       },
     });
   }
-  
+
   private async ensureInitialized(): Promise<void> {
     if (!this.initialized) {
       await this.msalInstance.initialize();
@@ -446,7 +446,7 @@ export class OutlookOAuthService {
       // TODO: Remove this once a valid Outlook Client ID is configured
       if (this.clientId === 'demo-client-id' || !this.clientId || this.clientId === 'your_outlook_client_id_here') {
         console.log('Using demo mode for Outlook OAuth');
-        
+
         // Simulate user data
         const mockUser = {
           id: 'demo-user-' + Date.now(),
@@ -458,8 +458,12 @@ export class OutlookOAuthService {
           provider: 'outlook' as const,
         };
 
+
         // Store user data in localStorage for profile
         if (typeof window !== 'undefined') {
+          // Store demo user temporarily for callback
+          sessionStorage.setItem('outlook_demo_user', JSON.stringify(mockUser));
+
           localStorage.setItem('econexo_user', JSON.stringify(mockUser));
           localStorage.setItem('oauth_data', JSON.stringify({
             name: mockUser.name,
@@ -469,7 +473,7 @@ export class OutlookOAuthService {
             locale: 'es',
             verified_email: true,
           }));
-          
+
           // Also store profile data directly
           localStorage.setItem('econexo:profile', JSON.stringify({
             full_name: mockUser.name,
@@ -488,10 +492,10 @@ export class OutlookOAuthService {
             skills: 'C#, .NET, Azure, TypeScript, Angular'
           }));
 
-          // Redirect to profile
+          // Redirect to callback page
           setTimeout(() => {
-            window.location.href = '/perfil';
-          }, 500);
+            window.location.href = '/auth/outlook/callback';
+          }, 100);
         }
 
         return {
@@ -507,7 +511,7 @@ export class OutlookOAuthService {
 
       // Initialize MSAL before using it
       await this.ensureInitialized();
-      
+
       const loginRequest = {
         scopes: ['openid', 'profile', 'email', 'User.Read'],
         prompt: 'select_account',
@@ -516,12 +520,12 @@ export class OutlookOAuthService {
 
       // Use redirect instead of popup
       await this.msalInstance.loginRedirect(loginRequest);
-      
+
       // If we get here, redirect has started
       return { success: true };
     } catch (error: any) {
       console.error('Outlook OAuth error:', error);
-      
+
       return {
         success: false,
         error: 'Error al iniciar autenticación con Outlook. Por favor, intenta de nuevo.',
@@ -531,11 +535,45 @@ export class OutlookOAuthService {
 
   async handleRedirect(): Promise<OAuthResult> {
     try {
-      // Initialize MSAL before using it
+      // Check if we have a demo user in sessionStorage first
+      if (typeof window !== 'undefined') {
+        const demoUser = sessionStorage.getItem('outlook_demo_user');
+        if (demoUser) {
+          sessionStorage.removeItem('outlook_demo_user');
+          const mockUser = JSON.parse(demoUser);
+          return {
+            success: true,
+            user: mockUser,
+          };
+        }
+      }
+
+      // Check if we're in demo mode first
+      if (this.clientId === 'demo-client-id' || !this.clientId || this.clientId === 'your_outlook_client_id_here') {
+        console.log('Using demo mode for Outlook OAuth callback');
+
+        // Simulate user data
+        const mockUser = {
+          id: 'demo-user-' + Date.now(),
+          email: 'demo.outlook@econexo.app',
+          name: 'Demo User (Outlook)',
+          given_name: 'Demo',
+          family_name: 'User',
+          picture: '/logo-econexo.png',
+          provider: 'outlook' as const,
+        };
+
+        return {
+          success: true,
+          user: mockUser,
+        };
+      }
+
+      // Initialize MSAL before using it (only for real OAuth)
       await this.ensureInitialized();
-      
+
       const response = await this.msalInstance.handleRedirectPromise();
-      
+
       if (response && response.account) {
         return {
           success: true,
@@ -635,19 +673,19 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
   configPromise = (async () => {
     // CRÍTICO: En el cliente, SIEMPRE usar window.location.origin, sin importar qué
     // venga del API o de las variables de entorno
-    const siteUrl = typeof window !== 'undefined' 
+    const siteUrl = typeof window !== 'undefined'
       ? window.location.origin  // SIEMPRE usar el dominio actual del navegador en cliente
       : (process.env.NEXT_PUBLIC_SITE_URL || 'https://econexo.app');  // En servidor, usar env var
-    
+
     try {
       // Try to get from API endpoint (works in both server and client)
       const response = await fetch('/api/config/oauth');
       if (response.ok) {
         const data = await response.json();
-        
+
         // Use API value or fallback para Client ID
         const googleClientId = data.googleClientId || FALLBACK_GOOGLE_CLIENT_ID;
-        
+
         // IMPORTANTE: siteUrl ya está calculado arriba usando window.location.origin en cliente
         cachedConfig = {
           google: {
@@ -659,7 +697,7 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
             redirectUri: `${siteUrl}/auth/outlook/callback`,
           },
         };
-        
+
         const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'SERVER';
         console.log('✅ OAuth Config loaded from API:', {
           googleClientId: cachedConfig.google.clientId === 'demo-client-id' ? 'NOT CONFIGURED' : 'CONFIGURED',
@@ -670,7 +708,7 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
           usingCurrentOrigin: typeof window !== 'undefined',
           matchesCurrentOrigin: typeof window !== 'undefined' ? cachedConfig.google.redirectUri.includes(window.location.hostname) : 'N/A',
         });
-        
+
         return cachedConfig;
       }
     } catch (error) {
@@ -680,7 +718,7 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
     // Fallback: use environment variables or hardcoded value
     // siteUrl ya está calculado arriba usando window.location.origin en cliente
     const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || FALLBACK_GOOGLE_CLIENT_ID;
-    
+
     cachedConfig = {
       google: {
         clientId: googleClientId,
@@ -691,7 +729,7 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
         redirectUri: `${siteUrl}/auth/outlook/callback`,
       },
     };
-    
+
     const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'SERVER';
     console.log('✅ OAuth Config using fallback:', {
       googleClientId: cachedConfig.google.clientId === 'demo-client-id' ? 'NOT CONFIGURED' : 'CONFIGURED',
@@ -702,7 +740,7 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
       usingCurrentOrigin: typeof window !== 'undefined',
       matchesCurrentOrigin: typeof window !== 'undefined' ? cachedConfig.google.redirectUri.includes(window.location.hostname) : 'N/A',
     });
-    
+
     return cachedConfig;
   })();
 
@@ -716,9 +754,9 @@ export async function createOAuthService(): Promise<OAuthService> {
 
 // Synchronous version for backwards compatibility (will use fallback)
 export function createOAuthServiceSync(): OAuthService {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
     (typeof window !== 'undefined' ? window.location.origin : 'https://econexo.app');
-  
+
   const config: OAuthConfig = {
     google: {
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || 'demo-client-id',

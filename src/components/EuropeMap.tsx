@@ -94,11 +94,11 @@ interface InteractiveMapProps {
   zoom?: number;
 }
 
-export default function InteractiveMap({ 
-  projects, 
+export default function InteractiveMap({
+  projects,
   region = 'europe',
   center,
-  zoom 
+  zoom
 }: InteractiveMapProps) {
   // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
   // This is required by React's Rules of Hooks
@@ -116,7 +116,7 @@ export default function InteractiveMap({
   const [frequencyFilters, setFrequencyFilters] = useState<{ once: boolean; regular: boolean; permanent: boolean }>({ once: true, regular: true, permanent: true });
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  
+
   // ALL useEffect hooks MUST be called before any conditional returns
   useEffect(() => {
     setIsMounted(true);
@@ -125,7 +125,7 @@ export default function InteractiveMap({
       initializeLeafletIcons();
     }
   }, []);
-  
+
   // Listen to external center events from the page-level search bar
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -139,7 +139,7 @@ export default function InteractiveMap({
     window.addEventListener("econexo:center", onCenter as EventListener);
     return () => window.removeEventListener("econexo:center", onCenter as EventListener);
   }, []);
-  
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const handle = () => {
@@ -171,8 +171,8 @@ export default function InteractiveMap({
       if (!p.startsAt && !p.endsAt) return false;
       const start = p.startsAt ? new Date(p.startsAt) : now;
       const end = p.endsAt ? new Date(p.endsAt) : now;
-      const startDay = new Date(now); startDay.setHours(0,0,0,0);
-      const endDay = new Date(now); endDay.setHours(23,59,59,999);
+      const startDay = new Date(now); startDay.setHours(0, 0, 0, 0);
+      const endDay = new Date(now); endDay.setHours(23, 59, 59, 999);
       return (start <= endDay) && (end >= startDay);
     };
     const isPermanent = (p: Project) => Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
@@ -226,11 +226,11 @@ export default function InteractiveMap({
       cancelled = true;
     };
   }, [heatOn, filteredProjects]);
-  
+
   // Determine center and zoom from props or region preset
   const mapCenter = center || MAP_REGIONS[region].center;
   const mapZoom = zoom ?? MAP_REGIONS[region].zoom;
-  
+
   // NOW we can do conditional rendering AFTER all hooks are called
   if (!isMounted || typeof window === 'undefined') {
     return (
@@ -245,9 +245,9 @@ export default function InteractiveMap({
 
   const handleCenterOnLocation = () => {
     if (!("geolocation" in navigator)) {
-      setGeoError(locale === 'es' ? "Geolocation no está disponible en este dispositivo." : 
-                 locale === 'de' ? "Geolocation ist auf diesem Gerät nicht verfügbar." : 
-                 "Geolocation is not available on this device.");
+      setGeoError(locale === 'es' ? "Geolocation no está disponible en este dispositivo." :
+        locale === 'de' ? "Geolocation ist auf diesem Gerät nicht verfügbar." :
+          "Geolocation is not available on this device.");
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -262,12 +262,12 @@ export default function InteractiveMap({
       (err) => {
         if (err.code === err.PERMISSION_DENIED) {
           setGeoError(locale === 'es' ? "Para centrar en tu ubicación, concede permiso de localización al navegador." :
-                     locale === 'de' ? "Um auf deinen Standort zu zentrieren, gewähre dem Browser Standortberechtigung." :
-                     "To center on your location, grant location permission to the browser.");
+            locale === 'de' ? "Um auf deinen Standort zu zentrieren, gewähre dem Browser Standortberechtigung." :
+              "To center on your location, grant location permission to the browser.");
         } else {
           setGeoError(locale === 'es' ? "No se pudo obtener tu ubicación." :
-                     locale === 'de' ? "Dein Standort konnte nicht ermittelt werden." :
-                     "Could not get your location.");
+            locale === 'de' ? "Dein Standort konnte nicht ermittelt werden." :
+              "Could not get your location.");
         }
       },
       { enableHighAccuracy: true, timeout: 8000 }
@@ -337,278 +337,278 @@ export default function InteractiveMap({
 
   return (
     <>
-    <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
-    <MapContainer
-      center={mapCenter}
-      zoom={mapZoom}
-      scrollWheelZoom={true}
-      zoomControl={false}
-      style={{ height: "100%", width: "100%", display: "block", position: "relative" }}
-      whenReady={() => {
-        // fuerza el render correcto dentro del contenedor circular
-        setTimeout(() => mapRef.current?.invalidateSize(), 50);
-        setTimeout(() => mapRef.current?.invalidateSize(), 300);
-        setTimeout(() => mapRef.current?.invalidateSize(), 1000);
-      }}
-    >
-      {/* Bridge to capture map instance safely */}
-      {/** @ts-ignore */}
-      <SetMapRef onReady={(m: LeafletMap) => (mapRef.current = m)} />
-      
-      {/* Map Layers */}
-      <MapLayers />
-      
-      {/* Individual markers */}
-      {filteredProjects.map((p) => {
-        const freq = getFrequency(p);
-        const icon = createGradientIcon(freq);
-        return (
-          <Marker key={p.id} position={[p.lat, p.lng]} icon={icon}>
-          <Popup>
-            <div className="grid gap-1">
-              {p && (p as any).image_url && (
-                <img src={(p as any).image_url} alt="Project" className="mb-2 rounded w-full max-w-[220px] h-auto" />
-              )}
-              <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
-              <div className="text-xs text-gray-600">{locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}</div>
-              {p.address && (
-                <div className="text-xs text-gray-600">{p.address}</div>
-              )}
-              {(p.participants !== undefined || p.spots !== undefined) && (
-                <div className="text-xs">
-                  {p.participants !== undefined && (<span className="mr-2">👥 {p.participants}</span>)}
-                  {p.spots !== undefined && (<span>🪑 {p.spots}</span>)}
-                </div>
-              )}
-              <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
-              <div className="text-xs">
-                {t("frequency")}: {freq==='once' ? t("once") : freq==='regular' ? t("regular") : t("permanent")}
-              </div>
-              {p.spots !== undefined && (
-                <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
-              )}
-              <div className="flex gap-2 mt-1">
-                <Link href={`/projects/${p.id}`} className="text-green-700 underline text-sm">
-                  {t("viewDetails")}
-                </Link>
-                {(p as any).info_url && (
-                  <a href={(p as any).info_url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline text-sm">
-                    {t("moreInfo")}
-                  </a>
-                )}
-              </div>
+      <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
+        <MapContainer
+          center={mapCenter}
+          zoom={mapZoom}
+          scrollWheelZoom={true}
+          zoomControl={false}
+          style={{ height: "100%", width: "100%", display: "block", position: "relative" }}
+          whenReady={() => {
+            // fuerza el render correcto dentro del contenedor circular
+            setTimeout(() => mapRef.current?.invalidateSize(), 50);
+            setTimeout(() => mapRef.current?.invalidateSize(), 300);
+            setTimeout(() => mapRef.current?.invalidateSize(), 1000);
+          }}
+        >
+          {/* Bridge to capture map instance safely */}
+          {/** @ts-ignore */}
+          <SetMapRef onReady={(m: LeafletMap) => (mapRef.current = m)} />
+
+          {/* Map Layers */}
+          <MapLayers />
+
+          {/* Individual markers */}
+          {filteredProjects.map((p) => {
+            const freq = getFrequency(p);
+            const icon = createGradientIcon(freq);
+            return (
+              <Marker key={p.id} position={[p.lat, p.lng]} icon={icon}>
+                <Popup>
+                  <div className="grid gap-1">
+                    {p && (p as any).image_url && (
+                      <img src={(p as any).image_url} alt="Project" className="mb-2 rounded w-full max-w-[220px] h-auto" />
+                    )}
+                    <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
+                    <div className="text-xs text-gray-600">{locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}</div>
+                    {p.address && (
+                      <div className="text-xs text-gray-600">{p.address}</div>
+                    )}
+                    {(p.participants !== undefined || p.spots !== undefined) && (
+                      <div className="text-xs">
+                        {p.participants !== undefined && (<span className="mr-2">👥 {p.participants}</span>)}
+                        {p.spots !== undefined && (<span>🪑 {p.spots}</span>)}
+                      </div>
+                    )}
+                    <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
+                    <div className="text-xs">
+                      {t("frequency")}: {freq === 'once' ? t("once") : freq === 'regular' ? t("regular") : t("permanent")}
+                    </div>
+                    {p.spots !== undefined && (
+                      <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
+                    )}
+                    <div className="flex gap-2 mt-1">
+                      <Link href={`/projects/${p.id}`} className="text-green-700 underline text-sm">
+                        {t("viewDetails")}
+                      </Link>
+                      {(p as any).info_url && (
+                        <a href={(p as any).info_url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline text-sm">
+                          {t("moreInfo")}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MapContainer>
+
+        {/* Controles superpuestos - VISIBLES */}
+        {/* Top Controls Bar */}
+        <div className="absolute top-4 left-4 right-4 z-[5000] flex justify-between items-start pointer-events-none">
+          {/* Map Filters */}
+          <div className="pointer-events-auto flex items-center gap-2">
+            <MapSearch allProjects={projects} onResults={setBaseFilteredProjects} />
+            <MapFilters
+              allProjects={projects}
+              onFilterChange={setBaseFilteredProjects}
+              onCenterOnLocation={handleCenterOnLocation}
+            />
+            {/* Quick Category chips (moved to bottom overlay) */}
+            {/* Frequency legend & filter */}
+            <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
+              {([
+                { key: 'once', labelEs: 'Una vez', labelEn: 'One-time', labelDe: 'Einmalig', color: '#ef4444' },
+                { key: 'regular', labelEs: 'Regular', labelEn: 'Regular', labelDe: 'Regelmäßig', color: '#3b82f6' },
+                { key: 'permanent', labelEs: 'Permanente', labelEn: 'Permanent', labelDe: 'Dauerhaft', color: '#16a34a' },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.key}
+                  className={`px-2 py-1 rounded text-xs border flex items-center gap-1 ${frequencyFilters[opt.key] ? 'bg-black text-white border-black' : 'text-black border-black'}`}
+                  onClick={() => setFrequencyFilters((prev) => ({ ...prev, [opt.key]: !prev[opt.key] }))}
+                  title={locale === 'es' ? opt.labelEs : locale === 'de' ? opt.labelDe : opt.labelEn}
+                >
+                  <span className="inline-block w-3 h-3 rounded-full" style={{ background: opt.key === 'once' ? 'linear-gradient(135deg, #f97316, #ef4444)' : opt.key === 'regular' ? 'linear-gradient(135deg, #06b6d4, #3b82f6)' : 'linear-gradient(135deg, #22c55e, #10b981)' }} />
+                  <span>{locale === 'es' ? opt.labelEs : locale === 'de' ? opt.labelDe : opt.labelEn}</span>
+                </button>
+              ))}
             </div>
-          </Popup>
-        </Marker>
-        );
-      })}
-    </MapContainer>
-    
-    {/* Controles superpuestos - VISIBLES */}
-    {/* Top Controls Bar */}
-    <div className="absolute top-4 left-4 right-4 z-[5000] flex justify-between items-start pointer-events-none">
-      {/* Map Filters */}
-      <div className="pointer-events-auto flex items-center gap-2">
-        <MapSearch allProjects={projects} onResults={setBaseFilteredProjects} />
-        <MapFilters 
-          allProjects={projects}
-          onFilterChange={setBaseFilteredProjects}
-          onCenterOnLocation={handleCenterOnLocation}
-        />
-        {/* Quick Category chips (moved to bottom overlay) */}
-        {/* Frequency legend & filter */}
-        <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
-          {([
-            { key: 'once', labelEs: 'Una vez', labelEn: 'One-time', labelDe: 'Einmalig', color: '#ef4444' },
-            { key: 'regular', labelEs: 'Regular', labelEn: 'Regular', labelDe: 'Regelmäßig', color: '#3b82f6' },
-            { key: 'permanent', labelEs: 'Permanente', labelEn: 'Permanent', labelDe: 'Dauerhaft', color: '#16a34a' },
-          ] as const).map((opt) => (
-            <button
-              key={opt.key}
-              className={`px-2 py-1 rounded text-xs border flex items-center gap-1 ${frequencyFilters[opt.key] ? 'bg-black text-white border-black' : 'text-black border-black'}`}
-              onClick={() => setFrequencyFilters((prev) => ({ ...prev, [opt.key]: !prev[opt.key] }))}
-              title={locale==='es'?opt.labelEs:locale==='de'?opt.labelDe:opt.labelEn}
-            >
-              <span className="inline-block w-3 h-3 rounded-full" style={{ background: opt.key==='once' ? 'linear-gradient(135deg, #f97316, #ef4444)' : opt.key==='regular' ? 'linear-gradient(135deg, #06b6d4, #3b82f6)' : 'linear-gradient(135deg, #22c55e, #10b981)' }} />
-              <span>{locale==='es'?opt.labelEs:locale==='de'?opt.labelDe:opt.labelEn}</span>
-            </button>
-          ))}
+            {/* Events toggle */}
+            <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
+              <button className={`px-2 py-1 rounded text-xs border ${filterMode === 'all' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('all')}>
+                {locale === 'de' ? 'Alle' : locale === 'en' ? 'All' : 'Todos'}
+              </button>
+              <button className={`px-2 py-1 rounded text-xs border ${filterMode === 'today' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('today')}>
+                {locale === 'de' ? 'Heute' : locale === 'en' ? 'Today' : 'Hoy'}
+              </button>
+              <button className={`px-2 py-1 rounded text-xs border ${filterMode === 'permanent' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('permanent')}>
+                {locale === 'de' ? 'Dauerhaft' : locale === 'en' ? 'Permanent' : 'Permanentes'}
+              </button>
+            </div>
+            {/* Heatmap toggle */}
+            <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1 ml-2">
+              <button className={`px-2 py-1 rounded text-xs border ${heatOn ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setHeatOn((v) => !v)}>
+                {heatOn ? (locale === 'de' ? 'Heatmap an' : 'Heatmap On') : (locale === 'de' ? 'Heatmap aus' : 'Heatmap Off')}
+              </button>
+            </div>
+          </div>
+          {/* Right Controls (calendar button removed) */}
+          <div className="flex gap-2 pointer-events-auto" />
         </div>
-        {/* Events toggle */}
-        <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
-          <button className={`px-2 py-1 rounded text-xs border ${filterMode==='all' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('all')}>
-            {locale==='de'?'Alle':locale==='en'?'All':'Todos'}
-          </button>
-          <button className={`px-2 py-1 rounded text-xs border ${filterMode==='today' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('today')}>
-            {locale==='de'?'Heute':locale==='en'?'Today':'Hoy'}
-          </button>
-          <button className={`px-2 py-1 rounded text-xs border ${filterMode==='permanent' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('permanent')}>
-            {locale==='de'?'Dauerhaft':locale==='en'?'Permanent':'Permanentes'}
-          </button>
-        </div>
-        {/* Heatmap toggle */}
-        <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1 ml-2">
-          <button className={`px-2 py-1 rounded text-xs border ${heatOn ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setHeatOn((v)=>!v)}>
-            {heatOn ? (locale==='de'?'Heatmap an':'Heatmap On') : (locale==='de'?'Heatmap aus':'Heatmap Off')}
-          </button>
-        </div>
-      </div>
-      {/* Right Controls (calendar button removed) */}
-      <div className="flex gap-2 pointer-events-auto" />
-    </div>
 
-    {/* Botón de ubicación (esquina inferior derecha) - Mejorado y más visible */}
-    <div className={`pointer-events-auto absolute bottom-20 right-4 transition-all duration-300 z-[1500] opacity-100`}>
-      <button
-        onClick={handleCenterOnLocation}
-        className="px-4 py-2 rounded-full bg-blue-600 text-white shadow-lg flex items-center gap-2 text-sm font-semibold hover:bg-blue-700 hover:shadow-xl hover:scale-105 transition-all duration-200 border-2 border-white"
-        title={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
-        aria-label={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
-      >
-        <span className="text-lg">📍</span>
-        <span className="hidden sm:inline">{locale === 'de' ? 'Standort' : locale === 'es' ? 'Ubicación' : 'Location'}</span>
-      </button>
-      {geoError && (
-        <div className="absolute top-full mt-2 left-0 p-3 bg-red-500 text-white text-sm rounded-lg shadow-xl max-w-xs whitespace-normal z-[1600]">
-          {geoError}
-        </div>
-      )}
-    </div>
-
-    {/* Bottom Category Chips */}
-    <div className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-4 z-[2500]">
-      <div className="flex items-center gap-1 bg-white/90 rounded-full px-2 py-2 shadow-md max-w-[88vw] overflow-x-auto">
-        {Array.from(new Set(projects.map((p) => p.category))).map((cat) => {
-          const active = selectedCategories.includes(cat);
-          return (
-            <button
-              key={cat}
-              className={`px-3 py-1.5 rounded-full text-xs border whitespace-nowrap ${active ? 'bg-black text-white border-black' : 'text-black border-black'}`}
-              onClick={() => setSelectedCategories((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat])}
-              title={categoryLabel(cat as any, locale as any)}
-            >
-              {categoryLabel(cat as any, locale as any)}
-            </button>
-          );
-        })}
-        {selectedCategories.length > 0 && (
+        {/* Botón de ubicación (esquina inferior derecha) - Mejorado y más visible */}
+        <div className={`pointer-events-auto absolute bottom-20 right-4 transition-all duration-300 z-[1500] opacity-100`}>
           <button
-            className="ml-1 px-3 py-1.5 rounded-full text-xs border text-black border-black"
-            onClick={() => setSelectedCategories([])}
-            title={locale==='es'?'Limpiar':locale==='de'?'Zurücksetzen':'Clear'}
+            onClick={handleCenterOnLocation}
+            className="px-4 py-2 rounded-full bg-blue-600 text-white shadow-lg flex items-center gap-2 text-sm font-semibold hover:bg-blue-700 hover:shadow-xl hover:scale-105 transition-all duration-200 border-2 border-white"
+            title={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
+            aria-label={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
           >
-            {locale==='es'?'Limpiar':locale==='de'?'Zurücksetzen':'Clear'}
+            <span className="text-lg">📍</span>
+            <span className="hidden sm:inline">{locale === 'de' ? 'Standort' : locale === 'es' ? 'Ubicación' : 'Location'}</span>
           </button>
-        )}
-      </div>
-    </div>
+          {geoError && (
+            <div className="absolute top-full mt-2 left-0 p-3 bg-red-500 text-white text-sm rounded-lg shadow-xl max-w-xs whitespace-normal z-[1600]">
+              {geoError}
+            </div>
+          )}
+        </div>
 
-    {/* Pan Controls */}
-    <div className={`pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-2 transition-all duration-300 z-[3000] opacity-100`}>
-      <button
-        className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-        onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
-        title={locale === 'es' ? "Arriba" : 
-               locale === 'de' ? "Nach oben" : 
-               "Up"}
-        aria-label={locale === 'es' ? "Arriba" : 
-                   locale === 'de' ? "Nach oben" : 
-                   "Up"}
-      >
-        ↑
-      </button>
-      <div className="flex gap-2">
-        <button
-          className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-          onClick={() => mapRef.current?.panBy([-100, 0], { animate: true })}
-          title={locale === 'es' ? "Izquierda" : 
-                 locale === 'de' ? "Nach links" : 
-                 "Left"}
-          aria-label={locale === 'es' ? "Izquierda" : 
-                     locale === 'de' ? "Nach links" : 
-                     "Left"}
-        >
-          ←
-        </button>
-        <button
-          className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-          onClick={() => mapRef.current?.panBy([100, 0], { animate: true })}
-          title={locale === 'es' ? "Derecha" : 
-                 locale === 'de' ? "Nach rechts" : 
-                 "Right"}
-          aria-label={locale === 'es' ? "Derecha" : 
-                     locale === 'de' ? "Nach rechts" : 
-                     "Right"}
-        >
-          →
-        </button>
-      </div>
-      <button
-        className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-        onClick={() => mapRef.current?.panBy([0, 100], { animate: true })}
-        title={locale === 'es' ? "Abajo" : 
-               locale === 'de' ? "Nach unten" : 
-               "Down"}
-        aria-label={locale === 'es' ? "Abajo" : 
-                   locale === 'de' ? "Nach unten" : 
-                   "Down"}
-      >
-        ↓
-      </button>
-    </div>
+        {/* Bottom Category Chips */}
+        <div className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-4 z-[2500]">
+          <div className="flex items-center gap-1 bg-white/90 rounded-full px-2 py-2 shadow-md max-w-[88vw] overflow-x-auto">
+            {Array.from(new Set(projects.map((p) => p.category))).map((cat) => {
+              const active = selectedCategories.includes(cat);
+              return (
+                <button
+                  key={cat}
+                  className={`px-3 py-1.5 rounded-full text-xs border whitespace-nowrap ${active ? 'bg-black text-white border-black' : 'text-black border-black'}`}
+                  onClick={() => setSelectedCategories((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat])}
+                  title={categoryLabel(cat as any, locale as any)}
+                >
+                  {categoryLabel(cat as any, locale as any)}
+                </button>
+              );
+            })}
+            {selectedCategories.length > 0 && (
+              <button
+                className="ml-1 px-3 py-1.5 rounded-full text-xs border text-black border-black"
+                onClick={() => setSelectedCategories([])}
+                title={locale === 'es' ? 'Limpiar' : locale === 'de' ? 'Zurücksetzen' : 'Clear'}
+              >
+                {locale === 'es' ? 'Limpiar' : locale === 'de' ? 'Zurücksetzen' : 'Clear'}
+              </button>
+            )}
+          </div>
+        </div>
 
-    {/* Zoom Controls */}
-    <div className={`pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-3 transition-all duration-300 z-[3000] opacity-100`}>
-      <button
-        className="h-12 w-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-green-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-        onClick={() => mapRef.current?.zoomIn()}
-        title={locale === 'es' ? "Acercar" : 
-               locale === 'de' ? "Hineinzoomen" : 
-               "Zoom in"}
-        aria-label={locale === 'es' ? "Acercar" : 
-                   locale === 'de' ? "Hineinzoomen" : 
-                   "Zoom in"}
-      >
-        +
-      </button>
-      <button
-        className="h-12 w-12 rounded-full bg-red-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-red-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-        onClick={() => mapRef.current?.zoomOut()}
-        title={locale === 'es' ? "Alejar" : 
-               locale === 'de' ? "Herauszoomen" : 
-               "Zoom out"}
-        aria-label={locale === 'es' ? "Alejar" : 
-                   locale === 'de' ? "Herauszoomen" : 
-                   "Zoom out"}
-      >
-        −
-      </button>
-    </div>
+        {/* Pan Controls */}
+        <div className={`pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-2 transition-all duration-300 z-[3000] opacity-100`}>
+          <button
+            className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+            onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
+            title={locale === 'es' ? "Arriba" :
+              locale === 'de' ? "Nach oben" :
+                "Up"}
+            aria-label={locale === 'es' ? "Arriba" :
+              locale === 'de' ? "Nach oben" :
+                "Up"}
+          >
+            ↑
+          </button>
+          <div className="flex gap-2">
+            <button
+              className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+              onClick={() => mapRef.current?.panBy([-100, 0], { animate: true })}
+              title={locale === 'es' ? "Izquierda" :
+                locale === 'de' ? "Nach links" :
+                  "Left"}
+              aria-label={locale === 'es' ? "Izquierda" :
+                locale === 'de' ? "Nach links" :
+                  "Left"}
+            >
+              ←
+            </button>
+            <button
+              className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+              onClick={() => mapRef.current?.panBy([100, 0], { animate: true })}
+              title={locale === 'es' ? "Derecha" :
+                locale === 'de' ? "Nach rechts" :
+                  "Right"}
+              aria-label={locale === 'es' ? "Derecha" :
+                locale === 'de' ? "Nach rechts" :
+                  "Right"}
+            >
+              →
+            </button>
+          </div>
+          <button
+            className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+            onClick={() => mapRef.current?.panBy([0, 100], { animate: true })}
+            title={locale === 'es' ? "Abajo" :
+              locale === 'de' ? "Nach unten" :
+                "Down"}
+            aria-label={locale === 'es' ? "Abajo" :
+              locale === 'de' ? "Nach unten" :
+                "Down"}
+          >
+            ↓
+          </button>
+        </div>
+
+        {/* Zoom Controls */}
+        <div className={`pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-3 transition-all duration-300 z-[3000] opacity-100`}>
+          <button
+            className="h-12 w-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-green-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+            onClick={() => mapRef.current?.zoomIn()}
+            title={locale === 'es' ? "Acercar" :
+              locale === 'de' ? "Hineinzoomen" :
+                "Zoom in"}
+            aria-label={locale === 'es' ? "Acercar" :
+              locale === 'de' ? "Hineinzoomen" :
+                "Zoom in"}
+          >
+            +
+          </button>
+          <button
+            className="h-12 w-12 rounded-full bg-red-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-red-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
+            onClick={() => mapRef.current?.zoomOut()}
+            title={locale === 'es' ? "Alejar" :
+              locale === 'de' ? "Herauszoomen" :
+                "Zoom out"}
+            aria-label={locale === 'es' ? "Alejar" :
+              locale === 'de' ? "Herauszoomen" :
+                "Zoom out"}
+          >
+            −
+          </button>
+        </div>
 
 
-    {/* Asegurar que popups estén por encima de controles */}
-    <style jsx>{`
+        {/* Asegurar que popups estén por encima de controles */}
+        <style jsx>{`
       :global(.leaflet-popup) { z-index: 4000 !important; }
       :global(.leaflet-popup-content-wrapper) { z-index: 4000 !important; }
       :global(.leaflet-popup-tip) { z-index: 4000 !important; }
     `}</style>
-    </div>
+      </div >
 
-    {/* Calendar Modal removed */}
+      {/* Calendar Modal removed */}
     </>
   );
 }
 
 function SetMapRef({ onReady }: { onReady: (m: LeafletMap) => void }) {
-	// Using a nested component to access the react-leaflet map instance
-	// without changing parent signatures.
-	// eslint-disable-next-line react-hooks/rules-of-hooks
-	const map = useMap();
-	// eslint-disable-next-line react-hooks/rules-of-hooks
-	useEffect(() => {
-		onReady(map as unknown as LeafletMap);
-	}, [map, onReady]);
-	return null;
+  // Using a nested component to access the react-leaflet map instance
+  // without changing parent signatures.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const map = useMap();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    onReady(map as unknown as LeafletMap);
+  }, [map, onReady]);
+  return null;
 }
 
 

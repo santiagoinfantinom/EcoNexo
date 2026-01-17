@@ -180,7 +180,7 @@ export default function EcoTips() {
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl max-w-5xl w-full max-h-[85vh] overflow-hidden flex flex-col relative z-10 animate-in zoom-in-95 duration-200">
             <div className="p-6 border-b border-gray-200 dark:border-slate-700">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                   {t("ecoTips")}
                 </h2>
                 <button
@@ -232,7 +232,7 @@ export default function EcoTips() {
                     className="p-4 border border-gray-200 dark:border-slate-700 rounded-lg hover:shadow-md transition-shadow bg-white dark:bg-slate-800 relative"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-base leading-tight pr-2">
+                      <h3 className="font-semibold text-slate-900 dark:text-white text-base leading-tight pr-2">
                         {tip.title}
                       </h3>
                       <div className="flex gap-2 flex-shrink-0">

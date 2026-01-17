@@ -6,6 +6,7 @@ interface MatchRequest {
   user_id: string;
   query: string;
   context?: Record<string, any>;
+  filters?: Record<string, any>;
 }
 
 interface MatchResponse {
@@ -37,7 +38,7 @@ interface MatchResponse {
 export async function POST(req: NextRequest) {
   try {
     const body: MatchRequest = await req.json();
-    
+
     if (!body.user_id || !body.query) {
       return NextResponse.json(
         { error: 'user_id and query are required' },
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
         user_id: body.user_id,
         query: body.query,
         context: body.context || {},
+        filters: body.filters || null,
       }),
     });
 

@@ -219,7 +219,7 @@ export default function IntelligentClustering({
           </button>
         </div>
         {clusteringEnabled && (
-          <div className="mt-2 text-xs text-slate-600 dark:text-slate-400">
+          <div className="mt-2 text-xs text-slate-600 dark:text-slate-300">
             {clusters.length} clusters, {unclusteredEvents.length} individuales
           </div>
         )}

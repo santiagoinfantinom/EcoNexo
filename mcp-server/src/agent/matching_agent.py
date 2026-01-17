@@ -12,19 +12,16 @@ from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
 
 from .state import AgentState
-from ..tools import user_tools, project_tools, matching_tools
+from ..tools import user_tools, project_tools, matching_tools, scraper_tools
 
 logger = logging.getLogger(__name__)
 
-# Initialize Gemini LLM
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-if not GOOGLE_API_KEY:
-    raise ValueError("GOOGLE_API_KEY environment variable is required")
-
+# Initialize LLM with a supported model
+# gemini-pro is deprecated/404ing, using gemini-1.5-flash
 llm = ChatGoogleGenerativeAI(
-    model="gemini-pro",
-    google_api_key=GOOGLE_API_KEY,
-    temperature=0.7,
+    model="gemini-1.5-flash",
+    temperature=0,
+    google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 
@@ -80,12 +77,16 @@ def understand_intent(state: AgentState) -> AgentState:
 - category: list of categories (Medio ambiente, Educación, Salud, Comunidad, Océanos, Alimentación, Tecnología)
 - city: city name (optional)
 - country: country name (optional)
+- skills: list of skills mentioned (e.g. "Python", "React", "Project Management")
+- experience: string describing experience level/details (e.g. "Senior", "Junior", "5 years experience")
 - date_from: start date in ISO format (optional)
 - date_to: end date in ISO format (optional)
 - difficulty: list of difficulty levels (easy, medium, hard) (optional)
 - accessibility: boolean (optional)
 - radius_km: search radius in km (optional)
 - is_refinement: boolean indicating if this is a refinement of previous search
+- search_online_jobs: boolean (true if user asks for online/external jobs, work, remote jobs, or scraped data)
+- search_query: string (concise search terms for job search engine e.g. "Python Developer Remote", "Electrical Engineer Berlin")
 
 Return ONLY valid JSON, no other text."""),
         ("human", "{query}")
@@ -151,17 +152,265 @@ def search_projects(state: AgentState) -> AgentState:
     if intent.get("accessibility") is not None:
         criteria["accessibility"] = intent["accessibility"]
     
-    # Search projects (synchronous wrapper)
-    import asyncio
+    # Search internal projects
     try:
-        loop = asyncio.get_event_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
+        # Use simple string match for demonstration if vector store not available
+        projects = project_tools.search_projects(
+            query=state.get("current_query", ""),
+            category=criteria.get("category"),
+            city=criteria.get("city"),
+            country=criteria.get("country"),
+            lat=criteria.get("lat"),
+            lng=criteria.get("lng"),
+            radius_km=criteria.get("radius_km")
+        )
+        state["candidate_projects"] = projects
+    except Exception as e:
+        logger.error(f"Error searching projects: {e}")
+        state["candidate_projects"] = []
+        
+    return state
+
+
+def search_external_jobs(state: AgentState) -> AgentState:
+    """Node 3.5: Search for external jobs if requested or needed."""
+    logger.info("Searching for external jobs")
     
-    projects = loop.run_until_complete(project_tools.search_projects(criteria))
+    intent = state.get("intent", {})
+    query = state.get("current_query", "")
+    candidate_projects = state.get("candidate_projects", [])
     
-    state["candidate_projects"] = projects
+    # Determine if we should search externally
+    should_search_external = (
+        intent.get("search_online_jobs") or 
+        len(candidate_projects) < 3 or
+        "trabajo" in query.lower() or 
+        "job" in query.lower() or
+        "empleo" in query.lower() or
+        "remote" in query.lower() or
+        "remoto" in query.lower()
+    )
+    
+    if should_search_external:
+        import asyncio
+        profile = state.get("user_profile", {})
+        # Get query terms from explicit filters (priority) or intent
+        filters = state.get("filters") or {}
+        logger.info(f"State filters: {filters}")
+        
+        search_query = ""
+        # Improved location logic: Allow "Remote" AND specific location (e.g. Remote Europe)
+        loc_parts = []
+        if filters.get("isRemote"):
+            loc_parts.append("Remote")
+        
+        if filters.get("location"):
+             loc_parts.append(filters.get("location"))
+        elif not filters.get("isRemote"):
+             # Fallback to profile city ONLY if not searching Remote
+             # (If Remote is checked but no location specified, we want GLOBAL remote, not Remote Madrid)
+             extracted_loc = intent.get("city") or profile.get("location", {}).get("city")
+             if extracted_loc:
+                 loc_parts.append(extracted_loc)
+             
+        location = " ".join(loc_parts)
+
+        # Construct query from explicit filters
+        # Check if ANY filter is active (including salary)
+        if filters and (filters.get("skills") or filters.get("location") or filters.get("isRemote") or (filters.get("salary") and filters.get("salary") != "Any")):
+             parts = []
+             # Add skills as OR group for broader matching
+             if filters.get("skills"):
+                 # Handle if skills is list or string
+                 skills_val = filters["skills"]
+                 skill_list = []
+                 if isinstance(skills_val, list):
+                     skill_list = skills_val
+                 else:
+                     skill_list = [str(skills_val)]
+                 
+                 # Join with OR and wrap in parenthesis
+                 if len(skill_list) > 1:
+                     parts.append(f"({' OR '.join(skill_list)})")
+                 else:
+                     parts.append(skill_list[0])
+             
+             # Add specific keywords from experience level
+             experience = filters.get("experience")
+             if experience and str(experience) != "0":
+                 # Remove "Junior" from parts/query if it was added by skill selection or typed input
+                 # to avoid "Junior ... Junior" redundancy
+                 if int(experience) > 3:
+                     parts.append("Senior")
+                 elif int(experience) <= 1:
+                     parts.append("Junior")
+            
+             # Add salary if present
+             salary = filters.get("salary")
+             if salary and salary != "Any":
+                 parts.append(f"{salary}")
+
+             # Add location/remote to query specific
+             if filters.get("isRemote"):
+                 parts.append("Remote")
+                 
+             # CRITICAL: If no explicit skills filter, allow text query to contribute
+             if not filters.get("skills"):
+                 raw_text = intent.get("search_query") or query
+                 
+                 # Intelligent Fallback Extraction (since LLM might 404)
+                 # If text is long (> 5 words), try to extract keywords instead of using raw text
+                 import re
+                 words = raw_text.split()
+                 if len(words) > 5:
+                     # 1. Extract known tech keywords (case insensitive)
+                     tech_keywords = [
+                         "python", "javascript", "typescript", "react", "node", "django", "flask", 
+                         "fastapi", "java", "c++", "c#", "go", "golang", "rust", "php", "ruby", 
+                         "rails", "aws", "azure", "gcp", "docker", "kubernetes", "sql", "nosql", 
+                         "openai", "llm", "ai", "ml", "machine learning", "deep learning", 
+                         "nlp", "prompt", "engineering", "data", "analyst", "science", 
+                         "frontend", "backend", "fullstack", "devops", "marketing", "sales", 
+                         "design", "product", "manager", "junior", "senior", "lead",
+                         "creativity", "creative", "creatividad", "creativo", "creativa",
+                         "analytical", "analítico", "analítica", "analysis", "análisis", 
+                         "thinking", "pensamiento", "leadership", "liderazgo", 
+                         "communication", "comunicación", "team", "equipo", "proactive", "proactivo",
+                         "resolution", "resolución", "solving", "problem"
+                     ]
+                     extracted = []
+                     
+                     # Check for known keywords
+                     lower_text = raw_text.lower()
+                     for k in tech_keywords:
+                         if k in lower_text:
+                             # Find the actual casing in text if possible, or title case
+                             # Simple regex to find the word boundary matches
+                             if re.search(r'\b' + re.escape(k) + r'\b', lower_text):
+                                 extracted.append(k.title())
+                                 
+                     # 2. Extract capitalized words (heuristic for proper nouns/skills in Spanish too)
+                     # Avoid start of sentence capitalization if it's not a keyword
+                     cap_words = re.findall(r'\b[A-Z][a-zA-Z]+\b', raw_text)
+                     # Filter out common non-keywords if needed, or just add them
+                     # Merge unique
+                     for w in cap_words:
+                         if w.lower() not in [e.lower() for e in extracted] and len(w) > 2:
+                             # Basic filter for common start words
+                             if w.lower() not in ["hola", "tienes", "programo", "estoy", "busco", "necesito", "quiero"]:
+                                 extracted.append(w)
+                                 
+                     if extracted:
+                         parts.insert(0, f"({' OR '.join(extracted)})")
+                     else:
+                          # Fallback to cleaning if extraction failed
+                          cleaned_text = raw_text.strip(".,;:!? ")
+                          parts.insert(0, cleaned_text)
+                 else:
+                     # Short query, just use it cleaned
+                     prefixes = ["ayudame", "ayúdame", "necesito", "busco", "quiero", "no", "tengo", "hola", "hi", "estoy", "buscando", "tienes", "ofertas"]
+                     for p in prefixes:
+                         if raw_text.lower().startswith(p + " "):
+                             raw_text = raw_text[len(p):].strip()
+                         elif raw_text.lower() == p:
+                             raw_text = ""
+                     
+                     cleaned_text = raw_text.strip(".,;:!? ")
+                     if cleaned_text:
+                         parts.insert(0, cleaned_text)
+
+             search_query = " ".join(parts)
+        
+        if not search_query:
+             # Clean the raw query from "Ayudame", "Busco", etc if filters are empty
+             raw_query = intent.get("search_query") or query
+             # Remove common prefixes that confuse the scraper
+             prefixes = ["ayudame", "ayúdame", "necesito", "busco", "quiero", "no", "tengo", "hola", "hi"]
+             # Loop to remove multiple prefixes if present
+             cleaned = False
+             while not cleaned:
+                 cleaned = True
+                 for p in prefixes:
+                     if raw_query.lower().startswith(p + " "):
+                         raw_query = raw_query[len(p):].strip()
+                         cleaned = False # Check again
+                     elif raw_query.lower() == p: # Exact match
+                         raw_query = ""
+             
+             search_query = raw_query.strip(".,;:!? ")
+
+        
+        # If extraction failed or returned nothing useful, clean the raw query manually
+        if not search_query:
+             # Remove common stop words in Spanish/English to leave just keywords
+             # Extensive list to handle verbose user descriptions like "Tengo experiencia en..."
+             stop_words = [
+                 # Core job search fillers
+                 "busco", "quiero", "necesito", "trabajo", "empleo", "puesto", "en", "de", "con", "para", 
+                 "remoto", "remote", "job", "work", "looking", "for", "need", "hiring", "buscar", "ayudar", "ayudas", "puedes", "eso",
+                 "tengo", "experiencia", "experience", "years", "anios", "años", "librerias", "libraries", 
+                 "librerías", "como", "me", "interesan", "interesa", "los", "las", "el", "la", "un", "una", 
+                 "sectores", "sociales", "social", "sector", "industry", "knowledge", "conocimiento",
+                 "habilidades", "skills", "soy", "i", "am", "have", "with", "and", "y", "o", "or",
+                 "mas", "más", "desarrollo", "nivel",
+                 
+                 # Common accented words and errors (tilde variations)
+                 "mi", "mí", "tu", "tú", "el", "él", "se", "sé", "si", "sí", "de", "dé", "te", "té", "mas", "más", "aun", "aún",
+                 "que", "qué", "cual", "cuál", "quien", "quién", "como", "cómo", "cuanto", "cuánto", "cuando", "cuándo", "donde", "dónde",
+                 "este", "esté", "esta", "está", "ese", "ése", "esa", "ésa", "aquel", "aquél", "solo", "sólo",
+                 "tambien", "también", "ademas", "además", "asi", "así", "aqui", "aquí", "alli", "allí", "ahi", "ahí", "aca", "acá",
+                 "despues", "después", "segun", "según", "quizas", "quizás", "atraves", "través", "podria", "podría", "deberia", "debería",
+                 "gustaria", "gustaría", "seria", "sería", "habia", "había", "estaria", "estaría", "tendria", "tendría",
+                 "informacion", "información", "codigo", "código", "pagina", "página", "numero", "número", 
+                 "area", "área", "dia", "día", "dias", "días", "ultimo", "último", "ultima", "última",
+                 "practicas", "prácticas", "tecnologia", "tecnología", "tecnico", "técnico", "analisis", "análisis",
+                 "busqueda", "búsqueda", "interes", "interés", "inglés", "ingles", "español", "espanol",
+                 "exito", "éxito", "facil", "fácil", "dificil", "difícil", "rapido", "rápido", "util", "útil",
+                 "comun", "común", "jovenes", "jóvenes", "imagenes", "imágenes", "examenes", "exámenes"
+             ]
+             words = query.lower().replace(".", " ").replace(",", " ").split()
+             keywords = [w for w in words if w not in stop_words]
+             
+             # If still too long, apply heuristics
+             if len(keywords) > 5:
+                 # Heuristic 1: Keep capitalized words from original query (often technologies)
+                 # We look at original query to check capitalization
+                 original_words = query.replace(".", " ").replace(",", " ").split()
+                 caps = [w for w in original_words if w and w[0].isupper() and w.lower() not in stop_words]
+                 if len(caps) >= 1:
+                     search_query = " ".join(caps)
+                 else:
+                     # Heuristic 2: Just take the first 3 cleaned keywords
+                     search_query = " ".join(keywords[:3])
+             else:
+                 search_query = " ".join(keywords)
+             
+             # If result is empty, default to "python" or "developer" if present in original
+             if not search_query:
+                 if "python" in query.lower(): search_query = "python"
+                 elif "developer" in query.lower(): search_query = "developer"
+                 else: search_query = query # Last resort
+        
+        # Append skills if available (from extraction) to refine the search
+        # Note: If LLM failed, skills will be empty, so the manual fallback above is critical
+        skills = intent.get("skills", [])
+        if skills:
+            # Add top 2 skills to query
+            search_query += " " + " ".join(skills[:2])
+
+        # Append experience level if available
+        experience = intent.get("experience")
+        if experience:
+             if "senior" in experience.lower(): search_query += " senior"
+             elif "junior" in experience.lower(): search_query += " junior"
+
+        external_jobs = asyncio.run(scraper_tools.search_online_jobs(
+            query=search_query,
+            location=location,
+            limit=5
+        ))
+        # Combine results
+        state["candidate_projects"] = candidate_projects + external_jobs
     
     return state
 
@@ -281,47 +530,60 @@ def generate_explanation(state: AgentState) -> AgentState:
     logger.info("Generating explanation")
     
     matches = state.get("matched_projects", [])[:5]  # Top 5 for explanation
-    scores = state.get("match_scores", {})
-    explanations = state.get("explanations", {})
-    user_profile = state.get("user_profile", {})
+    intent = state.get("intent", {})
     
     if not matches:
-        state["explanations"] = {"general": "No matching projects found. Try adjusting your search criteria."}
+        state["explanations"] = {"general": "No matching projects found. Please try adjusting your filters (location, exp, skills) or checking for typos."}
         return state
-    
-    # Use Gemini to generate a natural explanation
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", """Generate a friendly, personalized explanation for why these projects match the user.
-User: {user_name}
-Interests: {interests}
-Location: {location}
 
-Be conversational and highlight the best matches. Keep it concise (2-3 sentences)."""),
-        ("human", """Top matches:
-{matches}
-
-Generate an explanation."""),
-    ])
+    # If we have matches, generate a simple explanation based on context
+    # Try to detection language from query
+    query_text = state.get("current_query", "").lower()
+    is_spanish = any(w in query_text for w in ["hola", "ayuda", "trabajo", "busco", "quiero", "gracias", "traducelo", "idioma", "español", "spanish"])
     
+    # Try using LLM for explanation first
     try:
-        matches_str = "\n".join([
-            f"- {p.get('name', 'Project')} ({scores.get(p.get('id', ''), 0):.0f}% match): {explanations.get(p.get('id', ''), '')}"
-            for p in matches
-        ])
-        
-        chain = prompt | llm
-        response = chain.invoke({
-            "user_name": user_profile.get("name", "User"),
-            "interests": ", ".join(user_profile.get("interests", [])[:5]),
-            "location": f"{user_profile.get('location', {}).get('city', '')}, {user_profile.get('location', {}).get('country', '')}",
-            "matches": matches_str
-        })
-        
-        state["explanations"]["general"] = response.content
-    except Exception as e:
-        logger.error(f"Error generating explanation: {e}")
-        state["explanations"]["general"] = "Found several projects that match your preferences!"
+        if matches:
+            # Construct context for LLM
+            matches_summary = "\n".join([f"- {m.get('name')} ({m.get('city')})" for m in matches])
+            prompt = f"""
+            You are a helpful assistant. The user searched for: "{state.get("current_query")}".
+            I found these matches:
+            {matches_summary}
+            
+            Write a very brief (1 sentence) explanation introducing these results in the SAME LANGUAGE as the user's query (Spanish or English).
+            If the user asks for translation, ensure the response is in the requested language.
+            """
+            response = llm.invoke(prompt)
+            explanation = response.content.strip()
+    except Exception:
+        # Fallback if LLM fails
+        if intent.get("search_online_jobs") or any(m.get("is_external") for m in matches):
+            count = len(matches)
+            if is_spanish:
+                explanation = f"He encontrado {count} oportunidades que coinciden con tu búsqueda."
+            else:
+                explanation = f"Found {count} opportunities that match your criteria."
+            
+            if intent.get("search_query"):
+                 if is_spanish:
+                     explanation += f" Enfocado en: {intent.get('search_query')}."
+                 else:
+                     explanation += f" Focused on: {intent.get('search_query')}."
+        else:
+            top_match = matches[0] if matches else None
+            if top_match:
+                 if is_spanish:
+                     explanation = f"He encontrado varios proyectos. El mejor es {top_match.get('name')} en {top_match.get('city')}."
+                 else:
+                     explanation = f"I found several projects for you. The top match is {top_match.get('name')} in {top_match.get('city')}."
+            else:
+                 if is_spanish:
+                     explanation = "Aquí tienes los mejores resultados que he encontrado."
+                 else:
+                     explanation = "Here are the best matches I could find."
     
+    state["explanations"] = {"general": explanation}
     return state
 
 
@@ -374,6 +636,7 @@ def create_matching_agent() -> StateGraph:
     workflow.add_node("analyze_profile", analyze_profile)
     workflow.add_node("understand_intent", understand_intent)
     workflow.add_node("search_projects", search_projects)
+    workflow.add_node("search_external_jobs", search_external_jobs)
     workflow.add_node("calculate_matches", calculate_matches)
     workflow.add_node("rank_matches", rank_matches)
     workflow.add_node("generate_explanation", generate_explanation)
@@ -383,7 +646,8 @@ def create_matching_agent() -> StateGraph:
     workflow.set_entry_point("analyze_profile")
     workflow.add_edge("analyze_profile", "understand_intent")
     workflow.add_edge("understand_intent", "search_projects")
-    workflow.add_edge("search_projects", "calculate_matches")
+    workflow.add_edge("search_projects", "search_external_jobs")
+    workflow.add_edge("search_external_jobs", "calculate_matches")
     workflow.add_edge("calculate_matches", "rank_matches")
     workflow.add_edge("rank_matches", "generate_explanation")
     workflow.add_conditional_edges(

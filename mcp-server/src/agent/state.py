@@ -18,6 +18,7 @@ class AgentState(TypedDict):
     
     # Current query and intent
     current_query: str
+    filters: Optional[Dict[str, Any]] # Explicit UI filters
     intent: Optional[Dict[str, Any]]  # Extracted intent with criteria
     
     # Matching results

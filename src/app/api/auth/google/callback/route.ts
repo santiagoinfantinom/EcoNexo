@@ -22,7 +22,10 @@ export async function GET(request: NextRequest) {
 
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-    const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/google/callback`;
+
+    // Use the actual origin from the request instead of hardcoded localhost:3000
+    const origin = request.nextUrl.origin || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const redirectUri = `${origin}/auth/google/callback`;
 
     // Exchange code for tokens
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
@@ -40,7 +43,7 @@ export async function GET(request: NextRequest) {
     });
 
     const tokens = await tokenResponse.json();
-    
+
     if (tokens.error) {
       return NextResponse.json(
         { success: false, error: tokens.error_description || 'Error al obtener tokens' },
@@ -56,9 +59,9 @@ export async function GET(request: NextRequest) {
     });
 
     const userInfo = await userResponse.json();
-    
+
     console.log('🔍 User info from Google:', userInfo);
-    
+
     // Try to get more detailed info from People API if available
     let detailedInfo: any = {};
     try {
@@ -83,7 +86,7 @@ export async function GET(request: NextRequest) {
     let birthdate: string | undefined = undefined;
     let gender: string | undefined = undefined;
     let pronouns: string | undefined = undefined;
-    
+
     // Try to get detailed info from People API
     if (detailedInfo.names && detailedInfo.names.length > 0) {
       const primaryName = detailedInfo.names.find((n: any) => n.metadata?.primary) || detailedInfo.names[0];
@@ -113,11 +116,11 @@ export async function GET(request: NextRequest) {
       const p = detailedInfo.pronouns.find((x: any) => x.metadata?.primary) || detailedInfo.pronouns[0];
       pronouns = p?.pronouns;
     }
-    
+
     // Split full name if given/family names are not available
     let firstName = givenName;
     let lastName = familyName;
-    
+
     if (!firstName && !lastName && fullName) {
       const nameParts = fullName.trim().split(' ');
       if (nameParts.length > 0) {

@@ -7,7 +7,7 @@ import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import { AuthProvider } from "@/lib/auth";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import CreateEventFAB from "@/components/CreateEventFAB";
+import GreenCompass from "@/components/GreenCompass";
 import HeaderNav from "@/components/HeaderNav";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import SimpleIntro from "@/components/SimpleIntro";
@@ -17,6 +17,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import IOSMetaTags from "@/components/IOSMetaTags";
 import { generateMetadata, generateViewport } from "@/lib/metadata";
 import { ToastProvider } from "@/components/ToastNotification";
+import { SmartProvider } from "@/context/SmartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,22 +47,25 @@ export default function RootLayout({
       <body
         className={`${interTight.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-gls-primary`}
       >
+        <div className="fixed top-0 left-0 w-full h-1 bg-ecosia-green z-50 shadow-sm" />
         <div className="animated-gradient-bg" />
         <PlausibleProvider domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "econexo.app"}>
           <ThemeProvider>
             <I18nProvider>
               <AuthProvider>
                 <ToastProvider>
-                  <ErrorBoundary>
-                    <IOSMetaTags />
-                    <ServiceWorkerRegistration />
-                    <DynamicManifest />
-                    <SimpleIntro />
-                    <LanguageSwitcher />
-                    <HeaderNav />
-                    <main className="min-h-screen">{children}</main>
-                    <CreateEventFAB />
-                  </ErrorBoundary>
+                  <SmartProvider>
+                    <ErrorBoundary>
+                      <IOSMetaTags />
+                      <ServiceWorkerRegistration />
+                      <DynamicManifest />
+                      <SimpleIntro />
+                      <LanguageSwitcher />
+                      <HeaderNav />
+                      <main className="min-h-screen">{children}</main>
+                      <GreenCompass />
+                    </ErrorBoundary>
+                  </SmartProvider>
                 </ToastProvider>
               </AuthProvider>
             </I18nProvider>

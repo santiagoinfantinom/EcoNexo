@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useI18n, locationLabel } from "@/lib/i18n";
 import { COUNTRIES } from "@/lib/countries";
 
@@ -30,9 +30,12 @@ export default function MapSearch({
   allProjects: Project[];
   onResults: (projects: Project[]) => void;
 }) {
-  const { locale } = useI18n();
+  const { t, locale } = useI18n();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+
+  const [globalSuggestions, setGlobalSuggestions] = useState<Suggestion[]>([]);
+  const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
 
   const suggestions = useMemo<Suggestion[]>(() => {
     const projSugs: Suggestion[] = allProjects.map((p) => ({
@@ -40,7 +43,7 @@ export default function MapSearch({
       id: p.id,
       label:
         (locale === "en" && (p as any).name_en) ? (p as any).name_en :
-        (locale === "de" && (p as any).name_de) ? (p as any).name_de : p.name,
+          (locale === "de" && (p as any).name_de) ? (p as any).name_de : p.name,
       lat: p.lat,
       lng: p.lng,
     }));
@@ -80,12 +83,12 @@ export default function MapSearch({
     COUNTRIES.forEach((c) => {
       const n =
         locale === "en" ? c.name_en :
-        locale === "de" ? c.name_de :
-        locale === "fr" ? (c as any).name_fr :
-        locale === "it" ? c.name_it :
-        locale === "pl" ? c.name_pl :
-        locale === "nl" ? c.name_nl :
-        c.name_es || c.name;
+          locale === "de" ? c.name_de :
+            locale === "fr" ? (c as any).name_fr :
+              locale === "it" ? c.name_it :
+                locale === "pl" ? c.name_pl :
+                  locale === "nl" ? c.name_nl :
+                    c.name_es || c.name;
       if (n) countryNames.add(n);
     });
     // also include countries present in projects (localized via locationLabel)
@@ -115,6 +118,38 @@ export default function MapSearch({
     return [...citySugs, ...countrySugs, ...projSugs, ...categorySugs, ...tagSugs];
   }, [allProjects, locale]);
 
+  // Debounced global search
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 3) {
+      setGlobalSuggestions([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearchingGlobal(true);
+      try {
+        const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=3&addressdetails=1`);
+        const data = await resp.json();
+        const globalSugs: Suggestion[] = data.map((item: any) => ({
+          type: "city", // Treat general places as cities for centering/filtering logic
+          label: `🌍 ${item.display_name}`,
+          city: item.address?.city || item.address?.town || item.address?.village || item.display_name.split(',')[0],
+          country: item.address?.country || '',
+          lat: parseFloat(item.lat),
+          lng: parseFloat(item.lon),
+        }));
+        setGlobalSuggestions(globalSugs);
+      } catch (err) {
+        console.error("Geocoding error:", err);
+      } finally {
+        setIsSearchingGlobal(false);
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [] as Suggestion[];
@@ -126,20 +161,25 @@ export default function MapSearch({
       if (index === 0) score = 100; // Starts with query
       else if (index > 0) score = 50; // Contains query
       else score = 0;
-      
+
       // Boost cities and countries
       if (s.type === "city") score += 20;
       if (s.type === "country") score += 15;
-      
+
       return { suggestion: s, score };
     });
-    
-    return scored
+
+    const localResults = scored
       .filter((item) => item.score > 0)
       .sort((a, b) => b.score - a.score)
-      .map((item) => item.suggestion)
-      .slice(0, 12);
-  }, [query, suggestions]);
+      .map((item) => item.suggestion);
+
+    // Combine local results with global suggestions
+    const combined = [...localResults, ...globalSuggestions];
+
+    return combined.slice(0, 15);
+  }, [query, suggestions, globalSuggestions]);
+
 
   const centerOn = (lat: number, lon: number) => {
     if (typeof window !== "undefined") {
@@ -159,7 +199,7 @@ export default function MapSearch({
     }
     if (s.type === "city") {
       // Filter by city and country to handle cities with same name in different countries
-      const list = allProjects.filter((p) => 
+      const list = allProjects.filter((p) =>
         locationLabel(p.city, locale as any) === locationLabel(s.city, locale as any) &&
         locationLabel(p.country, locale as any) === locationLabel(s.country, locale as any)
       );
@@ -214,11 +254,17 @@ export default function MapSearch({
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
-        placeholder="Buscar ciudades, países, eventos, categorías..."
+        placeholder={t('mapSearchPlaceholderGlobal')}
         className="w-64 md:w-80 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900 placeholder:text-gray-500"
       />
       {open && filtered.length > 0 && (
         <div className="absolute z-[6000] mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-64 overflow-auto text-gray-900">
+          {isSearchingGlobal && (
+            <div className="px-3 py-2 text-xs text-gray-500 italic border-b flex items-center gap-2">
+              <div className="animate-spin h-3 w-3 border-b-2 border-green-600 rounded-full"></div>
+              {t('searchingGlobally')}
+            </div>
+          )}
           {filtered.map((s, i) => (
             <button
               key={i}

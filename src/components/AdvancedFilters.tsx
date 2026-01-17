@@ -145,7 +145,7 @@ export default function AdvancedFilters({
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
           Filtros Avanzados
         </h3>
         <div className="flex items-center gap-2">

@@ -3,11 +3,15 @@
 
 :root {
   /* Nueva paleta inspirada en las imágenes */
-  --background: #1F3D3B; /* Dark teal como base (GLS Bank style) */
-  --foreground: #F2F6EB; /* Green tea - texto principal */
-  --accent: #92C3A4; /* Jade - acentos secundarios */
-  --accent-2: #DBF58E; /* Sour apple - acentos vibrantes */
-  
+  --background: #1F3D3B;
+  /* Dark teal como base (GLS Bank style) */
+  --foreground: #F2F6EB;
+  /* Green tea - texto principal */
+  --accent: #92C3A4;
+  /* Jade - acentos secundarios */
+  --accent-2: #DBF58E;
+  /* Sour apple - acentos vibrantes */
+
   /* Colores específicos de la nueva paleta */
   --green-tea: #F2F6EB;
   --sunflower: #FFCE55;
@@ -30,16 +34,25 @@
 
 /* Theme override by data attribute - Inspirado en Ecosia y GLS Bank */
 [data-theme="dark"] {
-  --background: #1F3D3B; /* Dark teal - estilo Ecosia */
-  --foreground: #F2F6EB; /* Green tea - texto claro */
-  --accent: #92C3A4; /* Jade - acentos */
-  --accent-2: #DBF58E; /* Sour apple - acentos vibrantes */
+  --background: #1F3D3B;
+  /* Dark teal - estilo Ecosia */
+  --foreground: #F2F6EB;
+  /* Green tea - texto claro */
+  --accent: #92C3A4;
+  /* Jade - acentos */
+  --accent-2: #DBF58E;
+  /* Sour apple - acentos vibrantes */
 }
+
 [data-theme="light"] {
-  --background: #F2F6EB; /* Green tea - fondo claro */
-  --foreground: #1F3D3B; /* Dark teal - texto oscuro */
-  --accent: #668265; /* Forest - acentos */
-  --accent-2: #92C3A4; /* Jade - acentos secundarios */
+  --background: #F2F6EB;
+  /* Green tea - fondo claro */
+  --foreground: #1F3D3B;
+  /* Dark teal - texto oscuro */
+  --accent: #668265;
+  /* Forest - acentos */
+  --accent-2: #92C3A4;
+  /* Jade - acentos secundarios */
 }
 
 body {
@@ -50,6 +63,21 @@ body {
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Barra verde de fondo consistente */
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #10b981 0%, #059669 50%, #047857 100%);
+  opacity: 0.15;
+  z-index: -2;
+  pointer-events: none;
 }
 
 /* Subtle dark-green blot background (no animation) */
@@ -73,21 +101,37 @@ body {
 
 /* Modern minimal gradient background container */
 .bg-modern {
-  background: 
-    linear-gradient(135deg, 
+  background:
+    linear-gradient(135deg,
       color-mix(in oklab, var(--background) 98%, var(--foreground) 2%) 0%,
       color-mix(in oklab, var(--background) 99%, var(--foreground) 1%) 50%,
-      color-mix(in oklab, var(--background) 98%, var(--foreground) 2%) 100%
-    );
+      color-mix(in oklab, var(--background) 98%, var(--foreground) 2%) 100%);
 }
 
 /* Typography utilities */
-.font-light { font-weight: 300; }
-.font-normal { font-weight: 400; }
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
-.font-extrabold { font-weight: 800; }
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
 
 /* Elegant text styles */
 .text-elegant {
@@ -213,12 +257,15 @@ header .btn-gls-primary:hover {
 
 /* Hide scrollbar but keep scroll functionality */
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;
+  /* Chrome, Safari and Opera */
 }
 
 /* Ocultar errores de reCAPTCHA que aparecen directamente del widget */
@@ -301,10 +348,11 @@ div[class*="recaptcha-error"] {
   position: relative;
   height: 1px;
   margin: 20px 0;
-  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.15), transparent);
 }
+
 .dark .content-separator {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
 }
 
 /* Botón Sign In/Sign Up mejorado */
@@ -393,6 +441,7 @@ div[class*="recaptcha-error"] {
   0% {
     background-position: -1000px 0;
   }
+
   100% {
     background-position: 1000px 0;
   }
@@ -408,6 +457,7 @@ div[class*="recaptcha-error"] {
     opacity: 0;
     transform: translateX(100%);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -423,6 +473,7 @@ div[class*="recaptcha-error"] {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -479,16 +530,95 @@ div[class*="recaptcha-error"] {
   transform: scale(1.05);
 }
 
+/* Mobile-specific utilities */
+.mobile-hidden {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .mobile-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: white;
+    overflow-y: auto;
+  }
+
+  .dark .mobile-fullscreen {
+    background: #1e293b;
+  }
+}
+
 /* Touch targets mejorados para móvil */
 @media (max-width: 768px) {
-  button, a, input[type="button"], input[type="submit"] {
+
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"] {
     min-height: 44px;
     min-width: 44px;
   }
-  
+
   .touch-target {
     padding: 0.75rem 1rem;
     min-height: 44px;
+  }
+
+  /* Reduce header padding on mobile */
+  header {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Better spacing for mobile forms */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+    /* Prevents zoom on iOS */
+  }
+
+  /* Horizontal scroll for tables */
+  .table-mobile-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Optimize font sizes for mobile */
+  h1 {
+    font-size: 1.875rem !important;
+    /* 30px */
+    line-height: 2.25rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+    /* 24px */
+    line-height: 2rem !important;
+  }
+
+  h3 {
+    font-size: 1.25rem !important;
+    /* 20px */
+    line-height: 1.75rem !important;
   }
 }
 
@@ -497,7 +627,7 @@ div[class*="recaptcha-error"] {
   .layout-gls {
     grid-template-columns: 1fr;
   }
-  
+
   .impact-stats {
     flex-direction: column;
   }

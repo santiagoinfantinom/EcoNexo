@@ -41,11 +41,11 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
   // Format time remaining
   const formatTimeRemaining = (ms: number) => {
     if (ms <= 0) return locale === 'es' ? 'Expirado' : locale === 'de' ? 'Abgelaufen' : 'Expired';
-    
+
     const minutes = Math.floor(ms / 60000);
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    
+
     if (hours > 0) {
       return `${hours}h ${mins}m`;
     }
@@ -57,7 +57,7 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
     const updateTime = () => {
       const remaining = Math.max(0, room.expiresAt - Date.now());
       setTimeRemaining(remaining);
-      
+
       if (remaining <= 0 && !isExpired) {
         setIsExpired(true);
         if (pollIntervalRef.current) {
@@ -92,10 +92,10 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
     };
 
     loadMessages();
-    
+
     // Poll for new messages every 2 seconds
     const interval = setInterval(loadMessages, 2000);
-    
+
     return () => clearInterval(interval);
   }, [room.id]);
 
@@ -156,25 +156,17 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 text-center">
         <div className="text-6xl mb-4">💥</div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          {locale === 'es'
-            ? 'Sala Destruida'
-            : locale === 'de'
-            ? 'Raum zerstört'
-            : 'Room Destroyed'}
+          {t('roomDestroyed')}
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          {locale === 'es'
-            ? 'Esta sala se ha autodestruido según lo programado. Todos los mensajes han sido eliminados permanentemente.'
-            : locale === 'de'
-            ? 'Dieser Raum wurde wie geplant selbstzerstört. Alle Nachrichten wurden dauerhaft gelöscht.'
-            : 'This room has self-destructed as scheduled. All messages have been permanently deleted.'}
+          {t('roomDestroyedDesc')}
         </p>
         {onLeave && (
           <button
             onClick={onLeave}
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
-            {locale === 'es' ? 'Volver' : locale === 'de' ? 'Zurück' : 'Go Back'}
+            {t('goBack')}
           </button>
         )}
       </div>
@@ -197,19 +189,14 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
             )}
           </div>
           <div className="text-right">
-            <div className={`text-sm font-semibold ${
-              timeRemaining < 60000 ? 'text-red-600' : 
-              timeRemaining < 300000 ? 'text-orange-600' : 
-              'text-green-600'
-            }`}>
+            <div className={`text-sm font-semibold ${timeRemaining < 60000 ? 'text-red-600' :
+                timeRemaining < 300000 ? 'text-orange-600' :
+                  'text-green-600'
+              }`}>
               ⏱️ {formatTimeRemaining(timeRemaining)}
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              {locale === 'es'
-                ? `${room.participants.length} participantes`
-                : locale === 'de'
-                ? `${room.participants.length} Teilnehmer`
-                : `${room.participants.length} participants`}
+              {t('participantsCount', { count: room.participants.length })}
             </div>
           </div>
         </div>
@@ -218,7 +205,7 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
             onClick={onLeave}
             className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
           >
-            {locale === 'es' ? 'Salir de la sala' : locale === 'de' ? 'Raum verlassen' : 'Leave room'}
+            {t('leaveRoom')}
           </button>
         )}
       </div>
@@ -227,11 +214,7 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 ? (
           <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-            {locale === 'es'
-              ? 'No hay mensajes aún. Sé el primero en escribir!'
-              : locale === 'de'
-              ? 'Noch keine Nachrichten. Sei der Erste!'
-              : 'No messages yet. Be the first to write!'}
+            {t('noMessagesYet')}
           </div>
         ) : (
           messages.map((message) => {
@@ -242,11 +225,10 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
                 className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[75%] rounded-lg p-3 ${
-                    isOwn
+                  className={`max-w-[75%] rounded-lg p-3 ${isOwn
                       ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-gray-100'
-                  }`}
+                      : 'bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white'
+                    }`}
                 >
                   {!isOwn && (
                     <div className="text-xs opacity-80 mb-1 font-semibold">
@@ -254,9 +236,8 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
                     </div>
                   )}
                   <div className="whitespace-pre-wrap">{message.content}</div>
-                  <div className={`text-xs mt-1 ${
-                    isOwn ? 'text-green-100' : 'text-gray-500 dark:text-gray-400'
-                  }`}>
+                  <div className={`text-xs mt-1 ${isOwn ? 'text-green-100' : 'text-gray-500 dark:text-gray-400'
+                    }`}>
                     {formatTime(message.timestamp)}
                   </div>
                 </div>
@@ -275,14 +256,8 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={
-              locale === 'es'
-                ? 'Escribe un mensaje...'
-                : locale === 'de'
-                ? 'Nachricht schreiben...'
-                : 'Type a message...'
-            }
-            className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100"
+            placeholder={t('writeMessagePh')}
+            className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             disabled={!user || isExpired}
           />
           <button
@@ -290,16 +265,12 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
             disabled={!user || !newMessage.trim() || isExpired}
             className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {locale === 'es' ? 'Enviar' : locale === 'de' ? 'Senden' : 'Send'}
+            {t('send')}
           </button>
         </div>
         {!user && (
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            {locale === 'es'
-              ? 'Inicia sesión para enviar mensajes'
-              : locale === 'de'
-              ? 'Melde dich an, um Nachrichten zu senden'
-              : 'Sign in to send messages'}
+            {t('signInToSendMessage')}
           </p>
         )}
       </div>

@@ -21,7 +21,7 @@ export default function WelcomeIntro() {
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 500);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -107,7 +107,7 @@ export default function WelcomeIntro() {
 
         {/* Progress bar */}
         <div className="w-full bg-gray-200 rounded-full h-3 mb-8">
-          <div 
+          <div
             className="bg-green-500 h-3 rounded-full transition-all duration-500"
             style={{ width: `${((currentStep + 1) / features.length) * 100}%` }}
           />
@@ -125,7 +125,7 @@ export default function WelcomeIntro() {
               <p className="text-xl text-gray-600 mb-8">
                 {t('welcomeIntroWelcomeDescription')}
               </p>
-              
+
               <div className="space-y-4">
                 <button
                   onClick={() => handleLanguageSelect('es')}
@@ -157,7 +157,7 @@ export default function WelcomeIntro() {
               <p className="text-xl text-gray-600 mb-8">
                 {features[currentStep].description}
               </p>
-              
+
               <div className="flex gap-4 justify-center">
                 <button
                   onClick={handleSkip}
@@ -169,8 +169,9 @@ export default function WelcomeIntro() {
                   onClick={handleNext}
                   className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                 >
-                  {currentStep === features.length - 1 ? 
-                    (currentStep === features.length - 1 ? t('welcomeIntroGetStarted') : t('welcomeIntroNext'))
+                  {currentStep === features.length - 1
+                    ? t('welcomeIntroGetStarted')
+                    : t('welcomeIntroNext')
                   }
                 </button>
               </div>

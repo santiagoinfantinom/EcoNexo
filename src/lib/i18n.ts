@@ -7,12 +7,18 @@ type Dict = Record<string, string>;
 
 const DICTS: Record<Locale, Dict> = {
   en: {
-  
+
     app: "EcoNexo",
     map: "Map",
     events: "Events",
     jobs: "Jobs",
     chat: "Chat",
+    home: "Home",
+    explore: "Explore",
+    workshops: "Workshops",
+    badges: "Badges",
+    forum: "Forum",
+    volunteering: "Volunteering",
     profile: "Profile",
     signIn: "Sign In",
     signUp: "Sign Up",
@@ -91,15 +97,112 @@ const DICTS: Record<Locale, Dict> = {
     exploreEvents: "Explore Events",
     findJobs: "Find Jobs",
     interactiveMap: "Interactive Map",
-    showMap: "Show Map", 
+    showMap: "Show Map",
     hideMap: "Hide Map",
     activeProjects: "Active Projects",
-    
+
     cities: "Cities",
     connectedVolunteers: "Connected volunteers",
     availableSpots: "Available spots",
+    mapSearchPlaceholder: "Search cities, projects, world...",
+    mapSearchPlaceholderGlobal: "Search cities, countries, projects, places...",
+    searchingGlobally: "Searching globally...",
     featuredProjects: "Featured Projects",
+    recommendedForYou: "Recommended for you",
+    match: "Match",
+    communityProjectsTitle: "Community Projects",
+    proximityReason: "Just {{distance}} km from you",
+    interestReason: "Matches your interest in {{category}}",
+    preferredTimeReason: "In your preferred time ({{time}})",
+    difficultyReason: "Appropriate difficulty level",
+    noNearbyEvents: "No nearby events found",
+    eventsNearby: "Events nearby",
+    viewAll: "View all",
+    socialMediaDetectionHeader: "Automatic Project Detection",
+    interactions: "interactions",
+    sustainable: "sustainable",
+    approved: "Approve",
+    rejected: "Reject",
+    viewPost: "View post",
+    detectionActive: "Detection active",
+    detectionPaused: "Detection paused",
+    monitoringSocialMedia: "Monitoring social media for verified environmental projects",
+    scanningSocialMedia: "Scanning social media...",
+    noNewProjects: "No new projects found",
+    scanning: "Scanning",
+    scan: "Scan",
+    detectionSettings: "Detection Settings",
+    minFollowers: "Minimum followers",
+    minScore: "Minimum score",
+    communityProjectsPageDesc: "Discover community-driven initiatives that are building stronger, more sustainable neighborhoods across Europe",
+    totalVolunteers: "Total Volunteers",
+    backToHome: "Back to Home",
+    basedOnPrefs: "Based on your preferences and location",
+    excellent: "Excellent",
+    veryGood: "Very Good",
+
+    // Community Page
+    communityPageTitle: "EcoNexo Community",
+    tabFeed: "Feed",
+    tabGroups: "Groups",
+    tabMentoring: "Mentoring",
+    tabMarketplace: "Marketplace",
+    recentActivity: "Recent Activity",
+    noActivityYet: "No activity yet",
+    createdAnEvent: "created an event",
+    localGroupsTitle: "Local Groups",
+    createGroupBtn: "+ Create Group",
+    localGroupsDesc: "Connect with local communities in your city or region",
+    viewAllGroups: "View All Groups",
+    mentoringTitle: "Mentoring",
+    mentoringDesc: "Connect with experts or find learners in sustainability",
+    findMentorBtn: "Find Mentor",
+    findMentorDesc: "Find an expert to guide you",
+    becomeMentorBtn: "Become a Mentor",
+    shareKnowledgeDesc: "Share your knowledge",
+    marketplaceTitle: "Eco Marketplace",
+    publishBtn: "+ Publish",
+    marketplaceDesc: "Buy, sell or exchange sustainable products and services",
+    karma: "Karma",
+    reputation: "Reputation",
+    followers: "Followers",
+    quickLinks: "Quick Links",
+    myProfileLabel: "My Profile",
+
+    good: "Good",
+    fair: "Fair",
+    howRecsWork: "How recommendations work",
+    locationPrio: "Location: We prioritize events near you",
+    interestsPrio: "Interests: Based on your favorite categories",
+    timesPrio: "Schedules: We consider your preferred times",
+    historyPrio: "History: We learn from past events",
+    availabilityPrio: "Availability: Only events with free spots",
+    environmentalProject: "Environmental project",
+    educationalProject: "Educational project",
+    healthServices: "Health services",
+    communityProject: "Community project",
+    foodProject: "Food project",
+    activeProject: "Active project",
     exploreCategories: "Explore Categories",
+    exploreDescription: "Discover regenerative projects, community events, and impact opportunities in your area.",
+    featuredProjectsDesc: "Initiatives that are changing Europe right now.",
+    viewProjects: "View Projects",
+    coursesAndWorkshops: "Courses and Workshops",
+    coursesAndWorkshopsDesc: "Learn skills for a sustainable future.",
+    exploreCourses: "Explore Courses",
+    impactSearch: "Impact Search",
+    searchPlaceholderExplore: "What are you looking for? (e.g. Permaculture, Barcelona, Oceans...)",
+    searchResults: "Search results",
+    found: "found",
+    noResultsFor: "No results found for",
+    clearSearch: "Clear search",
+    haveInitiative: "Do you have an initiative?",
+    registerInitiativeDesc: "Register it on EcoNexo and connect with thousands of volunteers.",
+    publishProject: "Publish Project",
+    tagBiodiversity: "Biodiversity",
+    tagSolarEnergy: "Solar Energy",
+    tagZeroWaste: "Zero Waste",
+    tagReforestation: "Reforestation",
     ecoTipsTitle: "Eco Tips",
     ecoTipsDescription: "Practical ideas to reduce your footprint and live sustainably.",
     // Map filters/search
@@ -111,7 +214,7 @@ const DICTS: Record<Locale, Dict> = {
     maxDistance: "Max distance",
     anyDistance: "Any distance",
     dateRange: "Date range",
-    
+
     type: "Type",
     permanent: "Permanent",
     frequency: "Frequency",
@@ -145,7 +248,6 @@ const DICTS: Record<Locale, Dict> = {
     innovationTitle: "Innovation",
     innovationDescription: "We leverage cutting-edge technology and innovative solutions to address environmental challenges and create sustainable futures.",
     // Local Groups
-    localGroupsTitle: "Local Groups",
     localGroupsSubtitle: "Connect with local communities in your city or region",
     createGroup: "Create Group",
     allGroups: "All",
@@ -282,6 +384,7 @@ const DICTS: Record<Locale, Dict> = {
     spotsLeft: "spots left",
     requirements: "Requirements",
     benefits: "Benefits",
+    rememberToTellThemTooltip: "Remember to tell them you came from EcoNexo!",
     // Onboarding
     onboardingWelcome: "Welcome to EcoNexo!",
     onboardingDescription: "Discover sustainable projects and connect with a community committed to environmental protection",
@@ -339,7 +442,7 @@ const DICTS: Record<Locale, Dict> = {
     skills: "Skills",
     languages: "Languages",
     socialMedia: "Social Media",
-    
+
     // OAuth Provider Information
     googleInformation: "Google Information",
     microsoftInformation: "Microsoft Information",
@@ -356,6 +459,14 @@ const DICTS: Record<Locale, Dict> = {
     linkedin: "LinkedIn",
     twitter: "Twitter",
     instagram: "Instagram",
+    firstNamePh: "Enter first name",
+    lastNamePh: "Enter last name",
+    phonePh: "Enter phone number",
+    aboutMePh: "Tell us about yourself...",
+    linkedinPh: "https://linkedin.com/in/your-profile",
+    twitterPh: "https://twitter.com/your-username",
+    instagramPh: "https://instagram.com/your-username",
+    websitePh: "https://your-website.com",
     website: "Website",
     useLogo: "Use logo",
     passionsPlaceholder: "What are you passionate about?",
@@ -364,10 +475,64 @@ const DICTS: Record<Locale, Dict> = {
     interestsPlaceholder: "What interests you?",
     skillsPlaceholder: "What skills do you have?",
     languagesPlaceholder: "What languages do you speak?",
-    volunteersLabel: "volunteers",
     spotsLabel: "spots",
+    projectTitle: "Project Title",
+    projectTitlePh: "Ex: Sustainable Urban Reforestation",
+    locationPh: "City, Country",
+    detailedDescription: "Detailed Description",
+    detailedDescriptionPh: "Describe goals, impact, and methodology...",
+    targetParticipants: "Target Participants",
+    estimatedBudget: "Estimated Budget (€)",
+    keyMilestones: "Key Milestones",
+    keyMilestonesPh: "- Launch\n- First implementation phase\n- Evaluation",
+    accessibilityNeedsPh: "e.g. Wheelchair, limited mobility, etc.",
+    writeMessagePh: "Type a message...",
+    roomDestroyed: "Room Destroyed",
+    roomDestroyedDesc: "This room has self-destructed as scheduled. All messages have been permanently deleted.",
+    participantsCount: "{{count}} participants",
+    leaveRoom: "Leave room",
+    noMessagesYet: "No messages yet. Be the first to write!",
+    signInToSendMessage: "Sign in to send messages",
+    goBack: "Go Back",
+    searchConfiguration: "Search Configuration",
+    remoteWorkOnly: "Remote work only",
+    experienceYears: "Experience (years)",
+    skillsCommas: "Skills (comma separated)",
+    salaryMin: "Salary (Min)",
+    matchingAgentWelcome: "Hello! I'm your intelligent matching assistant. I can help you find projects that perfectly match your interests and preferences. What type of projects interest you?",
+    matchingAgentError: "Sorry, there was an error searching for projects. Please try again.",
+    signInToUseMatching: "Please sign in to use the matching assistant.",
+    suggestionsLabel: "Suggestions:",
+    typeSearchPh: "Type your search...",
+    searchEventsPh: "Search events in your city...",
+    searchEventsTitlePh: "Title, location, organizer...",
+    loadingCalendar: "Loading calendar...",
+    loadingEventsIndicator: "Loading events...",
+    showFiltersLabel: "Show Filters",
+    hideFiltersLabel: "Hide Filters",
+    noEventsFound: "No events found matching the filters",
+    becomeMentor: "Become a Mentor",
+    shareKnowledge: "Share your knowledge and support learners in sustainability topics.",
+    expertiseAreas: "Expertise areas",
+    expertiseAreasPhMentoring: "Energy, Circularity...",
+    languagesPhMentoring: "German, English...",
+    availabilityPhMentoring: "2 h/week",
+    offerMentoring: "Offer Mentoring",
+    savingEllipsis: "Saving...",
+    creatingEllipsis: "Creating...",
+    groupName: "Group Name",
+    groupNamePh: "e.g. Berlin Sustainable",
+    groupDescriptionPh: "Describe the purpose and goals of the group...",
+    tagsLabel: "Tags",
+    region: "Region",
+    add: "Add",
+    addTagPh: "Add tag...",
+    publicGroup: "Public group (anyone can join)",
+    backToGroups: "Back to Groups",
+    mustSignInToCreateGroup: "You must sign in to create a group",
+    volunteersLabel: "volunteers",
     previewLabel: "Preview",
-    
+
     // Project names and descriptions
     urbanReforestationBerlin: "Urban Reforestation Berlin",
     urbanReforestationDesc: "Join our urban reforestation initiative in Berlin. Help plant trees and create green spaces in the city.",
@@ -378,7 +543,7 @@ const DICTS: Record<Locale, Dict> = {
     communityGardensMadrid: "Community Gardens Madrid",
     communityGardensDesc: "Get involved in community gardens across Madrid. Learn sustainable agriculture and connect with neighbors.",
     communityGardensActive: "community gardens active",
-    
+
     // Eco Tips
     ecoTipCategoryFinance: "Finance",
     ecoTipBankTitle: "Choose Sustainable Banking",
@@ -399,10 +564,10 @@ const DICTS: Record<Locale, Dict> = {
     ecoTipWaterTitle: "Conserve Water",
     ecoTipWaterDescription: "Take shorter showers, fix leaks, and use water-efficient appliances.",
     ecoTips: "Eco Tips",
-    
+
     // Event creation
     createEvent: "Create Event",
-    
+
     // Event administrators
     eventAdministrators: "Event Administrators",
     addAdministrator: "Add Administrator",
@@ -415,10 +580,10 @@ const DICTS: Record<Locale, Dict> = {
     youAreAdministrator: "You are an administrator",
     eventCreator: "Event Creator",
     administrators: "Administrators",
-    
+
     ofRevenueDonated: "of revenue donated to environmental causes",
     subscribe: "Subscribe",
-    
+
     // Chat translations
     communityChat: "Community Chat",
     topicForums: "Topic Forums",
@@ -440,7 +605,7 @@ const DICTS: Record<Locale, Dict> = {
     chatMessage2: "I've been working on similar projects in my area",
     chatMessage3: "This is exactly what we need more of!",
     chatMessage4: "Has anyone tried this approach before?",
-    
+
     // Chat Rules
     chatRule1: "Respect all participants",
     chatRule2: "Keep conversations relevant",
@@ -454,7 +619,7 @@ const DICTS: Record<Locale, Dict> = {
     chatRulesFooter: "Following these rules creates a positive community",
     chatRulesIntro: "To maintain a positive environment, please follow these rules:",
     chatRulesTitle: "Community Rules",
-    
+
     // Chat Recommendations
     recommendations: "Recommendations",
     popularDiscussions: "Popular Discussions",
@@ -463,7 +628,7 @@ const DICTS: Record<Locale, Dict> = {
     discoverLatestInitiatives: "Discover Latest Initiatives",
     eventsNearYou: "Events Near You",
     findLocalEvents: "Find Local Events",
-    
+
     // Category translations
     environment: "Environment",
     education: "Education",
@@ -471,7 +636,7 @@ const DICTS: Record<Locale, Dict> = {
     community: "Community",
     oceans: "Oceans",
     food: "Food",
-    
+
     capital: "Capital",
     population: "Population",
     currency: "Currency",
@@ -480,14 +645,14 @@ const DICTS: Record<Locale, Dict> = {
     governmentAPIInDevelopment: "Government API in development",
     integratedGovernmentAPIs: "Integrated Government APIs",
     baseURL: "Base URL",
-    
+
     // Additional event titles for calendar
     eventNativeTreePlanting: "Native Tree Planting",
     eventSolarEnergyWorkshop: "Solar Energy Workshop",
     eventRiverCleanup: "River Cleanup",
     eventClimateConference: "Climate Change Conference",
     eventFoodConservationWorkshop: "Food Conservation Workshop",
-    
+
     // Event titles
     eventVerticalGardens: "Vertical Gardens Construction",
     eventEcoRace: "Eco-friendly 5K Race",
@@ -507,7 +672,7 @@ const DICTS: Record<Locale, Dict> = {
     eventEcoNewYear: "Eco-friendly New Year Celebration",
     eventMarineConservation: "Marine Species Conservation",
     eventHydroelectricWorkshop: "Hydroelectric Energy Workshop",
-    
+
     // Job titles
     jobTitle1: "Urban Reforestation Specialist",
     jobTitle2: "Air Quality Data Analyst",
@@ -518,7 +683,7 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle7: "Green Architecture Specialist",
     jobTitle8: "Circular Economy Researcher",
     jobTitle9: "Wind Farm Operations Engineer",
-    
+
     // Job descriptions
     jobDesc1: "Lead urban reforestation initiatives in Berlin, managing tree planting projects, coordinating with local communities, and developing sustainable green spaces. You'll work with environmental scientists, city planners, and volunteers to create healthier urban environments.",
     jobDesc2: "Analyze air quality data using Python and GIS tools, monitor sensor networks across Paris, and create reports for environmental policy makers. You'll work with data scientists and environmental engineers to improve air quality monitoring systems.",
@@ -529,7 +694,7 @@ const DICTS: Record<Locale, Dict> = {
     jobDesc7: "Lead sustainable architecture projects in Amsterdam. Integrate energy efficiency, passive design, and low‑carbon materials (LEED/BREEAM). Coordinate with urban planners and community stakeholders.",
     jobDesc8: "Join a Copenhagen research institute to evaluate circular economy pilots. Quantify impact (LCA), publish findings, and support policy recommendations across the Nordics.",
     jobDesc9: "Operate and optimize wind farms around Hamburg. Oversee maintenance schedules, SCADA monitoring, safety procedures, and performance improvements with OEM partners.",
-    
+
     // Technical tags
     sensores: "sensors",
     silvicultura: "silviculture",
@@ -557,7 +722,7 @@ const DICTS: Record<Locale, Dict> = {
     blockchain: "blockchain",
     iot: "IoT",
     uxui: "UX/UI",
-    
+
     // Interface translations
     searchPlaceholderEn: "Search for jobs...",
     cityLabel: "City",
@@ -574,7 +739,7 @@ const DICTS: Record<Locale, Dict> = {
     jobPostingInfo: "Job posting information",
     conductGuidelines: "Conduct Guidelines",
     conductGuidelinesText: "Maintain a respectful and constructive environment",
-    
+
     // Job form fields
     jobTitle: "Job Title",
     jobTitlePlaceholder: "Enter the job title",
@@ -608,10 +773,10 @@ const DICTS: Record<Locale, Dict> = {
     saveDraft: "Save Draft",
     publishJob: "Publish Job",
     jobCreated: "Job Created",
-    
+
     // Language levels
     spanish: "Spanish",
-    english: "English", 
+    english: "English",
     german: "German",
     nativeLanguage: "Native language",
     selectLevel: "Select level",
@@ -624,7 +789,7 @@ const DICTS: Record<Locale, Dict> = {
     levelMid: "Mid",
     levelSenior: "Senior",
     levelLead: "Lead",
-    
+
     // Admin panel titles
     adminPanelTitle: "Administration Panel",
     adminPanelDescription: "Manage events, projects and EcoNexo users",
@@ -660,32 +825,35 @@ const DICTS: Record<Locale, Dict> = {
     adminTreePlantingMadrid: "Tree Planting Madrid",
     adminCommunityGardenValencia: "Community Garden Valencia",
     adminSolarEnergyNeighborhood: "Solar Energy Neighborhood",
-    
+
     // Gamification titles
-    badgeFirstEvent: "First Event",
+
     badgeEcoWarrior: "Eco Warrior",
     badgeCommunityLeader: "Community Leader",
     badgeGreenJobHunter: "Green Job Hunter",
     badgeChatMaster: "Chat Master",
+
+    level: "Level",
+
     achievementEcoExplorer: "Eco Explorer",
     achievementProjectPioneer: "Project Pioneer",
     achievementCommunityConnector: "Community Connector",
     achievementCarbonNeutral: "Carbon Neutral",
-    
+
     // Admin page metadata
     adminPageTitle: "Administration Panel - EcoNexo",
     adminPageDescription: "Manage events, projects and EcoNexo users",
-    
+
     // Map titles
     centerOnMyLocation: "Center on my location",
-    
+
     // Social media titles
     socialMediaCommunityReforestationBerlin: "Community Reforestation in Berlin",
-    
+
     // Regions
     all: "All",
     northernEurope: "Northern Europe",
-    westernEurope: "Western Europe", 
+    westernEurope: "Western Europe",
     centralEurope: "Central Europe",
     southernEurope: "Southern Europe",
     easternEurope: "Eastern Europe",
@@ -694,7 +862,7 @@ const DICTS: Record<Locale, Dict> = {
     allCities: "All",
     allContracts: "All",
     results: "results",
-    
+
     // Calendar and Events translations
     calendar: "Calendar",
     required: "Required",
@@ -732,6 +900,7 @@ const DICTS: Record<Locale, Dict> = {
     volunteers: "Volunteers",
     progressReached: "Progress reached",
     donatePaypal: "Donate with PayPal",
+    donateKlarna: "Donate with Klarna",
     donateStripe: "Donate with Stripe",
     backToMap: "Back to map",
     moreInfo: "More info",
@@ -764,14 +933,87 @@ const DICTS: Record<Locale, Dict> = {
     yourAnswer: "Your answer",
     verify: "Verify",
     howMuchIs: "How much is",
+    // Gamification & Badges
+    badgeFirstStep: "First Step",
+    descFirstStep: "Completed your first action",
+    badgeExplorer: "Explorer",
+    descExplorer: "Explored different sections",
+    badgeHelper: "Helper",
+    descHelper: "Helped the community",
+    badgeFirstEvent: "First Event",
+    descFirstEvent: "Attended your first event",
+    badgeEventEnthusiast: "Enthusiast",
+    descEventEnthusiast: "Attended 5 events",
+    badgeEventMaster: "Event Master",
+    descEventMaster: "Attended 10 events",
+    badgeEventCreator: "Organizer",
+    descEventCreator: "Created your first event",
+    badgeProjectJoiner: "Collaborator",
+    descProjectJoiner: "Joined your first project",
+    badgeProjectCreator: "Creator",
+    descProjectCreator: "Created your first project",
+    badgeProjectVeteran: "Veteran",
+    descProjectVeteran: "Completed 5 projects",
+    badgeConnector: "Connector",
+    descConnector: "Made your first connection",
+    badgeMentor: "Mentor",
+    descMentor: "Became a mentor",
+    badgeMarketplaceSeller: "Green Seller",
+    descMarketplaceSeller: "Posted in marketplace",
+    badgeGreenCommuter: "Green Commuter",
+    descGreenCommuter: "Used sustainable transport",
+    badgeWasteWarrior: "Waste Warrior",
+    descWasteWarrior: "Reduced waste",
+    badgeCarbonFighter: "Carbon Fighter",
+    descCarbonFighter: "Offset your carbon footprint",
+    badgeDailyStreak7: "Weekly Streak",
+    descDailyStreak7: "7 consecutive days",
+    badgeDailyStreak30: "Monthly Streak",
+    descDailyStreak30: "30 consecutive days",
+    badgeProfileComplete: "Profile Complete",
+    descProfileComplete: "Completed your profile",
+    badgeSocialSharer: "Sharer",
+    descSocialSharer: "Shared 10 times",
+
+    // Impact Page UI
+    yourImpact: "Your Impact",
+    impactDescription: "You are building a greener future, step by step. Here is your progress and achievements in EcoNexo.",
+    xpToLevel: "XP to Level",
+    impactMedals: "Medals",
+    impactStreakDays: "Streak Days",
+    impactSocialImpact: "Social Impact",
+    impactShared: "shared",
+    impactTalleres: "Workshops",
+    impactCompleted: "completed",
+    impactCity: "City",
+    impactRanking: "Ranking",
+    impactBadgeCollection: "Badge Collection",
+    impactRecentActivity: "Recent Activity",
+    impactNoActivity: "No recent activity.",
+    impactJustNow: "Just now",
+    impactKeepGoing: "Keep going!",
+    impactUnlockNextLevel: "Participate in more projects and events to unlock level {{level}}.",
+    impactExploreProjects: "Explore Projects",
+    impactLevel: "Level",
+
+    // Badge Categories
+    categoryStarter: "Starter",
+    categoryEngagement: "Engagement",
+    categoryLifestyle: "Lifestyle",
   },
   de: {
-  
+
     app: "EcoNexo",
     map: "Karte",
     events: "Veranstaltungen",
     jobs: "Jobs",
     chat: "Chat",
+    home: "Startseite",
+    explore: "Erkunden",
+    workshops: "Workshops",
+    badges: "Abzeichen",
+    forum: "Forum",
+    volunteering: "Freiwilligenarbeit",
     profile: "Profil",
     signIn: "Anmelden",
     signUp: "Registrieren",
@@ -853,17 +1095,115 @@ const DICTS: Record<Locale, Dict> = {
     showMap: "Karte Anzeigen",
     hideMap: "Karte Ausblenden",
     activeProjects: "Aktive Projekte",
-    
+
     cities: "Städte",
     connectedVolunteers: "Verbundene Freiwillige",
     availableSpots: "Verfügbare Plätze",
+    mapSearchPlaceholder: "Städte, Projekte, Weltweit suchen...",
+    mapSearchPlaceholderGlobal: "Städte, Länder, Projekte, Orte suchen...",
+    searchingGlobally: "Weltweit suchen...",
     featuredProjects: "Empfohlene Projekte",
+    recommendedForYou: "Für dich empfohlen",
+    match: "Match",
+    communityProjectsTitle: "Gemeinschaftsprojekte",
+    proximityReason: "Nur {{distance}} km von dir entfernt",
+    interestReason: "Passt zu deinem Interesse an {{category}}",
+    preferredTimeReason: "In deiner bevorzugten Zeit ({{time}})",
+    difficultyReason: "Passender Schwierigkeitsgrad",
+    noNearbyEvents: "Keine Veranstaltungen in der Nähe gefunden",
+    eventsNearby: "Veranstaltungen in der Nähe",
+    viewAll: "Alle ansehen",
+    socialMediaDetectionHeader: "Automatische Projekterkennung",
+    interactions: "Interaktionen",
+    sustainable: "nachhaltig",
+    approved: "Genehmigen",
+    rejected: "Ablehnen",
+    viewPost: "Beitrag ansehen",
+    detectionActive: "Erkennung aktiv",
+    detectionPaused: "Erkennung pausiert",
+    monitoringSocialMedia: "Überwachung sozialer Medien auf verifizierte Umweltprojekte",
+    scanningSocialMedia: "Soziale Medien werden gescannt...",
+    noNewProjects: "Keine neuen Projekte gefunden",
+    scanning: "Scannen",
+    scan: "Escanear",
+    detectionSettings: "Erkennungseinstellungen",
+    minFollowers: "Mindestfollower",
+    minScore: "Mindestpunktzahl",
+    communityProjectsPageDesc: "Entdecken Sie von der Gemeinschaft getragene Initiativen, die stärkere und nachhaltigere Nachbarschaften in ganz Europa aufbauen",
+    totalVolunteers: "Gesamt Freiwillige",
+    backToHome: "Zurück zur Startseite",
+    recommendationsForYou: "Empfehlungen für dich",
+    basedOnPrefs: "Basierend auf deinen Vorlieben und deinem Standort",
+    excellent: "Exzellent",
+    veryGood: "Sehr gut",
+    good: "Gut",
+    fair: "Mittelmäßig",
+    howRecsWork: "Wie Empfehlungen funktionieren",
+    locationPrio: "Standort: Wir priorisieren Veranstaltungen in deiner Nähe",
+    interestsPrio: "Interessen: Basierend auf deinen Lieblingskategorien",
+    timesPrio: "Zeitpläne: Wir berücksichtigen deine bevorzugten Zeiten",
+    historyPrio: "Verlauf: Wir lernen aus vergangenen Veranstaltungen",
+    availabilityPrio: "Verfügbarkeit: Nur Veranstaltungen mit freien Plätzen",
+    environmentalProject: "Umweltprojekt",
+    educationalProject: "Bildungsprojekt",
+    healthServices: "Gesundheitsdienste",
+    communityProject: "Gemeinschaftsprojekt",
+    foodProject: "Ernährungsprojekt",
+    activeProject: "Aktives Projekt",
     exploreCategories: "Kategorien erkunden",
+    exploreDescription: "Entdecke regenerative Projekte, Gemeinschaftsveranstaltungen und Wirkungsmöglichkeiten in deiner Nähe.",
+    featuredProjectsDesc: "Initiativen, die Europa gerade jetzt verändern.",
+    viewProjects: "Projekte anzeigen",
+    coursesAndWorkshops: "Kurse und Workshops",
+    coursesAndWorkshopsDesc: "Lerne Fähigkeiten für eine nachhaltige Zukunft.",
+    exploreCourses: "Kurse erkunden",
+    impactSearch: "Wirkungssuche",
+    searchPlaceholderExplore: "Wonach suchst du? (z.B. Permakultur, Berlin, Ozeane...)",
+    searchResults: "Suchergebnisse",
+    found: "gefunden",
+    noResultsFor: "Keine Ergebnisse gefunden für",
+    clearSearch: "Suche löschen",
+    haveInitiative: "Hast du eine Initiative?",
+    registerInitiativeDesc: "Registriere sie auf EcoNexo und verbinde dich mit Tausenden von Freiwilligen.",
+    publishProject: "Projekt veröffentlichen",
+    tagBiodiversity: "Artenvielfalt",
+    tagSolarEnergy: "Solarenergie",
+    tagZeroWaste: "Zero Waste",
+    tagReforestation: "Aufforstung",
     ecoTipsTitle: "Öko-Tipps",
     joinCommunity: "Gemeinschaft beitreten",
     readyToMakeDifference: "Bereit, einen Unterschied zu machen?",
     readyDescription: "Erkunden Sie Projekte, nehmen Sie an Veranstaltungen teil und verbinden Sie sich mit einer Gemeinschaft, die sich für die Zukunft unseres Planeten engagiert",
     letsGo: "Los geht's!",
+
+    // Community Page
+    communityPageTitle: "EcoNexo Gemeinschaft",
+    tabFeed: "Feed",
+    tabGroups: "Gruppen",
+    tabMentoring: "Mentoring",
+    tabMarketplace: "Marktplatz",
+    recentActivity: "Aktuelle Aktivität",
+    noActivityYet: "Noch keine Aktivität",
+    createdAnEvent: "hat ein Event erstellt",
+    localGroupsTitle: "Lokale Gruppen",
+    createGroupBtn: "+ Gruppe erstellen",
+    localGroupsDesc: "Verbinde dich mit lokalen Gemeinschaften in deiner Stadt oder Region",
+    viewAllGroups: "Alle Gruppen anzeigen",
+    mentoringTitle: "Mentoring",
+    mentoringDesc: "Verbinde dich mit Experten oder finde Lernende in Nachhaltigkeit",
+    findMentorBtn: "Mentor suchen",
+    findMentorDesc: "Finde einen Experten, der dich führt",
+    becomeMentorBtn: "Mentor werden",
+    shareKnowledgeDesc: "Teile dein Wissen",
+    marketplaceTitle: "Öko-Marktplatz",
+    publishBtn: "+ Veröffentlichen",
+    marketplaceDesc: "Kaufe, verkaufe oder tausche nachhaltige Produkte und Dienstleistungen",
+    karma: "Karma",
+    reputation: "Reputation",
+    followers: "Follower",
+    quickLinks: "Schnelllinks",
+    myProfileLabel: "Mein Profil",
+
     viewMap: "Karte anzeigen",
     // Categories
     environmentTitle: "Umwelt",
@@ -886,8 +1226,13 @@ const DICTS: Record<Locale, Dict> = {
     innovationTitle: "Innovation",
     innovationDescription: "Wir nutzen modernste Technologie und innovative Lösungen, um Umweltprobleme anzugehen und nachhaltige Zukunft zu schaffen.",
     // Local Groups
-    localGroupsTitle: "Lokale Gruppen",
     localGroupsSubtitle: "Verbinde dich mit lokalen Gemeinschaften in deiner Stadt oder Region",
+    becomeMentor: "Mentor werden",
+    shareKnowledge: "Teile dein Wissen und unterstütze Lernende bei Nachhaltigkeitsthemen.",
+    expertiseAreasPhMentoring: "Energie, Kreislaufwirtschaft...",
+    languagesPhMentoring: "Deutsch, Englisch...",
+    availabilityPhMentoring: "2 Std./Woche",
+    offerMentoring: "Mentoring anbieten",
     createGroup: "Gruppe erstellen",
     allGroups: "Alle",
     myGroups: "Meine Gruppen",
@@ -1023,7 +1368,7 @@ const DICTS: Record<Locale, Dict> = {
     spotsLeft: "Plätze übrig",
     requirements: "Anforderungen",
     benefits: "Vorteile",
-    
+
     // Job form fields
     jobTitle: "Stellenbezeichnung",
     jobTitlePlaceholder: "Stellenbezeichnung eingeben",
@@ -1057,7 +1402,7 @@ const DICTS: Record<Locale, Dict> = {
     saveDraft: "Entwurf speichern",
     publishJob: "Stelle veröffentlichen",
     jobCreated: "Stelle erstellt",
-    
+
     // Onboarding
     onboardingWelcome: "Willkommen bei EcoNexo!",
     onboardingDescription: "Entdecken Sie nachhaltige Projekte und verbinden Sie sich mit einer Gemeinschaft, die sich für den Umweltschutz engagiert",
@@ -1120,6 +1465,18 @@ const DICTS: Record<Locale, Dict> = {
     linkedin: "LinkedIn",
     twitter: "Twitter",
     instagram: "Instagram",
+    firstNamePh: "Vorname eingeben",
+    lastNamePh: "Nachname eingeben",
+    phonePh: "Telefonnummer eingeben",
+    aboutMePh: "Erzähle etwas über dich...",
+    linkedinPh: "https://linkedin.com/in/dein-profil",
+    twitterPh: "https://twitter.com/dein-benutzername",
+    instagramPh: "https://instagram.com/dein-benutzername",
+    websitePh: "https://deine-website.com",
+    cityPh: "Stadtname",
+    countryPh: "Landname",
+    addressPh: "Adresse",
+    titlePh: "Titel",
     website: "Website",
     useLogo: "Logo verwenden",
     passionsPlaceholder: "Wofür begeisterst du dich?",
@@ -1128,7 +1485,7 @@ const DICTS: Record<Locale, Dict> = {
     interestsPlaceholder: "Was interessiert dich?",
     skillsPlaceholder: "Welche Fähigkeiten hast du?",
     languagesPlaceholder: "Welche Sprachen sprichst du?",
-    
+
     // OAuth Provider Information
     googleInformation: "Google-Informationen",
     microsoftInformation: "Microsoft-Informationen",
@@ -1142,10 +1499,57 @@ const DICTS: Record<Locale, Dict> = {
     googleWorkspaceDomain: "Google Workspace-Domäne",
     tenantId: "Mandanten-ID",
     preferredUsername: "Bevorzugter Benutzername",
+    previewLabel: "Vorschau",
+    projectTitle: "Projekt-Titel",
+    projectTitlePh: "Z.B.: Nachhaltige städtische Aufforstung",
+    locationPh: "Stadt, Land",
+    detailedDescription: "Detaillierte Beschreibung",
+    detailedDescriptionPh: "Beschreibe Ziele, Auswirkungen und Methodik...",
+    targetParticipants: "Zielteilnehmer",
+    estimatedBudget: "Geschätztes Budget (€)",
+    keyMilestones: "Wichtige Meilensteine",
+    keyMilestonesPh: "- Start\n- Erste Implementierungsphase\n- Bewertung",
+    accessibilityNeedsPh: "z. B. Rollstuhl, eingeschränkte Mobilität, etc.",
+    writeMessagePh: "Nachricht schreiben...",
+    roomDestroyed: "Raum zerstört",
+    roomDestroyedDesc: "Dieser Raum wurde wie geplant selbstzerstört. Alle Nachrichten wurden dauerhaft gelöscht.",
+    participantsCount: "{{count}} Teilnehmer",
+    leaveRoom: "Raum verlassen",
+    noMessagesYet: "Noch keine Nachrichten. Sei der Erste!",
+    signInToSendMessage: "Melde dich an, um Nachrichten zu senden",
+    goBack: "Zurück",
+    searchConfiguration: "Suchkonfiguration",
+    remoteWorkOnly: "Nur Fernarbeit",
+    experienceYears: "Erfahrung (Jahre)",
+    skillsCommas: "Fähigkeiten (kommagetrennt)",
+    salaryMin: "Gehalt (Min)",
+    matchingAgentWelcome: "Hallo! Ich bin dein intelligenter Matching-Assistent. Ich kann dir helfen, Projekte zu finden, die perfekt zu deinen Interessen und Präferenzen passen. Welche Art von Projekten interessieren dich?",
+    matchingAgentError: "Entschuldigung, beim Suchen nach Projekten ist ein Fehler aufgetreten. Bitte versuche es erneut.",
+    signInToUseMatching: "Bitte melde dich an, um den Matching-Assistenten zu verwenden.",
+    suggestionsLabel: "Vorschläge:",
+    typeSearchPh: "Schreibe deine Suche...",
+    searchEventsPh: "Suche nach Veranstaltungen in deiner Stadt...",
+    searchEventsTitlePh: "Titel, Ort, Organisator...",
+    loadingCalendar: "Kalender wird geladen...",
+    loadingEventsIndicator: "Veranstaltungen werden geladen...",
+    showFiltersLabel: "Filter anzeigen",
+    hideFiltersLabel: "Filter ausblenden",
+    noEventsFound: "Keine Veranstaltungen gefunden, die den Filtern entsprechen",
+    savingEllipsis: "Speichern...",
+    creatingEllipsis: "Erstellen...",
+    groupName: "Gruppenname",
+    groupNamePh: "z.B. Berlin Nachhaltig",
+    groupDescriptionPh: "Beschreibe den Zweck und die Ziele der Gruppe...",
+    tagsLabel: "Tags",
+    region: "Region",
+    add: "Hinzufügen",
+    addTagPh: "Tag hinzufügen...",
+    publicGroup: "Öffentliche Gruppe (jeder kann beitreten)",
+    backToGroups: "Zurück zu Gruppen",
+    mustSignInToCreateGroup: "Du musst dich anmelden, um eine Gruppe zu erstellen",
     volunteersLabel: "Freiwillige",
     spotsLabel: "Plätze",
-    previewLabel: "Vorschau",
-    
+
     // Project names and descriptions
     urbanReforestationBerlin: "Städtische Aufforstung Berlin",
     urbanReforestationDesc: "Nimm an unserer städtischen Aufforstungsinitiative in Berlin teil. Hilf beim Pflanzen von Bäumen und schaffe grüne Räume in der Stadt.",
@@ -1156,7 +1560,7 @@ const DICTS: Record<Locale, Dict> = {
     communityGardensMadrid: "Gemeinschaftsgärten Madrid",
     communityGardensDesc: "Engagiere dich in Gemeinschaftsgärten in Madrid. Lerne nachhaltige Landwirtschaft und verbinde dich mit Nachbarn.",
     communityGardensActive: "Gemeinschaftsgärten aktiv",
-    
+
     // Eco Tips
     ecoTipCategoryFinance: "Finanzen",
     ecoTipsDescription: "Praktische Ideen, um deinen Fußabdruck zu senken und nachhaltig zu leben.",
@@ -1169,7 +1573,7 @@ const DICTS: Record<Locale, Dict> = {
     maxDistance: "Maximale Entfernung",
     anyDistance: "Beliebige Entfernung",
     dateRange: "Datumsbereich",
-    
+
     type: "Typ",
     permanent: "Dauerhaft",
     frequency: "Häufigkeit",
@@ -1195,10 +1599,10 @@ const DICTS: Record<Locale, Dict> = {
     ecoTipWaterTitle: "Wasser sparen",
     ecoTipWaterDescription: "Nimm kürzere Duschen, repariere Lecks und nutze wassersparende Geräte.",
     ecoTips: "Öko-Tipps",
-    
+
     // Event creation
     createEvent: "Event erstellen",
-    
+
     // Event administrators
     eventAdministrators: "Event-Administratoren",
     addAdministrator: "Administrator hinzufügen",
@@ -1211,7 +1615,7 @@ const DICTS: Record<Locale, Dict> = {
     youAreAdministrator: "Sie sind Administrator",
     eventCreator: "Event-Ersteller",
     administrators: "Administratoren",
-    
+
     // Chat translations
     communityChat: "Community Chat",
     topicForums: "Themen-Foren",
@@ -1233,7 +1637,7 @@ const DICTS: Record<Locale, Dict> = {
     chatMessage2: "Ich arbeite an ähnlichen Projekten in meiner Gegend",
     chatMessage3: "Das ist genau das, was wir mehr brauchen!",
     chatMessage4: "Hat jemand diesen Ansatz schon einmal ausprobiert?",
-    
+
     // Chat Rules
     chatRule1: "Respektiere alle Teilnehmer",
     chatRule2: "Halte Gespräche relevant",
@@ -1247,7 +1651,7 @@ const DICTS: Record<Locale, Dict> = {
     chatRulesFooter: "Das Befolgen dieser Regeln schafft eine positive Gemeinschaft",
     chatRulesIntro: "Um eine positive Umgebung zu erhalten, bitte folge diesen Regeln:",
     chatRulesTitle: "Gemeinschaftsregeln",
-    
+
     // Chat Recommendations
     recommendations: "Empfehlungen",
     popularDiscussions: "Beliebte Diskussionen",
@@ -1256,7 +1660,7 @@ const DICTS: Record<Locale, Dict> = {
     discoverLatestInitiatives: "Entdecke Neueste Initiativen",
     eventsNearYou: "Veranstaltungen In Deiner Nähe",
     findLocalEvents: "Finde Lokale Veranstaltungen",
-    
+
     // Category translations
     environment: "Umwelt",
     education: "Bildung",
@@ -1264,7 +1668,7 @@ const DICTS: Record<Locale, Dict> = {
     community: "Gemeinschaft",
     oceans: "Ozeane",
     food: "Ernährung",
-    
+
     capital: "Hauptstadt",
     population: "Bevölkerung",
     currency: "Währung",
@@ -1273,14 +1677,14 @@ const DICTS: Record<Locale, Dict> = {
     governmentAPIInDevelopment: "Regierungs-API in Entwicklung",
     integratedGovernmentAPIs: "Integrierte Regierungs-APIs",
     baseURL: "Basis-URL",
-    
+
     // Additional event titles for calendar
     eventNativeTreePlanting: "Einheimische Baumpflanzung",
     eventSolarEnergyWorkshop: "Solarenergie Workshop",
     eventRiverCleanup: "Flussreinigung",
     eventClimateConference: "Klimawandel Konferenz",
     eventFoodConservationWorkshop: "Lebensmittelkonservierung Workshop",
-    
+
     // Event titles
     eventVerticalGardens: "Vertikale Gärten Bau",
     eventEcoRace: "Umweltfreundlicher 5K-Lauf",
@@ -1300,7 +1704,7 @@ const DICTS: Record<Locale, Dict> = {
     eventEcoNewYear: "Umweltfreundliche Silvesterfeier",
     eventMarineConservation: "Meeresarten Schutz",
     eventHydroelectricWorkshop: "Wasserkraft Workshop",
-    
+
     // Job titles
     jobTitle1: "Städtische Aufforstung Spezialist",
     jobTitle2: "Luftqualität Datenanalyst",
@@ -1311,7 +1715,7 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle7: "Spezialist für grüne Architektur",
     jobTitle8: "Forscher Kreislaufwirtschaft",
     jobTitle9: "Ingenieur Windparkbetrieb",
-    
+
     // Job descriptions
     jobDesc1: "Leiten Sie städtische Aufforstungsinitiativen in Berlin, verwalten Sie Baumpflanzprojekte, koordinieren Sie mit lokalen Gemeinden und entwickeln Sie nachhaltige Grünflächen. Sie arbeiten mit Umweltexperten, Stadtplanern und Freiwilligen zusammen, um gesündere städtische Umgebungen zu schaffen.",
     jobDesc2: "Analysieren Sie Luftqualitätsdaten mit Python und GIS-Tools, überwachen Sie Sensornetzwerke in Paris und erstellen Sie Berichte für Umweltpolitiker. Sie arbeiten mit Datenwissenschaftlern und Umweltingenieuren zusammen, um Luftqualitätsüberwachungssysteme zu verbessern.",
@@ -1322,7 +1726,7 @@ const DICTS: Record<Locale, Dict> = {
     jobDesc7: "Leiten Sie nachhaltige Architekturprojekte in Amsterdam. Integrieren Sie Energieeffizienz, Passivhaus‑Design und CO₂‑arme Materialien (LEED/BREEAM). Arbeiten Sie eng mit Stadtplanung und Community zusammen.",
     jobDesc8: "Arbeiten Sie an einem Forschungsinstitut in Kopenhagen, um Kreislaufwirtschaft‑Pilotprojekte zu evaluieren. Quantifizieren Sie Auswirkungen (LCA), veröffentlichen Sie Ergebnisse und unterstützen Sie Politikempfehlungen.",
     jobDesc9: "Betreiben und optimieren Sie Windparks rund um Hamburg. Verantwortlich für Wartungspläne, SCADA‑Monitoring, Sicherheitsverfahren und Performance‑Verbesserungen mit OEM‑Partnern.",
-    
+
     // Technical tags
     sensores: "Sensoren",
     silvicultura: "Forstwirtschaft",
@@ -1350,7 +1754,7 @@ const DICTS: Record<Locale, Dict> = {
     blockchain: "Blockchain",
     iot: "IoT",
     uxui: "UX/UI",
-    
+
     // Interface translations
     searchPlaceholderEn: "Nach Jobs suchen...",
     cityLabel: "Stadt",
@@ -1367,7 +1771,7 @@ const DICTS: Record<Locale, Dict> = {
     jobPostingInfo: "Stellenausschreibungsinformationen",
     conductGuidelines: "Verhaltensrichtlinien",
     conductGuidelinesText: "Halten Sie eine respektvolle und konstruktive Umgebung aufrecht",
-    
+
     // Language levels
     spanish: "Spanisch",
     english: "Englisch",
@@ -1383,7 +1787,7 @@ const DICTS: Record<Locale, Dict> = {
     levelMid: "Mid-Level",
     levelSenior: "Senior",
     levelLead: "Lead",
-    
+
     // Admin panel titles
     adminPanelTitle: "Administrations-Panel",
     adminPanelDescription: "Verwalten Sie Veranstaltungen, Projekte und EcoNexo-Benutzer",
@@ -1419,9 +1823,9 @@ const DICTS: Record<Locale, Dict> = {
     adminTreePlantingMadrid: "Baumpflanzung Madrid",
     adminCommunityGardenValencia: "Gemeinschaftsgarten Valencia",
     adminSolarEnergyNeighborhood: "Solarenergie Nachbarschaft",
-    
+
     // Gamification titles
-    badgeFirstEvent: "Erstes Event",
+
     badgeEcoWarrior: "Öko-Krieger",
     badgeCommunityLeader: "Gemeinschaftsführer",
     badgeGreenJobHunter: "Grüner Job-Jäger",
@@ -1430,22 +1834,22 @@ const DICTS: Record<Locale, Dict> = {
     achievementProjectPioneer: "Projekt-Pionier",
     achievementCommunityConnector: "Gemeinschaftsverbinder",
     achievementCarbonNeutral: "Kohlenstoffneutral",
-    
+
     // Admin page metadata
     adminPageTitle: "Administrations-Panel - EcoNexo",
     adminPageDescription: "Verwalten Sie Veranstaltungen, Projekte und EcoNexo-Benutzer",
-    
+
     // Map titles
     centerOnMyLocation: "Auf meinen Standort zentrieren",
-    
+
     // Social media titles
     socialMediaCommunityReforestationBerlin: "Gemeinschaftliche Aufforstung in Berlin",
-    
+
     // Regions
     all: "Alle",
     northernEurope: "Nordeuropa",
     westernEurope: "Westeuropa",
-    centralEurope: "Mitteleuropa", 
+    centralEurope: "Mitteleuropa",
     southernEurope: "Südeuropa",
     easternEurope: "Osteuropa",
     minExperience: "Mindestberufserfahrung",
@@ -1472,9 +1876,11 @@ const DICTS: Record<Locale, Dict> = {
     volunteers: "Freiwillige",
     progressReached: "Fortschritt erreicht",
     donatePaypal: "Mit PayPal spenden",
+    donateKlarna: "Mit Klarna spenden",
     donateStripe: "Mit Stripe spenden",
     backToMap: "Zurück zur Karte",
     moreInfo: "Mehr Info",
+    rememberToTellThemTooltip: "Denken Sie daran, zu erwähnen, dass Sie von EcoNexo kommen!",
     // Auth Modal translations
     pleaseCompleteSecurityVerification: "Bitte vervollständigen Sie die Sicherheitsüberprüfung",
     errorSendingEmail: "Fehler beim Senden der E-Mail",
@@ -1504,14 +1910,87 @@ const DICTS: Record<Locale, Dict> = {
     yourAnswer: "Ihre Antwort",
     verify: "Überprüfen",
     howMuchIs: "Wie viel ist",
+    // Gamification & Badges
+    badgeFirstStep: "Erster Schritt",
+    descFirstStep: "Erste Aktion abgeschlossen",
+    badgeExplorer: "Entdecker",
+    descExplorer: "Verschiedene Bereiche erkundet",
+    badgeHelper: "Helfer",
+    descHelper: "Der Gemeinschaft geholfen",
+    badgeFirstEvent: "Erstes Event",
+    descFirstEvent: "Erstes Event besucht",
+    badgeEventEnthusiast: "Enthusiast",
+    descEventEnthusiast: "5 Events besucht",
+    badgeEventMaster: "Event-Meister",
+    descEventMaster: "10 Events besucht",
+    badgeEventCreator: "Organisator",
+    descEventCreator: "Erstes Event erstellt",
+    badgeProjectJoiner: "Mitarbeiter",
+    descProjectJoiner: "Erstem Projekt beigetreten",
+    badgeProjectCreator: "Schöpfer",
+    descProjectCreator: "Erstes Projekt erstellt",
+    badgeProjectVeteran: "Veteran",
+    descProjectVeteran: "5 Projekte abgeschlossen",
+    badgeConnector: "Verbinder",
+    descConnector: "Erste Verbindung hergestellt",
+    badgeMentor: "Mentor",
+    descMentor: "Mentor geworden",
+    badgeMarketplaceSeller: "Grüner Verkäufer",
+    descMarketplaceSeller: "Im Marktplatz gepostet",
+    badgeGreenCommuter: "Grüner Pendler",
+    descGreenCommuter: "Nachhaltigen Transport genutzt",
+    badgeWasteWarrior: "Abfall-Krieger",
+    descWasteWarrior: "Abfall reduziert",
+    badgeCarbonFighter: "CO2-Kämpfer",
+    descCarbonFighter: "Fußabdruck ausgeglichen",
+    badgeDailyStreak7: "Wöchentliche Serie",
+    descDailyStreak7: "7 Tage in Folge",
+    badgeDailyStreak30: "Monatliche Serie",
+    descDailyStreak30: "30 Tage in Folge",
+    badgeProfileComplete: "Profil vollständig",
+    descProfileComplete: "Profil vervollständigt",
+    badgeSocialSharer: "Teiler",
+    descSocialSharer: "10 Mal geteilt",
+
+    // Impact Page UI
+    yourImpact: "Dein Einfluss",
+    impactDescription: "Sie bauen Schritt für Schritt eine grünere Zukunft auf. Hier sind Ihre Fortschritte und Erfolge bei EcoNexo.",
+    xpToLevel: "EP bis Level",
+    impactMedals: "Medaillen",
+    impactStreakDays: "Serien-Tage",
+    impactSocialImpact: "Sozialer Einfluss",
+    impactShared: "geteilt",
+    impactTalleres: "Workshops",
+    impactCompleted: "abgeschlossen",
+    impactCity: "Stadt",
+    impactRanking: "Rangliste",
+    impactBadgeCollection: "Medaillensammlung",
+    impactRecentActivity: "Kürzliche Aktivität",
+    impactNoActivity: "Keine jüngsten Aktivitäten.",
+    impactJustNow: "Gerade eben",
+    impactKeepGoing: "Weiter so!",
+    impactUnlockNextLevel: "Nehmen Sie an weiteren Projekten und Veranstaltungen teil, um Level {{level}} freizuschalten.",
+    impactExploreProjects: "Projekte erkunden",
+    impactLevel: "Level",
+
+    // Badge Categories
+    categoryStarter: "Starter",
+    categoryEngagement: "Engagement",
+    categoryLifestyle: "Lebensstil",
   },
   es: {
-  
+
     app: "EcoNexo",
     map: "Mapa",
     events: "Eventos",
     jobs: "Trabajos",
     chat: "Chat",
+    home: "Inicio",
+    explore: "Explorar",
+    workshops: "Talleres",
+    badges: "Insignias",
+    forum: "Foro",
+    volunteering: "Trabajos Verdes",
     profile: "Perfil",
     signIn: "Iniciar sesión",
     signUp: "Registrarse",
@@ -1597,8 +2076,76 @@ const DICTS: Record<Locale, Dict> = {
     cities: "Ciudades",
     connectedVolunteers: "Voluntarios conectados",
     availableSpots: "Cupos disponibles",
+    mapSearchPlaceholder: "Buscar ciudades, proyectos, lugares...",
+    mapSearchPlaceholderGlobal: "Buscar ciudades, países, proyectos, lugares...",
+    searchingGlobally: "Buscando en el mundo...",
     featuredProjects: "Proyectos Destacados",
+    recommendedForYou: "Recomendado para ti",
+    match: "Match",
+    communityProjectsTitle: "Proyectos Comunitarios",
+    proximityReason: "A solo {{distance}} km de ti",
+    interestReason: "Coincide con tu interés en {{category}}",
+    preferredTimeReason: "En tu horario preferido ({{time}})",
+    difficultyReason: "Nivel de dificultad adecuado",
+    noNearbyEvents: "No se encontraron eventos cercanos.",
+    eventsNearby: "Eventos en los alrededores",
+    viewAll: "Ver todos",
+    socialMediaDetectionHeader: "Detección Automática de Proyectos",
+    interactions: "interacciones",
+    sustainable: "sostenible",
+    approved: "Aprobar",
+    rejected: "Rechazar",
+    viewPost: "Ver post",
+    detectionActive: "Detección activa",
+    detectionPaused: "Detección pausada",
+    monitoringSocialMedia: "Monitoreando redes sociales para proyectos ambientales verificados",
+    scanningSocialMedia: "Escaneando redes sociales...",
+    noNewProjects: "No se encontraron proyectos nuevos",
+    scanning: "Escaneando",
+    scan: "Escanear",
+    detectionSettings: "Configuración de Detección",
+    minFollowers: "Seguidores mínimos",
+    minScore: "Puntuación mínima",
+    communityProjectsPageDesc: "Descubre iniciativas impulsadas por la comunidad que están construyendo barrios más fuertes y sostenibles en toda Europa",
+    totalVolunteers: "Voluntarios Totales",
+    backToHome: "Volver al Inicio",
+    basedOnPrefs: "Basado en tus preferencias y ubicación",
+    excellent: "Excelente",
+    veryGood: "Muy bueno",
+    good: "Bueno",
+    fair: "Regular",
+    howRecsWork: "Cómo funcionan las recomendaciones",
+    locationPrio: "Ubicación: Priorizamos eventos cerca de ti",
+    interestsPrio: "Intereses: Basado en tus categorías favoritas",
+    timesPrio: "Horarios: Consideramos tus momentos preferidos",
+    historyPrio: "Historial: Aprendemos de eventos anteriores",
+    availabilityPrio: "Disponibilidad: Solo eventos con plazas libres",
+    environmentalProject: "Proyecto ambiental",
+    educationalProject: "Proyecto educativo",
+    healthServices: "Servicios de salud",
+    communityProject: "Proyecto comunitario",
+    foodProject: "Proyecto alimentario",
+    activeProject: "Proyecto activo",
     exploreCategories: "Explorar Categorías",
+    exploreDescription: "Descubre proyectos regenerativos, eventos comunitarios y oportunidades de impacto en tu zona.",
+    featuredProjectsDesc: "Iniciativas que están cambiando Europa ahora mismo.",
+    viewProjects: "Ver Proyectos",
+    coursesAndWorkshops: "Cursos y Talleres",
+    coursesAndWorkshopsDesc: "Aprende habilidades para un futuro sostenible.",
+    exploreCourses: "Explorar Cursos",
+    impactSearch: "Buscador de Impacto",
+    searchPlaceholderExplore: "¿Qué buscas? (ej: Permacultura, Barcelona, Océanos...)",
+    searchResults: "Resultados de búsqueda",
+    found: "encontrados",
+    noResultsFor: "No encontramos resultados para",
+    clearSearch: "Limpiar búsqueda",
+    haveInitiative: "¿Tienes una iniciativa?",
+    registerInitiativeDesc: "Regístrala en EcoNexo y conecta con miles de voluntarios.",
+    publishProject: "Publicar Proyecto",
+    tagBiodiversity: "Biodiversidad",
+    tagSolarEnergy: "Energía Solar",
+    tagZeroWaste: "Zero Waste",
+    tagReforestation: "Reforestación",
     ecoTipsTitle: "Consejos Ecológicos",
     joinCommunity: "Unirse a la Comunidad",
     readyToMakeDifference: "Vuélvete agente de cambio!",
@@ -1626,8 +2173,14 @@ const DICTS: Record<Locale, Dict> = {
     innovationTitle: "Innovación",
     innovationDescription: "Utilizamos tecnología de vanguardia y soluciones innovadoras para abordar los desafíos ambientales y crear futuros sostenibles.",
     // Local Groups
-    localGroupsTitle: "Grupos Locales",
     localGroupsSubtitle: "Conecta con comunidades locales en tu ciudad o región",
+    becomeMentor: "Convertirse en Mentor",
+    shareKnowledge: "Comparte tu conocimiento y apoya a aprendices en temas de sostenibilidad.",
+
+    expertiseAreasPhMentoring: "Energía, Circularidad...",
+    languagesPhMentoring: "Español, Inglés...",
+    availabilityPhMentoring: "2 h/semana",
+    offerMentoring: "Ofrecer Mentoring",
     createGroup: "Crear Grupo",
     allGroups: "Todos",
     myGroups: "Mis Grupos",
@@ -1763,6 +2316,7 @@ const DICTS: Record<Locale, Dict> = {
     spotsLeft: "cupos restantes",
     requirements: "Requisitos",
     benefits: "Beneficios",
+    rememberToTellThemTooltip: "¡Recuerda decir que llegaste por EcoNexo!",
     // Onboarding
     onboardingWelcome: "¡Bienvenido a EcoNexo!",
     onboardingDescription: "Descubre proyectos sostenibles y conecta con una comunidad comprometida con el medio ambiente",
@@ -1823,6 +2377,14 @@ const DICTS: Record<Locale, Dict> = {
     linkedin: "LinkedIn",
     twitter: "Twitter",
     instagram: "Instagram",
+    firstNamePh: "Ingresa tu nombre",
+    lastNamePh: "Ingresa tu apellido",
+    phonePh: "Ingresa tu teléfono",
+    aboutMePh: "Cuéntanos sobre ti...",
+    linkedinPh: "https://linkedin.com/in/tu-perfil",
+    twitterPh: "https://twitter.com/tu-usuario",
+    instagramPh: "https://instagram.com/tu-usuario",
+    websitePh: "https://tu-sitio-web.com",
     website: "Sitio Web",
     useLogo: "Usar logo",
     passionsPlaceholder: "¿Qué te apasiona?",
@@ -1831,7 +2393,7 @@ const DICTS: Record<Locale, Dict> = {
     interestsPlaceholder: "¿Qué te interesa?",
     skillsPlaceholder: "¿Qué habilidades tienes?",
     languagesPlaceholder: "¿Qué idiomas hablas?",
-    
+
     // OAuth Provider Information
     googleInformation: "Información de Google",
     microsoftInformation: "Información de Microsoft",
@@ -1845,6 +2407,56 @@ const DICTS: Record<Locale, Dict> = {
     googleWorkspaceDomain: "Dominio Google Workspace",
     tenantId: "Tenant ID",
     preferredUsername: "Usuario preferido",
+    projectTitle: "Título del Proyecto",
+    projectTitlePh: "Ej: Reforestación Urbana Sostenible",
+    locationPh: "Ciudad, País",
+    detailedDescription: "Descripción Detallada",
+    detailedDescriptionPh: "Describe los objetivos, impacto y metodología...",
+    targetParticipants: "Meta de Participantes",
+    estimatedBudget: "Presupuesto Estimado (€)",
+    keyMilestones: "Hitos Principales",
+    keyMilestonesPh: "- Lanzamiento\n- Primera fase de implementación\n- Evaluación",
+    publishing: "Publicando...",
+    errorSavingProject: "Error al guardar el proyecto",
+    dietaryRestrictionsPh: "ej: Vegetariano, alergias, etc.",
+    accessibilityNeedsPh: "ej: Silla de ruedas, movilidad reducida, etc.",
+    writeMessagePh: "Escribe un mensaje...",
+    roomDestroyed: "Sala Destruida",
+    roomDestroyedDesc: "Esta sala se ha autodestruido según lo programado. Todos los mensajes han sido eliminados permanentemente.",
+    participantsCount: "{{count}} participantes",
+    leaveRoom: "Salir de la sala",
+    noMessagesYet: "No hay mensajes aún. ¡Sé el primero en escribir!",
+    signInToSendMessage: "Inicia sesión para enviar mensajes",
+    goBack: "Volver",
+    searchConfiguration: "Configuración de Búsqueda",
+    remoteWorkOnly: "Solo trabajo remoto",
+    experienceYears: "Experiencia (años)",
+    skillsCommas: "Habilidades (separadas por comas)",
+    salaryMin: "Salario (Mínimo)",
+    matchingAgentWelcome: "¡Hola! Soy tu asistente de matching inteligente. Puedo ayudarte a encontrar proyectos que se ajusten perfectamente a tus intereses y preferencias. ¿Qué tipo de proyectos te interesan?",
+    matchingAgentError: "Lo siento, hubo un error al buscar proyectos. Por favor, intenta de nuevo.",
+    signInToUseMatching: "Por favor, inicia sesión para usar el asistente de matching.",
+    suggestionsLabel: "Sugerencias:",
+    typeSearchPh: "Escribe tu búsqueda...",
+    searchEventsPh: "Buscar eventos en tu ciudad...",
+    searchEventsTitlePh: "Título, ubicación, organizador...",
+    loadingCalendar: "Cargando calendario...",
+    loadingEventsIndicator: "Cargando eventos...",
+    showFiltersLabel: "Mostrar Filtros",
+    hideFiltersLabel: "Ocultar Filtros",
+    noEventsFound: "No se encontraron eventos que coincidan con los filtros",
+    savingEllipsis: "Guardando...",
+    creatingEllipsis: "Creando...",
+    groupName: "Nombre del Grupo",
+    groupNamePh: "Ej: Berlín Sostenible",
+    groupDescriptionPh: "Describe el propósito y objetivos del grupo...",
+    tagsLabel: "Etiquetas",
+    region: "Región",
+    add: "Agregar",
+    addTagPh: "Agregar etiqueta...",
+    publicGroup: "Grupo público (cualquiera puede unirse)",
+    backToGroups: "Volver a Grupos",
+    mustSignInToCreateGroup: "Debes iniciar sesión para crear un grupo",
     // Traducciones automáticas generadas Sun Oct 19 11:54:11 CEST 2025
     address: "Dirección",
     addressPh: "Ingresa tu dirección",
@@ -1908,7 +2520,7 @@ const DICTS: Record<Locale, Dict> = {
     chatMessage2: "He estado trabajando en proyectos similares en mi área",
     chatMessage3: "¡Esto es exactamente lo que necesitamos más!",
     chatMessage4: "¿Alguien ha probado este enfoque antes?",
-    
+
     companyName: "Nombre de la empresa",
     companyNamePlaceholder: "Nombre de tu empresa",
     conductGuidelines: "Pautas de Conducta",
@@ -1922,7 +2534,7 @@ const DICTS: Record<Locale, Dict> = {
     contract_part_time: "Medio tiempo",
     countryPh: "Selecciona tu país",
     createJobOffer: "Crear Oferta de Trabajo",
-    
+
     // Language levels
     spanish: "Español",
     english: "Inglés",
@@ -1944,6 +2556,7 @@ const DICTS: Record<Locale, Dict> = {
     description: "Descripción",
     discoverLatestInitiatives: "Descubre las últimas iniciativas",
     donatePaypal: "Donar con PayPal",
+    donateKlarna: "Donar con Klarna",
     donateStripe: "Donar con Stripe",
     moreInfo: "Más info",
     easy: "Fácil",
@@ -2051,7 +2664,7 @@ const DICTS: Record<Locale, Dict> = {
     volunteersLabel: "voluntarios",
     spotsLabel: "plazas",
     previewLabel: "Vista previa",
-    
+
     // Project names and descriptions
     urbanReforestationBerlin: "Reforestación Urbana Berlín",
     urbanReforestationDesc: "Únete a nuestra iniciativa de reforestación urbana en Berlín. Ayuda a plantar árboles y crear espacios verdes en la ciudad.",
@@ -2062,7 +2675,7 @@ const DICTS: Record<Locale, Dict> = {
     communityGardensMadrid: "Huertos Comunitarios Madrid",
     communityGardensDesc: "Involúcrate en huertos comunitarios en Madrid. Aprende agricultura sostenible y conéctate con vecinos.",
     communityGardensActive: "huertos comunitarios activos",
-    
+
     // Eco Tips
     ecoTipCategoryFinance: "Finanzas",
     ecoTipBankTitle: "Elige Banca Sostenible",
@@ -2083,10 +2696,10 @@ const DICTS: Record<Locale, Dict> = {
     ecoTipWaterTitle: "Conserva el Agua",
     ecoTipWaterDescription: "Toma duchas más cortas, repara fugas y usa electrodomésticos eficientes en agua.",
     ecoTips: "Consejos Ecológicos",
-    
+
     // Event creation
     createEvent: "Crear Evento",
-    
+
     // Event administrators
     eventAdministrators: "Administradores del Evento",
     addAdministrator: "Agregar Administrador",
@@ -2099,8 +2712,8 @@ const DICTS: Record<Locale, Dict> = {
     youAreAdministrator: "Eres un administrador",
     eventCreator: "Creador del Evento",
     administrators: "Administradores",
-    
-    
+
+
     capital: "Capital",
     population: "Población",
     currency: "Moneda",
@@ -2109,14 +2722,14 @@ const DICTS: Record<Locale, Dict> = {
     governmentAPIInDevelopment: "API gubernamental en desarrollo",
     integratedGovernmentAPIs: "APIs Gubernamentales Integradas",
     baseURL: "URL Base",
-    
+
     // Additional event titles for calendar
     eventNativeTreePlanting: "Plantación de árboles nativos",
     eventSolarEnergyWorkshop: "Taller de energía solar",
     eventRiverCleanup: "Limpieza de río",
     eventClimateConference: "Conferencia sobre cambio climático",
     eventFoodConservationWorkshop: "Taller de conservación de alimentos",
-    
+
     // Event titles
     eventVerticalGardens: "Construcción de jardines verticales",
     eventEcoRace: "Carrera ecológica 5K",
@@ -2136,7 +2749,7 @@ const DICTS: Record<Locale, Dict> = {
     eventEcoNewYear: "Celebración de fin de año ecológica",
     eventMarineConservation: "Conservación de especies marinas",
     eventHydroelectricWorkshop: "Taller de energía hidroeléctrica",
-    
+
     // Job titles
     jobTitle1: "Especialista en Reforestación Urbana",
     jobTitle2: "Analista de Datos de Calidad del Aire",
@@ -2147,7 +2760,7 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle7: "Especialista en Arquitectura Sostenible",
     jobTitle8: "Investigador/a en Economía Circular",
     jobTitle9: "Ingeniero/a de Operaciones Eólicas",
-    
+
     // Job descriptions
     jobDesc1: "Lidera iniciativas de reforestación urbana en Berlín, gestionando proyectos de plantación de árboles, coordinando con comunidades locales y desarrollando espacios verdes sostenibles. Trabajarás con científicos ambientales, planificadores urbanos y voluntarios para crear entornos urbanos más saludables.",
     jobDesc2: "Analiza datos de calidad del aire usando Python y herramientas GIS, monitorea redes de sensores en París y crea informes para responsables de políticas ambientales. Trabajarás con científicos de datos e ingenieros ambientales para mejorar los sistemas de monitoreo de calidad del aire.",
@@ -2158,7 +2771,7 @@ const DICTS: Record<Locale, Dict> = {
     jobDesc7: "Lidera proyectos de arquitectura sostenible en Ámsterdam. Integra eficiencia energética, diseño pasivo y materiales de bajo carbono (LEED/BREEAM). Coordina con urbanismo y actores comunitarios.",
     jobDesc8: "Únete a un instituto en Copenhague para evaluar pilotos de economía circular. Cuantifica impacto (ACV), publica resultados y apoya recomendaciones de política en los países nórdicos.",
     jobDesc9: "Opera y optimiza parques eólicos en torno a Hamburgo. Gestiona planes de mantenimiento, monitoreo SCADA, seguridad y mejoras de rendimiento con fabricantes (OEM).",
-    
+
     // Technical tags
     sensores: "sensores",
     silvicultura: "silvicultura",
@@ -2172,10 +2785,10 @@ const DICTS: Record<Locale, Dict> = {
     seguridad: "seguridad",
     python: "Python",
     gis: "GIS",
-    
+
     // Interface translations
     searchPlaceholderEn: "Buscar trabajos...",
-    
+
     // Admin panel titles
     adminPanelTitle: "Panel de Administración",
     adminPanelDescription: "Gestiona eventos, proyectos y personas usuarias de EcoNexo",
@@ -2211,28 +2824,47 @@ const DICTS: Record<Locale, Dict> = {
     adminTreePlantingMadrid: "Plantación de Árboles Madrid",
     adminCommunityGardenValencia: "Huerto Comunitario Valencia",
     adminSolarEnergyNeighborhood: "Energía Solar Barrio",
-    
-    // Gamification titles
-    badgeFirstEvent: "Primer Evento",
-    badgeEcoWarrior: "Guerrero Ecológico",
-    badgeCommunityLeader: "Líder Comunitario",
-    badgeGreenJobHunter: "Cazador de Empleos Verdes",
-    badgeChatMaster: "Maestro del Chat",
-    achievementEcoExplorer: "Explorador Ecológico",
-    achievementProjectPioneer: "Pionero de Proyectos",
-    achievementCommunityConnector: "Conector Comunitario",
-    achievementCarbonNeutral: "Carbono Neutral",
-    
+
+
+
     // Admin page metadata
     adminPageTitle: "Panel de Administración - EcoNexo",
     adminPageDescription: "Gestiona eventos, proyectos y personas usuarias de EcoNexo",
-    
+
     // Map titles
     centerOnMyLocation: "Centrar en mi ubicación",
-    
+
+    // Community Page
+    communityPageTitle: "Comunidad EcoNexo",
+    tabFeed: "Feed",
+    tabGroups: "Grupos",
+    tabMentoring: "Mentoring",
+    tabMarketplace: "Marketplace",
+    recentActivity: "Actividad Reciente",
+    noActivityYet: "No hay actividad aún",
+    createdAnEvent: "creó un evento",
+    localGroupsTitle: "Grupos Locales",
+    createGroupBtn: "+ Crear Grupo",
+    localGroupsDesc: "Conecta con comunidades locales en tu ciudad o región",
+    viewAllGroups: "Ver Todos los Grupos",
+    mentoringTitle: "Mentoring",
+    mentoringDesc: "Conecta con expertos o encuentra aprendices en sostenibilidad",
+    findMentorBtn: "Buscar Mentor",
+    findMentorDesc: "Encuentra un experto que te guíe",
+    becomeMentorBtn: "Convertirse en Mentor",
+    shareKnowledgeDesc: "Comparte tu conocimiento",
+    marketplaceTitle: "Marketplace Ecológico",
+    publishBtn: "+ Publicar",
+
+    karma: "Karma",
+    reputation: "Reputación",
+    followers: "Seguidores",
+    quickLinks: "Enlaces Rápidos",
+    myProfileLabel: "Mi Perfil",
+
     // Social media titles
     socialMediaCommunityReforestationBerlin: "Reforestación comunitaria en Berlín",
-    
+
     // Regions
     all: "Todos",
     northernEurope: "Europa del Norte",
@@ -2249,7 +2881,6 @@ const DICTS: Record<Locale, Dict> = {
     securityVerificationIncorrect: "Verificación de seguridad incorrecta. Intenta de nuevo.",
     welcomeEmailSent: "¡Email de bienvenida enviado! Por favor revisa tu bandeja de entrada y verifica tu cuenta haciendo clic en el enlace.",
     authenticationSuccessful: "¡Autenticación exitosa!",
-    orContinueWith: "O continúa con",
     registerWith: "Regístrate con",
     or: "O",
     emailPlaceholder: "tu@email.com",
@@ -2269,6 +2900,73 @@ const DICTS: Record<Locale, Dict> = {
     yourAnswer: "Tu respuesta",
     verify: "Verificar",
     howMuchIs: "¿Cuánto es",
+    // Gamification & Badges
+    badgeFirstStep: "Primer Paso",
+    descFirstStep: "Completaste tu primera acción",
+    badgeExplorer: "Explorador",
+    descExplorer: "Exploraste diferentes áreas",
+    badgeHelper: "Ayudante",
+    descHelper: "Ayudaste a la comunidad",
+    badgeFirstEvent: "Primer Evento",
+    descFirstEvent: "Asististe a tu primer evento",
+    badgeEventEnthusiast: "Entusiasta",
+    descEventEnthusiast: "Asististe a 5 eventos",
+    badgeEventMaster: "Maestro de Eventos",
+    descEventMaster: "Asististe a 10 eventos",
+    badgeEventCreator: "Organizador",
+    descEventCreator: "Creaste tu primer evento",
+    badgeProjectJoiner: "Colaborador",
+    descProjectJoiner: "Te uniste a tu primer proyecto",
+    badgeProjectCreator: "Creador",
+    descProjectCreator: "Creaste tu primer proyecto",
+    badgeProjectVeteran: "Veterano",
+    descProjectVeteran: "Completaste 5 proyectos",
+    badgeConnector: "Conector",
+    descConnector: "Hiciste tu primera conexión",
+    badgeMentor: "Mentor",
+    descMentor: "Te convertiste en mentor",
+    badgeMarketplaceSeller: "Vendedor Verde",
+    descMarketplaceSeller: "Publicaste en el marketplace",
+    badgeGreenCommuter: "Transporte Verde",
+    descGreenCommuter: "Usaste transporte sostenible",
+    badgeWasteWarrior: "Guerrero Residuos",
+    descWasteWarrior: "Redujiste residuos",
+    badgeCarbonFighter: "Luchador Carbono",
+    descCarbonFighter: "Compensaste tu huella",
+    badgeDailyStreak7: "Racha Semanal",
+    descDailyStreak7: "7 días consecutivos",
+    badgeDailyStreak30: "Racha Mensual",
+    descDailyStreak30: "30 días consecutivos",
+    badgeProfileComplete: "Perfil Completo",
+    descProfileComplete: "Completaste tu perfil",
+    badgeSocialSharer: "Compartidor",
+    descSocialSharer: "Compartiste 10 veces",
+
+    // Impact Page UI
+    yourImpact: "Tu Impacto",
+    impactDescription: "Estás construyendo un futuro más verde, paso a paso. Aquí está tu progreso y logros en EcoNexo.",
+    xpToLevel: "XP para Nivel",
+    impactMedals: "Medallas",
+    impactStreakDays: "Días Racha",
+    impactSocialImpact: "Impacto Social",
+    impactShared: "compartidos",
+    impactTalleres: "Talleres",
+    impactCompleted: "completados",
+    impactCity: "Ciudad",
+    impactRanking: "Ranking",
+    impactBadgeCollection: "Colección de Medallas",
+    impactRecentActivity: "Actividad Reciente",
+    impactNoActivity: "No hay actividad reciente.",
+    impactJustNow: "Hace un momento",
+    impactKeepGoing: "¡Sigue sumando!",
+    impactUnlockNextLevel: "Participa en más proyectos y eventos para desbloquear el nivel {{level}}.",
+    impactExploreProjects: "Explorar Proyectos",
+    impactLevel: "Nivel",
+
+    // Badge Categories
+    categoryStarter: "Inicio",
+    categoryEngagement: "Compromiso",
+    categoryLifestyle: "Estilo de Vida",
   },
   fr: {
     // Job titles
@@ -2276,13 +2974,13 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle2: "Analyste de Données de Qualité de l'Air",
     jobTitle3: "Éducateur Environnemental (STEM)",
     jobTitle4: "Coordinateur de Nettoyage de Rivières",
-    
+
     // Job descriptions
     jobDesc1: "Dirigez les initiatives de reboisement urbain à Berlin, gérez les projets de plantation d'arbres, coordonnez avec les communautés locales et développez des espaces verts durables. Vous travaillerez avec des scientifiques environnementaux, des urbanistes et des bénévoles pour créer des environnements urbains plus sains.",
     jobDesc2: "Analysez les données de qualité de l'air en utilisant Python et les outils GIS, surveillez les réseaux de capteurs à Paris et créez des rapports pour les décideurs politiques environnementaux. Vous travaillerez avec des scientifiques de données et des ingénieurs environnementaux pour améliorer les systèmes de surveillance de la qualité de l'air.",
     jobDesc3: "Développez et livrez des programmes d'éducation environnementale basés sur STEM à Madrid, enseignez aux étudiants l'énergie solaire, la robotique et la durabilité. Vous créerez des programmes d'études engageants et travaillerez avec les écoles pour promouvoir la sensibilisation environnementale.",
     jobDesc4: "Coordonnez les opérations de nettoyage de rivières à Milan, gérez les équipes de bénévoles, assurez les protocoles de sécurité et organisez les initiatives de collecte de déchets. Vous travaillerez avec des organisations environnementales et les autorités locales pour protéger les écosystèmes aquatiques.",
-    
+
     // Technical tags
     sensores: "capteurs",
     silvicultura: "sylviculture",
@@ -2296,7 +2994,7 @@ const DICTS: Record<Locale, Dict> = {
     seguridad: "sécurité",
     python: "Python",
     gis: "GIS",
-    
+
     // Interface translations
     searchPlaceholderEn: "Rechercher des emplois...",
     cityLabel: "Ville",
@@ -2314,7 +3012,7 @@ const DICTS: Record<Locale, Dict> = {
     conductGuidelines: "Directives de Conduite",
     conductGuidelinesText: "Maintenez un environnement respectueux et constructif",
     createJobOffer: "Créer une Offre d'Emploi",
-    
+
     // Chat Rules
     chatRules: "Règles Du Chat",
     chatRule1: "Respecte Tous Les Participants",
@@ -2328,7 +3026,7 @@ const DICTS: Record<Locale, Dict> = {
     chatRulesFooter: "Suivre Ces Règles Crée Une Communauté Positive",
     chatRulesIntro: "Pour Maintenir Un Environnement Positif, Veuillez Suivre Ces Règles:",
     chatRulesTitle: "Règles De La Communauté",
-    
+
     // Chat Recommendations
     recommendations: "Recommandations",
     popularDiscussions: "Discussions Populaires",
@@ -2344,13 +3042,13 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle2: "Analista Dati Qualità dell'Aria",
     jobTitle3: "Educatore Ambientale (STEM)",
     jobTitle4: "Coordinatore Pulizia Fiumi",
-    
+
     // Job descriptions
     jobDesc1: "Dirigi le iniziative di riforestazione urbana a Berlino, gestisci progetti di piantagione di alberi, coordina con le comunità locali e sviluppa spazi verdi sostenibili. Lavorerai con scienziati ambientali, urbanisti e volontari per creare ambienti urbani più sani.",
     jobDesc2: "Analizza i dati sulla qualità dell'aria utilizzando Python e strumenti GIS, monitora le reti di sensori a Parigi e crea report per i responsabili delle politiche ambientali. Lavorerai con scienziati dei dati e ingegneri ambientali per migliorare i sistemi di monitoraggio della qualità dell'aria.",
     jobDesc3: "Sviluppa e consegna programmi di educazione ambientale basati su STEM a Madrid, insegnando agli studenti energia solare, robotica e sostenibilità. Creerai curricula coinvolgenti e lavorerai con le scuole per promuovere la consapevolezza ambientale.",
     jobDesc4: "Coordina le operazioni di pulizia dei fiumi a Milano, gestisci squadre di volontari, assicura protocolli di sicurezza e organizza iniziative di raccolta rifiuti. Lavorerai con organizzazioni ambientali e autorità locali per proteggere gli ecosistemi acquatici.",
-    
+
     // Technical tags
     sensores: "sensori",
     silvicultura: "silvicoltura",
@@ -2364,7 +3062,7 @@ const DICTS: Record<Locale, Dict> = {
     seguridad: "sicurezza",
     python: "Python",
     gis: "GIS",
-    
+
     // Interface translations
     searchPlaceholderEn: "Cerca lavori...",
     cityLabel: "Città",
@@ -2382,7 +3080,7 @@ const DICTS: Record<Locale, Dict> = {
     conductGuidelines: "Linee Guida di Condotta",
     conductGuidelinesText: "Mantieni un ambiente rispettoso e costruttivo",
     createJobOffer: "Crea Offerta di Lavoro",
-    
+
     // Chat Rules
     chatRules: "Regole Della Chat",
     chatRule1: "Rispetta Tutti I Partecipanti",
@@ -2396,7 +3094,7 @@ const DICTS: Record<Locale, Dict> = {
     chatRulesFooter: "Seguire Queste Regole Crea Una Comunità Positiva",
     chatRulesIntro: "Per Mantenere Un Ambiente Positivo, Segui Queste Regole:",
     chatRulesTitle: "Regole Della Comunità",
-    
+
     // Chat Recommendations
     recommendations: "Raccomandazioni",
     popularDiscussions: "Discussioni Popolari",
@@ -2412,13 +3110,13 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle2: "Analityk Danych Jakości Powietrza",
     jobTitle3: "Edukator Środowiskowy (STEM)",
     jobTitle4: "Koordynator Czyszczenia Rzek",
-    
+
     // Job descriptions
     jobDesc1: "Kieruj inicjatywami reforestacji miejskiej w Berlinie, zarządzaj projektami sadzenia drzew, koordynuj z lokalnymi społecznościami i rozwijaj zrównoważone tereny zielone. Będziesz pracować z naukowcami środowiskowymi, urbanistami i wolontariuszami, aby tworzyć zdrowsze środowiska miejskie.",
     jobDesc2: "Analizuj dane dotyczące jakości powietrza używając Pythona i narzędzi GIS, monitoruj sieci czujników w Paryżu i twórz raporty dla decydentów polityki środowiskowej. Będziesz pracować z analitykami danych i inżynierami środowiskowymi, aby ulepszać systemy monitorowania jakości powietrza.",
     jobDesc3: "Rozwijaj i dostarczaj programy edukacji środowiskowej oparte na STEM w Madrycie, ucząc studentów o energii słonecznej, robotyce i zrównoważonym rozwoju. Będziesz tworzyć angażujące programy nauczania i pracować ze szkołami, aby promować świadomość środowiskową.",
     jobDesc4: "Koordynuj operacje czyszczenia rzek w Mediolanie, zarządzaj zespołami wolontariuszy, zapewniaj protokoły bezpieczeństwa i organizuj inicjatywy zbierania odpadów. Będziesz pracować z organizacjami środowiskowymi i lokalnymi władzami, aby chronić ekosystemy wodne.",
-    
+
     // Technical tags
     sensores: "czujniki",
     silvicultura: "leśnictwo",
@@ -2432,7 +3130,7 @@ const DICTS: Record<Locale, Dict> = {
     seguridad: "bezpieczeństwo",
     python: "Python",
     gis: "GIS",
-    
+
     // Interface translations
     searchPlaceholderEn: "Szukaj pracy...",
     cityLabel: "Miasto",
@@ -2450,7 +3148,7 @@ const DICTS: Record<Locale, Dict> = {
     conductGuidelines: "Wytyczne Postępowania",
     conductGuidelinesText: "Utrzymuj szanujące i konstruktywne środowisko",
     createJobOffer: "Utwórz Ofertę Pracy",
-    
+
     // Chat Rules
     chatRules: "Zasady Czatu",
     chatRule1: "Szanuj Wszystkich Uczestników",
@@ -2464,7 +3162,7 @@ const DICTS: Record<Locale, Dict> = {
     chatRulesFooter: "Przestrzeganie Tych Zasad Tworzy Pozytywną Społeczność",
     chatRulesIntro: "Aby Utrzymać Pozytywne Środowisko, Proszę Przestrzegać Tych Zasad:",
     chatRulesTitle: "Zasady Społeczności",
-    
+
     // Chat Recommendations
     recommendations: "Rekomendacje",
     popularDiscussions: "Popularne Dyskusje",
@@ -2480,13 +3178,13 @@ const DICTS: Record<Locale, Dict> = {
     jobTitle2: "Luchtkwaliteit Data Analist",
     jobTitle3: "Milieu Educateur (STEM)",
     jobTitle4: "Rivier Opruiming Coördinator",
-    
+
     // Job descriptions
     jobDesc1: "Leid stedelijke herbebossingsinitiatieven in Berlijn, beheer boomplantprojecten, coördineer met lokale gemeenschappen en ontwikkel duurzame groene ruimtes. Je werkt samen met milieuwetenschappers, stadsplanners en vrijwilligers om gezondere stedelijke omgevingen te creëren.",
     jobDesc2: "Analyseer luchtkwaliteitsgegevens met Python en GIS-tools, monitor sensornetwerken in Parijs en maak rapporten voor milieubeleidsmakers. Je werkt samen met datawetenschappers en milieu-ingenieurs om luchtkwaliteitsmonitoringssystemen te verbeteren.",
     jobDesc3: "Ontwikkel en lever STEM-gebaseerde milieu-educatieprogramma's in Madrid, leer studenten over zonne-energie, robotica en duurzaamheid. Je creëert boeiende curricula en werkt samen met scholen om milieubewustzijn te bevorderen.",
     jobDesc4: "Coördineer rivieropruimingsoperaties in Milaan, beheer vrijwilligersteams, zorg voor veiligheidsprotocollen en organiseer afvalinzamelingsinitiatieven. Je werkt samen met milieuorganisaties en lokale autoriteiten om waterecosystemen te beschermen.",
-    
+
     // Technical tags
     sensores: "sensoren",
     silvicultura: "bosbouw",
@@ -2500,7 +3198,7 @@ const DICTS: Record<Locale, Dict> = {
     seguridad: "veiligheid",
     python: "Python",
     gis: "GIS",
-    
+
     // Interface translations
     searchPlaceholderEn: "Zoek banen...",
     cityLabel: "Stad",
@@ -2518,7 +3216,7 @@ const DICTS: Record<Locale, Dict> = {
     conductGuidelines: "Gedragsrichtlijnen",
     conductGuidelinesText: "Houd een respectvolle en constructieve omgeving",
     createJobOffer: "Vacature Aanmaken",
-    
+
     // Chat Rules
     chatRules: "Chat Regels",
     chatRule1: "Respecteer Alle Deelnemers",
@@ -2532,7 +3230,7 @@ const DICTS: Record<Locale, Dict> = {
     chatRulesFooter: "Het Volgen Van Deze Regels Creëert Een Positieve Gemeenschap",
     chatRulesIntro: "Om Een Positieve Omgeving Te Behouden, Volg Deze Regels:",
     chatRulesTitle: "Gemeenschapsregels",
-    
+
     // Chat Recommendations
     recommendations: "Aanbevelingen",
     popularDiscussions: "Populaire Discussies",
@@ -2544,14 +3242,14 @@ const DICTS: Record<Locale, Dict> = {
   },
 };
 
-const I18nContext = createContext<{ t: (k: string) => string; locale: Locale; setLocale: (l: Locale) => void } | null>(null);
+const I18nContext = createContext<{ t: (k: string, vars?: Record<string, any>) => string; locale: Locale; setLocale: (l: Locale) => void } | null>(null);
 
 export { DICTS };
 
 // Helper functions for dynamic content
 export function locationLabel(original: string, locale: Locale) {
   if (locale === "es") return original;
-  
+
   const locationMap: Record<string, Record<Locale, string>> = {
     "Berlín": { en: "Berlin", de: "Berlin", es: "Berlín", fr: "Berlin", it: "Berlino", pl: "Berlin", nl: "Berlijn" },
     "Madrid": { en: "Madrid", de: "Madrid", es: "Madrid", fr: "Madrid", it: "Madrid", pl: "Madryt", nl: "Madrid" },
@@ -2560,29 +3258,44 @@ export function locationLabel(original: string, locale: Locale) {
     "España": { en: "Spain", de: "Spanien", es: "España", fr: "Espagne", it: "Spagna", pl: "Hiszpania", nl: "Spanje" },
     "Francia": { en: "France", de: "Frankreich", es: "Francia", fr: "France", it: "Francia", pl: "Francja", nl: "Frankrijk" },
   };
-  
+
   return locationMap[original]?.[locale] || original;
 }
 
 export function categoryLabel(category: string, locale: Locale) {
-  if (locale === "es") return category;
-  
   const categoryMap: Record<string, Record<Locale, string>> = {
-  "Medio ambiente": { en: "Environment", de: "Umwelt", es: "Medio ambiente", fr: "Environnement", it: "Ambiente", pl: "Środowisko", nl: "Milieu" },
-  "Educación": { en: "Education", de: "Bildung", es: "Educación", fr: "Éducation", it: "Educazione", pl: "Edukacja", nl: "Onderwijs" },
-  "Comunidad": { en: "Community", de: "Gemeinschaft", es: "Comunidad", fr: "Communauté", it: "Comunità", pl: "Społeczność", nl: "Gemeenschap" },
+    "Medio ambiente": { en: "Environment", de: "Umwelt", es: "Medio ambiente", fr: "Environnement", it: "Ambiente", pl: "Środowisko", nl: "Milieu" },
+    "Educación": { en: "Education", de: "Bildung", es: "Educación", fr: "Éducation", it: "Educazione", pl: "Edukacja", nl: "Onderwijs" },
+    "Comunidad": { en: "Community", de: "Gemeinschaft", es: "Comunidad", fr: "Communauté", it: "Comunità", pl: "Społeczność", nl: "Gemeenschap" },
     "Salud": { en: "Health", de: "Gesundheit", es: "Salud", fr: "Santé", it: "Salute", pl: "Zdrowie", nl: "Gezondheid" },
-  "Océanos": { en: "Oceans", de: "Ozeane", es: "Océanos", fr: "Océans", it: "Oceani", pl: "Oceany", nl: "Oceanen" },
-  "Alimentación": { en: "Food", de: "Ernährung", es: "Alimentación", fr: "Alimentation", it: "Alimentazione", pl: "Żywność", nl: "Voeding" },
-  "Tecnología": { en: "Technology", de: "Technologie", es: "Tecnología", fr: "Technologie", it: "Tecnologia", pl: "Technologia", nl: "Technologie" },
-};
+    "Océanos": { en: "Oceans", de: "Ozeane", es: "Océanos", fr: "Océans", it: "Oceani", pl: "Oceany", nl: "Oceanen" },
+    "Alimentación": { en: "Food", de: "Ernährung", es: "Alimentación", fr: "Alimentation", it: "Alimentazione", pl: "Żywność", nl: "Voeding" },
+    "Tecnología": { en: "Technology", de: "Technologie", es: "Tecnología", fr: "Technologie", it: "Tecnologia", pl: "Technologia", nl: "Technologie" },
+  };
 
-  return categoryMap[category]?.[locale] || category;
+  // 1. Try exact match
+  if (categoryMap[category]?.[locale]) {
+    return categoryMap[category][locale];
+  }
+
+  // 2. Try case-insensitive match
+  const lowerCat = category.toLowerCase();
+  const foundKey = Object.keys(categoryMap).find(k => k.toLowerCase() === lowerCat);
+  if (foundKey && categoryMap[foundKey]?.[locale]) {
+    return categoryMap[foundKey][locale];
+  }
+
+  // 3. Fallback: Capitalize first letter if not found
+  if (locale === "es" || !categoryMap[category]) {
+    return category.charAt(0).toUpperCase() + category.slice(1);
+  }
+
+  return category;
 }
 
 export function projectNameLabel(id: string, name: string, locale: Locale) {
   if (locale === "es") return name;
-  
+
   // For now, return the original name
   // In the future, this could be enhanced with a database lookup
   return name;
@@ -2646,7 +3359,7 @@ export function projectDescriptionLabel(projectId: string, original: string, loc
 
 export function impactTagLabel(original: string, locale: Locale) {
   if (locale === "es") return original;
-  
+
   const impactMap: Record<string, Record<Locale, string>> = {
     "Alto impacto": { en: "High impact", de: "Hohe Wirkung", es: "Alto impacto", fr: "Impact élevé", it: "Impatto alto", pl: "Wysoki wpływ", nl: "Hoge impact" },
     "Medio impacto": { en: "Medium impact", de: "Mittlere Wirkung", es: "Medio impacto", fr: "Impact moyen", it: "Impatto medio", pl: "Średni wpływ", nl: "Gemiddelde impact" },
@@ -2673,7 +3386,7 @@ export function impactTagLabel(original: string, locale: Locale) {
     "Agricultura sostenible": { en: "Sustainable agriculture", de: "Nachhaltige Landwirtschaft", es: "Agricultura sostenible", fr: "Agriculture durable", it: "Agricoltura sostenibile", pl: "Zrównoważone rolnictwo", nl: "Duurzame landbouw" },
     "Seguridad alimentaria": { en: "Food security", de: "Ernährungssicherheit", es: "Seguridad alimentaria", fr: "Sécurité alimentaire", it: "Sicurezza alimentare", pl: "Bezpieczeństwo żywnościowe", nl: "Voedselzekerheid" },
   };
-  
+
   if (impactMap[original]?.[locale]) return impactMap[original][locale];
 
   // Humanize fallback if unknown tag comes in camelCase or with separators
@@ -2695,7 +3408,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
           setLocaleState(saved as Locale);
         }
       }
-    } catch {}
+    } catch { }
   }, []);
 
   const setLocale = (l: Locale) => {
@@ -2704,7 +3417,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       if (typeof window !== "undefined") {
         localStorage.setItem("econexo:locale", l);
       }
-    } catch {}
+    } catch { }
   };
 
   const t = useMemo(() => {
@@ -2825,13 +3538,20 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         .trim();
       return spaced.charAt(0).toUpperCase() + spaced.slice(1);
     };
-    return (k: string) => {
-      const translation = dict[k];
+    return (k: string, vars?: Record<string, any>) => {
+      let translation = dict[k];
       if (!translation) {
         console.warn(`Missing translation key "${k}" for locale "${locale}"`);
         const fb = (FALLBACKS as any)[locale]?.[k];
-        return fb || humanizeKey(k);
+        translation = fb || humanizeKey(k);
       }
+
+      if (vars && typeof translation === 'string') {
+        Object.entries(vars).forEach(([key, value]) => {
+          translation = translation.replace(`{{${key}}}`, String(value));
+        });
+      }
+
       return translation;
     };
   }, [locale]);

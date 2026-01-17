@@ -28,21 +28,35 @@ def calculate_match_score(user_profile: Dict[str, Any], project: Dict[str, Any])
     user_location = user_profile.get("location", {})
     
     # Distance factor (30 points max)
-    if user_location.get("lat") and user_location.get("lng"):
-        distance = calc_distance(
-            user_location["lat"],
-            user_location["lng"],
-            project.get("lat", 0),
-            project.get("lng", 0)
-        )
-        max_distance = preferences.get("maxDistance", 25)
-        if distance <= max_distance:
-            # Closer = higher score
-            distance_score = 30 * (1 - (distance / max_distance))
-            score += distance_score
+    # Distance factor (30 points max)
+    is_external = project.get("is_external", False)
+    
+    if is_external:
+        # Check if city matches instead of coordinates
+        if user_location.get("city") and project.get("city") and user_location.get("city").lower() in project.get("city").lower():
+            score += 30
         else:
-            # Penalty for being too far
-            score -= 10
+            # Neutral score for external jobs with unknown location
+            score += 15
+    elif user_location.get("lat") and user_location.get("lng"):
+        p_lat = project.get("lat", 0)
+        p_lng = project.get("lng", 0)
+        # Skip distance check if project has no coordinates (e.g. online event)
+        if p_lat != 0 or p_lng != 0:
+            distance = calc_distance(
+                user_location["lat"],
+                user_location["lng"],
+                p_lat,
+                p_lng
+            )
+            max_distance = preferences.get("maxDistance", 25)
+            if distance <= max_distance:
+                # Closer = higher score
+                distance_score = 30 * (1 - (distance / max_distance))
+                score += distance_score
+            else:
+                # Penalty for being too far
+                score -= 10
     
     # Category preference (25 points max)
     preferred_categories = preferences.get("preferredCategories", [])
@@ -177,16 +191,25 @@ def explain_match(user_profile: Dict[str, Any], project: Dict[str, Any], score: 
     user_location = user_profile.get("location", {})
     
     # Distance explanation
-    if user_location.get("lat") and user_location.get("lng"):
-        distance = calc_distance(
-            user_location["lat"],
-            user_location["lng"],
-            project.get("lat", 0),
-            project.get("lng", 0)
-        )
-        max_distance = preferences.get("maxDistance", 25)
-        if distance <= max_distance:
-            reasons.append(f"A solo {distance:.1f} km de tu ubicación")
+    # Distance explanation
+    is_external = project.get("is_external", False)
+    if is_external:
+        reasons.append("Oferta externa encontrada en la web")
+        if user_location.get("city") and project.get("city") and user_location.get("city").lower() in project.get("city").lower():
+            reasons.append(f"Ubicado en {project.get('city')}")
+    elif user_location.get("lat") and user_location.get("lng"):
+        p_lat = project.get("lat", 0)
+        p_lng = project.get("lng", 0)
+        if p_lat != 0 or p_lng != 0:
+            distance = calc_distance(
+                user_location["lat"],
+                user_location["lng"],
+                p_lat,
+                p_lng
+            )
+            max_distance = preferences.get("maxDistance", 25)
+            if distance <= max_distance:
+                reasons.append(f"A solo {distance:.1f} km de tu ubicación")
     
     # Category match
     preferred_categories = preferences.get("preferredCategories", [])

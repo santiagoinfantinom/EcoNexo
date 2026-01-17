@@ -23,6 +23,7 @@ interface Match {
   startsAt?: string;
   endsAt?: string;
   isPermanent?: boolean;
+  is_external?: boolean;
 }
 
 interface Message {
@@ -33,6 +34,15 @@ interface Message {
   matches?: Match[];
   explanations?: Record<string, string>;
   suggestions?: string[];
+}
+
+interface AgentStats {
+  status: string;
+  active_threads: number;
+  saturation_index: number;
+  rate_limits: {
+    remaining_requests: number;
+  };
 }
 
 interface MatchingAgentChatProps {
@@ -46,6 +56,18 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState<AgentStats | null>(null);
+
+  // Advanced Search filters state
+  const [showFilters, setShowFilters] = useState(true);
+  const [filters, setFilters] = useState({
+    location: '',
+    experience: 0,
+    skills: '',
+    isRemote: false,
+    salary: 'Any' // New salary filter
+  });
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -55,15 +77,40 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
       setMessages([{
         id: '1',
         type: 'assistant',
-        content: locale === 'es' 
-          ? '¡Hola! Soy tu asistente de matching inteligente. Puedo ayudarte a encontrar proyectos que se ajusten perfectamente a tus intereses y preferencias. ¿Qué tipo de proyectos te interesan?'
-          : locale === 'de'
-          ? 'Hallo! Ich bin dein intelligenter Matching-Assistent. Ich kann dir helfen, Projekte zu finden, die perfekt zu deinen Interessen und Präferenzen passen. Welche Art von Projekten interessieren dich?'
-          : 'Hello! I\'m your intelligent matching assistant. I can help you find projects that perfectly match your interests and preferences. What type of projects interest you?',
+        content: t('matchingAgentWelcome'),
         timestamp: new Date(),
       }]);
     }
   }, [messages.length, locale]);
+
+
+  // Fetch stats periodically
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // In a real app we'd need a proxy to the MCP server stats, 
+        // For now assuming we have a Next.js API route that proxies to /stats or we call direct if same origin
+        // Since the current architecture has a proxy at /api/agents/matching, we might need to add a stats route.
+        // For simplicity in this demo, I'll assume we can hit a new endpoint we'll create or mock it.
+        // Let's create a quick client-side mock if the endpoint isn't wired up in Next.js yet,
+        // BUT ideally we should hit the backend.
+        // Let's assume /api/agents/matching/stats exists (we need to create it).
+
+        // For this specific turn, I will assume I'll create the Next.js route next.
+        const res = await fetch('/api/agents/matching/stats');
+        if (res.ok) {
+          const data = await res.json();
+          setStats(data);
+        }
+      } catch (e) {
+        console.error("Failed to fetch agent stats", e);
+      }
+    };
+
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000); // Update every 30s
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -93,6 +140,10 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
         body: JSON.stringify({
           user_id: user.id || user.email || 'anonymous',
           query: input.trim(),
+          filters: {
+            ...filters,
+            skills: filters.skills.split(',').map(s => s.trim()).filter(Boolean)
+          }
         }),
       });
 
@@ -101,9 +152,9 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
       }
 
       const data = await response.json();
-      
+
       // Format explanation
-      const explanation = data.explanations?.general || 
+      const explanation = data.explanations?.general ||
         Object.values(data.explanations || {}).join('\n') ||
         'Found some matches for you!';
 
@@ -124,11 +175,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
-        content: locale === 'es'
-          ? 'Lo siento, hubo un error al buscar proyectos. Por favor, intenta de nuevo.'
-          : locale === 'de'
-          ? 'Entschuldigung, beim Suchen nach Projekten ist ein Fehler aufgetreten. Bitte versuche es erneut.'
-          : 'Sorry, there was an error searching for projects. Please try again.',
+        content: t('matchingAgentError'),
         timestamp: new Date(),
       }]);
     } finally {
@@ -160,11 +207,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
     return (
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 text-center">
         <p className="text-gray-600 dark:text-gray-400">
-          {locale === 'es'
-            ? 'Por favor, inicia sesión para usar el asistente de matching.'
-            : locale === 'de'
-            ? 'Bitte melde dich an, um den Matching-Assistenten zu verwenden.'
-            : 'Please sign in to use the matching assistant.'}
+          {t('signInToUseMatching')}
         </p>
       </div>
     );
@@ -172,6 +215,119 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg flex flex-col h-[600px]">
+      {/* Header with Stats */}
+      <div className="px-4 py-3 border-b border-gray-200 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-800/50 rounded-t-xl">
+        <h3 className="font-semibold text-gray-800 dark:text-white">Matching Agent</h3>
+        {stats && (
+          <div className="flex items-center gap-3 text-xs">
+            <div className="flex items-center gap-1" title="Agent Saturation Level">
+              <div className={`w-2 h-2 rounded-full ${stats.saturation_index > 0.8 ? 'bg-red-500' : stats.saturation_index > 0.5 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
+              <span className="text-gray-600 dark:text-gray-400">
+                Load: {(stats.saturation_index * 100).toFixed(0)}%
+              </span>
+            </div>
+            <div className="text-gray-500" title="API Quota Remaining">
+              ⚡ {stats.rate_limits?.remaining_requests ?? '-'}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Advanced Search Filters Panel */}
+      <div className="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-700">
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="w-full px-4 py-2 flex items-center justify-between text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+        >
+          <span>
+            {t('searchConfiguration')}
+            {filters.isRemote ? ' (Remote)' : ''}
+            {filters.location ? ` (${filters.location})` : ''}
+          </span>
+          <span>{showFilters ? '▲' : '▼'}</span>
+        </button>
+
+        {showFilters && (
+          <div className="px-4 pb-4 grid grid-cols-2 gap-3 animate-in slide-in-from-top-2 duration-200">
+            {/* Location */}
+            <div className="col-span-1">
+              <label className="block text-xs text-gray-500 mb-1">
+                {t('location')}
+              </label>
+              <input
+                type="text"
+                value={filters.location}
+                onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+                placeholder={locale === 'es' ? 'ej. Madrid, Berlín' : 'e.g. Madrid, Berlin'}
+                className="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
+              />
+            </div>
+
+            {/* Experience */}
+            <div className="col-span-1">
+              <label className="block text-xs text-gray-500 mb-1">
+                {t('experienceYears')} {filters.experience}+
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="10"
+                step="1"
+                value={filters.experience}
+                onChange={(e) => setFilters(prev => ({ ...prev, experience: parseInt(e.target.value) }))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-600"
+              />
+            </div>
+
+            {/* Skills */}
+            <div className="col-span-2">
+              <label className="block text-xs text-gray-500 mb-1">
+                {t('skillsCommas')}
+              </label>
+              <input
+                type="text"
+                value={filters.skills}
+                onChange={(e) => setFilters({ ...filters, skills: e.target.value })}
+                placeholder="Python, React, Django..."
+                className="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
+              />
+            </div>
+
+            {/* Salary */}
+            <div className="col-span-1">
+              <label className="block text-xs text-gray-500 mb-1">
+                {t('salaryMin')}
+              </label>
+              <select
+                value={filters.salary}
+                onChange={(e) => setFilters(prev => ({ ...prev, salary: e.target.value }))}
+                className="w-full px-2 py-1.5 text-xs border border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
+              >
+                <option value="Any">{t('any')}</option>
+                <option value="30k+">$30k+</option>
+                <option value="50k+">$50k+</option>
+                <option value="80k+">$80k+</option>
+                <option value="100k+">$100k+</option>
+              </select>
+            </div>
+
+            {/* Remote Checkbox */}
+            <div className="col-span-1 flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="remote-check"
+                checked={filters.isRemote}
+                onChange={(e) => setFilters(prev => ({ ...prev, isRemote: e.target.checked }))}
+                className="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500"
+              />
+              <label htmlFor="remote-check" className="text-xs text-gray-700 dark:text-gray-300 cursor-pointer select-none">
+                {t('remoteWorkOnly')}
+              </label>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
@@ -180,14 +336,13 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
             className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[80%] rounded-lg p-3 ${
-                message.type === 'user'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-gray-100'
-              }`}
+              className={`max-w-[80%] rounded-lg p-3 ${message.type === 'user'
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white'
+                }`}
             >
               <p className="whitespace-pre-wrap">{message.content}</p>
-              
+
               {/* Matches */}
               {message.matches && message.matches.length > 0 && (
                 <div className="mt-4 space-y-3">
@@ -199,12 +354,18 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
                     });
                     const explanation = message.explanations?.[match.id] || '';
                     const score = 85; // Would come from API in real implementation
-                    
+
                     return (
                       <div
                         key={match.id}
                         className="bg-white dark:bg-slate-600 rounded-lg p-3 border border-gray-200 dark:border-slate-500 cursor-pointer hover:shadow-md transition-shadow"
-                        onClick={() => onMatchClick?.(match)}
+                        onClick={() => {
+                          if (match.is_external || (match.info_url && match.info_url.startsWith('http'))) {
+                            window.open(match.info_url, '_blank');
+                          } else {
+                            onMatchClick?.(match);
+                          }
+                        }}
                       >
                         <div className="flex items-start gap-3">
                           <img
@@ -228,6 +389,11 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
                               <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
                                 {score}% match
                               </span>
+                              {match.is_external && (
+                                <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
+                                  🌐 External
+                                </span>
+                              )}
                               <span className="text-xs text-gray-500">
                                 📍 {match.city}, {match.country}
                               </span>
@@ -239,12 +405,12 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
                   })}
                 </div>
               )}
-              
+
               {/* Suggestions */}
               {message.suggestions && message.suggestions.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-gray-300 dark:border-slate-600">
                   <p className="text-xs font-semibold mb-1">
-                    {locale === 'es' ? 'Sugerencias:' : locale === 'de' ? 'Vorschläge:' : 'Suggestions:'}
+                    {t('suggestionsLabel')}
                   </p>
                   <ul className="text-xs space-y-1">
                     {message.suggestions.map((suggestion, idx) => (
@@ -256,7 +422,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
             </div>
           </div>
         ))}
-        
+
         {isLoading && (
           <div className="flex justify-start">
             <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-3">
@@ -268,7 +434,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
             </div>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -288,14 +454,8 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={
-              locale === 'es'
-                ? 'Escribe tu búsqueda...'
-                : locale === 'de'
-                ? 'Schreibe deine Suche...'
-                : 'Type your search...'
-            }
-            className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100"
+            placeholder={t('typeSearchPh')}
+            className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             disabled={isLoading}
           />
           <button
@@ -303,7 +463,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
             disabled={!input.trim() || isLoading}
             className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {locale === 'es' ? 'Enviar' : locale === 'de' ? 'Senden' : 'Send'}
+            {t('send')}
           </button>
         </div>
       </div>

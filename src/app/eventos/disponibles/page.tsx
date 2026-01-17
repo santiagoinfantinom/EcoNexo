@@ -5,6 +5,7 @@ import { useI18n, categoryLabel, locationLabel } from "@/lib/i18n";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import { CardSkeleton } from "@/components/SkeletonLoader";
 import { ensureEventImage } from "@/lib/eventImages";
+import ImageWithFallback from "@/components/ImageWithFallback";
 
 type Event = {
   id: string;
@@ -49,12 +50,12 @@ export default function EventosDisponiblesPage() {
       // Fetch all events
       const eventsRes = await fetch('/api/events');
       const eventsData: Event[] = eventsRes.ok ? await eventsRes.json() : [];
-      
+
       // For each event, count registrations
       const eventsWithAvailability: EventWithAvailability[] = await Promise.all(
         eventsData.map(async (event) => {
           let currentRegistrations = 0;
-          
+
           if (isSupabaseConfigured()) {
             try {
               const supabase = getSupabase();
@@ -67,13 +68,13 @@ export default function EventosDisponiblesPage() {
               console.warn('Error counting registrations:', err);
             }
           }
-          
-          const spotsAvailable = event.capacity 
+
+          const spotsAvailable = event.capacity
             ? Math.max(0, event.capacity - currentRegistrations)
             : null;
-          
+
           const isAvailable = spotsAvailable === null || spotsAvailable > 0;
-          
+
           return {
             ...event,
             currentRegistrations,
@@ -82,17 +83,17 @@ export default function EventosDisponiblesPage() {
           };
         })
       );
-      
+
       // Filter events that are available
       const availableEvents = eventsWithAvailability.filter(e => e.isAvailable);
-      
+
       // Sort by date (upcoming first)
       availableEvents.sort((a, b) => {
         const dateA = new Date(`${a.date} ${a.start_time || '00:00'}`).getTime();
         const dateB = new Date(`${b.date} ${b.start_time || '00:00'}`).getTime();
         return dateA - dateB;
       });
-      
+
       setEvents(availableEvents);
     } catch (error) {
       console.error('Error loading events:', error);
@@ -104,21 +105,21 @@ export default function EventosDisponiblesPage() {
 
   const getFilteredEvents = () => {
     let filtered = events;
-    
+
     // Filter by availability type
     if (filter === 'urgent') {
-      filtered = filtered.filter(e => 
+      filtered = filtered.filter(e =>
         e.spotsAvailable !== null && e.spotsAvailable > 0 && e.spotsAvailable <= 5
       );
     } else if (filter === 'available') {
       filtered = filtered.filter(e => e.isAvailable);
     }
-    
+
     // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(e => e.category === selectedCategory);
     }
-    
+
     return filtered;
   };
 
@@ -132,7 +133,7 @@ export default function EventosDisponiblesPage() {
       month: 'short',
       day: 'numeric'
     });
-    
+
     if (startTime) {
       const timeStr = endTime ? `${startTime}–${endTime}` : startTime;
       return `${dateFormatted} ${timeStr}`;
@@ -155,11 +156,11 @@ export default function EventosDisponiblesPage() {
             {locale === 'de' ? 'Verfügbare Veranstaltungen' : locale === 'es' ? 'Eventos Disponibles' : 'Available Events'}
           </h1>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            {locale === 'de' 
-              ? 'Entdecken Sie Veranstaltungen, die noch Teilnehmer suchen' 
-              : locale === 'es' 
-              ? 'Descubre eventos que aún buscan participantes'
-              : 'Discover events that are still looking for participants'}
+            {locale === 'de'
+              ? 'Entdecken Sie Veranstaltungen, die noch Teilnehmer suchen'
+              : locale === 'es'
+                ? 'Descubre eventos que aún buscan participantes'
+                : 'Discover events that are still looking for participants'}
           </p>
         </div>
 
@@ -169,31 +170,28 @@ export default function EventosDisponiblesPage() {
           <div className="flex flex-wrap gap-2 justify-center">
             <button
               onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
-                filter === 'all'
-                  ? 'bg-green-600 text-white shadow-md'
-                  : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
-              }`}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${filter === 'all'
+                ? 'bg-green-600 text-white shadow-md'
+                : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
+                }`}
             >
               {locale === 'de' ? 'Alle' : locale === 'es' ? 'Todos' : 'All'}
             </button>
             <button
               onClick={() => setFilter('available')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
-                filter === 'available'
-                  ? 'bg-green-600 text-white shadow-md'
-                  : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
-              }`}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${filter === 'available'
+                ? 'bg-green-600 text-white shadow-md'
+                : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
+                }`}
             >
               {locale === 'de' ? 'Verfügbar' : locale === 'es' ? 'Disponibles' : 'Available'}
             </button>
             <button
               onClick={() => setFilter('urgent')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
-                filter === 'urgent'
-                  ? 'bg-red-600 text-white shadow-md'
-                  : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
-              }`}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${filter === 'urgent'
+                ? 'bg-red-600 text-white shadow-md'
+                : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
+                }`}
             >
               {locale === 'de' ? 'Dringend' : locale === 'es' ? 'Urgentes' : 'Urgent'} (≤5)
             </button>
@@ -204,11 +202,10 @@ export default function EventosDisponiblesPage() {
             <div className="flex flex-wrap gap-2 justify-center">
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
-                  selectedCategory === 'all'
-                    ? 'bg-gray-800 text-white'
-                    : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${selectedCategory === 'all'
+                  ? 'bg-gray-800 text-white'
+                  : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
+                  }`}
               >
                 {t("all")}
               </button>
@@ -216,11 +213,10 @@ export default function EventosDisponiblesPage() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
-                    selectedCategory === cat
-                      ? 'bg-gray-800 text-white'
-                      : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
-                  }`}
+                  className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${selectedCategory === cat
+                    ? 'bg-gray-800 text-white'
+                    : 'bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-slate-600'
+                    }`}
                 >
                   {categoryLabel(cat, locale)}
                 </button>
@@ -243,18 +239,18 @@ export default function EventosDisponiblesPage() {
               <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-xl shadow-lg">
                 <div className="text-6xl mb-4">📅</div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  {locale === 'de' 
-                    ? 'Keine verfügbaren Veranstaltungen' 
-                    : locale === 'es' 
-                    ? 'No hay eventos disponibles'
-                    : 'No available events'}
+                  {locale === 'de'
+                    ? 'Keine verfügbaren Veranstaltungen'
+                    : locale === 'es'
+                      ? 'No hay eventos disponibles'
+                      : 'No available events'}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
                   {locale === 'de'
                     ? 'Es gibt derzeit keine Veranstaltungen mit verfügbaren Plätzen.'
                     : locale === 'es'
-                    ? 'Actualmente no hay eventos con plazas disponibles.'
-                    : 'There are currently no events with available spots.'}
+                      ? 'Actualmente no hay eventos con plazas disponibles.'
+                      : 'There are currently no events with available spots.'}
                 </p>
                 <Link
                   href="/eventos"
@@ -273,14 +269,15 @@ export default function EventosDisponiblesPage() {
                   >
                     {/* Event Image - Always show image */}
                     <div className="w-full h-48 overflow-hidden">
-                      <img
+                      <ImageWithFallback
                         src={ensureEventImage(event)}
                         alt={getEventTitle(event)}
+                        category={event.category}
                         className="w-full h-full object-cover"
                         loading="lazy"
                       />
                     </div>
-                    
+
                     {/* Event Content */}
                     <div className="p-4 sm:p-6">
                       {/* Category Badge */}
@@ -311,13 +308,12 @@ export default function EventosDisponiblesPage() {
                       <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-slate-700">
                         {event.spotsAvailable !== null ? (
                           <div className="flex items-center gap-2">
-                            <span className={`text-sm font-semibold ${
-                              event.spotsAvailable <= 5 
-                                ? 'text-red-600 dark:text-red-400' 
-                                : event.spotsAvailable <= 10
+                            <span className={`text-sm font-semibold ${event.spotsAvailable <= 5
+                              ? 'text-red-600 dark:text-red-400'
+                              : event.spotsAvailable <= 10
                                 ? 'text-orange-600 dark:text-orange-400'
                                 : 'text-green-600 dark:text-green-400'
-                            }`}>
+                              }`}>
                               {event.spotsAvailable} {locale === 'de' ? 'Plätze frei' : locale === 'es' ? 'plazas' : 'spots'}
                             </span>
                           </div>
