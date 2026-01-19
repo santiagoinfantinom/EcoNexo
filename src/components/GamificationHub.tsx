@@ -134,8 +134,8 @@ export default function GamificationHub() {
             )}
 
             {/* Desktop Bottom Bar */}
-            <div className={`hidden md:block fixed bottom-0 left-0 right-0 z-40 transition-all duration-300 ${isExpanded ? 'translate-y-0' : 'translate-y-[calc(100%-3.5rem)]'}`}>
-                <div className="flex flex-col bg-white dark:bg-slate-800 shadow-2xl rounded-t-2xl overflow-hidden border border-gray-100 dark:border-slate-700 mx-4">
+            <div className={`hidden md:block fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl z-40 transition-all duration-300 ${isExpanded ? 'translate-y-0' : 'translate-y-[calc(100%-3.5rem)]'}`}>
+                <div className="flex flex-col bg-white dark:bg-slate-800 shadow-2xl rounded-t-2xl overflow-hidden border border-gray-100 dark:border-slate-700">
                     {/* Toggle Tab (Top of bar) */}
                     <button
                         onClick={() => setIsExpanded(!isExpanded)}

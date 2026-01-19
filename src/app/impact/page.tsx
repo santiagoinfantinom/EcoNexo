@@ -75,14 +75,14 @@ export default function ImpactPage() {
                         </div>
 
                         {/* Text Info */}
-                        <div className="text-center md:text-left flex-1">
+                        <div className="text-center flex-1">
                             <h1 className="text-4xl font-bold mb-2">{t('yourImpact')}</h1>
-                            <p className="text-emerald-100 text-lg mb-6 max-w-xl">
+                            <p className="text-emerald-100 text-lg mb-6 max-w-xl mx-auto">
                                 {t('impactDescription')}
                             </p>
 
                             {/* Progress Bar Large */}
-                            <div className="bg-emerald-900/30 rounded-full h-6 w-full max-w-md relative overflow-hidden backdrop-blur-sm border border-emerald-500/30">
+                            <div className="bg-emerald-900/30 rounded-full h-6 w-full max-w-md mx-auto relative overflow-hidden backdrop-blur-sm border border-emerald-500/30">
                                 <div
                                     className="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-400 to-orange-500 transition-all duration-1000 ease-out"
                                     style={{ width: `${progress}%` }}
