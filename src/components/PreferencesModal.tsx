@@ -8,12 +8,12 @@ import { useI18n, categoryLabel } from '@/lib/i18n';
 
 // Available options for the MVP
 const AVAILABLE_SKILLS = [
-    { id: 'tech', label: 'Tecnología / IT', icon: '💻' },
-    { id: 'gardening', label: 'Jardinería / Campo', icon: '🌱' },
-    { id: 'teaching', label: 'Educación / Enseñanza', icon: '📚' },
-    { id: 'manual', label: 'Trabajo Manual / Reparación', icon: '🔧' },
-    { id: 'social', label: 'Trabajo Social / Cuidados', icon: '🤝' },
-    { id: 'art', label: 'Arte / Creatividad', icon: '🎨' },
+    { id: 'tech', labelKey: 'skillTech', icon: '💻' },
+    { id: 'gardening', labelKey: 'skillGardening', icon: '🌱' },
+    { id: 'teaching', labelKey: 'skillTeaching', icon: '📚' },
+    { id: 'manual', labelKey: 'skillManual', icon: '🔧' },
+    { id: 'social', labelKey: 'skillSocial', icon: '🤝' },
+    { id: 'art', labelKey: 'skillArt', icon: '🎨' },
 ];
 
 export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -50,8 +50,8 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                 {/* Header */}
                 <div className="p-6 bg-gradient-to-r from-green-600 to-teal-600 text-white flex justify-between items-center">
                     <div>
-                        <h2 className="text-2xl font-bold">🎯 Personaliza EcoNexo</h2>
-                        <p className="text-green-100 text-sm">Ayúdanos a recomendarte los mejores proyectos.</p>
+                        <h2 className="text-2xl font-bold">🎯 {t('personalizeEcoNexo')}</h2>
+                        <p className="text-green-100 text-sm">{t('onboardingSubtitle')}</p>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-full transition-colors">
                         <X size={24} />
@@ -64,7 +64,7 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                         <div className="space-y-6">
                             <div>
                                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-                                    ¿Qué causas te mueven?
+                                    {t('causesTitle')}
                                 </h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {(['Medio ambiente', 'Educación', 'Salud', 'Comunidad', 'Océanos', 'Alimentación'] as Category[]).map((cat) => (
@@ -87,7 +87,7 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                         <div className="space-y-6">
                             <div>
                                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-                                    ¿Qué habilidades puedes aportar?
+                                    {t('skillsTitle')}
                                 </h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {AVAILABLE_SKILLS.map((skill) => (
@@ -101,7 +101,7 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                                         >
                                             <span className="flex items-center gap-2">
                                                 <span>{skill.icon}</span>
-                                                <span className="font-medium text-sm">{skill.label}</span>
+                                                <span className="font-medium text-sm">{t(skill.labelKey)}</span>
                                             </span>
                                             {preferences.selectedSkills.includes(skill.id) && <Check size={18} className="text-blue-500" />}
                                         </button>
@@ -119,14 +119,14 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                             onClick={() => setStep(1)}
                             className="px-6 py-2 text-gray-600 font-medium hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                         >
-                            Atrás
+                            {t('back')}
                         </button>
                     ) : (
                         <button
                             onClick={onClose}
                             className="px-6 py-2 text-gray-500 font-medium hover:text-gray-700 dark:text-gray-400"
                         >
-                            Saltar
+                            {t('skip')}
                         </button>
                     )}
 
@@ -135,14 +135,14 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                             onClick={() => setStep(2)}
                             className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
                         >
-                            Siguiente
+                            {t('next')}
                         </button>
                     ) : (
                         <button
                             onClick={handleFinish}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2"
                         >
-                            ¡Listo! <Award size={18} />
+                            {t('ready')} <Award size={18} />
                         </button>
                     )}
                 </div>

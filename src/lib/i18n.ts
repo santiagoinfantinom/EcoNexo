@@ -1001,6 +1001,25 @@ const DICTS: Record<Locale, Dict> = {
     categoryEngagement: "Engagement",
     categoryLifestyle: "Lifestyle",
 
+    // Onboarding
+    personalizeEcoNexo: "Personalize EcoNexo",
+    onboardingSubtitle: "Help us recommend the best projects for you.",
+    causesTitle: "What causes move you?",
+    skillsTitle: "What skills can you contribute?",
+    back: "Back",
+    skip: "Skip",
+    next: "Next",
+    ready: "Ready!",
+
+    // Skills
+    skillTech: "Technology / IT",
+    skillGardening: "Gardening / Field",
+    skillTeaching: "Education / Teaching",
+    skillManual: "Manual Work / Repair",
+    skillSocial: "Social Work / Care",
+    skillArt: "Art / Creativity",
+
+
     // Volunteer Page
     volunteersPageTitle: "Volunteers Page",
     localRecords: "Local Records",
@@ -1985,6 +2004,25 @@ const DICTS: Record<Locale, Dict> = {
     categoryStarter: "Starter",
     categoryEngagement: "Engagement",
     categoryLifestyle: "Lebensstil",
+
+    // Onboarding
+    personalizeEcoNexo: "EcoNexo personalisieren",
+    onboardingSubtitle: "Helfen Sie uns, die besten Projekte für Sie zu empfehlen.",
+    causesTitle: "Welche Anliegen bewegen Sie?",
+    skillsTitle: "Welche Fähigkeiten können Sie einbringen?",
+    back: "Zurück",
+    skip: "Überspringen",
+    next: "Weiter",
+    ready: "Fertig!",
+
+    // Skills
+    skillTech: "Technologie / IT",
+    skillGardening: "Gärtnern / Feldarbeit",
+    skillTeaching: "Bildung / Lehre",
+    skillManual: "Handwerk / Reparatur",
+    skillSocial: "Soziales / Pflege",
+    skillArt: "Kunst / Kreativität",
+
 
     // Volunteer Page
     name: "Name",
@@ -2990,6 +3028,25 @@ const DICTS: Record<Locale, Dict> = {
     categoryStarter: "Inicio",
     categoryEngagement: "Compromiso",
     categoryLifestyle: "Estilo de Vida",
+
+    // Onboarding
+    personalizeEcoNexo: "Personaliza EcoNexo",
+    onboardingSubtitle: "Ayúdanos a recomendarte los mejores proyectos.",
+    causesTitle: "¿Qué causas te mueven?",
+    skillsTitle: "¿Qué habilidades puedes aportar?",
+    back: "Atrás",
+    skip: "Saltar",
+    next: "Siguiente",
+    ready: "¡Listo!",
+
+    // Skills
+    skillTech: "Tecnología / IT",
+    skillGardening: "Jardinería / Campo",
+    skillTeaching: "Educación / Enseñanza",
+    skillManual: "Trabajo Manual / Reparación",
+    skillSocial: "Trabajo Social / Cuidados",
+    skillArt: "Arte / Creatividad",
+
   },
   fr: {
     // Job titles
