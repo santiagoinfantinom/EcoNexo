@@ -20,7 +20,10 @@ echo -e "${BLUE}💾 3. Creando commit${NC}"
 git commit -m "🚀 Deploy automático - $(date '+%Y-%m-%d %H:%M:%S')"
 
 echo -e "${BLUE}📤 4. Subiendo a GitHub${NC}"
-git push origin Jugando-con-las-esteticas
+# Push current branch
+current_branch=$(git branch --show-current)
+echo -e "${BLUE}📤 4. Subiendo rama $current_branch a GitHub${NC}"
+git push origin "$current_branch"
 
 echo -e "${BLUE}🌐 5. Deploying a Vercel${NC}"
 npx vercel --prod
@@ -32,8 +35,7 @@ fi
 
 echo -e "${GREEN}✅ Deploy completado exitosamente!${NC}"
 echo ""
-echo "🌐 URLs de EcoNexo:"
-echo "  - Web: https://eco-nexo.vercel.app"
+echo "🌐 URL de producción (busca la línea 'Production:' arriba en el log)"
 echo "  - GitHub: https://github.com/santiagoinfantinom/EcoNexo"
 echo ""
 echo "📱 Próximos pasos:"

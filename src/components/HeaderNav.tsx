@@ -43,7 +43,7 @@ export default function HeaderNav() {
             <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-105">
               <EcoNexoLogo size={28} className="sm:w-9 sm:h-9" />
               <span className="text-xl sm:text-2xl lg:text-3xl text-white font-black tracking-tight drop-shadow-md">
-                {t("app")} <span className="text-xs opacity-50 font-normal">v1.1</span>
+                {t("app")}
               </span>
             </Link>
           </div>
