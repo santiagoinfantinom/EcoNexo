@@ -227,6 +227,10 @@ const DICTS: Record<Locale, Dict> = {
     readyDescription: "Explore projects, join events and connect with a community committed to our planet's future",
     letsGo: "Let's Go!",
     viewMap: "View Map",
+    addToGoogleCalendar: "Add to Google Calendar",
+    addToOutlookCalendar: "Add to Outlook",
+    downloadICS: "Download iCal",
+    addToCalendar: "Add to Calendar",
     // Categories
     environmentTitle: "Environment",
     environmentDescription: "Conservation, reforestation and ecosystem protection projects",
