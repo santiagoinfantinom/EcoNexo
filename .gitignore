@@ -55,3 +55,4 @@ __pycache__/
 .tmp/
 credentials.json
 token.json
+.env*.local
