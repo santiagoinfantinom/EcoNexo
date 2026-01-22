@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { UserPreferences } from '@/lib/matching';
 import { useToast } from '@/components/ToastNotification';
+import { useI18n } from '@/lib/i18n';
 
 interface GamificationState {
     points: number;
@@ -85,6 +86,7 @@ const defaultGamification: GamificationState = {
 const SmartContext = createContext<SmartContextType | undefined>(undefined);
 
 export function SmartProvider({ children }: { children: ReactNode }) {
+    const { t } = useI18n(); // Helper hook
     const [preferences, setPreferences] = useState<UserPreferences>(defaultPreferences);
     const [showOnboarding, setShowOnboarding] = useState(false);
     const [gamification, setGamification] = useState<GamificationState>(defaultGamification);
@@ -127,13 +129,13 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                     lastLogin: today,
                     streak: newStreak,
                     points: prev.points + 20,
-                    history: [...prev.history, `Inicio de sesión diario (+20 XP)`]
+                    history: [...prev.history, `Daily Login (+20 XP)`] // Keeping english in history for simplicity or needs refactor
                 };
 
                 // Bonus for weekly streak
                 if (newStreak === 7) {
                     updated.points += 50;
-                    updated.history.push("Racha de 7 días (+50 XP)");
+                    updated.history.push("Weekly Streak (+50 XP)");
                     if (!updated.badges.includes('daily_streak_7')) {
                         updated.badges = [...updated.badges, 'daily_streak_7'];
                     }
@@ -165,7 +167,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         // Award "First Step" badge if not present
         if (!gamification.badges.includes('first_step')) {
             unlockBadge('first_step');
-            addPoints(50, 'Completar perfil');
+            addPoints(50, t('completedProfile') || 'Completed Profile');
         }
     };
 
@@ -199,7 +201,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
 
             // Level up check
             if (newLevel > prev.level) {
-                showToast(`¡Nivel Siguiente! Has alcanzado el nivel ${newLevel}`, "success");
+                showToast(`${t('levelUp')} ${newLevel}`, "success");
             }
 
             // Show toast for points (optional, maybe only for big amounts or user preference)
@@ -225,7 +227,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         setGamification(prev => {
             if (prev.badges.includes(badgeId)) return prev;
 
-            showToast("¡Nueva Medalla Desbloqueada!", "success");
+            showToast(t('newBadge') || "New Badge Unlocked!", "success");
 
             const updated = { ...prev, badges: [...prev.badges, badgeId] };
             saveGamification(updated);
