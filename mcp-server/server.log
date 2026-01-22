@@ -1,0 +1,8 @@
+INFO:     Will watch for changes in these directories: ['/Users/santiago/Documents/Projects/EcoNexo/mcp-server']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [74993] using WatchFiles
+2026-01-20 11:36:57,718 - src.server - INFO - Matching agent initialized successfully
+INFO:     Started server process [75054]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:58173 - "GET /health HTTP/1.1" 200 OK

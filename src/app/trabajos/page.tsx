@@ -3,22 +3,43 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useI18n, locationLabel } from "@/lib/i18n";
 import { useToast } from "@/components/ToastNotification";
 import { CardSkeleton } from "@/components/SkeletonLoader";
+import { jobCurator, ScrapedJob } from "@/services/agents/JobCurator";
+import {
+  Search,
+  Briefcase,
+  MapPin,
+  DollarSign,
+  Clock,
+  Star,
+  CheckCircle2,
+  Heart,
+  ExternalLink,
+  Plus,
+  Bot,
+  Terminal,
+  Cpu
+} from "lucide-react";
+
+type LocalizedString = string | Record<string, string>;
+type LocalizedArray = string[] | Record<string, string[]>;
 
 type Job = {
   id: string;
-  title: string;
+  title: LocalizedString;
   company: string;
-  city: string;
-  country: string;
+  city: LocalizedString;
+  country: LocalizedString;
   salaryMinEur: number;
   salaryMaxEur: number;
   level: 'junior' | 'mid' | 'senior' | 'lead';
   experienceYears: number;
-  knowledgeAreas: string[];
+  knowledgeAreas: LocalizedArray;
   contract: "full-time" | "part-time" | "contract" | "internship";
   remote: boolean;
-  description: string;
+  description: LocalizedString;
   apply_url?: string;
+  isCurated?: boolean; // New field for agent jobs
+  curatorLog?: string[]; // New field for agent logs
 };
 
 // Función para traducir tags técnicos
@@ -32,558 +53,1911 @@ const JOBS: Job[] = [
   // === REAL JOBS 2026 - RENEWABLE ENERGY ===
   {
     id: "real_j1",
-    title: "Renewable Energy Project Manager",
+    title: {
+      en: "Renewable Energy Project Manager",
+      es: "Gerente de Proyectos de Energía Renovable",
+      de: "Projektleiter Erneuerbare Energien",
+      fr: "Chef de Projet Énergie Renouvelable",
+      it: "Project Manager Energie Rinnovabili",
+      pl: "Kierownik Projektu Energii Odnawialnej",
+      nl: "Projectmanager Hernieuwbare Energie"
+    },
     company: "European Energy",
-    city: "Copenhagen",
-    country: "Denmark",
+    city: {
+      en: "Copenhagen",
+      es: "Copenhague",
+      de: "Kopenhagen",
+      fr: "Copenhague",
+      it: "Copenaghen",
+      pl: "Kopenhaga",
+      nl: "Kopenhagen"
+    },
+    country: {
+      en: "Denmark",
+      es: "Dinamarca",
+      de: "Dänemark",
+      fr: "Danemark",
+      it: "Danimarca",
+      pl: "Dania",
+      nl: "Denemarken"
+    },
     salaryMinEur: 65000,
     salaryMaxEur: 85000,
     level: 'senior',
     experienceYears: 5,
-    knowledgeAreas: ["Solar PV", "Wind Energy", "Project Management", "PPA"],
+    knowledgeAreas: {
+      en: ["Solar PV", "Wind Energy", "Project Management", "PPA"],
+      es: ["Solar FV", "Energía Eólica", "Gestión de Proyectos", "PPA"],
+      de: ["Solar-PV", "Windenergie", "Projektmanagement", "PPA"],
+      fr: ["PV Solaire", "Énergie Éolienne", "Gestion de Projet", "PPA"],
+      it: ["Fotovoltaico", "Energia Eolica", "Gestione Progetti", "PPA"],
+      pl: ["Fotowoltaika", "Energia Wiatrowa", "Zarządzanie Projektami", "PPA"],
+      nl: ["Zonne-energie", "Windenergie", "Projectmanagement", "PPA"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Lead the development of large-scale renewable energy projects across Europe. Manage stakeholders, permits, and grid connections. Join a leading company driving the green transition.",
+    description: {
+      en: "Lead the development of large-scale renewable energy projects across Europe. Manage stakeholders, permitting, and grid connections. Join a leading company driving the green transition.",
+      es: "Liderar el desarrollo de proyectos de energía renovable a gran escala en toda Europa. Gestionar partes interesadas, permisos y conexiones a la red. Únete a una empresa líder que impulsa la transición ecológica.",
+      de: "Leiten Sie die Entwicklung von großen Erneuerbare-Energien-Projekten in ganz Europa. Management von Stakeholdern, Genehmigungen und Netzanschlüssen.",
+      fr: "Diriger le développement de projets d'énergie renouvelable à grande échelle à travers l'Europe. Gérer les parties prenantes, les permis et les raccordements au réseau.",
+      it: "Guidare lo sviluppo di progetti di energia rinnovabile su larga scala in tutta Europa. Gestire le parti interessate, i permessi e le connessioni alla rete.",
+      pl: "Kieruj rozwojem wielkoskalowych projektów energii odnawialnej w całej Europie. Zarządzaj interesariuszami, pozwoleniami i przyłączeniami do sieci.",
+      nl: "Leid de ontwikkeling van grootschalige projecten voor hernieuwbare energie in heel Europa. Beheer belanghebbenden, vergunningen en netaansluitingen."
+    },
     apply_url: "https://europeanenergy.com/career/vacancies/"
   },
   {
     id: "real_j2",
-    title: "Battery Systems Engineer",
+    title: {
+      en: "Battery Systems Engineer",
+      es: "Ingeniero de Sistemas de Baterías",
+      de: "Batteriesystemingenieur",
+      fr: "Ingénieur Systèmes de Batteries",
+      it: "Ingegnere Sistemi Batterie",
+      pl: "Inżynier Systemów Bateryjnych",
+      nl: "Batterij Systeem Ingenieur"
+    },
     company: "Northvolt",
-    city: "Stockholm",
-    country: "Sweden",
+    city: {
+      en: "Stockholm",
+      es: "Estocolmo",
+      de: "Stockholm",
+      fr: "Stockholm",
+      it: "Stoccolma",
+      pl: "Sztokholm",
+      nl: "Stockholm"
+    },
+    country: {
+      en: "Sweden",
+      es: "Suecia",
+      de: "Schweden",
+      fr: "Suède",
+      it: "Svezia",
+      pl: "Szwecja",
+      nl: "Zweden"
+    },
     salaryMinEur: 58000,
     salaryMaxEur: 75000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Lithium-ion", "BMS", "Python", "Simulink"],
+    knowledgeAreas: {
+      en: ["Li-Ion", "BMS", "Python", "Simulink"],
+      es: ["Ion-Litio", "BMS", "Python", "Simulink"],
+      de: ["Li-Ion", "BMS", "Python", "Simulink"],
+      fr: ["Li-Ion", "BMS", "Python", "Simulink"],
+      it: ["Li-Ion", "BMS", "Python", "Simulink"],
+      pl: ["Li-Ion", "BMS", "Python", "Simulink"],
+      nl: ["Li-Ion", "BMS", "Python", "Simulink"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Design and validate battery management systems for next-gen electric vehicles. Work in a world-class team to build the greenest battery in the world.",
+    description: {
+      en: "Design and validate battery management systems for next-gen electric vehicles. Work in a world-class team to build the world's greenest battery.",
+      es: "Diseñar y validar sistemas de gestión de baterías para vehículos eléctricos de próxima generación. Trabaja en un equipo de clase mundial para construir la batería más ecológica del mundo.",
+      de: "Entwurf und Validierung von Batteriemanagementsystemen für Elektrofahrzeuge der nächsten Generation. Arbeiten Sie in einem Weltklasse-Team am Bau der umweltfreundlichsten Batterie der Welt.",
+      fr: "Concevoir et valider des systèmes de gestion de batteries pour les véhicules électriques de nouvelle génération.",
+      it: "Progettare e convalidare sistemi di gestione delle batterie per veicoli elettrici di prossima generazione.",
+      pl: "Projektowanie i walidacja systemów zarządzania bateriami dla pojazdów elektrycznych nowej generacji.",
+      nl: "Ontwerp en valideer batterijbeheersystemen voor elektrische voertuigen van de volgende generatie."
+    },
     apply_url: "https://northvolt.com/career/"
   },
   {
     id: "real_j3",
-    title: "Wind Turbine Technician",
+    title: {
+      en: "Wind Turbine Technician",
+      es: "Técnico de Turbinas Eólicas",
+      de: "Windturbinentechniker",
+      fr: "Technicien Éolien",
+      it: "Tecnico Turbine Eoliche",
+      pl: "Technik Turbin Wiatrowych",
+      nl: "Windturbine Technicus"
+    },
     company: "Vestas",
-    city: "Hamburg",
-    country: "Germany",
+    city: {
+      en: "Hamburg",
+      es: "Hamburgo",
+      de: "Hamburg",
+      fr: "Hambourg",
+      it: "Amburgo",
+      pl: "Hamburg",
+      nl: "Hamburg"
+    },
+    country: {
+      en: "Germany",
+      es: "Alemania",
+      de: "Deutschland",
+      fr: "Allemagne",
+      it: "Germania",
+      pl: "Niemcy",
+      nl: "Duitsland"
+    },
     salaryMinEur: 42000,
     salaryMaxEur: 55000,
     level: 'mid',
     experienceYears: 2,
-    knowledgeAreas: ["Mechanics", "Hydraulics", "Electronics", "Safety"],
+    knowledgeAreas: {
+      en: ["Mechanics", "Hydraulics", "Electronics", "Safety"],
+      es: ["Mecánica", "Hidráulica", "Electrónica", "Seguridad"],
+      de: ["Mechanik", "Hydraulik", "Elektronik", "Sicherheit"],
+      fr: ["Mécanique", "Hydraulique", "Électronique", "Sécurité"],
+      it: ["Meccanica", "Idraulica", "Elettronica", "Sicurezza"],
+      pl: ["Mechanika", "Hydraulika", "Elektronika", "Bezpieczeństwo"],
+      nl: ["Mechanica", "Hydraulica", "Elektronica", "Veiligheid"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Perform maintenance and troubleshooting on wind turbines. Ensure optimal performance and safety standards. Ideal for hands-on technical professionals passionate about wind energy.",
+    description: {
+      en: "Perform maintenance and troubleshooting on wind turbines. Ensure optimal performance and safety standards. Ideal for hands-on technical professionals passionate about wind energy.",
+      es: "Realizar mantenimiento y resolución de problemas en turbinas eólicas. Asegurar un rendimiento óptimo y estándares de seguridad. Ideal para profesionales técnicos prácticos apasionados por la energía eólica.",
+      de: "Wartung und Fehlerbehebung an Windkraftanlagen durchführen. Gewährleistung optimaler Leistung und Sicherheitsstandards.",
+      fr: "Effectuer la maintenance et le dépannage des éoliennes. Assurer des performances optimales et le respect des normes de sécurité.",
+      it: "Eseguire la manutenzione e la risoluzione dei problemi sulle turbine eoliche.",
+      pl: "Wykonywanie konserwacji i rozwiązywanie problemów w turbinach wiatrowych.",
+      nl: "Voer onderhoud en probleemoplossing uit aan windturbines."
+    },
     apply_url: "https://careers.vestas.com/"
   },
   {
     id: "real_j4",
-    title: "Offshore Wind Engineer",
+    title: {
+      en: "Offshore Wind Engineer",
+      es: "Ingeniero de Eólica Marina",
+      de: "Offshore-Windingenieur",
+      fr: "Ingénieur Éolien Offshore",
+      it: "Ingegnere Eolico Offshore",
+      pl: "Inżynier Morskiej Energetyki Wiatrowej",
+      nl: "Offshore Wind Ingenieur"
+    },
     company: "Ørsted",
-    city: "Esbjerg",
-    country: "Denmark",
+    city: {
+      en: "Esbjerg",
+      es: "Esbjerg",
+      de: "Esbjerg",
+      fr: "Esbjerg",
+      it: "Esbjerg",
+      pl: "Esbjerg",
+      nl: "Esbjerg"
+    },
+    country: {
+      en: "Denmark",
+      es: "Dinamarca",
+      de: "Dänemark",
+      fr: "Danemark",
+      it: "Danimarca",
+      pl: "Dania",
+      nl: "Denemarken"
+    },
     salaryMinEur: 62000,
     salaryMaxEur: 80000,
     level: 'senior',
     experienceYears: 5,
-    knowledgeAreas: ["Offshore Wind", "Marine Engineering", "Grid Integration", "SCADA"],
+    knowledgeAreas: {
+      en: ["Offshore Wind", "Marine Engineering", "Grid Integration", "SCADA"],
+      es: ["Eólica Marina", "Ingeniería Marina", "Integración de Red", "SCADA"],
+      de: ["Offshore-Wind", "Schiffbau", "Netzintegration", "SCADA"],
+      fr: ["Éolien Offshore", "Génie Maritime", "Intégration Réseau", "SCADA"],
+      it: ["Eolico Offshore", "Ingegneria Navale", "Integrazione Rete", "SCADA"],
+      pl: ["Morska Energetyka Wiatrowa", "Inżynieria Morska", "Integracja z Siecią", "SCADA"],
+      nl: ["Offshore Wind", "Maritieme Techniek", "Netintegratie", "SCADA"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Lead offshore wind farm projects from concept to operation. World's leader in offshore wind energy seeks experienced engineers to accelerate the green energy transformation.",
+    description: {
+      en: "Lead offshore wind farm projects from concept to operation. The global leader in offshore wind is looking for experienced engineers to accelerate the green energy transformation.",
+      es: "Liderar proyectos de parques eólicos marinos desde el concepto hasta la operación. El líder mundial en energía eólica marina busca ingenieros experimentados para acelerar la transformación de la energía verde.",
+      de: "Leitung von Offshore-Windparkprojekten von der Konzeption bis zum Betrieb.",
+      fr: "Diriger les projets de parcs éoliens offshore de la conception à l'exploitation.",
+      it: "Guidare i progetti di parchi eolici offshore dal concetto all'operatività.",
+      pl: "Kieruj projektami morskich farm wiatrowych od koncepcji do eksploatacji.",
+      nl: "Leid offshore windparkprojecten van concept tot exploitatie."
+    },
     apply_url: "https://orsted.com/en/careers"
   },
   {
     id: "real_j5",
-    title: "Solar PV Design Engineer",
+    title: {
+      en: "Solar PV Design Engineer",
+      es: "Ingeniero de Diseño Solar Fotovoltaico",
+      de: "Solar-PV-Designingenieur",
+      fr: "Ingénieur Conception Solaire PV",
+      it: "Ingegnere Progettazione Solare FV",
+      pl: "Inżynier Projektu Fotowoltaiki",
+      nl: "Solar PV Design Ingenieur"
+    },
     company: "Enel Green Power",
-    city: "Rome",
-    country: "Italy",
+    city: {
+      en: "Rome",
+      es: "Roma",
+      de: "Rom",
+      fr: "Rome",
+      it: "Roma",
+      pl: "Rzym",
+      nl: "Rome"
+    },
+    country: {
+      en: "Italy",
+      es: "Italia",
+      de: "Italien",
+      fr: "Italie",
+      it: "Italia",
+      pl: "Włochy",
+      nl: "Italië"
+    },
     salaryMinEur: 45000,
     salaryMaxEur: 58000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["PV Design", "PVsyst", "AutoCAD", "Grid Connection", "Energy Yield"],
+    knowledgeAreas: {
+      en: ["PV Design", "PVsyst", "AutoCAD", "Grid Connection", "Energy Yield"],
+      es: ["Diseño FV", "PVsyst", "AutoCAD", "Conexión a Red", "Rendimiento Energético"],
+      de: ["PV-Design", "PVsyst", "AutoCAD", "Netzanschluss", "Energieertrag"],
+      fr: ["Conception PV", "PVsyst", "AutoCAD", "Raccordement Réseau", "Productible"],
+      it: ["Progettazione FV", "PVsyst", "AutoCAD", "Connessione Rete", "Resa Energetica"],
+      pl: ["Projektowanie PV", "PVsyst", "AutoCAD", "Przyłączenie do Sieci", "Uzysk Energii"],
+      nl: ["PV Ontwerp", "PVsyst", "AutoCAD", "Netaansluiting", "Energieopbrengst"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Design utility-scale solar PV plants across Southern Europe. Use cutting-edge simulation tools to optimize energy production and reduce LCOE.",
+    description: {
+      en: "Design large-scale solar PV plants in Southern Europe. Use cutting-edge simulation tools to optimize energy production and reduce LCOE.",
+      es: "Diseñar plantas solares fotovoltaicas a gran escala en el sur de Europa. Utilizar herramientas de simulación de vanguardia para optimizar la producción de energía y reducir el LCOE.",
+      de: "Entwurf von großen Solar-PV-Anlagen in Südeuropa. Einsatz modernster Simulationstools zur Optimierung der Energieproduktion.",
+      fr: "Concevoir des centrales solaires PV à grande échelle en Europe du Sud.",
+      it: "Progettare impianti solari fotovoltaici su larga scala nel sud Europa.",
+      pl: "Projektowanie wielkoskalowych elektrowni fotowoltaicznych w Europie Południowej.",
+      nl: "Ontwerp grootschalige zonne-PV-installaties in Zuid-Europa."
+    },
     apply_url: "https://www.enelgreenpower.com/careers"
   },
 
   // === REAL JOBS 2026 - CLIMATE TECH & SOFTWARE ===
   {
     id: "real_j6",
-    title: "Software Engineer - Green Search",
+    title: {
+      en: "Software Engineer - Green Search",
+      es: "Ingeniero de Software - Búsqueda Verde",
+      de: "Softwareingenieur - Grüne Suche",
+      fr: "Ingénieur Logiciel - Recherche Verte",
+      it: "Ingegnere Software - Ricerca Verde",
+      pl: "Inżynier Oprogramowania - Zielone Wyszukiwanie",
+      nl: "Software Engineer - Groen Zoeken"
+    },
     company: "Ecosia",
-    city: "Berlin",
-    country: "Germany",
+    city: {
+      en: "Berlin",
+      es: "Berlín",
+      de: "Berlin",
+      fr: "Berlin",
+      it: "Berlino",
+      pl: "Berlin",
+      nl: "Berlijn"
+    },
+    country: {
+      en: "Germany",
+      es: "Alemania",
+      de: "Deutschland",
+      fr: "Allemagne",
+      it: "Germania",
+      pl: "Niemcy",
+      nl: "Duitsland"
+    },
     salaryMinEur: 60000,
     salaryMaxEur: 80000,
     level: 'senior',
     experienceYears: 4,
-    knowledgeAreas: ["Go", "Kubernetes", "Search Algorithms", "Sustainability"],
+    knowledgeAreas: {
+      en: ["Go", "Kubernetes", "Search Algorithms", "Sustainability"],
+      es: ["Go", "Kubernetes", "Algoritmos de Búsqueda", "Sostenibilidad"],
+      de: ["Go", "Kubernetes", "Suchalgorithmen", "Nachhaltigkeit"],
+      fr: ["Go", "Kubernetes", "Algorithmes de Recherche", "Durabilité"],
+      it: ["Go", "Kubernetes", "Algoritmi di Ricerca", "Sostenibilità"],
+      pl: ["Go", "Kubernetes", "Algorytmy Wyszukiwania", "Zrównoważony Rozwój"],
+      nl: ["Go", "Kubernetes", "Zoekalgoritmen", "Duurzaamheid"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Build the search engine that plants trees. Optimizing search performance and infrastructure while minimizing carbon footprint. Help us scale our positive impact.",
+    description: {
+      en: "Build the search engine that plants trees. Optimize search performance and infrastructure while minimizing carbon footprint. Help us scale our positive impact.",
+      es: "Construye el motor de búsqueda que planta árboles. Optimiza el rendimiento de búsqueda y la infraestructura mientras minimizas la huella de carbono. Ayúdanos a escalar nuestro impacto positivo.",
+      de: "Bauen Sie die Suchmaschine, die Bäume pflanzt. Optimieren Sie die Suchleistung und Infrastruktur bei gleichzeitiger Minimierung des CO2-Fußabdrucks.",
+      fr: "Construisez le moteur de recherche qui plante des arbres. Optimisez les performances de recherche et l'infrastructure tout en minimisant l'empreinte carbone.",
+      it: "Costruisci il motore di ricerca che pianta alberi. Ottimizza le prestazioni di ricerca e l'infrastruttura riducendo al minimo l'impronta di carbonio.",
+      pl: "Buduj wyszukiwarkę, która sadzi drzewa. Optymalizuj wydajność wyszukiwania i infrastrukturę, minimalizując ślad węglowy.",
+      nl: "Bouw de zoekmachine die bomen plant. Optimaliseer de zoekprestaties en infrastructuur terwijl je de ecologische voetafdruk minimaliseert."
+    },
     apply_url: "https://ecosia.workable.com/"
   },
   {
     id: "real_j7",
-    title: "Climate Data Scientist",
+    title: {
+      en: "Climate Data Scientist",
+      es: "Científico de Datos Climáticos",
+      de: "Klimadatenwissenschaftler",
+      fr: "Data Scientist Climatique",
+      it: "Data Scientist Climatico",
+      pl: "Analityk Danych Klimatycznych",
+      nl: "Klimaat Data Scientist"
+    },
     company: "ClimateAI",
-    city: "Amsterdam",
-    country: "Netherlands",
+    city: {
+      en: "Amsterdam",
+      es: "Ámsterdam",
+      de: "Amsterdam",
+      fr: "Amsterdam",
+      it: "Amsterdam",
+      pl: "Amsterdam",
+      nl: "Amsterdam"
+    },
+    country: {
+      en: "Netherlands",
+      es: "Países Bajos",
+      de: "Niederlande",
+      fr: "Pays-Bas",
+      it: "Paesi Bassi",
+      pl: "Holandia",
+      nl: "Nederland"
+    },
     salaryMinEur: 55000,
     salaryMaxEur: 72000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Python", "Machine Learning", "Climate Modeling", "TensorFlow", "R"],
+    knowledgeAreas: {
+      en: ["Python", "Machine Learning", "Climate Modeling", "TensorFlow", "R"],
+      es: ["Python", "Machine Learning", "Modelado Climático", "TensorFlow", "R"],
+      de: ["Python", "Maschinelles Lernen", "Klimamodellierung", "TensorFlow", "R"],
+      fr: ["Python", "Apprentissage Automatique", "Modélisation Climatique", "TensorFlow", "R"],
+      it: ["Python", "Machine Learning", "Modellazione Climatica", "TensorFlow", "R"],
+      pl: ["Python", "Uczenie Maszynowe", "Modelowanie Klimatyczne", "TensorFlow", "R"],
+      nl: ["Python", "Machine Learning", "Klimaatmodellering", "TensorFlow", "R"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Develop ML models to predict climate risks for agriculture and supply chains. Work with satellite data and weather forecasts to help businesses adapt to climate change.",
+    description: {
+      en: "Develop ML models to predict climate risks for agriculture and supply chains. Work with satellite data and weather forecasts to help businesses adapt to climate change.",
+      es: "Desarrollar modelos de ML para predecir riesgos climáticos para la agricultura y las cadenas de suministro. Trabajar con datos satelitales y pronósticos meteorológicos para ayudar a las empresas a adaptarse al cambio climático.",
+      de: "Entwicklung von ML-Modellen zur Vorhersage von Klimarisiken für Landwirtschaft und Lieferketten.",
+      fr: "Développer des modèles ML pour prédire les risques climatiques pour l'agriculture et les chaînes d'approvisionnement.",
+      it: "Sviluppare modelli ML per prevedere i rischi climatici per l'agricoltura e le catene di approvvigionamento.",
+      pl: "Rozwijaj modele ML do przewidywania ryzyka klimatycznego dla rolnictwa i łańcuchów dostaw.",
+      nl: "Ontwikkel ML-modellen om klimaatrisico's voor de landbouw en toeleveringsketens te voorspellen."
+    },
     apply_url: "https://climate.ai/careers"
   },
   {
     id: "real_j8",
-    title: "Sustainability Software Developer",
+    title: {
+      en: "Sustainability Software Developer",
+      es: "Desarrollador de Software de Sostenibilidad",
+      de: "Nachhaltigkeits-Softwareentwickler",
+      fr: "Développeur Logiciel Durabilité",
+      it: "Sviluppatore Software Sostenibilità",
+      pl: "Programista Oprogramowania Zrównoważonego Rozwoju",
+      nl: "Duurzaamheids Software Ontwikkelaar"
+    },
     company: "Plan A",
-    city: "Berlin",
-    country: "Germany",
+    city: {
+      en: "Berlin",
+      es: "Berlín",
+      de: "Berlin",
+      fr: "Berlin",
+      it: "Berlino",
+      pl: "Berlin",
+      nl: "Berlijn"
+    },
+    country: {
+      en: "Germany",
+      es: "Alemania",
+      de: "Deutschland",
+      fr: "Allemagne",
+      it: "Germania",
+      pl: "Niemcy",
+      nl: "Duitsland"
+    },
     salaryMinEur: 52000,
     salaryMaxEur: 68000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["React", "TypeScript", "Node.js", "Carbon Accounting", "APIs"],
+    knowledgeAreas: {
+      en: ["React", "TypeScript", "Node.js", "Carbon Accounting", "APIs"],
+      es: ["React", "TypeScript", "Node.js", "Contabilidad de Carbono", "APIs"],
+      de: ["React", "TypeScript", "Node.js", "CO2-Bilanzierung", "APIs"],
+      fr: ["React", "TypeScript", "Node.js", "Comptabilité Carbone", "APIs"],
+      it: ["React", "TypeScript", "Node.js", "Contabilità del Carbonio", "APIs"],
+      pl: ["React", "TypeScript", "Node.js", "Rachunkowość Węglowa", "APIs"],
+      nl: ["React", "TypeScript", "Node.js", "Koolstofboekhouding", "APIs"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Build enterprise carbon management software used by companies worldwide. Help organizations measure, reduce, and report their environmental impact.",
+    description: {
+      en: "Build enterprise carbon management software used by companies worldwide. Help organizations measure, reduce, and report their environmental impact.",
+      es: "Construir software empresarial de gestión de carbono utilizado por empresas en todo el mundo. Ayudar a las organizaciones a medir, reducir y reportar su impacto ambiental.",
+      de: "Entwicklung von Unternehmenssoftware für CO2-Management, die weltweit eingesetzt wird.",
+      fr: "Construire un logiciel de gestion du carbone d'entreprise utilisé par des entreprises du monde entier.",
+      it: "Costruire software per la gestione del carbonio aziendale utilizzato da aziende in tutto il mondo.",
+      pl: "Buduj oprogramowanie do zarządzania emisją dwutlenku węgla w przedsiębiorstwach, używane przez firmy na całym świecie.",
+      nl: "Bouw bedrijfssoftware voor koolstofbeheer die wereldwijd door bedrijven wordt gebruikt."
+    },
     apply_url: "https://plana.earth/careers"
   },
 
   // === REAL JOBS 2026 - ESG & SUSTAINABILITY CONSULTING ===
   {
     id: "real_j9",
-    title: "ESG Reporting Manager",
+    title: {
+      en: "ESG Reporting Manager",
+      es: "Gerente de Informes ESG",
+      de: "ESG-Berichtsmanager",
+      fr: "Responsable Reporting ESG",
+      it: "Responsabile Reporting ESG",
+      pl: "Menedżer ds. Raportowania ESG",
+      nl: "ESG Rapportage Manager"
+    },
     company: "Siemens",
-    city: "Munich",
-    country: "Germany",
+    city: {
+      en: "Munich",
+      es: "Múnich",
+      de: "München",
+      fr: "Munich",
+      it: "Monaco di Baviera",
+      pl: "Monachium",
+      nl: "München"
+    },
+    country: {
+      en: "Germany",
+      es: "Alemania",
+      de: "Deutschland",
+      fr: "Allemagne",
+      it: "Germania",
+      pl: "Niemcy",
+      nl: "Duitsland"
+    },
     salaryMinEur: 65000,
     salaryMaxEur: 82000,
     level: 'senior',
     experienceYears: 5,
-    knowledgeAreas: ["ESG", "CSRD", "GRI Standards", "TCFD", "Sustainability Reporting"],
+    knowledgeAreas: {
+      en: ["ESG", "CSRD", "GRI Standards", "TCFD", "Sustainability Reporting"],
+      es: ["ESG", "CSRD", "Estándares GRI", "TCFD", "Informes de Sostenibilidad"],
+      de: ["ESG", "CSRD", "GRI-Standards", "TCFD", "Nachhaltigkeitsberichterstattung"],
+      fr: ["ESG", "CSRD", "Normes GRI", "TCFD", "Rapport de Durabilité"],
+      it: ["ESG", "CSRD", "Standard GRI", "TCFD", "Report Sostenibilità"],
+      pl: ["ESG", "CSRD", "Standardy GRI", "TCFD", "Raportowanie Zrównoważonego Rozwoju"],
+      nl: ["ESG", "CSRD", "GRI Standaarden", "TCFD", "Duurzaamheidsrapportage"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Lead ESG reporting for one of Europe's largest industrial companies. Ensure compliance with CSRD and coordinate sustainability data across global operations.",
+    description: {
+      en: "Lead ESG reporting for one of Europe's largest industrial companies. Ensure CSRD compliance and coordinate sustainability data across global operations.",
+      es: "Liderar los informes ESG para una de las empresas industriales más grandes de Europa. Asegurar el cumplimiento de la CSRD y coordinar los datos de sostenibilidad en todas las operaciones globales.",
+      de: "Leitung der ESG-Berichterstattung für eines der größten Industrieunternehmen Europas. Sicherstellung der CSRD-Konformität.",
+      fr: "Diriger le reporting ESG pour l'une des plus grandes entreprises industrielles d'Europe. Assurer la conformité CSRD.",
+      it: "Guidare il reporting ESG per una delle più grandi aziende industriali d'Europa.",
+      pl: "Kieruj raportowaniem ESG dla jednej z największych firm przemysłowych w Europie.",
+      nl: "Leid ESG-rapportage voor een van de grootste industriële bedrijven van Europa."
+    },
     apply_url: "https://jobs.siemens.com/"
   },
   {
     id: "real_j10",
-    title: "Sustainability Consultant",
+    title: {
+      en: "Sustainability Consultant",
+      es: "Consultor de Sostenibilidad",
+      de: "Nachhaltigkeitsberater",
+      fr: "Consultant en Durabilité",
+      it: "Consulente di Sostenibilità",
+      pl: "Konsultant ds. Zrównoważonego Rozwoju",
+      nl: "Duurzaamheidsconsultant"
+    },
     company: "Deloitte",
-    city: "Frankfurt",
-    country: "Germany",
+    city: {
+      en: "Frankfurt",
+      es: "Fráncfort",
+      de: "Frankfurt",
+      fr: "Francfort",
+      it: "Francoforte",
+      pl: "Frankfurt",
+      nl: "Frankfurt"
+    },
+    country: {
+      en: "Germany",
+      es: "Alemania",
+      de: "Deutschland",
+      fr: "Allemagne",
+      it: "Germania",
+      pl: "Niemcy",
+      nl: "Duitsland"
+    },
     salaryMinEur: 58000,
     salaryMaxEur: 75000,
     level: 'mid',
     experienceYears: 4,
-    knowledgeAreas: ["Sustainability Strategy", "ESG", "Carbon Footprint", "CSRD", "EU Taxonomy"],
+    knowledgeAreas: {
+      en: ["Sustainability Strategy", "ESG", "Carbon Footprint", "CSRD", "EU Taxonomy"],
+      es: ["Estrategia de Sostenibilidad", "ESG", "Huella de Carbono", "CSRD", "Taxonomía UE"],
+      de: ["Nachhaltigkeitsstrategie", "ESG", "CO2-Fußabdruck", "CSRD", "EU-Taxonomie"],
+      fr: ["Stratégie Durabilité", "ESG", "Empreinte Carbone", "CSRD", "Taxonomie UE"],
+      it: ["Strategia Sostenibilità", "ESG", "Impronta di Carbonio", "CSRD", "Tassonomia UE"],
+      pl: ["Strategia Zrównoważonego Rozwoju", "ESG", "Ślad Węglowy", "CSRD", "Taksonomia UE"],
+      nl: ["Duurzaamheidsstrategie", "ESG", "Ecologische Voetafdruk", "CSRD", "EU Taxonomie"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Advise major corporations on sustainability transformation. From carbon strategy to ESG reporting, help clients navigate the transition to a low-carbon economy.",
+    description: {
+      en: "Advise major corporations on their sustainability transformation. From carbon strategy to ESG reporting, help clients navigate the transition to a low-carbon economy.",
+      es: "Asesorar a grandes corporaciones en su transformación hacia la sostenibilidad. Desde la estrategia de carbono hasta los informes ESG, ayuda a los clientes a navegar la transición hacia una economía baja en carbono.",
+      de: "Beratung von Großunternehmen bei ihrer Nachhaltigkeitstransformation. Von der CO2-Strategie bis zur ESG-Berichterstattung.",
+      fr: "Conseiller les grandes entreprises sur leur transformation durable. De la stratégie carbone au reporting ESG.",
+      it: "Consigliare le grandi aziende sulla loro trasformazione sostenibile.",
+      pl: "Doradzaj dużym korporacjom w ich transformacji w kierunku zrównoważonego rozwoju.",
+      nl: "Adviseer grote bedrijven over hun duurzaamheidstransformatie."
+    },
     apply_url: "https://www2.deloitte.com/careers"
   },
   {
     id: "real_j11",
-    title: "Environmental Consultant",
+    title: {
+      en: "Environmental Consultant",
+      es: "Consultor Ambiental",
+      de: "Umweltberater",
+      fr: "Consultant Environnemental",
+      it: "Consulente Ambientale",
+      pl: "Konsultant Środowiskowy",
+      nl: "Milieuconsultant"
+    },
     company: "Arcadis",
-    city: "Amsterdam",
-    country: "Netherlands",
+    city: {
+      en: "Amsterdam",
+      es: "Ámsterdam",
+      de: "Amsterdam",
+      fr: "Amsterdam",
+      it: "Amsterdam",
+      pl: "Amsterdam",
+      nl: "Amsterdam"
+    },
+    country: {
+      en: "Netherlands",
+      es: "Países Bajos",
+      de: "Niederlande",
+      fr: "Pays-Bas",
+      it: "Paesi Bassi",
+      pl: "Holandia",
+      nl: "Nederland"
+    },
     salaryMinEur: 45000,
     salaryMaxEur: 58000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["EIA", "Sustainability Strategy", "Soil Remediation", "Permitting"],
+    knowledgeAreas: {
+      en: ["EIA", "Sustainability Strategy", "Soil Remediation", "Permitting"],
+      es: ["EIA", "Estrategia de Sostenibilidad", "Remediación de Suelos", "Permisos"],
+      de: ["UVP", "Nachhaltigkeitsstrategie", "Bodensanierung", "Genehmigungsverfahren"],
+      fr: ["EIE", "Stratégie Durabilité", "Assainissement des Sols", "Permis"],
+      it: ["VIA", "Strategia Sostenibilità", "Bonifica Suoli", "Permessi"],
+      pl: ["OOŚ", "Strategia Zrównoważonego Rozwoju", "Remediacja Gleby", "Pozwolenia"],
+      nl: ["MER", "Duurzaamheidsstrategie", "Bodemsanering", "Vergunningen"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Deliver environmental consultancy services for sustainable infrastructure projects. Assess environmental impacts and design mitigation strategies.",
+    description: {
+      en: "Deliver environmental consulting services for sustainable infrastructure projects. Assess environmental impacts and design mitigation strategies.",
+      es: "Ofrecer servicios de consultoría ambiental para proyectos de infraestructura sostenible. Evaluar impactos ambientales y diseñar estrategias de mitigación.",
+      de: "Erbringung von Umweltberatungsleistungen für nachhaltige Infrastrukturprojekte. Bewertung von Umweltauswirkungen.",
+      fr: "Fournir des services de conseil environnemental pour des projets d'infrastructure durable.",
+      it: "Fornire servizi di consulenza ambientale per progetti di infrastrutture sostenibili.",
+      pl: "Świadczenie usług doradztwa środowiskowego dla projektów infrastruktury zrównoważonej.",
+      nl: "Lever milieuadviesdiensten voor duurzame infrastructuurprojecten."
+    },
     apply_url: "https://careers.arcadis.com/"
   },
 
   // === REAL JOBS 2026 - CIRCULAR ECONOMY & WASTE ===
+  // === REAL JOBS 2026 - CIRCULAR ECONOMY & WASTE ===
   {
     id: "real_j12",
-    title: "Circular Economy Specialist",
+    title: {
+      en: "Circular Economy Specialist",
+      es: "Especialista en Economía Circular",
+      de: "Spezialist für Kreislaufwirtschaft",
+      fr: "Spécialiste de l'Économie Circulaire",
+      it: "Specialista in Economia Circolare",
+      pl: "Specjalista ds. Gospodarki o Obiegu Zamkniętym",
+      nl: "Specialist Circulaire Economie"
+    },
     company: "IKEA",
-    city: "Malmö",
-    country: "Sweden",
+    city: {
+      en: "Malmo",
+      es: "Malmö",
+      de: "Malmö",
+      fr: "Malmö",
+      it: "Malmö",
+      pl: "Malmö",
+      nl: "Malmö"
+    },
+    country: {
+      en: "Sweden",
+      es: "Suecia",
+      de: "Schweden",
+      fr: "Suède",
+      it: "Svezia",
+      pl: "Szwecja",
+      nl: "Zweden"
+    },
     salaryMinEur: 48000,
     salaryMaxEur: 62000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Circular Economy", "Product Design", "Material Innovation", "LCA", "Sustainability"],
+    knowledgeAreas: {
+      en: ["Circular Economy", "Product Design", "Material Innovation", "LCA", "Sustainability"],
+      es: ["Economía Circular", "Diseño de Producto", "Innovación de Materiales", "ACV", "Sostenibilidad"],
+      de: ["Kreislaufwirtschaft", "Produktdesign", "Materialinnovation", "Ökobilanz", "Nachhaltigkeit"],
+      fr: ["Économie Circulaire", "Conception de Produits", "Innovation Matérielle", "ACV", "Durabilité"],
+      it: ["Economia Circolare", "Design del Prodotto", "Innovazione dei Materiali", "LCA", "Sostenibilità"],
+      pl: ["Gospodarka o Obiegu Zamkniętym", "Projektowanie Produktu", "Innowacje Materiałowe", "LCA", "Zrównoważony Rozwój"],
+      nl: ["Circulaire Economie", "Productontwerp", "Materiaalinnovatie", "LCA", "Duurzaamheid"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Drive IKEA's circular transformation. Work on furniture take-back programs, redesign products for circularity, and develop new circular business models.",
+    description: {
+      en: "Drive IKEA's circular transformation. Work on furniture take-back programs, redesign products for circularity, and develop new circular business models.",
+      es: "Impulsar la transformación circular de IKEA. Trabajar en programas de recuperación de muebles, rediseñar productos para la circularidad y desarrollar nuevos modelos de negocio circulares.",
+      de: "Vorantreiben der zirkulären Transformation von IKEA. Arbeit an Möbelrücknahmeprogrammen.",
+      fr: "Piloter la transformation circulaire d'IKEA. Travailler sur les programmes de reprise de meubles.",
+      it: "Guidare la trasformazione circolare di IKEA.",
+      pl: "Kieruj transformacją cyrkularną IKEA.",
+      nl: "Stuur de circulaire transformatie van IKEA aan."
+    },
     apply_url: "https://www.ikea.com/careers"
   },
   {
     id: "real_j13",
-    title: "Especialista en Economía Circular",
+    title: {
+      en: "Circular Economy Specialist",
+      es: "Especialista en Economía Circular",
+      de: "Spezialist für Kreislaufwirtschaft",
+      fr: "Spécialiste de l'Économie Circulaire",
+      it: "Specialista in Economia Circolare",
+      pl: "Specjalista ds. Gospodarki o Obiegu Zamkniętym",
+      nl: "Specialist Circulaire Economie"
+    },
     company: "Ecoembes",
-    city: "Madrid",
-    country: "Spain",
+    city: {
+      en: "Madrid",
+      es: "Madrid",
+      de: "Madrid",
+      fr: "Madrid",
+      it: "Madrid",
+      pl: "Madryt",
+      nl: "Madrid"
+    },
+    country: {
+      en: "Spain",
+      es: "España",
+      de: "Spanien",
+      fr: "Espagne",
+      it: "Spagna",
+      pl: "Hiszpania",
+      nl: "Spanje"
+    },
     salaryMinEur: 38000,
     salaryMaxEur: 48000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Reciclaje", "Ecodiseño", "Gestión de Residuos", "Normativa"],
+    knowledgeAreas: {
+      en: ["Recycling", "Ecodesign", "Waste Management", "Regulations"],
+      es: ["Reciclaje", "Ecodiseño", "Gestión de Residuos", "Normativa"],
+      de: ["Recycling", "Ökodesign", "Abfallmanagement", "Vorschriften"],
+      fr: ["Recyclage", "Écoconception", "Gestion des Déchets", "Réglementations"],
+      it: ["Riciclaggio", "Eco-design", "Gestione Rifiuti", "Normative"],
+      pl: ["Recykling", "Ekoprojektowanie", "Gospodarka Odpadami", "Przepisy"],
+      nl: ["Recycling", "Ecodesign", "Afvalbeheer", "Regelgeving"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Impulsar proyectos de innovación en economía circular y gestión de envases. Colaborar con empresas para mejorar la sostenibilidad de sus envases y procesos.",
+    description: {
+      en: "Drive innovation projects in circular economy and packaging management. Collaborate with companies to improve the sustainability of their packaging and processes.",
+      es: "Impulsar proyectos de innovación en economía circular y gestión de envases. Colaborar con empresas para mejorar la sostenibilidad de sus envases y procesos.",
+      de: "Vorantreiben von Innovationsprojekten in der Kreislaufwirtschaft.",
+      fr: "Piloter des projets d'innovation en économie circulaire.",
+      it: "Guidare progetti di innovazione nell'economia circolare.",
+      pl: "Kieruj projektami innowacyjnymi w gospodarce o obiegu zamkniętym.",
+      nl: "Stuur innovatieprojecten in de circulaire economie aan."
+    },
     apply_url: "https://www.ecoembes.com/es/empleo"
   },
   {
     id: "real_j14",
-    title: "Packaging Sustainability Manager",
+    title: {
+      en: "Packaging Sustainability Manager",
+      es: "Gerente de Sostenibilidad de Envases",
+      de: "Verpackungsnachhaltigkeitsmanager",
+      fr: "Responsable Durabilité Emballage",
+      it: "Responsabile Sostenibilità Imballaggi",
+      pl: "Menedżer ds. Zrównoważonego Rozwoju Opakowań",
+      nl: "Manager Verpakkingsduurzaamheid"
+    },
     company: "Unilever",
-    city: "Rotterdam",
-    country: "Netherlands",
+    city: {
+      en: "Rotterdam",
+      es: "Róterdam",
+      de: "Rotterdam",
+      fr: "Rotterdam",
+      it: "Rotterdam",
+      pl: "Rotterdam",
+      nl: "Rotterdam"
+    },
+    country: {
+      en: "Netherlands",
+      es: "Países Bajos",
+      de: "Niederlande",
+      fr: "Pays-Bas",
+      it: "Paesi Bassi",
+      pl: "Holandia",
+      nl: "Nederland"
+    },
     salaryMinEur: 55000,
     salaryMaxEur: 70000,
     level: 'senior',
     experienceYears: 5,
-    knowledgeAreas: ["Packaging", "Circular Economy", "Material Science", "Recycling", "LCA"],
+    knowledgeAreas: {
+      en: ["Packaging", "Circular Economy", "Materials Science", "Recycling", "LCA"],
+      es: ["Envases", "Economía Circular", "Ciencia de Materiales", "Reciclaje", "ACV"],
+      de: ["Verpackung", "Kreislaufwirtschaft", "Materialwissenschaft", "Recycling", "Ökobilanz"],
+      fr: ["Emballage", "Économie Circulaire", "Science des Matériaux", "Recyclage", "ACV"],
+      it: ["Imballaggio", "Economia Circolare", "Scienza dei Materiali", "Riciclaggio", "LCA"],
+      pl: ["Opakowania", "Gospodarka o Obiegu Zamkniętym", "Nauka o Materiałach", "Recykling", "LCA"],
+      nl: ["Verpakking", "Circulaire Economie", "Materiaalwetenschap", "Recycling", "LCA"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Lead Unilever's transition to 100% reusable, recyclable or compostable packaging. Partner with suppliers and innovators to eliminate plastic waste.",
+    description: {
+      en: "Lead Unilever's transition to 100% reusable, recyclable, or compostable packaging. Partner with suppliers and innovators to eliminate plastic waste.",
+      es: "Liderar la transición de Unilever hacia envases 100% reutilizables, reciclables o compostables. Asociarse con proveedores e innovadores para eliminar los residuos plásticos.",
+      de: "Leitung des Übergangs von Unilever zu 100% nachhaltigen Verpackungen.",
+      fr: "Diriger la transition d'Unilever vers des emballages 100% durables.",
+      it: "Guidare la transizione di Unilever verso imballaggi sostenibili.",
+      pl: "Kieruj przejściem Unilever na opakowania zrównoważone.",
+      nl: "Leid de overgang van Unilever naar duurzame verpakkingen."
+    },
     apply_url: "https://careers.unilever.com/"
   },
 
   // === REAL JOBS 2026 - NGOs & ADVOCACY ===
   {
     id: "real_j15",
-    title: "Técnico de Proyectos de Cambio Climático",
+    title: {
+      en: "Climate Change Project Officer",
+      es: "Técnico de Proyectos de Cambio Climático",
+      de: "Projektbeauftragter Klimawandel",
+      fr: "Chargé de Projet Changement Climatique",
+      it: "Responsabile Progetti Cambiamento Climatico",
+      pl: "Specjalista ds. Projektów Klimatycznych",
+      nl: "Projectmedewerker Klimaatverandering"
+    },
     company: "Greenpeace España",
-    city: "Madrid",
-    country: "Spain",
+    city: {
+      en: "Madrid",
+      es: "Madrid",
+      de: "Madrid",
+      fr: "Madrid",
+      it: "Madrid",
+      pl: "Madryt",
+      nl: "Madrid"
+    },
+    country: {
+      en: "Spain",
+      es: "España",
+      de: "Spanien",
+      fr: "Espagne",
+      it: "Spagna",
+      pl: "Hiszpania",
+      nl: "Spanje"
+    },
     salaryMinEur: 32000,
     salaryMaxEur: 40000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Campañas", "Incidencia política", "Comunicación", "Energía"],
+    knowledgeAreas: {
+      en: ["Campaigns", "Political Advocacy", "Communication", "Energy"],
+      es: ["Campañas", "Incidencia política", "Comunicación", "Energía"],
+      de: ["Kampagnen", "Politische Interessenvertretung", "Kommunikation", "Energie"],
+      fr: ["Campagnes", "Plaidoyer Politique", "Communication", "Énergie"],
+      it: ["Campagne", "Patrocinio Politico", "Comunicazione", "Energia"],
+      pl: ["Kampanie", "Rzecznictwo Polityczne", "Komunikacja", "Energia"],
+      nl: ["Campagnes", "Politieke Belangenbehartiging", "Communicatie", "Energie"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Desarrollar campañas para la transición energética y la justicia climática. Coordinar acciones, investigar políticas energéticas y movilizar a la ciudadanía.",
+    description: {
+      en: "Develop campaigns for energy transition and climate justice. Coordinate actions, research energy policies, and mobilize citizens.",
+      es: "Desarrollar campañas para la transición energética y la justicia climática. Coordinar acciones, investigar políticas energéticas y movilizar a la ciudadanía.",
+      de: "Entwicklung von Kampagnen für Energiewende und Klimagerechtigkeit.",
+      fr: "Développer des campagnes pour la transition énergétique et la justice climatique.",
+      it: "Sviluppare campagne per la transizione energetica e la giustizia climatica.",
+      pl: "Opracowywanie kampanii na rzecz transformacji energetycznej i sprawiedliwości klimatycznej.",
+      nl: "Ontwikkel campagnes voor energietransitie en klimaatrechtvaardigheid."
+    },
     apply_url: "https://es.greenpeace.org/es/trabaja-con-nosotros/"
   },
   {
     id: "real_j16",
-    title: "Climate Policy Analyst",
+    title: {
+      en: "Climate Policy Analyst",
+      es: "Analista de Política Climática",
+      de: "Klimapolitischer Analyst",
+      fr: "Analyste Politique Climatique",
+      it: "Analista Politica Climatica",
+      pl: "Analityk Polityki Klimatycznej",
+      nl: "Klimaatbeleidsanalist"
+    },
     company: "WWF European Policy Office",
-    city: "Brussels",
-    country: "Belgium",
+    city: {
+      en: "Brussels",
+      es: "Bruselas",
+      de: "Brüssel",
+      fr: "Bruxelles",
+      it: "Bruxelles",
+      pl: "Bruksela",
+      nl: "Brussel"
+    },
+    country: {
+      en: "Belgium",
+      es: "Bélgica",
+      de: "Belgien",
+      fr: "Belgique",
+      it: "Belgio",
+      pl: "Belgia",
+      nl: "België"
+    },
     salaryMinEur: 42000,
     salaryMaxEur: 54000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Climate Policy", "EU Legislation", "Advocacy", "Research", "Stakeholder Engagement"],
+    knowledgeAreas: {
+      en: ["Climate Policy", "EU Legislation", "Advocacy", "Research", "Stakeholder Engagement"],
+      es: ["Política Climática", "Legislación UE", "Incidencia", "Investigación", "Participación de Interesados"],
+      de: ["Klimapolitik", "EU-Gesetzgebung", "Interessenvertretung", "Forschung", "Stakeholder-Engagement"],
+      fr: ["Politique Climatique", "Législation UE", "Plaidoyer", "Recherche", "Engagement des Parties Prenantes"],
+      it: ["Politica Climatica", "Legislazione UE", "Patrocinio", "Ricerca", "Coinvolgimento Stakeholder"],
+      pl: ["Polityka Klimatyczna", "Ustawodawstwo UE", "Rzecznictwo", "Badania", "Zaangażowanie Interesariuszy"],
+      nl: ["Klimaatbeleid", "EU Wetgeving", "Belangenbehartiging", "Onderzoek", "Stakeholder Betrokkenheid"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Influence EU climate and energy policy. Monitor legislation, engage with policymakers, and coordinate with WWF's global network to drive ambitious climate action.",
+    description: {
+      en: "Influence EU climate and energy policy. Monitor legislation, engage with policymakers, and coordinate with WWF's global network to drive ambitious climate action.",
+      es: "Influir en la política climática y energética de la UE. Monitorear la legislación, interactuar con los responsables políticos y coordinar con la red global de WWF para impulsar una acción climática ambiciosa.",
+      de: "Einflussnahme auf die EU-Klima- und Energiepolitik. Überwachung der Gesetzgebung.",
+      fr: "Influencer la politique climatique et énergétique de l'UE.",
+      it: "Influenzare la politica climatica ed energetica dell'UE.",
+      pl: "Wpływaj na politykę klimatyczną i energetyczną UE.",
+      nl: "Beïnvloed het EU-klimaat- en energiebeleid."
+    },
     apply_url: "https://www.wwf.eu/jobs"
   },
 
   // === REAL JOBS 2026 - CLEAN CHEMICALS & MATERIALS ===
   {
     id: "real_j17",
-    title: "Sustainability Innovation Manager",
+    title: {
+      en: "Sustainability Innovation Manager",
+      es: "Gerente de Innovación en Sostenibilidad",
+      de: "Manager für Nachhaltigkeitsinnovation",
+      fr: "Responsable Innovation Durable",
+      it: "Manager Innovazione Sostenibilità",
+      pl: "Menedżer Innowacji Zrównoważonego Rozwoju",
+      nl: "Manager Duurzaamheidsinnovatie"
+    },
     company: "BASF",
-    city: "Ludwigshafen",
-    country: "Germany",
+    city: {
+      en: "Ludwigshafen",
+      es: "Ludwigshafen",
+      de: "Ludwigshafen",
+      fr: "Ludwigshafen",
+      it: "Ludwigshafen",
+      pl: "Ludwigshafen",
+      nl: "Ludwigshafen"
+    },
+    country: {
+      en: "Germany",
+      es: "Alemania",
+      de: "Deutschland",
+      fr: "Allemagne",
+      it: "Germania",
+      pl: "Niemcy",
+      nl: "Duitsland"
+    },
     salaryMinEur: 62000,
     salaryMaxEur: 78000,
     level: 'senior',
     experienceYears: 5,
-    knowledgeAreas: ["Chemical Engineering", "Green Chemistry", "Innovation", "LCA", "Sustainability"],
+    knowledgeAreas: {
+      en: ["Chemical Engineering", "Green Chemistry", "Innovation", "LCA", "Sustainability"],
+      es: ["Ingeniería Química", "Química Verde", "Innovación", "ACV", "Sostenibilidad"],
+      de: ["Verfahrenstechnik", "Grüne Chemie", "Innovation", "Ökobilanz", "Nachhaltigkeit"],
+      fr: ["Génie Chimique", "Chimie Verte", "Innovation", "ACV", "Durabilité"],
+      it: ["Ingegneria Chimica", "Chimica Verde", "Innovazione", "LCA", "Sostenibilità"],
+      pl: ["Inżynieria Chemiczna", "Zielona Chemia", "Innowacje", "LCA", "Zrównoważony Rozwój"],
+      nl: ["Chemische Technologie", "Groene Chemie", "Innovatie", "LCA", "Duurzaamheid"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Drive sustainable chemistry innovations at the world's leading chemical company. Develop low-carbon processes and bio-based materials for the circular economy.",
+    description: {
+      en: "Drive sustainability innovations at the world's leading chemical company. Develop low-carbon processes and bio-based materials for the circular economy.",
+      es: "Impulsar innovaciones en química sostenible en la empresa química líder mundial. Desarrollar procesos bajos en carbono y materiales de base biológica para la economía circular.",
+      de: "Vorantreiben von Nachhaltigkeitsinnovationen beim weltführenden Chemieunternehmen.",
+      fr: "Piloter les innovations en matière de durabilité chez le leader mondial de la chimie.",
+      it: "Guidare le innovazioni di sostenibilità presso l'azienda chimica leader mondiale.",
+      pl: "Kieruj innowacjami w zakresie zrównoważonego rozwoju w wiodącej na świecie firmie chemicznej.",
+      nl: "Stuur duurzaamheidsinnovaties aan bij 's werelds toonaangevende chemiebedrijf."
+    },
     apply_url: "https://on.basf.com/careers"
   },
   {
     id: "real_j18",
-    title: "Bio-based Materials Scientist",
+    title: {
+      en: "Bio-based Materials Scientist",
+      es: "Científico de Materiales Bio-basados",
+      de: "Wissenschaftler für biobasierte Materialien",
+      fr: "Scientifique Matériaux Biosourcés",
+      it: "Scienziato Materiali Bio-based",
+      pl: "Naukowiec ds. Materiałów Biopochodnych",
+      nl: "Wetenschapper Bio-based Materialen"
+    },
     company: "Neste",
-    city: "Espoo",
-    country: "Finland",
+    city: {
+      en: "Espoo",
+      es: "Espoo",
+      de: "Espoo",
+      fr: "Espoo",
+      it: "Espoo",
+      pl: "Espoo",
+      nl: "Espoo"
+    },
+    country: {
+      en: "Finland",
+      es: "Finlandia",
+      de: "Finnland",
+      fr: "Finlande",
+      it: "Finlandia",
+      pl: "Finlandia",
+      nl: "Finland"
+    },
     salaryMinEur: 52000,
     salaryMaxEur: 68000,
     level: 'mid',
     experienceYears: 4,
-    knowledgeAreas: ["Material Science", "Biochemistry", "Renewable Feedstocks", "R&D", "LCA"],
+    knowledgeAreas: {
+      en: ["Materials Science", "Biochemistry", "Renewable Feedstocks", "R&D", "LCA"],
+      es: ["Ciencia de Materiales", "Bioquímica", "Materias Primas Renovables", "I+D", "ACV"],
+      de: ["Materialwissenschaft", "Biochemie", "Erneuerbare Rohstoffe", "F&E", "Ökobilanz"],
+      fr: ["Science des Matériaux", "Biochimie", "Matières Premières Renouvelables", "R&D", "ACV"],
+      it: ["Scienza dei Materiali", "Biochimica", "Materie Prime Rinnovabili", "R&D", "LCA"],
+      pl: ["Nauka o Materiałach", "Biochemia", "Surowce Odnawialne", "B+R", "LCA"],
+      nl: ["Materiaalwetenschap", "Biochemie", "Hernieuwbare Grondstoffen", "R&D", "LCA"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Develop next-generation renewable plastics and fuels from waste and residues. Join the world's leading producer of renewable diesel and sustainable aviation fuel.",
+    description: {
+      en: "Develop next-gen renewable plastics and fuels from waste. Join the world's leading producer of renewable diesel and sustainable aviation fuel.",
+      es: "Desarrollar plásticos y combustibles renovables de próxima generación a partir de residuos. Únete al productor líder mundial de diésel renovable y combustible de aviación sostenible.",
+      de: "Entwicklung von erneuerbaren Kunststoffen und Kraftstoffen der nächsten Generation aus Abfällen.",
+      fr: "Développer des plastiques et des carburants renouvelables de nouvelle génération à partir de déchets.",
+      it: "Sviluppare plastiche e combustibili rinnovabili di prossima generazione dai rifiuti.",
+      pl: "Opracowywanie tworzyw sztucznych i paliw odnawialnych nowej generacji z odpadów.",
+      nl: "Ontwikkel hernieuwbare kunststoffen en brandstoffen van de volgende generatie uit afval."
+    },
     apply_url: "https://www.neste.com/careers"
   },
 
   // === REAL JOBS 2026 - SUSTAINABLE FINANCE ===
   {
     id: "real_j19",
-    title: "Sustainable Finance Analyst",
+    title: {
+      en: "Sustainable Finance Analyst",
+      es: "Analista de Finanzas Sostenibles",
+      de: "Analyst für nachhaltige Finanzen",
+      fr: "Analyste Finance Durable",
+      it: "Analista Finanza Sostenibile",
+      pl: "Analityk Zrównoważonych Finansów",
+      nl: "Analist Duurzame Financiering"
+    },
     company: "European Investment Bank",
-    city: "Luxembourg",
-    country: "Luxembourg",
+    city: {
+      en: "Luxembourg",
+      es: "Luxemburgo",
+      de: "Luxemburg",
+      fr: "Luxembourg",
+      it: "Lussemburgo",
+      pl: "Luksemburg",
+      nl: "Luxemburg"
+    },
+    country: {
+      en: "Luxembourg",
+      es: "Luxemburgo",
+      de: "Luxemburg",
+      fr: "Luxembourg",
+      it: "Lussemburgo",
+      pl: "Luksemburg",
+      nl: "Luxemburg"
+    },
     salaryMinEur: 58000,
     salaryMaxEur: 75000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Green Finance", "Project Finance", "ESG", "Climate Risk", "EU Taxonomy"],
+    knowledgeAreas: {
+      en: ["Green Finance", "Project Finance", "ESG", "Climate Risk", "EU Taxonomy"],
+      es: ["Finanzas Verdes", "Financiación de Proyectos", "ESG", "Riesgo Climático", "Taxonomía UE"],
+      de: ["Green Finance", "Projektfinanzierung", "ESG", "Klimarisiko", "EU-Taxonomie"],
+      fr: ["Finance Verte", "Financement de Projet", "ESG", "Risque Climatique", "Taxonomie UE"],
+      it: ["Finanza Verde", "Finanza di Progetto", "ESG", "Rischio Climatico", "Tassonomia UE"],
+      pl: ["Zielone Finanse", "Finansowanie Projektów", "ESG", "Ryzyko Klimatyczne", "Taksonomia UE"],
+      nl: ["Groene Financiering", "Projectfinanciering", "ESG", "Klimaatrisico", "EU Taxonomie"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Finance Europe's green transition. Assess climate and environmental projects for EU's climate bank. Work on renewable energy, energy efficiency, and sustainable transport.",
+    description: {
+      en: "Finance Europe's green transition. Assess climate and environmental projects for the EU's climate bank. Work on renewable energy, energy efficiency, and sustainable transport.",
+      es: "Financiar la transición verde de Europa. Evaluar proyectos climáticos y ambientales para el banco climático de la UE. Trabajar en energía renovable, eficiencia energética y transporte sostenible.",
+      de: "Finanzierung der grünen Transformation Europas.",
+      fr: "Financer la transition verte de l'Europe.",
+      it: "Finanziare la transizione verde dell'Europa.",
+      pl: "Finansuj zieloną transformację Europy.",
+      nl: "Financier de groene overgang van Europa."
+    },
     apply_url: "https://www.eib.org/jobs"
   },
   {
     id: "real_j20",
-    title: "Climate Risk Analyst",
+    title: {
+      en: "Climate Risk Analyst",
+      es: "Analista de Riesgo Climático",
+      de: "Klimarisikoanalyst",
+      fr: "Analyste Risque Climatique",
+      it: "Analista Rischio Climatico",
+      pl: "Analityk Ryzyka Klimatycznego",
+      nl: "Klimaatrisico Analist"
+    },
     company: "Allianz",
-    city: "Munich",
-    country: "Germany",
+    city: {
+      en: "Munich",
+      es: "Múnich",
+      de: "München",
+      fr: "Munich",
+      it: "Monaco di Baviera",
+      pl: "Monachium",
+      nl: "München"
+    },
+    country: {
+      en: "Germany",
+      es: "Alemania",
+      de: "Deutschland",
+      fr: "Allemagne",
+      it: "Germania",
+      pl: "Niemcy",
+      nl: "Duitsland"
+    },
     salaryMinEur: 52000,
     salaryMaxEur: 68000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Climate Risk", "Financial Modeling", "TCFD", "Scenario Analysis", "Insurance"],
+    knowledgeAreas: {
+      en: ["Climate Risk", "Financial Modeling", "TCFD", "Scenario Analysis", "Insurance"],
+      es: ["Riesgo Climático", "Modelado Financiero", "TCFD", "Análisis de Escenarios", "Seguros"],
+      de: ["Klimarisiko", "Finanzmodellierung", "TCFD", "Szenarioanalyse", "Versicherung"],
+      fr: ["Risque Climatique", "Modélisation Financière", "TCFD", "Analyse de Scénarios", "Assurance"],
+      it: ["Rischio Climatico", "Modellazione Finanziaria", "TCFD", "Analisi Scenari", "Assicurazione"],
+      pl: ["Ryzyko Klimatyczne", "Modelowanie Finansowe", "TCFD", "Analiza Scenariuszy", "Ubezpieczenia"],
+      nl: ["Klimaatrisico", "Financiële Modellering", "TCFD", "Scenario-analyse", "Verzekering"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Model physical and transition climate risks for insurance portfolios. Help Allianz adapt to climate change and support clients in their transition.",
+    description: {
+      en: "Model physical and transition climate risks for insurance portfolios. Help Allianz adapt to climate change and support clients in their transition.",
+      es: "Modelar riesgos climáticos físicos y de transición para carteras de seguros. Ayudar a Allianz a adaptarse al cambio climático y apoyar a los clientes en su transición.",
+      de: "Modellierung physischer und transitorischer Klimarisiken für Versicherungsportfolios.",
+      fr: "Modéliser les risques climatiques physiques et de transition pour les portefeuilles d'assurance.",
+      it: "Modellare i rischi climatici fisici e di transizione per i portafogli assicurativi.",
+      pl: "Modeluj fizyczne i przejściowe ryzyka klimatyczne dla portfeli ubezpieczeniowych.",
+      nl: "Modelleer fysieke en transitieklimaatrisico's voor verzekeringsportefeuilles."
+    },
     apply_url: "https://careers.allianz.com/"
   },
 
   // === REAL JOBS 2026 - SUSTAINABLE MOBILITY ===
   {
     id: "real_j21",
-    title: "E-Mobility Product Manager",
+    title: {
+      en: "E-Mobility Product Manager",
+      es: "Gerente de Producto E-Mobility",
+      de: "Produktmanager E-Mobilität",
+      fr: "Chef de Produit E-Mobilité",
+      it: "Product Manager E-Mobility",
+      pl: "Menedżer Produktu E-Mobilności",
+      nl: "Productmanager E-Mobility"
+    },
     company: "BMW Group",
-    city: "Munich",
-    country: "Germany",
+    city: {
+      en: "Munich",
+      es: "Múnich",
+      de: "München",
+      fr: "Munich",
+      it: "Monaco di Baviera",
+      pl: "Monachium",
+      nl: "München"
+    },
+    country: {
+      en: "Germany",
+      es: "Alemania",
+      de: "Deutschland",
+      fr: "Allemagne",
+      it: "Germania",
+      pl: "Niemcy",
+      nl: "Duitsland"
+    },
     salaryMinEur: 62000,
     salaryMaxEur: 78000,
     level: 'senior',
     experienceYears: 5,
-    knowledgeAreas: ["Electric Vehicles", "Product Management", "Charging Infrastructure", "Battery Tech", "Mobility Services"],
+    knowledgeAreas: {
+      en: ["EVs", "Product Management", "Charging Infrastructure", "Battery Tech", "Mobility Services"],
+      es: ["Vehículos Eléctricos", "Gestión de Producto", "Infraestructura de Carga", "Tecnología de Baterías", "Servicios de Movilidad"],
+      de: ["Elektrofahrzeuge", "Produktmanagement", "Ladeinfrastruktur", "Batterietechnologie", "Mobilitätsdienstleistungen"],
+      fr: ["Véhicules Électriques", "Gestion de Produit", "Infrastructure de Recharge", "Technologie Batterie", "Services Mobilité"],
+      it: ["Veicoli Elettrici", "Gestione Prodotto", "Infrastruttura Ricarica", "Tecnologia Batterie", "Servizi Mobilità"],
+      pl: ["Pojazdy Elektryczne", "Zarządzanie Produktem", "Infrastruktura Ładowania", "Technologia Baterii", "Usługi Mobilności"],
+      nl: ["Elektrische Voertuigen", "Productmanagement", "Laadinfrastructuur", "Batterijtechnologie", "Mobiliteitsdiensten"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Shape the future of electric mobility. Lead product development for BMW's electric vehicle ecosystem including charging solutions and digital services.",
+    description: {
+      en: "Shape the future of electric mobility. Lead product development for BMW's EV ecosystem, including charging solutions and digital services.",
+      es: "Dar forma al futuro de la movilidad eléctrica. Liderar el desarrollo de productos para el ecosistema de vehículos eléctricos de BMW, incluyendo soluciones de carga y servicios digitales.",
+      de: "Gestaltung der Zukunft der Elektromobilität. Leitung der Produktentwicklung für das EV-Ökosystem von BMW.",
+      fr: "Façonner l'avenir de la mobilité électrique. Diriger le développement de produits pour l'écosystème VE de BMW.",
+      it: "Dare forma al futuro della mobilità elettrica. Guidare lo sviluppo del prodotto per l'ecosistema EV di BMW.",
+      pl: "Kształtuj przyszłość elektromobilności. Kieruj rozwojem produktów dla ekosystemu EV BMW.",
+      nl: "Geef vorm aan de toekomst van elektrische mobiliteit. Leid productontwikkeling voor BMW's EV-ecosysteem."
+    },
     apply_url: "https://www.bmwgroup.jobs/"
   },
   {
     id: "real_j22",
-    title: "Urban Mobility Planner",
+    title: {
+      en: "Urban Mobility Planner",
+      es: "Planificador de Movilidad Urbana",
+      de: "Planer für urbane Mobilität",
+      fr: "Planificateur Mobilité Urbaine",
+      it: "Pianificatore Mobilità Urbana",
+      pl: "Planista Mobilności Miejskiej",
+      nl: "Stedelijke Mobiliteitsplanner"
+    },
     company: "Ramboll",
-    city: "Copenhagen",
-    country: "Denmark",
+    city: {
+      en: "Copenhagen",
+      es: "Copenhague",
+      de: "Kopenhagen",
+      fr: "Copenhague",
+      it: "Copenaghen",
+      pl: "Kopenhaga",
+      nl: "Kopenhagen"
+    },
+    country: {
+      en: "Denmark",
+      es: "Dinamarca",
+      de: "Dänemark",
+      fr: "Danemark",
+      it: "Danimarca",
+      pl: "Dania",
+      nl: "Denemarken"
+    },
     salaryMinEur: 46000,
     salaryMaxEur: 58000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Urban Planning", "Sustainable Mobility", "GIS", "Traffic Modeling", "Policy"],
+    knowledgeAreas: {
+      en: ["Urban Planning", "Sustainable Mobility", "GIS", "Traffic Modeling", "Policy"],
+      es: ["Planificación Urbana", "Movilidad Sostenible", "GIS", "Modelado de Tráfico", "Política"],
+      de: ["Stadtplanung", "Nachhaltige Mobilität", "GIS", "Verkehrsmodellierung", "Politik"],
+      fr: ["Urbanisme", "Mobilité Durable", "SIG", "Modélisation du Trafic", "Politique"],
+      it: ["Pianificazione Urbana", "Mobilità Sostenibile", "GIS", "Modellazione Traffico", "Politica"],
+      pl: ["Planowanie Miejskie", "Zrównoważona Mobilność", "GIS", "Modelowanie Ruchu", "Polityka"],
+      nl: ["Stedenbouw", "Duurzame Mobiliteit", "GIS", "Verkeersmodellering", "Beleid"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Design sustainable transport solutions for European cities. Promote cycling, public transit, and zero-emission zones to reduce urban carbon footprints.",
+    description: {
+      en: "Design sustainable transport solutions for European cities. Promote cycling, public transport, and zero-emission zones to reduce urban carbon footprint.",
+      es: "Diseñar soluciones de transporte sostenible para ciudades europeas. Promover el ciclismo, el transporte público y zonas de cero emisiones para reducir la huella de carbono urbana.",
+      de: "Entwurf nachhaltiger Verkehrslösungen für europäische Städte.",
+      fr: "Concevoir des solutions de transport durable pour les villes européennes.",
+      it: "Progettare soluzioni di trasporto sostenibile per le città europee.",
+      pl: "Projektowanie zrównoważonych rozwiązań transportowych dla miast europejskich.",
+      nl: "Ontwerp duurzame transportoplossingen voor Europese steden."
+    },
     apply_url: "https://careers.ramboll.com/"
   },
 
   // === REAL JOBS 2026 - FOOD & AGRICULTURE ===
   {
     id: "real_j23",
-    title: "Sustainable Agriculture Specialist",
+    title: {
+      en: "Sustainable Agriculture Specialist",
+      es: "Especialista en Agricultura Sostenible",
+      de: "Spezialist für nachhaltige Landwirtschaft",
+      fr: "Spécialiste Agriculture Durable",
+      it: "Specialista Agricoltura Sostenibile",
+      pl: "Specjalista ds. Rolnictwa Zrównoważonego",
+      nl: "Specialist Duurzame Landbouw"
+    },
     company: "Danone",
-    city: "Paris",
-    country: "France",
+    city: {
+      en: "Paris",
+      es: "París",
+      de: "Paris",
+      fr: "Paris",
+      it: "Parigi",
+      pl: "Paryż",
+      nl: "Parijs"
+    },
+    country: {
+      en: "France",
+      es: "Francia",
+      de: "Frankreich",
+      fr: "France",
+      it: "Francia",
+      pl: "Francja",
+      nl: "Frankrijk"
+    },
     salaryMinEur: 48000,
     salaryMaxEur: 62000,
     level: 'mid',
     experienceYears: 4,
-    knowledgeAreas: ["Regenerative Agriculture", "Supply Chain", "Soil Health", "Carbon Farming", "Dairy"],
+    knowledgeAreas: {
+      en: ["Regenerative Agriculture", "Supply Chain", "Soil Health", "Carbon Farming", "Dairy"],
+      es: ["Agricultura Regenerativa", "Cadena de Suministro", "Salud del Suelo", "Cultivo de Carbono", "Lácteos"],
+      de: ["Regenerative Landwirtschaft", "Lieferkette", "Bodengesundheit", "Carbon Farming", "Milchprodukte"],
+      fr: ["Agriculture Régénératrice", "Chaîne d'Approvisionnement", "Santé des Sols", "Carbon Farming", "Produits Laitiers"],
+      it: ["Agricoltura Rigenerativa", "Catena di Approvvigionamento", "Salute del Suolo", "Carbon Farming", "Latticini"],
+      pl: ["Rolnictwo Regeneracyjne", "Łańcuch Dostaw", "Zdrowie Gleby", "Rolnictwo Węglowe", "Nabiał"],
+      nl: ["Regeneratieve Landbouw", "Toeleveringsketen", "Bodemgezondheid", "Koolstoflandbouw", "Zuivel"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Work with dairy farmers to implement regenerative practices. Reduce carbon footprint, improve soil health, and enhance biodiversity across Danone's supply chain.",
+    description: {
+      en: "Work with dairy farmers to implement regenerative practices. Reduce carbon footprint, improve soil health, and enhance biodiversity in Danone's supply chain.",
+      es: "Trabajar con productores de leche para implementar prácticas regenerativas. Reducir la huella de carbono, mejorar la salud del suelo y aumentar la biodiversidad en la cadena de suministro de Danone.",
+      de: "Zusammenarbeit mit Milchbauern zur Umsetzung regenerativer Praktiken.",
+      fr: "Travailler avec les producteurs laitiers pour mettre en œuvre des pratiques régénératrices.",
+      it: "Lavorare con gli allevatori per implementare pratiche rigenerative.",
+      pl: "Współpraca z producentami mleka w celu wdrożenia praktyk regeneracyjnych.",
+      nl: "Werk samen met melkveehouders om regeneratieve praktijken te implementeren."
+    },
     apply_url: "https://careers.danone.com/"
   },
   {
     id: "real_j24",
-    title: "Food Waste Reduction Manager",
+    title: {
+      en: "Food Waste Reduction Manager",
+      es: "Gerente de Reducción de Desperdicio de Alimentos",
+      de: "Manager für Lebensmittelabfallreduzierung",
+      fr: "Responsable Réduction Gaspillage Alimentaire",
+      it: "Manager Riduzione Sprechi Alimentari",
+      pl: "Menedżer ds. Redukcji Marnowania Żywności",
+      nl: "Manager Voedselverspillingreductie"
+    },
     company: "Too Good To Go",
-    city: "Copenhagen",
-    country: "Denmark",
+    city: {
+      en: "Copenhagen",
+      es: "Copenhague",
+      de: "Kopenhagen",
+      fr: "Copenhague",
+      it: "Copenaghen",
+      pl: "Kopenhaga",
+      nl: "Kopenhagen"
+    },
+    country: {
+      en: "Denmark",
+      es: "Dinamarca",
+      de: "Dänemark",
+      fr: "Danemark",
+      it: "Danimarca",
+      pl: "Dania",
+      nl: "Denemarken"
+    },
     salaryMinEur: 45000,
     salaryMaxEur: 58000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Food Waste", "Supply Chain", "Business Development", "Sustainability", "Operations"],
+    knowledgeAreas: {
+      en: ["Food Waste", "Supply Chain", "Business Development", "Sustainability", "Operations"],
+      es: ["Desperdicio de Alimentos", "Cadena de Suministro", "Desarrollo de Negocios", "Sostenibilidad", "Operaciones"],
+      de: ["Lebensmittelverschwendung", "Lieferkette", "Geschäftsentwicklung", "Nachhaltigkeit", "Betrieb"],
+      fr: ["Gaspillage Alimentaire", "Chaîne d'Approvisionnement", "Développement Commercial", "Durabilité", "Opérations"],
+      it: ["Spreco Alimentare", "Catena di Approvvigionamento", "Sviluppo Business", "Sostenibilità", "Operazioni"],
+      pl: ["Marnowanie Żywności", "Łańcuch Dostaw", "Rozwój Biznesu", "Zrównoważony Rozwój", "Operacje"],
+      nl: ["Voedselverspilling", "Toeleveringsketen", "Business Development", "Duurzaamheid", "Operaties"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Fight food waste with Europe's largest surplus food marketplace. Partner with businesses to save unsold food and reduce environmental impact.",
+    description: {
+      en: "Fight food waste with Europe's largest surplus food marketplace. Partner with businesses to save unsold food and reduce environmental impact.",
+      es: "Luchar contra el desperdicio de alimentos con el mercado de excedentes de alimentos más grande de Europa. Asociarse con empresas para salvar alimentos no vendidos y reducir el impacto ambiental.",
+      de: "Kampf gegen Lebensmittelverschwendung mit Europas größtem Marktplatz für überschüssige Lebensmittel.",
+      fr: "Lutter contre le gaspillage alimentaire avec la plus grande place de marché d'invendus alimentaires en Europe.",
+      it: "Combattere lo spreco alimentare con il più grande mercato di eccedenze alimentari in Europa.",
+      pl: "Walcz z marnowaniem żywności dzięki największemu w Europie rynkowi nadwyżek żywności.",
+      nl: "Bestrijd voedselverspilling met Europa's grootste marktplaats voor surplusvoedsel."
+    },
     apply_url: "https://toogoodtogo.com/careers"
   },
 
   // === REAL JOBS 2026 - ENERGY EFFICIENCY & BUILDINGS ===
   {
     id: "real_j25",
-    title: "Building Energy Engineer",
+    title: {
+      en: "Building Energy Engineer",
+      es: "Ingeniero de Energía en Edificación",
+      de: "Gebäudeenergieingenieur",
+      fr: "Ingénieur Énergie Bâtiment",
+      it: "Ingegnere Energetico Edile",
+      pl: "Inżynier Energetyki Budynkowej",
+      nl: "Gebouw Energie Ingenieur"
+    },
     company: "Schneider Electric",
-    city: "Grenoble",
-    country: "France",
+    city: {
+      en: "Grenoble",
+      es: "Grenoble",
+      de: "Grenoble",
+      fr: "Grenoble",
+      it: "Grenoble",
+      pl: "Grenoble",
+      nl: "Grenoble"
+    },
+    country: {
+      en: "France",
+      es: "Francia",
+      de: "Frankreich",
+      fr: "France",
+      it: "Francia",
+      pl: "Francja",
+      nl: "Frankrijk"
+    },
     salaryMinEur: 48000,
     salaryMaxEur: 62000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Building Management Systems", "Energy Efficiency", "HVAC", "IoT", "Smart Buildings"],
+    knowledgeAreas: {
+      en: ["BMS", "Energy Efficiency", "HVAC", "IoT", "Smart Buildings"],
+      es: ["Sistemas de Gestión de Edificios", "Eficiencia Energética", "HVAC", "IoT", "Edificios Inteligentes"],
+      de: ["GLT", "Energieeffizienz", "HLK", "IoT", "Smart Buildings"],
+      fr: ["GTC/GTB", "Efficacité Énergétique", "CVC", "IoT", "Bâtiments Intelligents"],
+      it: ["BMS", "Efficienza Energetica", "HVAC", "IoT", "Smart Buildings"],
+      pl: ["BMS", "Efektywność Energetyczna", "HVAC", "IoT", "Inteligentne Budynki"],
+      nl: ["GBS", "Energie-efficiëntie", "HVAC", "IoT", "Smart Buildings"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Design smart building solutions to optimize energy consumption. Deploy IoT sensors and AI-powered controls to reduce building emissions by up to 50%.",
+    description: {
+      en: "Design smart building solutions to optimize energy consumption. Deploy IoT sensors and AI-driven controls to cut building emissions by up to 50%.",
+      es: "Diseñar soluciones de edificios inteligentes para optimizar el consumo de energía. Desplegar sensores IoT y controles impulsados por IA para reducir las emisiones de los edificios hasta en un 50%.",
+      de: "Entwurf von Smart-Building-Lösungen zur Optimierung des Energieverbrauchs.",
+      fr: "Concevoir des solutions de bâtiment intelligent pour optimiser la consommation d'énergie.",
+      it: "Progettare soluzioni di smart building per ottimizzare i consumi energetici.",
+      pl: "Projektowanie rozwiązań inteligentnych budynków w celu optymalizacji zużycia energii.",
+      nl: "Ontwerp smart building-oplossingen om energieverbruik te optimaliseren."
+    },
     apply_url: "https://www.se.com/careers"
   },
   {
     id: "real_j26",
-    title: "Green Building Consultant",
+    title: {
+      en: "Green Building Consultant",
+      es: "Consultor de Edificación Verde",
+      de: "Berater für grünes Bauen",
+      fr: "Consultant Bâtiment Durable",
+      it: "Consulente Green Building",
+      pl: "Konsultant ds. Zielonego Budownictwa",
+      nl: "Adviseur Groen Bouwen"
+    },
     company: "Buro Happold",
-    city: "London",
-    country: "United Kingdom",
+    city: {
+      en: "London",
+      es: "Londres",
+      de: "London",
+      fr: "Londres",
+      it: "Londra",
+      pl: "Londyn",
+      nl: "Londen"
+    },
+    country: {
+      en: "United Kingdom",
+      es: "Reino Unido",
+      de: "Vereinigtes Königreich",
+      fr: "Royaume-Uni",
+      it: "Regno Unito",
+      pl: "Wielka Brytania",
+      nl: "Verenigd Koninkrijk"
+    },
     salaryMinEur: 45000,
     salaryMaxEur: 58000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["LEED", "BREEAM", "Energy Modeling", "Sustainability Consulting", "Net Zero"],
+    knowledgeAreas: {
+      en: ["LEED", "BREEAM", "Energy Modeling", "Sustainability Consulting", "Net Zero"],
+      es: ["LEED", "BREEAM", "Modelado Energético", "Consultoría de Sostenibilidad", "Net Zero"],
+      de: ["LEED", "BREEAM", "Energiemodellierung", "Nachhaltigkeitsberatung", "Netto-Null"],
+      fr: ["LEED", "BREEAM", "Modélisation Énergétique", "Conseil Durabilité", "Net Zéro"],
+      it: ["LEED", "BREEAM", "Modellazione Energetica", "Consulenza Sostenibilità", "Net Zero"],
+      pl: ["LEED", "BREEAM", "Modelowanie Energetyczne", "Doradztwo Zrównoważonego Rozwoju", "Net Zero"],
+      nl: ["LEED", "BREEAM", "Energiemodellering", "Duurzaamheidsadvies", "Netto Nul"]
+    },
     contract: "full-time",
     remote: true,
-    description: "Deliver LEED and BREEAM certifications for landmark buildings. Guide architects and developers to achieve net-zero carbon targets.",
+    description: {
+      en: "Deliver LEED and BREEAM certifications for landmark buildings. Guide architects and developers to achieve net zero carbon targets.",
+      es: "Entregar certificaciones LEED y BREEAM para edificios emblemáticos. Guiar a arquitectos y desarrolladores para alcanzar objetivos de carbono neto cero.",
+      de: "Bereitstellung von LEED- und BREEAM-Zertifizierungen für Wahrzeichen-Gebäude.",
+      fr: "Délivrer des certifications LEED et BREEAM pour des bâtiments emblématiques.",
+      it: "Fornire certificazioni LEED e BREEAM per edifici storici.",
+      pl: "Dostarczanie certyfikatów LEED i BREEAM dla przełomowych budynków.",
+      nl: "Lever LEED- en BREEAM-certificeringen voor prominente gebouwen."
+    },
     apply_url: "https://www.burohappold.com/careers/"
   },
 
   // === REAL JOBS 2026 - WATER & ENVIRONMENT ===
   {
     id: "real_j27",
-    title: "Water Technology Engineer",
+    title: {
+      en: "Water Technology Engineer",
+      es: "Ingeniero de Tecnología del Agua",
+      de: "Wassertechnologieingenieur",
+      fr: "Ingénieur Technologies de l'Eau",
+      it: "Ingegnere Tecnologie Idriche",
+      pl: "Inżynier Technologii Wody",
+      nl: "Watertechnologie Ingenieur"
+    },
     company: "Veolia",
-    city: "Paris",
-    country: "France",
+    city: {
+      en: "Paris",
+      es: "París",
+      de: "Paris",
+      fr: "Paris",
+      it: "Parigi",
+      pl: "Paryż",
+      nl: "Parijs"
+    },
+    country: {
+      en: "France",
+      es: "Francia",
+      de: "Frankreich",
+      fr: "France",
+      it: "Francia",
+      pl: "Francja",
+      nl: "Frankrijk"
+    },
     salaryMinEur: 45000,
     salaryMaxEur: 58000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Water Treatment", "Wastewater", "Membrane Technology", "Process Engineering", "Sustainability"],
+    knowledgeAreas: {
+      en: ["Water Treatment", "Wastewater", "Membrane Tech", "Process Engineering", "Sustainability"],
+      es: ["Tratamiento de Agua", "Aguas Residuales", "Tecnología de Membranas", "Ingeniería de Procesos", "Sostenibilidad"],
+      de: ["Wasseraufbereitung", "Abwasser", "Membrantechnologie", "Verfahrenstechnik", "Nachhaltigkeit"],
+      fr: ["Traitement de l'Eau", "Eaux Usées", "Technologie Membranaire", "Génie des Procédés", "Durabilité"],
+      it: ["Trattamento Acque", "Acque Reflue", "Tecnologia a Membrana", "Ingegneria di Processo", "Sostenibilità"],
+      pl: ["Uzdatnianie Wody", "Ścieki", "Technologia Membranowa", "Inżynieria Procesowa", "Zrównoważony Rozwój"],
+      nl: ["Waterzuivering", "Afvalwater", "Membraantechnologie", "Procestechniek", "Duurzaamheid"]
+    },
     contract: "full-time",
     remote: false,
-    description: "Design and optimize water treatment systems. Ensure access to clean water while minimizing energy consumption and environmental impact.",
+    description: {
+      en: "Design and optimize water treatment systems. Ensure access to clean water while minimizing energy consumption and environmental impact.",
+      es: "Diseñar y optimizar sistemas de tratamiento de agua. Asegurar el acceso a agua limpia mientras se minimiza el consumo de energía y el impacto ambiental.",
+      de: "Entwurf und Optimierung von Wasseraufbereitungssystemen.",
+      fr: "Concevoir et optimiser des systèmes de traitement de l'eau.",
+      it: "Progettare e ottimizzare sistemi di trattamento delle acque.",
+      pl: "Projektowanie i optymalizacja systemów uzdatniania wody.",
+      nl: "Ontwerp en optimaliseer waterzuiveringssystemen."
+    },
     apply_url: "https://www.veolia.com/careers"
   },
 
   // === PART-TIME JOBS 2026 ===
   {
     id: "pt_j1",
-    title: "Part-Time Sustainability Coordinator",
+    title: {
+      en: "Sustainability Coordinator (Part-Time)",
+      es: "Coordinador de Sostenibilidad (Tiempo Parcial)",
+      de: "Nachhaltigkeitskoordinator (Teilzeit)",
+      fr: "Coordinateur Durabilité (Temps Partiel)",
+      it: "Coordinatore Sostenibilità (Part-Time)",
+      pl: "Koordynator ds. Zrównoważonego Rozwoju (Na część etatu)",
+      nl: "Duurzaamheidscoördinator (Deeltijd)"
+    },
     company: "European Climate Foundation",
-    city: "Remote",
-    country: "Europe",
+    city: {
+      en: "Remote",
+      es: "Remoto",
+      de: "Remote",
+      fr: "Télétravail",
+      it: "Remoto",
+      pl: "Zdalnie",
+      nl: "Remote"
+    },
+    country: {
+      en: "Europe",
+      es: "Europa",
+      de: "Europa",
+      fr: "Europe",
+      it: "Europa",
+      pl: "Europa",
+      nl: "Europa"
+    },
     salaryMinEur: 25000,
     salaryMaxEur: 35000,
     level: 'mid',
     experienceYears: 2,
-    knowledgeAreas: ["Climate Policy", "Project Coordination", "Stakeholder Engagement", "Remote Work", "EU Policy"],
+    knowledgeAreas: {
+      en: ["Climate Policy", "Project Coordination", "Stakeholder Engagement", "Remote Work", "EU Policy"],
+      es: ["Política Climática", "Coordinación de Proyectos", "Participación de Interesados", "Trabajo Remoto", "Política UE"],
+      de: ["Klimapolitik", "Projektkoordination", "Stakeholder-Engagement", "Remote-Arbeit", "EU-Politik"],
+      fr: ["Politique Climatique", "Coordination de Projet", "Engagement des Parties Prenantes", "Télétravail", "Politique UE"],
+      it: ["Politica Climatica", "Coordinamento Progetti", "Coinvolgimento Stakeholder", "Lavoro Remoto", "Politica UE"],
+      pl: ["Polityka Klimatyczna", "Koordynacja Projektów", "Zaangażowanie Interesariuszy", "Praca Zdalna", "Polityka UE"],
+      nl: ["Klimaatbeleid", "Projectcoördinatie", "Stakeholder Betrokkenheid", "Remote Werk", "EU Beleid"]
+    },
     contract: "part-time",
     remote: true,
-    description: "Support climate initiatives across Europe (20-30 hrs/week). Coordinate projects, engage with partners, and contribute to the climate transition from anywhere in Europe.",
+    description: {
+      en: "Support climate initiatives across Europe (20-30 hrs/week). Coordinate projects, engage with partners, and contribute to the climate transition from anywhere in Europe.",
+      es: "Apoyar iniciativas climáticas en toda Europa (20-30 hrs/semana). Coordinar proyectos, interactuar con socios y contribuir a la transición climática desde cualquier lugar de Europa.",
+      de: "Unterstützung von Klimainitiativen in ganz Europa (20-30 Std./Woche).",
+      fr: "Soutenir les initiatives climatiques à travers l'Europe (20-30 h/semaine).",
+      it: "Supportare le iniziative climatiche in tutta Europa (20-30 ore/settimana).",
+      pl: "Wspieraj inicjatywy klimatyczne w całej Europie (20-30 godz./tydzień).",
+      nl: "Ondersteun klimaatinitiatieven in heel Europa (20-30 uur/week)."
+    },
     apply_url: "https://europeanclimate.org/about-us/jobs-ecf/"
   },
   {
     id: "pt_j2",
-    title: "Remote ESG Reporting Analyst",
+    title: {
+      en: "Remote ESG Reporting Analyst",
+      es: "Analista de Informes ESG Remoto",
+      de: "Remote ESG-Berichtsanalyst",
+      fr: "Analyste Reporting ESG à Distance",
+      it: "Analista Reporting ESG Remoto",
+      pl: "Zdalny Analityk Raportowania ESG",
+      nl: "Remote ESG-rapportage Analist"
+    },
     company: "Sustainable Finance Platform",
-    city: "Remote",
-    country: "Europe",
+    city: {
+      en: "Remote",
+      es: "Remoto",
+      de: "Remote",
+      fr: "Télétravail",
+      it: "Remoto",
+      pl: "Zdalnie",
+      nl: "Remote"
+    },
+    country: {
+      en: "Europe",
+      es: "Europa",
+      de: "Europa",
+      fr: "Europe",
+      it: "Europa",
+      pl: "Europa",
+      nl: "Europa"
+    },
     salaryMinEur: 28000,
     salaryMaxEur: 38000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["ESG Reporting", "CSRD", "GRI Standards", "Data Analysis", "Excel"],
+    knowledgeAreas: {
+      en: ["ESG Reporting", "CSRD", "GRI Standards", "Data Analysis", "Excel"],
+      es: ["Informes ESG", "CSRD", "Estándares GRI", "Análisis de Datos", "Excel"],
+      de: ["ESG-Berichterstattung", "CSRD", "GRI-Standards", "Datenanalyse", "Excel"],
+      fr: ["Reporting ESG", "CSRD", "Normes GRI", "Analyse de Données", "Excel"],
+      it: ["Reporting ESG", "CSRD", "Standard GRI", "Analisi Dati", "Excel"],
+      pl: ["Raportowanie ESG", "CSRD", "Standardy GRI", "Analiza Danych", "Excel"],
+      nl: ["ESG-rapportage", "CSRD", "GRI Standaarden", "Data-analyse", "Excel"]
+    },
     contract: "part-time",
     remote: true,
-    description: "Analyze and report ESG data for European SMEs (25 hrs/week). Work remotely helping companies meet new sustainability reporting requirements.",
+    description: {
+      en: "Analyze and report ESG data for European SMEs (25 hrs/week). Work remotely helping companies comply with new sustainability reporting requirements.",
+      es: "Analizar y reportar datos ESG para PYMEs europeas (25 hrs/semana). Trabaja de forma remota ayudando a las empresas a cumplir con los nuevos requisitos de informes de sostenibilidad.",
+      de: "Analyse und Berichterstattung von ESG-Daten für europäische KMU (25 Std./Woche).",
+      fr: "Analyser et rapporter les données ESG pour les PME européennes (25 h/semaine).",
+      it: "Analizzare e riportare dati ESG per le PMI europee (25 ore/settimana).",
+      pl: "Analizuj i raportuj dane ESG dla europejskich MŚP (25 godz./tydzień).",
+      nl: "Analyseer en rapporteer ESG-data voor Europese MKB-bedrijven (25 uur/week)."
+    },
     apply_url: "https://euroclimatejobs.com/"
   },
   {
     id: "pt_j3",
-    title: "Freelance Carbon Accounting Specialist",
+    title: {
+      en: "Freelance Carbon Accounting Specialist",
+      es: "Especialista Freelance en Contabilidad de Carbono",
+      de: "Freiberuflicher Spezialist für CO2-Bilanzierung",
+      fr: "Spécialiste Comptabilité Carbone Freelance",
+      it: "Specialista Contabilità Carbonio Freelance",
+      pl: "Specjalista ds. Rachunkowości Węglowej (Freelance)",
+      nl: "Freelance Koolstofboekhouding Specialist"
+    },
     company: "Leafr Consulting",
-    city: "Remote",
-    country: "Europe",
+    city: {
+      en: "Remote",
+      es: "Remoto",
+      de: "Remote",
+      fr: "Télétravail",
+      it: "Remoto",
+      pl: "Zdalnie",
+      nl: "Remote"
+    },
+    country: {
+      en: "Europe",
+      es: "Europa",
+      de: "Europa",
+      fr: "Europe",
+      it: "Europa",
+      pl: "Europa",
+      nl: "Europa"
+    },
     salaryMinEur: 30000,
     salaryMaxEur: 45000,
     level: 'senior',
     experienceYears: 4,
-    knowledgeAreas: ["GHG Protocol", "Scope 3", "Carbon Footprinting", "LCA", "Client Management"],
+    knowledgeAreas: {
+      en: ["GHG Protocol", "Scope 3", "Carbon Footprint", "LCA", "Client Management"],
+      es: ["Protocolo GHG", "Alcance 3", "Huella de Carbono", "ACV", "Gestión de Clientes"],
+      de: ["THG-Protokoll", "Scope 3", "CO2-Fußabdruck", "Ökobilanz", "Kundenmanagement"],
+      fr: ["Protocole GHG", "Scope 3", "Empreinte Carbone", "ACV", "Gestion Client"],
+      it: ["Protocollo GHG", "Scope 3", "Impronta di Carbonio", "LCA", "Gestione Clienti"],
+      pl: ["Protokół GHG", "Zakres 3", "Ślad Węglowy", "LCA", "Zarządzanie Klientami"],
+      nl: ["GHG Protocol", "Scope 3", "Koolstofvoetafdruk", "LCA", "Klantenbeheer"]
+    },
     contract: "part-time",
     remote: true,
-    description: "Calculate carbon footprints for organizations as a freelance consultant (flexible hours). Help European businesses measure and reduce their climate impact.",
+    description: {
+      en: "Calculate carbon footprints for organizations as a freelance consultant (flexible hours). Help European businesses measure and reduce their climate impact.",
+      es: "Calcular huellas de carbono para organizaciones como consultor freelance (horario flexible). Ayudar a las empresas europeas a medir y reducir su impacto climático.",
+      de: "Berechnung von CO2-Fußabdrücken für Organisationen als freiberuflicher Berater.",
+      fr: "Calculer les empreintes carbone pour les organisations en tant que consultant indépendant.",
+      it: "Calcolare l'impronta di carbonio per le organizzazioni come consulente freelance.",
+      pl: "Obliczaj ślad węglowy dla organizacji jako niezależny konsultant.",
+      nl: "Bereken de koolstofvoetafdruk voor organisaties als freelance consultant."
+    },
     apply_url: "https://www.leafr.com/"
   },
   {
     id: "pt_j4",
-    title: "Part-Time Circular Economy Advisor",
+    title: {
+      en: "Circular Economy Advisor (Part-Time)",
+      es: "Asesor de Economía Circular (Tiempo Parcial)",
+      de: "Berater für Kreislaufwirtschaft (Teilzeit)",
+      fr: "Conseiller Économie Circulaire (Temps Partiel)",
+      it: "Consulente Economia Circolare (Part-Time)",
+      pl: "Doradca ds. Gospodarki o Obiegu Zamkniętym (Na część etatu)",
+      nl: "Adviseur Circulaire Economie (Deeltijd)"
+    },
     company: "Ellen MacArthur Foundation",
-    city: "Isle of Wight",
-    country: "United Kingdom",
+    city: {
+      en: "Isle of Wight",
+      es: "Isla de Wight",
+      de: "Isle of Wight",
+      fr: "Île de Wight",
+      it: "Isola di Wight",
+      pl: "Wyspa Wight",
+      nl: "Isle of Wight"
+    },
+    country: {
+      en: "United Kingdom",
+      es: "Reino Unido",
+      de: "Vereinigtes Königreich",
+      fr: "Royaume-Uni",
+      it: "Regno Unito",
+      pl: "Wielka Brytania",
+      nl: "Verenigd Koninkrijk"
+    },
     salaryMinEur: 22000,
     salaryMaxEur: 32000,
     level: 'mid',
     experienceYears: 3,
-    knowledgeAreas: ["Circular Economy", "Business Models", "Material Flows", "Systems Thinking", "Communication"],
+    knowledgeAreas: {
+      en: ["Circular Economy", "Business Models", "Material Flows", "Systems Thinking", "Communication"],
+      es: ["Economía Circular", "Modelos de Negocio", "Flujos de Materiales", "Pensamiento Sistémico", "Comunicación"],
+      de: ["Kreislaufwirtschaft", "Geschäftsmodelle", "Materialflüsse", "Systemdenken", "Kommunikation"],
+      fr: ["Économie Circulaire", "Modèles d'Affaires", "Flux de Matériaux", "Pensée Systémique", "Communication"],
+      it: ["Economia Circolare", "Modelli di Business", "Flussi di Materiali", "Pensiero Sistemico", "Comunicazione"],
+      pl: ["Gospodarka o Obiegu Zamkniętym", "Modele Biznesowe", "Przepływy Materiałów", "Myślenie Systemowe", "Komunikacja"],
+      nl: ["Circulaire Economie", "Bedrijfsmodellen", "Materiaalstromen", "Systeemdenken", "Communicatie"]
+    },
     contract: "part-time",
     remote: true,
-    description: "Advise businesses on circular economy transitions (20 hrs/week). Work with the world's leading circular economy organization to eliminate waste.",
+    description: {
+      en: "Advise businesses on circular economy transitions (20 hrs/week). Work with the world's leading circular economy organization to eliminate waste.",
+      es: "Asesorar a empresas sobre transiciones a la economía circular (20 hrs/semana). Trabajar con la organización líder mundial en economía circular para eliminar los residuos.",
+      de: "Beratung von Unternehmen beim Übergang zur Kreislaufwirtschaft (20 Std./Woche).",
+      fr: "Conseiller les entreprises sur les transitions vers l'économie circulaire (20 h/semaine).",
+      it: "Consigliare le aziende sulle transizioni verso l'economia circolare (20 ore/settimana).",
+      pl: "Doradzaj firmom w zakresie transformacji w kierunku gospodarki o obiegu zamkniętym (20 godz./tydzień).",
+      nl: "Adviseer bedrijven over transities naar de circulaire economie (20 uur/week)."
+    },
     apply_url: "https://ellenmacarthurfoundation.org/about-us/work-with-us"
   },
   {
     id: "pt_j5",
-    title: "Sustainability Content Writer",
+    title: {
+      en: "Sustainability Content Writer",
+      es: "Redactor de Contenido de Sostenibilidad",
+      de: "Redakteur für Nachhaltigkeitsinhalte",
+      fr: "Rédacteur Contenu Durabilité",
+      it: "Redattore Contenuti Sostenibilità",
+      pl: "Autor Treści o Zrównoważonym Rozwoju",
+      nl: "Schrijver Duurzaamheidscontent"
+    },
     company: "Climate Action Network Europe",
-    city: "Brussels",
-    country: "Belgium",
+    city: {
+      en: "Brussels",
+      es: "Bruselas",
+      de: "Brüssel",
+      fr: "Bruxelles",
+      it: "Bruxelles",
+      pl: "Bruksela",
+      nl: "Brussel"
+    },
+    country: {
+      en: "Belgium",
+      es: "Bélgica",
+      de: "Belgien",
+      fr: "Belgique",
+      it: "Belgio",
+      pl: "Belgia",
+      nl: "België"
+    },
     salaryMinEur: 18000,
     salaryMaxEur: 26000,
     level: 'junior',
     experienceYears: 1,
-    knowledgeAreas: ["Content Writing", "Climate Communication", "Social Media", "Research", "English"],
+    knowledgeAreas: {
+      en: ["Content Writing", "Climate Communication", "Social Media", "Research", "English"],
+      es: ["Redacción de Contenido", "Comunicación Climática", "Redes Sociales", "Investigación", "Inglés"],
+      de: ["Inhaltserstellung", "Klimakommunikation", "Soziale Medien", "Forschung", "Englisch"],
+      fr: ["Rédaction de Contenu", "Communication Climatique", "Réseaux Sociaux", "Recherche", "Anglais"],
+      it: ["Scrittura Contenuti", "Comunicazione Climatica", "Social Media", "Ricerca", "Inglese"],
+      pl: ["Pisanie Treści", "Komunikacja Klimatyczna", "Media Społecznościowe", "Badania", "Angielski"],
+      nl: ["Content Schrijven", "Klimaatcommunicatie", "Sociale Media", "Onderzoek", "Engels"]
+    },
     contract: "part-time",
     remote: true,
-    description: "Create compelling climate content for Europe's largest climate NGO network (15-20 hrs/week). Help amplify climate action messages across Europe.",
+    description: {
+      en: "Create compelling climate content for Europe's largest climate NGO network (15-20 hrs/week). Help amplify climate action messages across Europe.",
+      es: "Crear contenido climático convincente para la red de ONGs climáticas más grande de Europa (15-20 hrs/semana). Ayudar a amplificar los mensajes de acción climática en toda Europa.",
+      de: "Erstellung überzeugender Klimainhalte für Europas größtes Klima-NGO-Netzwerk.",
+      fr: "Créer du contenu climatique captivant pour le plus grand réseau d'ONG climatiques en Europe.",
+      it: "Creare contenuti climatici avvincenti per la più grande rete di ONG climatiche in Europa.",
+      pl: "Twórz przekonujące treści klimatyczne dla największej sieci organizacji pozarządowych zajmujących się klimatem w Europie.",
+      nl: "Creëer boeiende klimaatcontent voor Europa's grootste netwerk van klimaat-ngo's."
+    },
     apply_url: "https://caneurope.org/jobs/"
   },
   {
     id: "pt_j6",
-    title: "Part-Time Renewable Energy Analyst",
+    title: {
+      en: "Renewable Energy Analyst (Part-Time)",
+      es: "Analista de Energía Renovable (Tiempo Parcial)",
+      de: "Analyst für erneuerbare Energien (Teilzeit)",
+      fr: "Analyste Énergies Renouvelables (Temps Partiel)",
+      it: "Analista Energie Rinnovabili (Part-Time)",
+      pl: "Analityk Energii Odnawialnej (Na część etatu)",
+      nl: "Analist Hernieuwbare Energie (Deeltijd)"
+    },
     company: "SolarPower Europe",
-    city: "Brussels",
-    country: "Belgium",
+    city: {
+      en: "Brussels",
+      es: "Bruselas",
+      de: "Brüssel",
+      fr: "Bruxelles",
+      it: "Bruxelles",
+      pl: "Bruksela",
+      nl: "Brussel"
+    },
+    country: {
+      en: "Belgium",
+      es: "Bélgica",
+      de: "Belgien",
+      fr: "Belgique",
+      it: "Belgio",
+      pl: "Belgia",
+      nl: "België"
+    },
     salaryMinEur: 24000,
     salaryMaxEur: 34000,
     level: 'mid',
     experienceYears: 2,
-    knowledgeAreas: ["Solar Energy", "Market Analysis", "Data Analysis", "Energy Policy", "Excel"],
+    knowledgeAreas: {
+      en: ["Solar Energy", "Market Analysis", "Data Analysis", "Energy Policy", "Excel"],
+      es: ["Energía Solar", "Análisis de Mercado", "Análisis de Datos", "Política Energética", "Excel"],
+      de: ["Solarenergie", "Marktanalyse", "Datenanalyse", "Energiepolitik", "Excel"],
+      fr: ["Énergie Solaire", "Analyse de Marché", "Analyse de Données", "Politique Énergétique", "Excel"],
+      it: ["Energia Solare", "Analisi di Mercato", "Analisi Dati", "Politica Energetica", "Excel"],
+      pl: ["Energia Słoneczna", "Analiza Rynku", "Analiza Danych", "Polityka Energetyczna", "Excel"],
+      nl: ["Zonne-energie", "Marktanalyse", "Data-analyse", "Energiebeleid", "Excel"]
+    },
     contract: "part-time",
     remote: true,
-    description: "Analyze European solar market trends (25 hrs/week). Support advocacy and research for Europe's solar industry association.",
+    description: {
+      en: "Analyze European solar market trends (25 hrs/week). Support advocacy and research for Europe's solar industry association.",
+      es: "Analizar las tendencias del mercado solar europeo (25 hrs/semana). Apoyar la defensa y la investigación para la asociación de la industria solar de Europa.",
+      de: "Analyse der Trends auf dem europäischen Solarmarkt (25 Std./Woche).",
+      fr: "Analyser les tendances du marché solaire européen (25 h/Semaine).",
+      it: "Analizzare le tendenze del mercato solare europeo (25 ore/settimana).",
+      pl: "Analizuj trendy na europejskim rynku energii słonecznej (25 godz./tydzień).",
+      nl: "Analyseer trends op de Europese zonne-energiemarkt (25 uur/week)."
+    },
     apply_url: "https://www.solarpowereurope.org/about-solarpowereurope/work-with-us"
   },
 ];
 
 export default function JobsPage() {
   const { t, locale } = useI18n();
+
+  // Helper functions to get translated job data with safe fallback
+  const getJobTitle = (job: Job) => {
+    if (typeof job.title === 'string') return job.title;
+    return job.title[locale] || job.title['en'] || Object.values(job.title)[0] || '';
+  };
+
+  const getJobDescription = (job: Job) => {
+    if (typeof job.description === 'string') return job.description;
+    return job.description[locale] || job.description['en'] || Object.values(job.description)[0] || '';
+  };
+
+  const getJobKnowledgeAreas = (job: Job): string[] => {
+    if (Array.isArray(job.knowledgeAreas)) return job.knowledgeAreas;
+    return job.knowledgeAreas[locale] || job.knowledgeAreas['en'] || Object.values(job.knowledgeAreas)[0] || [];
+  };
+
+  const getJobCity = (job: Job) => {
+    if (typeof job.city === 'string') return job.city;
+    return job.city[locale] || job.city['en'] || Object.values(job.city)[0] || '';
+  };
+
+  const getJobCountry = (job: Job) => {
+    if (typeof job.country === 'string') return job.country;
+    return job.country[locale] || job.country['en'] || Object.values(job.country)[0] || '';
+  };
+
+  const getKnowledgeArea = (area: string) => {
+    const areaKey = area.toLowerCase().replace(/\s+/g, '');
+    const translated = t(areaKey);
+    return translated === areaKey ? area : translated;
+  };
   const { showToast } = useToast();
   const currentLocale = String(locale);
   const [query, setQuery] = useState("");
@@ -647,18 +2021,16 @@ export default function JobsPage() {
       if (!queryLower) return true;
 
       // Buscar en título del trabajo
-      const titleMatch = j.title.toLowerCase().includes(queryLower) ||
-        getJobTitle(j).toLowerCase().includes(queryLower);
+      const titleMatch = getJobTitle(j).toLowerCase().includes(queryLower);
 
       // Buscar en nombre de la empresa
       const companyMatch = j.company.toLowerCase().includes(queryLower);
 
       // Buscar en descripción del trabajo
-      const descriptionMatch = j.description.toLowerCase().includes(queryLower) ||
-        getJobDescription(j).toLowerCase().includes(queryLower);
+      const descriptionMatch = getJobDescription(j).toLowerCase().includes(queryLower);
 
       // Buscar en áreas de conocimiento
-      const knowledgeMatch = j.knowledgeAreas.some(a =>
+      const knowledgeMatch = getJobKnowledgeAreas(j).some(a =>
         a.toLowerCase().includes(queryLower) ||
         getKnowledgeArea(a).toLowerCase().includes(queryLower)
       );
@@ -682,11 +2054,13 @@ export default function JobsPage() {
         (queryLower.includes('internship') || queryLower.includes('pasantía') || queryLower.includes('praktikum')) && j.contract === 'internship';
 
       // Buscar en ubicación (ciudad y país)
+      const cityStr = getJobCity(j);
+      const countryStr = getJobCountry(j);
       const locationMatch =
-        j.city.toLowerCase().includes(queryLower) ||
-        j.country.toLowerCase().includes(queryLower) ||
-        locationLabel(j.city, locale as any).toLowerCase().includes(queryLower) ||
-        locationLabel(j.country, locale as any).toLowerCase().includes(queryLower);
+        cityStr.toLowerCase().includes(queryLower) ||
+        countryStr.toLowerCase().includes(queryLower) ||
+        locationLabel(cityStr, locale as any).toLowerCase().includes(queryLower) ||
+        locationLabel(countryStr, locale as any).toLowerCase().includes(queryLower);
 
       // Buscar en años de experiencia (como texto)
       const experienceMatch =
@@ -701,7 +2075,7 @@ export default function JobsPage() {
       return titleMatch || companyMatch || descriptionMatch || knowledgeMatch ||
         levelMatch || contractMatch || locationMatch || experienceMatch || remoteMatch;
     }).filter(j => j.salaryMinEur >= minSalary && j.experienceYears >= minExperience)
-      .filter(j => city === "all" ? true : j.city.toLowerCase() === city.toLowerCase())
+      .filter(j => city === "all" ? true : getJobCity(j).toLowerCase() === city.toLowerCase())
       .filter(j => contract === "all" ? true : j.contract === contract)
       .filter(j => levelFilter === 'all' ? true : j.level === levelFilter)
       .filter(j => remoteOnly ? j.remote : true);
@@ -832,34 +2206,7 @@ export default function JobsPage() {
     try { localStorage.removeItem('econexo:jobApplication'); } catch { }
   };
 
-  // Helper functions to get translated job data with safe fallback
-  const getJobTitle = (job: Job) => {
-    // For jobs with apply_url (real jobs), always use the job.title directly
-    if (job.apply_url) {
-      return job.title;
-    }
-    // For mock jobs, try translation
-    const titleKey = `jobTitle${job.id}`;
-    const translated = t(titleKey);
-    return translated === titleKey ? job.title : translated;
-  };
 
-  const getJobDescription = (job: Job) => {
-    // For jobs with apply_url (real jobs), always use the job.description directly
-    if (job.apply_url) {
-      return job.description;
-    }
-    // For mock jobs, try translation
-    const descKey = `jobDesc${job.id}`;
-    const translated = t(descKey);
-    return translated === descKey ? job.description : translated;
-  };
-
-  const getKnowledgeArea = (area: string) => {
-    const areaKey = area.toLowerCase().replace(/\s+/g, '');
-    const translated = t(areaKey);
-    return translated === areaKey ? area : translated;
-  };
 
   // Función para generar URL de búsqueda de la empresa
   const getCompanyUrl = (companyName: string) => {
@@ -886,11 +2233,11 @@ export default function JobsPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Header with green gradient - matching Community Chat style */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-8 mb-8">
+      {/* Header with gradient - matching new design system */}
+      <div className="bg-gradient-to-r from-primary to-secondary px-6 py-8 mb-8">
         <div className="container mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-md mb-2">{t("jobs")}</h1>
-          <p className="text-green-100 text-lg">
+          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-md mb-2 font-sans">{t("jobs")}</h1>
+          <p className="text-white/80 text-lg font-mono">
             {locale === "en" ? "Connected" : locale === "de" ? "Verbunden" : "Conectado"}
           </p>
         </div>
@@ -923,7 +2270,7 @@ export default function JobsPage() {
               <label className="block text-sm text-slate-600 dark:text-slate-300 mb-0.5">{t("cityLabel")}</label>
               <select value={city} onChange={(e) => setCity(e.target.value)} className="w-full border rounded px-3 py-2 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
                 <option value="all">{t('allCities')}</option>
-                {Array.from(new Set(realJobs.map(j => j.city))).map(c => (
+                {Array.from(new Set(realJobs.map(j => getJobCity(j)))).map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
@@ -964,11 +2311,13 @@ export default function JobsPage() {
 
         {filtered.length === 0 && query && (
           <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <div className="text-6xl mb-4 flex justify-center text-primary">
+              <Search size={64} />
+            </div>
+            <h2 className="text-xl font-semibold text-foreground mb-2 font-sans">
               {t("noResults") || "No se encontraron resultados"}
             </h2>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-foreground/60 font-mono">
               {t("tryDifferentSearch") || "Intenta con otros términos de búsqueda"}
             </p>
           </div>
@@ -995,13 +2344,13 @@ export default function JobsPage() {
                         href={getEcosiaSearchUrl(job.company)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-xs transition-colors"
+                        className="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors"
                         title={`Buscar ${job.company} en Ecosia`}
                       >
-                        🔍
+                        <Search size={14} />
                       </a>
                       {' — '}
-                      {locationLabel(job.city, locale as any)}, {locationLabel(job.country, locale as any)}
+                      {locationLabel(getJobCity(job), locale as any)}, {locationLabel(getJobCountry(job), locale as any)}
                     </span>
                   </p>
                 </div>
@@ -1013,7 +2362,7 @@ export default function JobsPage() {
               <div className="mt-3 text-slate-700 dark:text-slate-300">{getJobDescription(job)}</div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="badge-modern px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">{job.experienceYears} {t("yearsExp")}</span>
-                {job.knowledgeAreas.map((a) => (
+                {getJobKnowledgeAreas(job).map((a) => (
                   <span key={a} className="badge-modern px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600">{getKnowledgeArea(a)}</span>
                 ))}
               </div>
@@ -1023,13 +2372,13 @@ export default function JobsPage() {
                     href={job.apply_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative touch-target px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg hover-lift flex items-center justify-center text-center"
+                    className="group relative touch-target px-4 py-2 bg-cta text-white rounded-lg hover:bg-cta/90 transition-all duration-200 font-medium shadow-md hover:shadow-lg hover-lift flex items-center justify-center text-center cursor-pointer"
                     title={t("rememberToTellThemTooltip") || "Recuerda decir que llegaste por aquí!"}
                   >
-                    {t("applyBtn")} ↗
+                    {t("applyBtn")} <ExternalLink size={16} className="ml-2" />
                     {/* Burbuja / Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-xs rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 border border-emerald-100 dark:border-emerald-900/50">
-                      💚 {t("rememberToTellThemTooltip") || "Recuerda decir que llegaste por aquí!"}
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-xs rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 border border-primary/20">
+                      <Heart size={12} className="inline mr-1 text-primary fill-primary" /> {t("rememberToTellThemTooltip") || "Recuerda decir que llegaste por aquí!"}
                       {/* Flechita del tooltip */}
                       <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-white dark:border-t-slate-900"></div>
                     </div>

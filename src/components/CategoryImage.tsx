@@ -2,7 +2,7 @@
 import React from 'react';
 
 interface CategoryImageProps {
-  category: 'salud' | 'medio-ambiente' | 'educacion' | 'comunidad' | 'oceanos' | 'alimentacion';
+  category: 'salud' | 'medio-ambiente' | 'educacion' | 'comunidad' | 'oceanos' | 'alimentacion' | 'tecnologia';
   className?: string;
 }
 

@@ -219,11 +219,12 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
             <button onClick={toggleFavorite} className={`rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold transition-colors shadow-md hover:shadow-lg text-sm sm:text-base ${favorite ? 'bg-amber-500 text-white hover:bg-amber-600 border-2 border-amber-600' : 'bg-white text-gray-800 border-2 border-gray-300 hover:bg-gray-50'}`}>
               {favorite ? '★ ' + t('saved') : '☆ ' + t('save')}
             </button>
-            {details.info_url && (
-              <a href={details.info_url} target="_blank" rel="noopener noreferrer" className="bg-gray-700 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-gray-800 transition-colors shadow-md hover:shadow-lg border-2 border-gray-800 text-center text-sm sm:text-base">
-                {t("moreInfo")}
-              </a>
-            )}
+            <button
+              onClick={details.info_url ? () => window.open(details.info_url, '_blank', 'noopener,noreferrer') : () => alert(t("infoNotAvailable"))}
+              className="bg-gray-700 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-gray-800 transition-colors shadow-md hover:shadow-lg border-2 border-gray-800 text-center text-sm sm:text-base cursor-pointer"
+            >
+              {t("moreInfo")}
+            </button>
           </div>
         </div>
       </div>

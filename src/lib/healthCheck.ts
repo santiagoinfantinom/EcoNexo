@@ -3,6 +3,8 @@
  * Asegura que todos los componentes críticos estén funcionando
  */
 
+import React from 'react';
+
 export interface HealthStatus {
   status: 'healthy' | 'degraded' | 'unhealthy';
   timestamp: number;

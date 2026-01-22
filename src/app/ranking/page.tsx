@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { CITY_RANKING, CityRankingData } from '@/data/cityRanking';
 import Link from 'next/link';
-import GamificationHub from '@/components/GamificationHub';
+// import GamificationHub from "@/components/GamificationHubNew";
 
 export default function RankingPage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -60,7 +60,7 @@ export default function RankingPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
-            <GamificationHub />
+            {/* <GamificationHub /> */}
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">

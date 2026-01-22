@@ -48,24 +48,24 @@ export default function MedioAmbientePage() {
             <div key={project.id} className="bg-gls-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               {/* Project Image */}
               <div className="h-48">
-                <ProjectSpecificImage project={project} className="w-full h-full" locale={locale} />
+                <ProjectSpecificImage project={project} className="w-full h-full" locale={locale as 'en' | 'de' | 'es'} />
               </div>
 
               {/* Project Content */}
               <div className="p-6 bg-black">
-                <h3 className="text-xl font-bold text-white mb-2">{project.title[locale] || project.title.es}</h3>
-                <p className="text-white opacity-80 mb-4 text-sm">{project.description[locale] || project.description.es}</p>
+                <h3 className="text-xl font-bold text-white mb-2">{project.title[locale as 'en' | 'de' | 'es'] || project.title.es}</h3>
+                <p className="text-white opacity-80 mb-4 text-sm">{project.description[locale as 'en' | 'de' | 'es'] || project.description.es}</p>
 
                 {/* Location */}
                 <div className="flex items-center text-white opacity-70 text-sm mb-3">
                   <span className="mr-2">📍</span>
-                  <span>{project.location[locale] || project.location.es}</span>
+                  <span>{project.location[locale as 'en' | 'de' | 'es'] || project.location.es}</span>
                 </div>
 
                 {/* Impact */}
                 <div className="flex items-center text-emerald-400 text-sm mb-4">
                   <span className="mr-2">🎯</span>
-                  <span className="font-medium">{project.impact[locale] || project.impact.es}</span>
+                  <span className="font-medium">{project.impact[locale as 'en' | 'de' | 'es'] || project.impact.es}</span>
                 </div>
 
                 {/* Stats */}

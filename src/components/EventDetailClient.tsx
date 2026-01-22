@@ -217,9 +217,15 @@ function autoTranslate(text: string, locale: string): string {
   // Replace longer phrases first
   const entries = Object.entries(dict).sort((a, b) => b[0].length - a[0].length);
   let out = text;
+
+  // Use a constructed regex string to avoid Tailwind parser confusion with brackets
+  const escapeChars = "-/\\^$*+?.()|[]{}";
+  const escapePattern = "[" + escapeChars.replace(new RegExp("[" + escapeChars + "]", "g"), "\\$&") + "]";
+
   for (const [es, tr] of entries) {
     // word boundaries break on accents/compound words; do a safer global replace
-    const re = new RegExp(`${es.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")}`, "gi");
+    const esEscaped = es.replace(new RegExp(escapePattern, "g"), "\\$&");
+    const re = new RegExp(esEscaped, "gi");
     out = out.replace(re, (m) => {
       const isCap = m[0] === m[0].toUpperCase();
       const rep = tr;

@@ -3,7 +3,15 @@ import { useI18n, Locale } from "@/lib/i18n";
 import { useState, useEffect } from "react";
 import { trackEvent } from "@/lib/analytics";
 
-const FLAGS: Record<Locale, string> = { es: "🇪🇸", en: "🇬🇧", de: "🇩🇪" };
+const FLAGS: Record<Locale, string> = { 
+  es: "🇪🇸", 
+  en: "🇬🇧", 
+  de: "🇩🇪", 
+  fr: "🇫🇷", 
+  it: "🇮🇹", 
+  pl: "🇵🇱", 
+  nl: "🇳🇱" 
+};
 
 export default function LanguageSwitcher() {
   const { locale, setLocale } = useI18n();

@@ -1000,6 +1000,14 @@ const DICTS: Record<Locale, Dict> = {
     categoryStarter: "Starter",
     categoryEngagement: "Engagement",
     categoryLifestyle: "Lifestyle",
+
+    // Volunteer Page
+    volunteersPageTitle: "Volunteers Page",
+    localRecords: "Local Records",
+    noVolunteersYet: "No volunteers yet",
+    backToProject: "Back to Project",
+    volunteeringPoints: "Join project",
+    infoNotAvailable: "Official website not available",
   },
   de: {
 
@@ -1977,6 +1985,20 @@ const DICTS: Record<Locale, Dict> = {
     categoryStarter: "Starter",
     categoryEngagement: "Engagement",
     categoryLifestyle: "Lebensstil",
+
+    // Volunteer Page
+    name: "Name",
+    availability: "Verfügbarkeit",
+    availabilityPh: "z.B. 2 Std/Woche",
+    notes: "Notizen",
+    save: "Speichern",
+    saved: "Gespeichert",
+    volunteersPageTitle: "Freiwilligenseite",
+    localRecords: "Lokale Einträge",
+    noVolunteersYet: "Noch keine Freiwilligen",
+    backToProject: "Zurück zum Projekt",
+    volunteeringPoints: "Projekt beitreten",
+    infoNotAvailable: "Offizielle Website nicht verfügbar",
   },
   es: {
 
@@ -2664,6 +2686,7 @@ const DICTS: Record<Locale, Dict> = {
     volunteersLabel: "voluntarios",
     spotsLabel: "plazas",
     previewLabel: "Vista previa",
+    infoNotAvailable: "Página oficial no disponible",
 
     // Project names and descriptions
     urbanReforestationBerlin: "Reforestación Urbana Berlín",
@@ -3347,11 +3370,17 @@ export function projectDescriptionLabel(projectId: string, original: string, loc
   const dict = locale === "en" ? ES_EN : ES_DE;
   const entries = Object.entries(dict).sort((a, b) => b[0].length - a[0].length);
   let out = original;
+  // Use a constructed regex string to avoid Tailwind parser confusion
+  const escapeChars = "-/\\^$*+?.()|[]{}";
+  const escapePattern = "[" + escapeChars.replace(new RegExp("[" + escapeChars + "]", "g"), "\\$&") + "]";
+
   for (const [es, tr] of entries) {
-    const re = new RegExp(`${es.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")}`, "gi");
+    const esEscaped = es.replace(new RegExp(escapePattern, "g"), "\\$&");
+    const re = new RegExp(esEscaped, "gi");
     out = out.replace(re, (m) => {
-      const cap = m[0] === m[0].toUpperCase();
-      return cap ? tr.charAt(0).toUpperCase() + tr.slice(1) : tr;
+      const isCap = m[0] === m[0].toUpperCase();
+      const rep = tr;
+      return isCap ? rep.charAt(0).toUpperCase() + rep.slice(1) : rep;
     });
   }
   return out;

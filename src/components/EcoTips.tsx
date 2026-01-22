@@ -1,6 +1,10 @@
-"use client";
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
+import {
+  Leaf,
+  X,
+  Plus
+} from "lucide-react";
 
 type EcoTip = {
   id: string;
@@ -23,13 +27,13 @@ export default function EcoTips() {
         setIsOpen(false);
       }
     };
-    
+
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
     }
-    
+
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
@@ -116,7 +120,7 @@ export default function EcoTips() {
     }
   };
 
-  const filteredTips = selectedCategory 
+  const filteredTips = selectedCategory
     ? tips.filter(tip => tip.category === selectedCategory)
     : tips;
 
@@ -130,7 +134,7 @@ export default function EcoTips() {
   const renderDescriptionWithLinks = (description: string) => {
     // Split by "GLS Bank" and "Triodos Bank" to create clickable links
     const parts = description.split(/(GLS Bank|Triodos Bank)/g);
-    
+
     return parts.map((part, index) => {
       if (part === "GLS Bank") {
         return (
@@ -165,19 +169,19 @@ export default function EcoTips() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-white hover:text-green-300 transition-colors duration-200 font-medium px-2 py-1"
+        className="text-white hover:text-secondary transition-colors duration-200 font-bold px-2 py-1 flex items-center gap-1 cursor-pointer"
       >
-        {t("ecoTips")}
+        <Leaf size={16} /> {t("ecoTips")}
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-200">
           {/* Backdrop clickable */}
-          <div 
-            className="absolute inset-0" 
+          <div
+            className="absolute inset-0"
             onClick={() => setIsOpen(false)}
           />
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl max-w-5xl w-full max-h-[85vh] overflow-hidden flex flex-col relative z-10 animate-in zoom-in-95 duration-200">
+          <div className="bg-background dark:bg-slate-900 rounded-2xl shadow-2xl max-w-5xl w-full max-h-[85vh] overflow-hidden flex flex-col relative z-10 animate-in zoom-in-95 duration-200 border border-white/10">
             <div className="p-6 border-b border-gray-200 dark:border-slate-700">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
@@ -185,10 +189,10 @@ export default function EcoTips() {
                 </h2>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200 text-2xl font-bold hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+                  className="text-foreground/40 hover:text-foreground/80 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-foreground/5 dark:hover:bg-slate-700 rounded-full w-8 h-8 flex items-center justify-center transition-all cursor-pointer"
                   aria-label="Cerrar"
                 >
-                  ×
+                  <X size={20} />
                 </button>
               </div>
               <p className="text-gray-600 dark:text-slate-400 mt-2">
@@ -201,11 +205,10 @@ export default function EcoTips() {
               <div className="flex flex-wrap gap-2 mb-6 flex-shrink-0">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-                    selectedCategory === null
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${selectedCategory === null
+                    ? "bg-primary text-white shadow-lg shadow-primary/20"
+                    : "bg-foreground/5 text-foreground/60 hover:bg-foreground/10 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
+                    }`}
                 >
                   {t("all")}
                 </button>
@@ -213,11 +216,10 @@ export default function EcoTips() {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-                      selectedCategory === category
-                        ? "bg-green-600 text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
-                    }`}
+                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${selectedCategory === category
+                      ? "bg-primary text-white shadow-lg shadow-primary/20"
+                      : "bg-foreground/5 text-foreground/60 hover:bg-foreground/10 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
+                      }`}
                   >
                     {category}
                   </button>
@@ -229,7 +231,7 @@ export default function EcoTips() {
                 {filteredTips.map(tip => (
                   <div
                     key={tip.id}
-                    className="p-4 border border-gray-200 dark:border-slate-700 rounded-lg hover:shadow-md transition-shadow bg-white dark:bg-slate-800 relative"
+                    className="p-5 border border-foreground/10 dark:border-slate-800 rounded-2xl hover:shadow-xl hover:shadow-primary/5 transition-all bg-background dark:bg-slate-900 group"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="font-semibold text-slate-900 dark:text-white text-base leading-tight pr-2">
@@ -248,8 +250,8 @@ export default function EcoTips() {
                       {renderDescriptionWithLinks(tip.description)}
                     </p>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-500 dark:text-slate-500 font-medium">
-                        {tip.category}
+                      <span className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest flex items-center gap-1">
+                        <Plus size={10} className="text-secondary" /> {tip.category}
                       </span>
                     </div>
                   </div>

@@ -1324,3 +1324,4 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2026-01-17 08:50:15,198 - src.agent.matching_agent - INFO - Calculating match scores
 2026-01-17 08:50:15,199 - src.agent.matching_agent - INFO - Re-ranking matches with AI
 2026-01-17 08:50:15,199 - src.agent.matching_agent - INFO - Generating explanation
+2026-01-20 11:36:57,718 - src.server - INFO - Matching agent initialized successfully

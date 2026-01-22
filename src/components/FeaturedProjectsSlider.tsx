@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useI18n, categoryLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { PROJECTS } from "@/data/projects";
+import { MapPin, Leaf, Users, Sprout, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function FeaturedProjectsSlider() {
   const { t, locale } = useI18n();
@@ -85,8 +86,8 @@ export default function FeaturedProjectsSlider() {
     };
   };
 
-  // Show 3 projects at a time, rotate through all active projects
-  const projectsPerView = 3;
+  // Show 1 project at a time, rotate through all active projects
+  const projectsPerView = 1;
   // Format all projects first to filter out invalid ones, then calculate slides
   const validFormattedProjects = activeProjects
     .map(formatProject)
@@ -146,21 +147,21 @@ export default function FeaturedProjectsSlider() {
             return (
               <div
                 key={slideIndex}
-                className="min-w-full grid grid-cols-1 md:grid-cols-3 gap-6 px-2 flex-shrink-0"
+                className="min-w-full flex justify-center px-2 flex-shrink-0"
               >
                 {slideProjects.map((project) => (
                   <Link
                     key={project.id}
                     href={`/projects/${project.id}`}
-                    className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 hover-lift border border-gray-200 dark:border-slate-700"
+                    className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 hover-lift border border-gray-200 dark:border-slate-700 group max-w-md w-full"
                   >
                     {/* Project Image - Always show image with fallback */}
-                    <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800">
+                    <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 relative">
                       {project.image_url ? (
                         <img
                           src={project.image_url}
                           alt={project.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                           loading="lazy"
                           onError={(e) => {
                             // Fallback to gradient background if image fails to load
@@ -169,7 +170,7 @@ export default function FeaturedProjectsSlider() {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <span className="text-6xl opacity-50">🌱</span>
+                          <Sprout className="w-12 h-12 text-green-600 opacity-50" />
                         </div>
                       )}
                     </div>
@@ -177,7 +178,7 @@ export default function FeaturedProjectsSlider() {
                     {/* Header with icon */}
                     <div className="bg-green-500 p-4 text-white">
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl">🌱</span>
+                        <Sprout className="w-6 h-6" />
                         <h3 className="text-lg font-bold line-clamp-2">{project.title}</h3>
                       </div>
                     </div>
@@ -190,17 +191,17 @@ export default function FeaturedProjectsSlider() {
 
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                          <span>📍</span>
+                          <MapPin className="w-4 h-4" />
                           <span className="line-clamp-1">{project.location}</span>
                         </div>
 
                         <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-medium">
-                          <span>🍃</span>
+                          <Leaf className="w-4 h-4" />
                           <span>{project.metric}</span>
                         </div>
 
                         <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
-                          <span>👥</span>
+                          <Users className="w-4 h-4" />
                           <span>{project.volunteers}</span>
                         </div>
                       </div>
@@ -218,22 +219,18 @@ export default function FeaturedProjectsSlider() {
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white dark:bg-slate-800 rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover-lift z-10 border border-gray-200 dark:border-slate-700"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white dark:bg-slate-800 rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover-lift z-10 border border-gray-200 dark:border-slate-700 group"
             aria-label="Previous projects"
           >
-            <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <ChevronLeft className="w-6 h-6 text-gray-700 dark:text-gray-300 group-hover:text-green-600 transition-colors" />
           </button>
 
           <button
             onClick={goToNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white dark:bg-slate-800 rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover-lift z-10 border border-gray-200 dark:border-slate-700"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white dark:bg-slate-800 rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover-lift z-10 border border-gray-200 dark:border-slate-700 group"
             aria-label="Next projects"
           >
-            <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            <ChevronRight className="w-6 h-6 text-gray-700 dark:text-gray-300 group-hover:text-green-600 transition-colors" />
           </button>
         </>
       )}
@@ -246,8 +243,8 @@ export default function FeaturedProjectsSlider() {
               key={index}
               onClick={() => goToSlide(index)}
               className={`h-2 rounded-full transition-all duration-300 ${index === currentIndex
-                  ? 'w-8 bg-green-600'
-                  : 'w-2 bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
+                ? 'w-8 bg-green-600'
+                : 'w-2 bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
                 }`}
               aria-label={`Go to slide ${index + 1}`}
             />

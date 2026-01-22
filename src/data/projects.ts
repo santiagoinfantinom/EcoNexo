@@ -23,6 +23,7 @@ export type Project = {
   city: string;
   country: string;
   spots?: number;
+  volunteers?: number;
   address?: string;
   // Optional scheduling for event filtering
   startsAt?: string;
@@ -212,7 +213,6 @@ export const PROJECTS: Project[] = [
     description_en: "Repair café where volunteers help fix appliances and reduce waste.",
     description_de: "Reparatur-Café, in dem Freiwillige beim Reparieren von Geräten helfen und Abfall reduzieren.",
     // Event hoy (demo)
-    startsAt: "2025-10-15T18:00:00+02:00",
     startsAt: "2025-10-15T18:00:00+02:00",
     endsAt: "2025-10-15T21:00:00+02:00",
     tags: ["repair", "tech", "manual", "indoor"],

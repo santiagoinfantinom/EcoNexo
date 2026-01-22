@@ -42,7 +42,7 @@ export function OnboardingModal() {
       // 1. Never completed onboarding, OR
       // 2. Haven't seen it in the last 7 days (for returning users)
       const shouldShowOnboarding = !hasCompletedOnboarding || 
-        (lastSeenOnboarding && Date.now() - parseInt(lastSeenOnboarding) > 7 * 24 * 60 * 60 * 1000);
+        (lastSeenOnboarding && Date.now() - parseInt(lastSeenOnboarding || '0') > 7 * 24 * 60 * 60 * 1000);
       
       if (shouldShowOnboarding) {
         if (!hasLanguagePreference) {

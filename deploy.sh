@@ -28,7 +28,7 @@ npx vercel --prod
 echo -e "${GREEN}✅ Deploy completado exitosamente!${NC}"
 echo ""
 echo "🌐 URLs de EcoNexo:"
-echo "  - Web: https://eco-nexo-68vbhh7ev-santiagoinfantinoms-projects.vercel.app"
+echo "  - Web: https://eco-nexo.vercel.app"
 echo "  - GitHub: https://github.com/santiagoinfantinom/EcoNexo"
 echo ""
 echo "📱 Próximos pasos:"

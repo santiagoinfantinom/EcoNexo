@@ -40,7 +40,7 @@ export default function ComunidadPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-background dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-8">
           {t('communityPageTitle')}
@@ -57,9 +57,9 @@ export default function ComunidadPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2 font-medium border-b-2 transition-colors ${activeTab === tab.id
-                ? 'border-green-600 text-green-600 dark:text-green-400'
-                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+              className={`px-6 py-3 font-bold transition-all border-b-2 cursor-pointer ${activeTab === tab.id
+                ? 'border-primary text-primary'
+                : 'border-transparent text-foreground/40 hover:text-foreground/60'
                 }`}
             >
               {tab.label}
@@ -72,8 +72,8 @@ export default function ComunidadPage() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             {activeTab === 'feed' && (
-              <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white mb-4">
+              <div className="bg-background dark:bg-slate-900 rounded-3xl shadow-2xl p-8 border border-foreground/10 dark:border-white/10">
+                <h2 className="text-3xl font-bold text-foreground mb-6 font-sans">
                   {t('recentActivity')}
                 </h2>
                 {loading ? (
@@ -90,7 +90,7 @@ export default function ComunidadPage() {
                           <img
                             src={item.user_avatar || '/logo-econexo.png'}
                             alt={item.user_name}
-                            className="w-12 h-12 rounded-full"
+                            className="w-12 h-12 rounded-2xl shadow-md border border-foreground/10 dark:border-white/10"
                           />
                           <div className="flex-1">
                             <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -98,7 +98,7 @@ export default function ComunidadPage() {
                               {t('createdAnEvent')}
                             </p>
                             <p className="font-medium mt-1 text-gray-800 dark:text-white">{item.activity_data.event_name}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <p className="text-xs text-foreground/40 mt-1 font-mono">
                               {new Date(item.created_at).toLocaleDateString(locale)}
                             </p>
                           </div>
@@ -111,14 +111,14 @@ export default function ComunidadPage() {
             )}
 
             {activeTab === 'groups' && (
-              <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white">
+              <div className="bg-background dark:bg-slate-900 rounded-3xl shadow-2xl p-8 border border-foreground/10 dark:border-white/10">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-3xl font-bold text-foreground font-sans">
                     {t('localGroupsTitle')}
                   </h2>
                   <Link
                     href="/comunidad/grupos/nuevo"
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:shadow-xl transition-all hover-lift cursor-pointer"
                   >
                     {t('createGroupBtn')}
                   </Link>
@@ -128,7 +128,7 @@ export default function ComunidadPage() {
                 </p>
                 <Link
                   href="/comunidad/grupos"
-                  className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="inline-block px-8 py-3 bg-primary text-white rounded-xl font-bold hover:shadow-xl transition-all hover-lift cursor-pointer"
                 >
                   {t('viewAllGroups')}
                 </Link>
@@ -136,33 +136,33 @@ export default function ComunidadPage() {
             )}
 
             {activeTab === 'mentoring' && (
-              <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white mb-4">
+              <div className="bg-background dark:bg-slate-900 rounded-3xl shadow-2xl p-8 border border-foreground/10 dark:border-white/10">
+                <h2 className="text-3xl font-bold text-foreground mb-6 font-sans">
                   {t('mentoringTitle')}
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                <p className="text-foreground/60 mb-8 font-mono text-sm leading-relaxed">
                   {t('mentoringDesc')}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Link
                     href="/comunidad/mentoring/buscar-mentor"
-                    className="p-4 border-2 border-green-500 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 bg-white/70 dark:bg-slate-800/60"
+                    className="p-6 border border-primary/20 rounded-2xl hover:bg-primary/5 transition-all hover-lift group cursor-pointer bg-background dark:bg-slate-900"
                   >
-                    <h3 className="font-bold text-gray-800 dark:text-white mb-2">
+                    <h3 className="font-bold text-foreground mb-3 font-sans text-xl group-hover:text-primary transition-colors">
                       {t('findMentorBtn')}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-sm text-foreground/60 font-mono">
                       {t('findMentorDesc')}
                     </p>
                   </Link>
                   <Link
                     href="/comunidad/mentoring/convertirse-mentor"
-                    className="p-4 border-2 border-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 bg-white/70 dark:bg-slate-800/60"
+                    className="p-6 border border-secondary/20 rounded-2xl hover:bg-secondary/5 transition-all hover-lift group cursor-pointer bg-background dark:bg-slate-900"
                   >
-                    <h3 className="font-bold text-gray-800 dark:text-white mb-2">
+                    <h3 className="font-bold text-foreground mb-3 font-sans text-xl group-hover:text-secondary transition-colors">
                       {t('becomeMentorBtn')}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-sm text-foreground/60 font-mono">
                       {t('shareKnowledgeDesc')}
                     </p>
                   </Link>
@@ -171,19 +171,19 @@ export default function ComunidadPage() {
             )}
 
             {activeTab === 'marketplace' && (
-              <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white">
+              <div className="bg-background dark:bg-slate-900 rounded-3xl shadow-2xl p-8 border border-foreground/10 dark:border-white/10">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-3xl font-bold text-foreground font-sans">
                     {t('marketplaceTitle')}
                   </h2>
                   <Link
                     href="/comunidad/marketplace/nuevo"
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    className="px-6 py-2 bg-cta text-white rounded-xl font-bold hover:shadow-xl transition-all hover-lift cursor-pointer"
                   >
                     {t('publishBtn')}
                   </Link>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-foreground/60 font-mono text-sm leading-relaxed">
                   {t('marketplaceDesc')}
                 </p>
               </div>
@@ -193,43 +193,43 @@ export default function ComunidadPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Stats Card */}
-            <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-extrabold text-gray-800 dark:text-white mb-4 drop-shadow-sm">
+            <div className="bg-background dark:bg-slate-900 rounded-3xl shadow-2xl p-8 border border-foreground/10 dark:border-white/10">
+              <h3 className="text-xl font-bold text-foreground mb-6 font-sans">
                 {t('yourImpact')}
               </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">{t('karma')}</span>
-                  <span className="font-bold text-gray-800 dark:text-white">0</span>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-foreground/60 font-mono text-sm uppercase tracking-widest">{t('karma')}</span>
+                  <span className="font-bold text-primary text-lg">0</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">
+                <div className="flex justify-between items-center">
+                  <span className="text-foreground/60 font-mono text-sm uppercase tracking-widest">
                     {t('reputation')}
                   </span>
-                  <span className="font-bold text-gray-800 dark:text-white">0.0</span>
+                  <span className="font-bold text-secondary text-lg">0.0</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">
+                <div className="flex justify-between items-center">
+                  <span className="text-foreground/60 font-mono text-sm uppercase tracking-widest">
                     {t('followers')}
                   </span>
-                  <span className="font-bold text-gray-800 dark:text-white">0</span>
+                  <span className="font-bold text-cta text-lg">0</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Links */}
-            <div className="bg-white/80 dark:bg-slate-800/90 rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-extrabold text-gray-800 dark:text-white mb-4 drop-shadow-sm">
+            <div className="bg-background dark:bg-slate-900 rounded-3xl shadow-2xl p-8 border border-foreground/10 dark:border-white/10">
+              <h3 className="text-xl font-bold text-foreground mb-6 font-sans">
                 {t('quickLinks')}
               </h3>
-              <div className="space-y-2">
-                <Link href="/perfil" className="block text-green-600 hover:underline">
+              <div className="space-y-3">
+                <Link href="/perfil" className="block text-primary hover:text-primary/70 font-bold transition-all text-sm font-sans underline underline-offset-4 decoration-primary/30">
                   {t('myProfileLabel')}
                 </Link>
-                <Link href="/eventos" className="block text-green-600 hover:underline">
+                <Link href="/eventos" className="block text-secondary hover:text-secondary/70 font-bold transition-all text-sm font-sans underline underline-offset-4 decoration-secondary/30">
                   {t('events')}
                 </Link>
-                <Link href="/proyectos" className="block text-green-600 hover:underline">
+                <Link href="/proyectos" className="block text-cta hover:text-cta/70 font-bold transition-all text-sm font-sans underline underline-offset-4 decoration-cta/30">
                   {t('adminProjects')}
                 </Link>
               </div>

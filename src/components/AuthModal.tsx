@@ -6,6 +6,7 @@ import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { createOAuthService } from "@/lib/oauth";
 import { CaptchaComponent, MathCaptchaComponent } from "@/lib/captcha";
 import EcoNexoLogo from "./EcoNexoLogo";
+import { Leaf, X, Mail, Globe, LogIn, UserPlus } from "lucide-react";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -23,14 +24,14 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [showEmailVerification, setShowEmailVerification] = useState(false);
-  
+
   // Check if Supabase is configured
   const isSupabaseReady = isSupabaseConfigured();
 
   // Ocultar errores de reCAPTCHA que aparecen en el DOM
   useEffect(() => {
     if (!isOpen) return;
-    
+
     const hideRecaptchaErrors = () => {
       // Ocultar mensajes de error comunes de reCAPTCHA
       const errorSelectors = [
@@ -41,7 +42,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
         '[data-sitekey] + div[class*="error"]',
         'iframe[src*="recaptcha"] + div',
       ];
-      
+
       errorSelectors.forEach(selector => {
         try {
           const elements = document.querySelectorAll(selector);
@@ -58,17 +59,17 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           // Ignorar errores de selector
         }
       });
-      
+
       // Buscar por texto de error común en todos los elementos
       const allElements = document.querySelectorAll('*');
       allElements.forEach(el => {
         const htmlEl = el as HTMLElement;
         const text = htmlEl.textContent || '';
-        if (text.includes('ERROR for site owner') || 
-            text.includes('Invalid site key') ||
-            text.includes('Error in security verification') ||
-            text.includes('Error en la verificación de seguridad') ||
-            text.includes('Fehler bei der Sicherheitsüberprüfung')) {
+        if (text.includes('ERROR for site owner') ||
+          text.includes('Invalid site key') ||
+          text.includes('Error in security verification') ||
+          text.includes('Error en la verificación de seguridad') ||
+          text.includes('Fehler bei der Sicherheitsüberprüfung')) {
           htmlEl.style.display = 'none';
           htmlEl.style.visibility = 'hidden';
           htmlEl.style.opacity = '0';
@@ -78,11 +79,11 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
         }
       });
     };
-    
+
     // Ejecutar inmediatamente y luego periódicamente
     hideRecaptchaErrors();
     const interval = setInterval(hideRecaptchaErrors, 50);
-    
+
     // También usar MutationObserver para detectar nuevos elementos
     const observer = new MutationObserver(hideRecaptchaErrors);
     observer.observe(document.body, {
@@ -91,7 +92,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
       attributes: true,
       attributeFilter: ['class', 'style'],
     });
-    
+
     return () => {
       clearInterval(interval);
       observer.disconnect();
@@ -106,7 +107,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
 
     setIsLoading(true);
     setError("");
-    
+
     try {
       if (mode === "register" && !captchaVerified) {
         setError(t("pleaseCompleteSecurityVerification"));
@@ -140,11 +141,11 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
         // Don't show generic errors for configuration issues
         const errorMessage = result.message || t("errorSendingEmail");
         // Filter out reCAPTCHA errors and security verification errors if not configured
-        const isRecaptchaError = errorMessage.includes("Invalid site key") || 
-                                 errorMessage.includes("site owner") ||
-                                 errorMessage.includes("Error in security verification") ||
-                                 errorMessage.includes("Error en la verificación de seguridad") ||
-                                 errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
+        const isRecaptchaError = errorMessage.includes("Invalid site key") ||
+          errorMessage.includes("site owner") ||
+          errorMessage.includes("Error in security verification") ||
+          errorMessage.includes("Error en la verificación de seguridad") ||
+          errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
         if (!isRecaptchaError) {
           setError(errorMessage);
         } else {
@@ -155,11 +156,11 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       // Don't show reCAPTCHA-related errors if not configured
-      const isRecaptchaError = errorMessage.includes("Invalid site key") || 
-                               errorMessage.includes("site owner") ||
-                               errorMessage.includes("Error in security verification") ||
-                               errorMessage.includes("Error en la verificación de seguridad") ||
-                               errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
+      const isRecaptchaError = errorMessage.includes("Invalid site key") ||
+        errorMessage.includes("site owner") ||
+        errorMessage.includes("Error in security verification") ||
+        errorMessage.includes("Error en la verificación de seguridad") ||
+        errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
       if (!isRecaptchaError) {
         setError(t("unexpectedError") + (errorMessage ? `: ${errorMessage}` : ""));
       } else {
@@ -174,15 +175,15 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     console.log('🚀 handleGoogleAuth llamado');
     console.log('📍 window.location:', typeof window !== 'undefined' ? window.location.href : 'SERVER');
     console.log('📍 window.location.origin:', typeof window !== 'undefined' ? window.location.origin : 'SERVER');
-    
+
     setIsLoading(true);
     setError("");
-    
+
     try {
       // Check if Google Client ID is configured
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
       console.log('📍 process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID:', clientId);
-      
+
       if (!clientId || clientId === 'demo-client-id' || clientId === 'your_google_client_id_here') {
         setError(t("errorStartingGoogleAuth") + " - Google Client ID no configurado");
         setIsLoading(false);
@@ -193,13 +194,13 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
       console.log('🔐 Iniciando autenticación con Google...');
       console.log('📍 Client ID:', clientId);
       console.log('📍 Creando OAuth Service...');
-      
+
       const oauthService = await createOAuthService();
       console.log('📍 OAuth Service creado, llamando authenticateWithGoogle...');
-      
+
       const result = await oauthService.authenticateWithGoogle();
       console.log('📍 Resultado de authenticateWithGoogle:', result);
-      
+
       if (!result.success) {
         setError(result.error || t("errorStartingGoogleAuth"));
         setIsLoading(false);
@@ -220,11 +221,11 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   const handleOutlookAuth = async () => {
     setIsLoading(true);
     setError("");
-    
+
     try {
       const oauthService = await createOAuthService();
       const result = await oauthService.authenticateWithOutlook();
-      
+
       if (!result.success) {
         setError(result.error || t("errorStartingOutlookAuth"));
         setIsLoading(false);
@@ -253,22 +254,22 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
+      <div className="bg-background dark:bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-foreground/10 dark:border-white/10">
         {/* Header */}
-        <div className="bg-gradient-to-br from-green-600 via-green-700 to-green-800 px-8 py-8 text-white rounded-t-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+        <div className="bg-gradient-to-br from-primary via-secondary to-cta px-8 py-10 text-white rounded-t-2xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/5 backdrop-blur-[2px]"></div>
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl">🌿</span>
+              <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-xl border border-white/20 hover-lift">
+                <Leaf size={32} className="text-white" />
               </div>
-              <div>
-                <h2 className="text-2xl font-bold">
+              <div className="font-sans">
+                <h2 className="text-2xl font-bold tracking-tight">
                   {mode === "login" ? t("welcomeBack") : t("joinEcoNexo")}
                 </h2>
-                <p className="text-green-100 text-sm mt-1">
-                  {mode === "login" 
-                    ? t("signInToContinue") 
+                <p className="text-white/80 text-xs mt-1 font-mono uppercase tracking-wider">
+                  {mode === "login"
+                    ? t("signInToContinue")
                     : t("createAccountToStart")
                   }
                 </p>
@@ -276,11 +277,9 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             </div>
             <button
               onClick={onClose}
-              className="text-white/80 hover:text-white hover:bg-white/20 transition-all duration-200 p-2 rounded-lg"
+              className="text-white/60 hover:text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-full cursor-pointer"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X size={24} />
             </button>
           </div>
         </div>
@@ -294,7 +293,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                   <span className="text-green-600 dark:text-green-200 text-sm">✓</span>
                 </div>
                 <span className="text-sm font-medium">
-                  {showEmailVerification 
+                  {showEmailVerification
                     ? t("welcomeEmailSent")
                     : t("authenticationSuccessful")
                   }
@@ -320,39 +319,30 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center font-medium">
               {mode === "login" ? t("orContinueWith") : t("registerWith")}
             </p>
-            
+
             <div className="space-y-3">
               {/* Google Button */}
               <button
                 onClick={handleGoogleAuth}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm hover:shadow-md"
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-background dark:bg-slate-800 border border-foreground/10 dark:border-white/10 rounded-2xl hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 shadow-sm hover:shadow-xl hover-lift group cursor-pointer"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                 </svg>
-                <span className="font-medium text-gray-700 dark:text-gray-200">Google</span>
+                <span className="font-bold text-foreground md:text-base text-sm font-sans tracking-tight">Google</span>
               </button>
 
               {/* Outlook Button */}
               <button
                 onClick={handleOutlookAuth}
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-background dark:bg-slate-800 border border-foreground/10 dark:border-white/10 rounded-2xl hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 shadow-sm hover:shadow-xl hover-lift group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                  {/* Envelope body - main blue rectangle */}
-                  <rect x="3" y="5" width="18" height="13" rx="2" fill="#0078D4"/>
-                  {/* Envelope flap - darker blue triangle */}
-                  <path d="M3 5L12 11L21 5H3Z" fill="#005A9E"/>
-                  {/* O square with circle inside */}
-                  <rect x="3" y="3" width="9" height="9" rx="1.5" fill="#0078D4"/>
-                  <circle cx="7.5" cy="7.5" r="2.5" fill="white"/>
-                  <circle cx="7.5" cy="7.5" r="1.5" fill="#0078D4"/>
-                </svg>
-                <span className="font-medium text-gray-700 dark:text-gray-200">Microsoft Outlook</span>
+                <Mail className="w-5 h-5 text-[#0078D4] group-hover:scale-110 transition-transform" />
+                <span className="font-bold text-foreground md:text-base text-sm font-sans tracking-tight">Microsoft Outlook</span>
               </button>
             </div>
           </div>
@@ -379,7 +369,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t("emailPlaceholder")}
-                className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium"
+                className="w-full px-4 py-3 border border-foreground/10 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-foreground/5 dark:bg-slate-900 text-foreground dark:text-white placeholder:text-foreground/40 dark:placeholder:text-white/20 font-bold transition-all"
                 required
               />
             </div>
@@ -390,14 +380,14 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 {/* Google reCAPTCHA - only show if configured AND not localhost */}
                 {(() => {
                   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-                  const isLocalhost = typeof window !== 'undefined' && 
-                                      (window.location.hostname === 'localhost' || 
-                                       window.location.hostname === '127.0.0.1');
-                  const isConfigured = siteKey && 
-                                       siteKey !== 'your_recaptcha_site_key_here' &&
-                                       siteKey !== 'demo-site-key' &&
-                                       !isLocalhost; // No mostrar reCAPTCHA en localhost
-                  
+                  const isLocalhost = typeof window !== 'undefined' &&
+                    (window.location.hostname === 'localhost' ||
+                      window.location.hostname === '127.0.0.1');
+                  const isConfigured = siteKey &&
+                    siteKey !== 'your_recaptcha_site_key_here' &&
+                    siteKey !== 'demo-site-key' &&
+                    !isLocalhost; // No mostrar reCAPTCHA en localhost
+
                   if (isConfigured) {
                     return (
                       <>
@@ -421,7 +411,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                   }
                   return null;
                 })()}
-                
+
                 {/* Math Captcha - always available */}
                 <MathCaptchaComponent
                   onVerify={handleMathCaptchaVerify}
@@ -432,15 +422,18 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             <button
               type="submit"
               disabled={isLoading || (mode === "register" && !captchaVerified)}
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full bg-primary text-white py-4 px-4 rounded-xl font-bold hover:shadow-xl transition-all hover-lift cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   {t("processing")}
-                </div>
+                </>
               ) : (
-                mode === "login" ? t("signInButton") : t("createAccountButton")
+                <div className="flex items-center gap-2">
+                  {mode === "login" ? <LogIn size={20} /> : <UserPlus size={20} />}
+                  {mode === "login" ? t("signInButton") : t("createAccountButton")}
+                </div>
               )}
             </button>
           </form>

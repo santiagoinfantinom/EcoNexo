@@ -50,3 +50,8 @@ mcp-server/venv/
 *.pyc
 __pycache__/
 .pytest_cache/
+
+# Agent Architecture
+.tmp/
+credentials.json
+token.json

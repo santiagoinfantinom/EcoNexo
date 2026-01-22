@@ -17,7 +17,7 @@ export function NotificationSettings() {
       const granted = await requestPermission();
       if (granted) {
         addPoints(10, 'Enabled Push Notifications');
-        trackEvent('Notifications Enabled');
+        // TrackEvent('Notifications Enabled'); // Temporarily commented
       }
     } catch (error) {
       console.error('Error enabling notifications:', error);
@@ -30,7 +30,7 @@ export function NotificationSettings() {
     setIsLoading(true);
     try {
       await unsubscribeFromPush();
-      trackEvent('Notifications Disabled');
+      // TrackEvent('Notifications Disabled'); // Temporarily commented
     } catch (error) {
       console.error('Error disabling notifications:', error);
     } finally {

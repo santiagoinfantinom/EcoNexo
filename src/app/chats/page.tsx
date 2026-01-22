@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 
-type Message = { id: string; from: string; text: string; ts: number };
+type Message = { id: string; from: string; to?: string; text: string; ts: number };
 
 export default function ChatsPage() {
   const { t } = useI18n();

@@ -72,10 +72,6 @@ export async function POST(req: NextRequest) {
           .insert({
             event_id: eventData.id,
             user_id: eventData.created_by
-          })
-          .catch(err => {
-            console.warn("Error adding creator as administrator:", err);
-            // Don't fail the entire request if this fails
           });
       }
     } catch {

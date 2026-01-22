@@ -4,6 +4,25 @@ import { useI18n, categoryLabel } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import CalendarView from "@/components/CalendarView";
 import { useSmartContext } from "@/context/SmartContext";
+import {
+  Leaf,
+  BookOpen,
+  Activity,
+  Users,
+  Waves,
+  Apple,
+  Cpu,
+  Search,
+  Calendar,
+  Plus,
+  MapPin,
+  Globe,
+  Clock,
+  RefreshCw,
+  Upload,
+  X,
+  Eye
+} from "lucide-react";
 
 // Función para formatear fechas de manera legible
 function formatDate(dateStr: string, locale: string): string {
@@ -125,23 +144,23 @@ export default function EventosPage() {
     };
   }, []);
   const COLOR_BY_CATEGORY: Record<Category, { bg: string; text: string; border: string }> = {
-    "Medio ambiente": { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },
-    "Educación": { bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-200" },
-    "Salud": { bg: "bg-rose-100", text: "text-rose-800", border: "border-rose-200" },
-    "Comunidad": { bg: "bg-amber-100", text: "text-amber-900", border: "border-amber-200" },
-    "Océanos": { bg: "bg-cyan-100", text: "text-cyan-800", border: "border-cyan-200" },
-    "Alimentación": { bg: "bg-lime-100", text: "text-lime-800", border: "border-lime-200" },
-    "Tecnología": { bg: "bg-violet-100", text: "text-violet-800", border: "border-violet-200" },
+    "Medio ambiente": { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" },
+    "Educación": { bg: "bg-secondary/10", text: "text-secondary", border: "border-secondary/20" },
+    "Salud": { bg: "bg-cta/10", text: "text-cta", border: "border-cta/20" },
+    "Comunidad": { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" },
+    "Océanos": { bg: "bg-secondary/10", text: "text-secondary", border: "border-secondary/20" },
+    "Alimentación": { bg: "bg-cta/10", text: "text-cta", border: "border-cta/20" },
+    "Tecnología": { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" },
   };
 
-  const CATEGORY_EMOJI: Record<Category, string> = {
-    "Medio ambiente": "🌍",
-    "Educación": "📚",
-    "Salud": "🏥",
-    "Comunidad": "👥",
-    "Océanos": "🌊",
-    "Alimentación": "🍎",
-    "Tecnología": "💻",
+  const CATEGORY_ICON: Record<Category, React.ReactNode> = {
+    "Medio ambiente": <Leaf size={24} />,
+    "Educación": <BookOpen size={24} />,
+    "Salud": <Activity size={24} />,
+    "Comunidad": <Users size={24} />,
+    "Océanos": <Waves size={24} />,
+    "Alimentación": <Apple size={24} />,
+    "Tecnología": <Cpu size={24} />,
   };
 
   function update<K extends keyof EventInput>(key: K, value: EventInput[K]) {
@@ -240,57 +259,49 @@ export default function EventosPage() {
   }, []);
 
   return (
-    <div className="w-full max-w-4xl mx-auto text-center mt-6 sm:mt-8 md:mt-10 px-3 sm:px-4">
+    <div className="w-full max-w-5xl mx-auto text-center mt-6 sm:mt-8 md:mt-10 px-3 sm:px-4">
       <div className="flex flex-col items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white capitalize">
+        <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-sm font-sans">
           {viewMode === 'form' ? t("createEvent") : t("calendar")}
         </h1>
 
         {/* Search Bar */}
-        <div className="w-full max-w-md relative mx-auto">
+        <div className="w-full max-w-md relative mx-auto group">
           <input
             type="text"
             placeholder="Buscar eventos, ciudad o país..."
-            className="w-full px-4 py-2.5 pl-10 border border-gray-300 dark:border-slate-600 rounded-full bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all text-base min-h-[44px]"
+            className="w-full px-5 py-3 pl-12 border border-foreground/10 dark:border-white/10 rounded-2xl bg-background/50 backdrop-blur-sm dark:bg-slate-900/50 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all text-base shadow-sm group-hover:shadow-md"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <svg
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-foreground/40 group-focus-within:text-primary transition-colors" />
         </div>
 
         {/* Filtros */}
         <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label className="block text-xs font-medium text-white mb-1">{t("date")}</label>
+          <div className="text-left">
+            <label className="block text-xs font-bold text-foreground/60 mb-1 ml-1 uppercase tracking-wider">{t("date")}</label>
             <input
               type="date"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all text-sm"
+              className="w-full px-4 py-2.5 border border-foreground/10 dark:border-white/10 rounded-xl bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm font-bold"
               value={filterDate}
               onChange={(e) => setFilterDate(e.target.value)}
             />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-white mb-1">{t("city")}</label>
+          <div className="text-left">
+            <label className="block text-xs font-bold text-foreground/60 mb-1 ml-1 uppercase tracking-wider">{t("city")}</label>
             <input
               type="text"
               placeholder={t("cityPh")}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all text-sm"
+              className="w-full px-4 py-2.5 border border-foreground/10 dark:border-white/10 rounded-xl bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm font-bold placeholder:text-foreground/20"
               value={filterCity}
               onChange={(e) => setFilterCity(e.target.value)}
             />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-white mb-1">{t("category")}</label>
+          <div className="text-left">
+            <label className="block text-xs font-bold text-foreground/60 mb-1 ml-1 uppercase tracking-wider">{t("category")}</label>
             <select
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all text-sm"
+              className="w-full px-4 py-2.5 border border-foreground/10 dark:border-white/10 rounded-xl bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm font-bold cursor-pointer"
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value as Category | "")}
             >
@@ -312,21 +323,21 @@ export default function EventosPage() {
               setFilterCity("");
               setFilterCategory("");
             }}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg text-sm transition-colors shadow-sm"
+            className="px-6 py-2 bg-cta/10 hover:bg-cta/20 text-cta font-bold rounded-xl text-sm transition-all shadow-sm flex items-center gap-2 cursor-pointer"
           >
-            {locale === 'es' ? 'Limpiar filtros' : locale === 'de' ? 'Filter löschen' : 'Clear filters'}
+            <X size={16} /> {locale === 'es' ? 'Limpiar filtros' : locale === 'de' ? 'Filter löschen' : 'Clear filters'}
           </button>
         )}
 
         <div className="flex gap-2 justify-center">
           <button
             onClick={() => setViewMode('calendar')}
-            className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all capitalize min-h-[44px] ${viewMode === 'calendar'
-              ? 'bg-green-600 text-white shadow-md hover:bg-green-700'
-              : 'bg-white/20 text-white hover:bg-white/30'
+            className={`px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${viewMode === 'calendar'
+              ? 'bg-primary text-white shadow-xl shadow-primary/20 scale-105'
+              : 'bg-foreground/5 text-foreground hover:bg-foreground/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10'
               }`}
           >
-            {t("calendar")}
+            <Calendar size={18} /> {t("calendar")}
           </button>
         </div>
       </div>
@@ -334,26 +345,26 @@ export default function EventosPage() {
       {viewMode === 'form' && (
         <>
           {/* Eventos existentes primero */}
-          <div className="grid gap-3">
+          <div className="grid gap-4 mt-8">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-white">{t("existingEvents")}</h2>
+              <h2 className="text-2xl font-bold text-white font-sans">{t("existingEvents")}</h2>
               <button
                 onClick={refreshParticipatedEvents}
-                className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white font-semibold rounded text-sm transition-colors duration-200 shadow-sm"
+                className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-bold rounded-xl text-sm transition-all flex items-center gap-2 cursor-pointer"
               >
-                {t('refresh')}
+                <RefreshCw size={16} /> {t('refresh')}
               </button>
             </div>
-            <div className="overflow-auto border border-gray-600 rounded table-mobile-scroll">
+            <div className="overflow-hidden border border-foreground/10 dark:border-white/10 rounded-2xl shadow-xl bg-background dark:bg-slate-900">
               <table className="min-w-full text-sm">
-                <thead className="bg-slate-700">
+                <thead className="bg-foreground/5 dark:bg-white/5">
                   <tr>
-                    <th className="text-left p-2 border-b border-gray-600 text-white">{t("title")}</th>
-                    <th className="text-left p-2 border-b border-gray-600 text-white">{t("date")}</th>
-                    <th className="text-left p-2 border-b border-gray-600 text-white">{t("city")}</th>
-                    <th className="text-left p-2 border-b border-gray-600 text-white">{t("country")}</th>
-                    <th className="text-left p-2 border-b border-gray-600 text-white">{t("category")}</th>
-                    <th className="text-left p-2 border-b border-gray-600 text-white">{t("capacity")}</th>
+                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("title")}</th>
+                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("date")}</th>
+                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("city")}</th>
+                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("country")}</th>
+                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("category")}</th>
+                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("capacity")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -368,27 +379,34 @@ export default function EventosPage() {
                       <tr
                         key={idx}
                         onClick={() => window.location.href = `/eventos/${(ev as any).id}`}
-                        className="bg-slate-800 odd:bg-slate-800 even:bg-slate-700 hover:bg-slate-600 cursor-pointer transition-colors"
+                        className="bg-background dark:bg-slate-900 hover:bg-foreground/5 dark:hover:bg-white/5 cursor-pointer transition-all border-b border-foreground/5 dark:border-white/5 group"
                       >
-                        <td className="p-2 border-b border-gray-600 text-white">
-                          <a
-                            href={`/eventos/${(ev as any).id}`}
-                            className="text-green-400 hover:text-green-300 hover:underline font-medium"
-                            onClick={(e) => e.stopPropagation()}
-                          >
+                        <td className="p-4 text-foreground dark:text-white">
+                          <div className="flex items-center gap-2 group-hover:text-primary transition-colors font-bold font-sans">
                             {ev.title}
-                          </a>
+                            <Eye size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
                         </td>
-                        <td className="p-2 border-b border-gray-600 text-white">
-                          <div className="font-medium">{formatDate(ev.date, locale)}</div>
+                        <td className="p-4 text-foreground dark:text-white">
+                          <div className="font-bold flex items-center gap-2">
+                            <Calendar size={14} className="text-secondary" />
+                            {formatDate(ev.date, locale)}
+                          </div>
                           {ev.start_time && (
-                            <div className="text-xs text-slate-400">{ev.start_time}{ev.end_time ? `–${ev.end_time}` : ""}</div>
+                            <div className="text-xs text-foreground/40 font-mono mt-1 flex items-center gap-1">
+                              <Clock size={12} /> {ev.start_time}{ev.end_time ? `–${ev.end_time}` : ""}
+                            </div>
                           )}
                         </td>
-                        <td className="p-2 border-b border-gray-600 text-white">{ev.city}</td>
-                        <td className="p-2 border-b border-gray-600 text-white">{ev.country}</td>
-                        <td className="p-2 border-b border-gray-600 text-white">{categoryLabel(ev.category as Category, locale)}</td>
-                        <td className="p-2 border-b border-gray-600 text-white">{ev.capacity ?? "-"}</td>
+                        <td className="p-4 text-foreground dark:text-white font-mono text-sm">{ev.city}</td>
+                        <td className="p-4 text-foreground dark:text-white font-mono text-sm">{ev.country}</td>
+                        <td className="p-4">
+                          <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 w-fit ${(COLOR_BY_CATEGORY[ev.category as Category] || { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" }).bg} ${(COLOR_BY_CATEGORY[ev.category as Category] || { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" }).text} border ${(COLOR_BY_CATEGORY[ev.category as Category] || { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" }).border}`}>
+                            {CATEGORY_ICON[ev.category as Category] && React.cloneElement(CATEGORY_ICON[ev.category as Category] as React.ReactElement<any>, { size: 10 })}
+                            {categoryLabel(ev.category as Category, locale)}
+                          </span>
+                        </td>
+                        <td className="p-4 text-foreground dark:text-white font-mono text-sm">{ev.capacity ?? "-"}</td>
                       </tr>
                     ))
                   )}
@@ -398,17 +416,17 @@ export default function EventosPage() {
           </div>
 
           {/* Separador */}
-          <div className="h-1 bg-gradient-to-r from-transparent via-green-600 to-transparent rounded-full my-6" />
+          <div className="h-px bg-foreground/5 dark:bg-white/5 my-12" />
 
           {/* Formulario de creación después */}
-          <h2 className="text-2xl font-bold text-white mb-4">{t("createEvent")}</h2>
+          <h2 className="text-3xl font-bold text-white mb-8 font-sans">{t("createEvent")}</h2>
 
           <form onSubmit={submit} className="grid gap-4 mx-auto text-left max-w-2xl">
             <div className="grid gap-1">
-              <label className="text-sm font-semibold text-white">{t("title")} ({t("required")})</label>
+              <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("title")} ({t("required")})</label>
               <input
                 required
-                className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white placeholder-slate-400"
+                className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all placeholder:text-foreground/20"
                 value={form.title}
                 onChange={(e) => update("title", e.target.value)}
                 placeholder={t("titlePh")}
@@ -416,28 +434,28 @@ export default function EventosPage() {
             </div>
             <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
               <div className="grid gap-1">
-                <label className="text-sm font-semibold text-white">{t("date")} ({t("required")})</label>
+                <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("date")} ({t("required")})</label>
                 <input
                   required
                   type="date"
-                  className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white"
+                  className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all"
                   value={form.date}
                   onChange={(e) => update("date", e.target.value)}
                 />
               </div>
               <div className="grid gap-1">
-                <label className="text-sm font-semibold text-white">{t("time")} ({t("optional")})</label>
+                <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("time")} ({t("optional")})</label>
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="time"
-                    className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white"
+                    className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all"
                     value={form.start_time ?? ""}
                     onChange={(e) => update("start_time", e.target.value)}
                     placeholder="HH:MM"
                   />
                   <input
                     type="time"
-                    className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white"
+                    className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all"
                     value={form.end_time ?? ""}
                     onChange={(e) => update("end_time", e.target.value)}
                     placeholder="HH:MM"
@@ -445,9 +463,9 @@ export default function EventosPage() {
                 </div>
               </div>
               <div className="grid gap-1">
-                <label className="text-sm font-semibold text-white">{t("mainCategory")} ({t("required")})</label>
+                <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("mainCategory")} ({t("required")})</label>
                 <select
-                  className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white"
+                  className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all cursor-pointer"
                   value={form.category}
                   onChange={(e) => update("category", e.target.value as Category)}
                 >
@@ -459,10 +477,10 @@ export default function EventosPage() {
                 </select>
               </div>
               <div className="grid gap-1">
-                <label className="text-sm font-semibold text-white">{t("image")} ({t("optional")})</label>
+                <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("image")} ({t("optional")})</label>
                 <div className="flex gap-2">
-                  <label className="cursor-pointer bg-slate-700 hover:bg-slate-600 border border-gray-600 rounded px-3 py-2 text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 flex-1">
-                    <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                  <label className="cursor-pointer bg-background dark:bg-slate-900 hover:bg-foreground/5 dark:hover:bg-white/5 border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 text-foreground dark:text-white text-sm font-bold transition-all flex items-center justify-center gap-2 flex-1 shadow-sm hover:shadow-md">
+                    <Upload size={18} className="text-primary" />
                     {locale === 'es' ? 'Subir Imagen' : locale === 'de' ? 'Bild hochladen' : 'Upload Image'}
                     <input
                       type="file"
@@ -484,10 +502,10 @@ export default function EventosPage() {
                     <button
                       type="button"
                       onClick={() => update('image_url', '')}
-                      className="px-2 border border-red-500 rounded text-red-500 hover:bg-red-500 hover:text-white transition-colors"
+                      className="px-4 border border-cta rounded-2xl text-cta hover:bg-cta hover:text-white transition-all cursor-pointer shadow-sm hover:shadow-cta/20"
                       title="Remove image"
                     >
-                      ✕
+                      <X size={20} />
                     </button>
                   )}
                 </div>
@@ -495,20 +513,20 @@ export default function EventosPage() {
             </div>
             <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
               <div className="grid gap-1">
-                <label className="text-sm font-semibold text-white">{t("city")} ({t("required")})</label>
+                <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("city")} ({t("required")})</label>
                 <input
                   required
-                  className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white placeholder-slate-400"
+                  className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all placeholder:text-foreground/20"
                   value={form.city}
                   onChange={(e) => update("city", e.target.value)}
                   placeholder={t("cityPh")}
                 />
               </div>
               <div className="grid gap-1">
-                <label className="text-sm font-semibold text-white">{t("country")} ({t("required")})</label>
+                <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("country")} ({t("required")})</label>
                 <input
                   required
-                  className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white placeholder-slate-400"
+                  className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all placeholder:text-foreground/20"
                   value={form.country}
                   onChange={(e) => update("country", e.target.value)}
                   placeholder={t("countryPh")}
@@ -517,9 +535,9 @@ export default function EventosPage() {
             </div>
 
             <div className="grid gap-1">
-              <label className="text-sm font-semibold text-white">{t("address")} ({t("optional")})</label>
+              <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("address")} ({t("optional")})</label>
               <input
-                className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white placeholder-slate-400"
+                className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all placeholder:text-foreground/20"
                 value={form.address ?? ""}
                 onChange={(e) => update("address", e.target.value)}
                 placeholder={t("addressPh")}
@@ -528,10 +546,10 @@ export default function EventosPage() {
 
             {/* Website URL (optional) */}
             <div className="grid gap-1">
-              <label className="text-sm font-semibold text-white">{t("website")} ({t("optional")})</label>
+              <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("website")} ({t("optional")})</label>
               <input
                 type="url"
-                className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white placeholder-slate-400"
+                className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all placeholder:text-foreground/20"
                 value={form.website ?? ""}
                 onChange={(e) => update("website", e.target.value)}
                 placeholder="https://ejemplo.com"
@@ -539,36 +557,35 @@ export default function EventosPage() {
             </div>
 
             {form.image_url && (
-              <div className="mt-2">
-                <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">{t('previewLabel')}</div>
-                <div className="w-full h-48 overflow-hidden rounded-xl border border-gray-600 shadow-inner bg-slate-800">
+              <div className="mt-4">
+                <div className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mb-2 ml-1 flex items-center gap-1">
+                  <Plus size={10} className="text-secondary" /> {t('previewLabel')}
+                </div>
+                <div className="w-full h-64 overflow-hidden rounded-3xl border border-foreground/10 dark:border-white/10 shadow-2xl bg-background dark:bg-slate-900 group relative">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent group-hover:opacity-0 transition-opacity" />
                   <img
                     src={form.image_url}
                     alt="preview"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                    decoding="async"
-                    crossOrigin="anonymous"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </div>
               </div>
             )}
 
-            <div className="grid gap-2">
-              <div className="text-sm font-semibold text-white">{t("optionalCategories")}</div>
-              <div className="flex flex-wrap gap-2 justify-center">
+            <div className="grid gap-3 mt-4">
+              <div className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("optionalCategories")}</div>
+              <div className="flex flex-wrap gap-3 justify-center">
                 {CATEGORIES.map((c) => (
                   <button
                     key={c}
                     type="button"
                     onClick={() => toggleOptional(c)}
-                    className={`px-3 py-1 rounded-full border font-medium transition-colors duration-200 ${form.optionalCategories.includes(c)
-                      ? "bg-green-700 text-white shadow-md"
-                      : `${COLOR_BY_CATEGORY[c].bg} ${COLOR_BY_CATEGORY[c].text} ${COLOR_BY_CATEGORY[c].border} hover:shadow-sm`
+                    className={`p-4 rounded-2xl border transition-all duration-300 hover-lift cursor-pointer shadow-sm hover:shadow-md ${form.optionalCategories.includes(c)
+                      ? "bg-primary text-white border-primary shadow-xl shadow-primary/20 scale-110"
+                      : `${COLOR_BY_CATEGORY[c].bg} ${COLOR_BY_CATEGORY[c].text} ${COLOR_BY_CATEGORY[c].border}`
                       }`}
                   >
-                    <span className="text-xl">{CATEGORY_EMOJI[c]}</span>
+                    {CATEGORY_ICON[c]}
                   </button>
                 ))}
               </div>
@@ -576,11 +593,11 @@ export default function EventosPage() {
 
             <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
               <div className="grid gap-1">
-                <label className="text-sm font-semibold text-white">{t("capacity")} ({t("optional")})</label>
+                <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("capacity")} ({t("optional")})</label>
                 <input
                   type="number"
                   min={1}
-                  className="border border-gray-600 rounded px-3 py-2 bg-slate-700 text-white placeholder-slate-400"
+                  className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all placeholder:text-foreground/20"
                   value={form.capacity ?? ""}
                   onChange={(e) => update("capacity", Number(e.target.value) || undefined)}
                   placeholder={t("capacityPh")}
@@ -589,16 +606,16 @@ export default function EventosPage() {
             </div>
 
             <div className="grid gap-1">
-              <label className="text-sm font-semibold text-white">{t("notes")} ({t("optional")})</label>
+              <label className="text-xs font-bold text-foreground/60 uppercase tracking-widest ml-1">{t("notes")} ({t("optional")})</label>
               <textarea
-                className="border border-gray-600 rounded px-3 py-2 min-h-24 bg-slate-700 text-white placeholder-slate-400"
+                className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 min-h-[120px] bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all placeholder:text-foreground/20"
                 value={form.notes ?? ""}
                 onChange={(e) => update("notes", e.target.value)}
                 placeholder={t("notesPh")}
               />
             </div>
 
-            <button className="bg-green-700 hover:bg-green-800 text-white font-semibold rounded px-4 py-2 w-fit transition-colors duration-200 shadow-md">
+            <button className="bg-primary text-white font-bold rounded-2xl px-10 py-4 w-fit transition-all shadow-xl shadow-primary/20 hover-lift cursor-pointer mt-4">
               {t("save")}
             </button>
           </form>
