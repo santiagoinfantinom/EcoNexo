@@ -25,6 +25,11 @@ git push origin Jugando-con-las-esteticas
 echo -e "${BLUE}🌐 5. Deploying a Vercel${NC}"
 npx vercel --prod
 
+if [ $? -ne 0 ]; then
+    echo -e "${RED}❌ Error al desplegar en Vercel. Por favor verifica tu login.${NC}"
+    exit 1
+fi
+
 echo -e "${GREEN}✅ Deploy completado exitosamente!${NC}"
 echo ""
 echo "🌐 URLs de EcoNexo:"
