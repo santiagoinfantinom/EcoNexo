@@ -129,13 +129,13 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                     lastLogin: today,
                     streak: newStreak,
                     points: prev.points + 20,
-                    history: [...prev.history, `Daily Login (+20 XP)`] // Keeping english in history for simplicity or needs refactor
+                    history: [...prev.history, `${t('dailyLogin')} (+20 XP)`]
                 };
 
                 // Bonus for weekly streak
                 if (newStreak === 7) {
                     updated.points += 50;
-                    updated.history.push("Weekly Streak (+50 XP)");
+                    updated.history.push(`${t('weeklyStreak')} (+50 XP)`);
                     if (!updated.badges.includes('daily_streak_7')) {
                         updated.badges = [...updated.badges, 'daily_streak_7'];
                     }
@@ -167,7 +167,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         // Award "First Step" badge if not present
         if (!gamification.badges.includes('first_step')) {
             unlockBadge('first_step');
-            addPoints(50, t('completedProfile') || 'Completed Profile');
+            addPoints(50, t('completedProfile'));
         }
     };
 
@@ -227,7 +227,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         setGamification(prev => {
             if (prev.badges.includes(badgeId)) return prev;
 
-            showToast(t('newBadge') || "New Badge Unlocked!", "success");
+            showToast(t('newBadge'), "success");
 
             const updated = { ...prev, badges: [...prev.badges, badgeId] };
             saveGamification(updated);

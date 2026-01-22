@@ -14,7 +14,7 @@ export default function EcoNexoLogo({ className = "", size = 40 }: EcoNexoLogoPr
       style={{ width: size, height: size }}
     >
       <Image
-        src="/logo-clean-v2.png"
+        src="/logo-icon-v3.png"
         alt="EcoNexo Logo"
         width={size * 1.5}
         height={size * 1.5}
