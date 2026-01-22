@@ -10,7 +10,9 @@ import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import { trackEvent } from "@/lib/analytics";
 import { ensureEventImage } from "@/lib/eventImages";
 import { EVENT_DETAILS, EventDetails } from "@/data/eventDetails";
-import { useSmartContext } from "@/context/SmartContext";
+import { useSmartContext, QuestStep } from "@/context/SmartContext";
+import { CalendarPlus, Download, ExternalLink } from "lucide-react";
+import { generateGoogleCalendarLink, generateOutlookCalendarLink, downloadICSFile } from "@/lib/calendarUtils";
 
 // Localized overrides for event strings (progressive coverage)
 const EVENT_I18N: Record<string, { en: Partial<EventDetails>; de: Partial<EventDetails> }> = {
@@ -1051,6 +1053,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
 
         // Award points for event registration
         addPoints(25, 'Inscribirse a evento');
+        updateQuestProgress('join', event.category);
 
         // Check for badge unlocks based on event count
         const eventCount = participatedEvents.length;
@@ -1106,6 +1109,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
 
       // Award points for sharing
       addPoints(10, locale === 'es' ? 'Compartir evento' : 'Share event');
+      updateQuestProgress('share', event.category);
 
       // Unlock badge if share count reaches 10 (approximated via history for now if not tracking shares separately)
       // For a more robust approach, I'll update GamificationState to track shares.
@@ -1217,6 +1221,71 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900"></div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Add to Calendar Section */}
+          <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6 mb-6">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+              <CalendarPlus className="w-5 h-5 text-green-600" />
+              {t("addToCalendar")}
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={generateGoogleCalendarLink({
+                  title: event.title,
+                  description: event.description,
+                  location: event.location,
+                  startDate: `${event.date}T${event.time.replace(':', '')}00`,
+                  url: typeof window !== 'undefined' ? window.location.href : undefined
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  addPoints(15, locale === 'es' ? 'Sincronizar calendario' : 'Sync calendar');
+                  updateQuestProgress('sync');
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
+              >
+                Google Calendar
+                <ExternalLink className="w-4 h-4 opacity-50" />
+              </a>
+              <a
+                href={generateOutlookCalendarLink({
+                  title: event.title,
+                  description: event.description,
+                  location: event.location,
+                  startDate: `${event.date}T${event.time}:00`,
+                  url: typeof window !== 'undefined' ? window.location.href : undefined
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  addPoints(15, locale === 'es' ? 'Sincronizar calendario' : 'Sync calendar');
+                  updateQuestProgress('sync');
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
+              >
+                Outlook
+                <ExternalLink className="w-4 h-4 opacity-50" />
+              </a>
+              <button
+                onClick={() => {
+                  downloadICSFile({
+                    title: event.title,
+                    description: event.description,
+                    location: event.location,
+                    startDate: `${event.date}T${event.time.replace(':', '')}00`,
+                    url: typeof window !== 'undefined' ? window.location.href : undefined
+                  });
+                  addPoints(15, locale === 'es' ? 'Sincronizar calendario' : 'Sync calendar');
+                  updateQuestProgress('sync');
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
+              >
+                <Download className="w-4 h-4" />
+                iCal / Apple
+              </button>
             </div>
           </div>
 

@@ -16,6 +16,28 @@ interface GamificationState {
     workshopCount: number;
     joinedProjectCount: number;
     currentGroupId?: string;
+    karma: number;
+    calendarSyncCount: number;
+    activeQuests: UserQuest[];
+    completedQuests: string[];
+}
+
+export interface QuestStep {
+    id: string;
+    description: string;
+    target: number;
+    current: number;
+    type: 'sync' | 'share' | 'join' | 'workshop';
+}
+
+export interface UserQuest {
+    id: string;
+    title: string;
+    category: string;
+    steps: QuestStep[];
+    rewardXP: number;
+    rewardKarma: number;
+    isDone?: boolean;
 }
 
 export interface GroupMember {
@@ -63,6 +85,7 @@ interface SmartContextType {
     addPoints: (amount: number, reason: string) => void;
     unlockBadge: (badgeId: string) => void;
     getGroupData: () => Group | null;
+    updateQuestProgress: (type: QuestStep['type'], category?: string) => void;
 }
 
 
@@ -80,7 +103,11 @@ const defaultGamification: GamificationState = {
     shareCount: 0,
     workshopCount: 0,
     joinedProjectCount: 0,
-    currentGroupId: 'berlin-sustainers' // Default mock assignment
+    currentGroupId: 'berlin-sustainers', // Default mock assignment
+    karma: 0,
+    calendarSyncCount: 0,
+    activeQuests: [],
+    completedQuests: []
 };
 
 const SmartContext = createContext<SmartContextType | undefined>(undefined);
@@ -145,6 +172,39 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                 return updated;
             });
         }
+
+        // Initialize default quests if empty
+        if (currentGamification.activeQuests.length === 0 && currentGamification.completedQuests.length === 0) {
+            setGamification(prev => {
+                const initialQuests: UserQuest[] = [
+                    {
+                        id: 'ocean-guardian',
+                        title: t('questOceanGuardian') || 'Ocean Guardian',
+                        category: 'oceans',
+                        rewardXP: 500,
+                        rewardKarma: 100,
+                        steps: [
+                            { id: 'og-1', type: 'join', target: 2, current: 0, description: t('questStepJoinOceans') || 'Join 2 ocean conservation events' },
+                            { id: 'og-2', type: 'share', target: 1, current: 0, description: t('questStepShareOcean') || 'Share an ocean project' }
+                        ]
+                    },
+                    {
+                        id: 'urban-sustainer',
+                        title: t('questUrbanSustainer') || 'Urban Sustainer',
+                        category: 'community',
+                        rewardXP: 300,
+                        rewardKarma: 50,
+                        steps: [
+                            { id: 'us-1', type: 'sync', target: 3, current: 0, description: t('questStepSyncEvents') || 'Sync 3 events to your calendar' },
+                            { id: 'us-2', type: 'workshop', target: 1, current: 0, description: t('questStepJoinWorkshop') || 'Attend an urban gardening workshop' }
+                        ]
+                    }
+                ];
+                const updated = { ...prev, activeQuests: initialQuests };
+                saveGamification(updated);
+                return updated;
+            });
+        }
     }, []);
 
     const { showToast } = useToast();
@@ -199,14 +259,25 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                 }
             }
 
+            if (reason.includes("calendario") || reason.includes("calendar")) {
+                prev.calendarSyncCount = (prev.calendarSyncCount || 0) + 1;
+                if (prev.calendarSyncCount >= 3 && !newBadges.includes('calendar_sync_master')) {
+                    newBadges.push('calendar_sync_master');
+                }
+            }
+
+            // Karma logic: awarded for community-centric actions
+            let karmaEarned = 0;
+            if (reason.includes("Compartir") || reason.includes("Share") ||
+                reason.includes("calendario") || reason.includes("calendar") ||
+                reason.includes("Comunidad") || reason.includes("Community")) {
+                karmaEarned = Math.floor(amount / 5);
+            }
+
             // Level up check
             if (newLevel > prev.level) {
                 showToast(`${t('levelUp')} ${newLevel}`, "success");
             }
-
-            // Show toast for points (optional, maybe only for big amounts or user preference)
-            // For now, always show for clear feedback
-            if (amount > 0) showToast(`+${amount} XP: ${reason}`, "info");
 
             const updated = {
                 ...prev,
@@ -216,7 +287,9 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                 shareCount: newShareCount,
                 workshopCount: newWorkshopCount,
                 joinedProjectCount: newJoinedProjectCount,
-                history: [...prev.history, `${reason} (+${amount})`]
+                calendarSyncCount: prev.calendarSyncCount,
+                karma: (prev.karma || 0) + karmaEarned,
+                history: [...prev.history, `${reason} (+${amount} XP${karmaEarned > 0 ? `, +${karmaEarned} Karma` : ''})`]
             };
             saveGamification(updated);
             return updated;
@@ -235,6 +308,67 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         });
     };
 
+    const updateQuestProgress = (type: QuestStep['type'], category?: string) => {
+        setGamification(prev => {
+            let questCompleted = false;
+            let completedQuestTitle = "";
+            let xpReward = 0;
+            let karmaReward = 0;
+
+            const newActiveQuests = prev.activeQuests.map(quest => {
+                // If category is provided, only progress quests of that category (or generic ones)
+                if (category && quest.category !== 'all' && quest.category !== category) return quest;
+
+                const newSteps = quest.steps.map(step => {
+                    if (step.type === type && step.current < step.target) {
+                        return { ...step, current: step.current + 1 };
+                    }
+                    return step;
+                });
+
+                const allDone = newSteps.every(s => s.current >= s.target);
+                if (allDone && !questCompleted) {
+                    questCompleted = true;
+                    completedQuestTitle = quest.title;
+                    xpReward = quest.rewardXP;
+                    karmaReward = quest.rewardKarma;
+                }
+
+                return { ...quest, steps: newSteps, isDone: allDone };
+            });
+
+            if (questCompleted) {
+                const questId = prev.activeQuests.find(q => q.title === completedQuestTitle)?.id || "";
+                const updatedActive = newActiveQuests.filter(q => !q.isDone);
+                const updatedCompleted = [...prev.completedQuests, questId];
+
+                showToast(`${t('questCompleted') || 'Quest Completed'}: ${completedQuestTitle}`, "success");
+
+                // Add rewards
+                addPoints(xpReward, `${t('questCompletedXP') || 'Quest Reward'}: ${completedQuestTitle}`);
+                // Note: addPoints already handles karma and points updates, but since we are inside setGamification,
+                // it might be cleaner to just calculate final state here. 
+                // However, for simplicity and reuse, I'll let the next render handle the point addition 
+                // OR I can manually add them here.
+
+                const finalState = {
+                    ...prev,
+                    activeQuests: updatedActive,
+                    completedQuests: updatedCompleted,
+                    points: prev.points + xpReward,
+                    karma: prev.karma + karmaReward,
+                    history: [...prev.history, `Quest ${completedQuestTitle} (+${xpReward} XP, +${karmaReward} Karma)`]
+                };
+                saveGamification(finalState);
+                return finalState;
+            }
+
+            const finalState = { ...prev, activeQuests: newActiveQuests };
+            saveGamification(finalState);
+            return finalState;
+        });
+    };
+
     return (
         <SmartContext.Provider value={{
             preferences,
@@ -244,7 +378,8 @@ export function SmartProvider({ children }: { children: ReactNode }) {
             gamification,
             addPoints,
             unlockBadge,
-            getGroupData: () => gamification.currentGroupId ? MOCK_GROUPS[gamification.currentGroupId] : null
+            getGroupData: () => gamification.currentGroupId ? MOCK_GROUPS[gamification.currentGroupId] : null,
+            updateQuestProgress
         }}>
             {children}
         </SmartContext.Provider>

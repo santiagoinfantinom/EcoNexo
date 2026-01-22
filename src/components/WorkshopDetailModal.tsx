@@ -22,12 +22,13 @@ interface WorkshopDetailModalProps {
 
 export default function WorkshopDetailModal({ workshop, isOpen, onClose }: WorkshopDetailModalProps) {
     const { locale } = useI18n();
-    const { addPoints } = useSmartContext();
+    const { addPoints, updateQuestProgress } = useSmartContext();
 
     if (!isOpen || !workshop) return null;
 
     const handleRegisterClick = () => {
         addPoints(25, locale === 'es' ? 'Inscribirse a taller' : 'Workshop registration');
+        updateQuestProgress('workshop');
     };
 
     const getLocalizedValue = (ws: Workshop, key: "title" | "description" | "location") => {

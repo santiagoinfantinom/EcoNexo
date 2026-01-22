@@ -9,6 +9,7 @@ import AuthModal from "@/components/AuthModal";
 import FeaturedProjectsSlider from "@/components/FeaturedProjectsSlider";
 import EcoTips from "@/components/EcoTips";
 import EcoTipsBulletPoints from "@/components/EcoTipsBulletPoints";
+import SocialMediaFeed from "@/components/SocialMediaFeed";
 import { PROJECTS } from "@/data/projects";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -27,7 +28,7 @@ import {
 } from "lucide-react";
 
 // New Smart Components
-// import GamificationHub from "@/components/GamificationHubNew";
+import GamificationHub from "@/components/GamificationHub";
 import PreferencesModal from "@/components/PreferencesModal";
 import RecommendedProjects from "@/components/RecommendedProjects";
 import CityLeaderboard from "@/components/CityLeaderboard";
@@ -90,7 +91,7 @@ export default function Home() {
       <div className="animated-gradient-bg" />
 
       {/* Gamification Sidebar */}
-      {/* <GamificationHub /> */}
+      <GamificationHub />
 
       {/* Onboarding Modal */}
       <PreferencesModal
@@ -350,6 +351,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <SocialMediaFeed />
 
       {/* Eco Tips */}
       <section className="py-20 px-4 bg-green-50/50 dark:bg-slate-800/30">
