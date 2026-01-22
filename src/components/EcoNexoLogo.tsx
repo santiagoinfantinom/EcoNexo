@@ -19,7 +19,7 @@ export default function EcoNexoLogo({ className = "", size = 40 }: EcoNexoLogoPr
         width={size * 2.2}
         height={size * 2.2}
         className="transition-transform hover:scale-105 duration-300 object-cover"
-        style={{ marginTop: '15%', objectPosition: 'center 25%' }}
+        style={{ marginTop: '25%', objectPosition: 'center 25%' }}
         priority
       />
     </div>
