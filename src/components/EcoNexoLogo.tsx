@@ -16,10 +16,10 @@ export default function EcoNexoLogo({ className = "", size = 40 }: EcoNexoLogoPr
       <Image
         src="/logo-no-text.png"
         alt="EcoNexo Logo"
-        width={size * 2.2}
-        height={size * 2.2}
+        width={size * 1.5}
+        height={size * 1.5}
         className="transition-transform hover:scale-105 duration-300 object-cover"
-        style={{ marginTop: '25%', objectPosition: 'center 25%' }}
+        style={{ objectPosition: 'center center' }}
         priority
       />
     </div>
