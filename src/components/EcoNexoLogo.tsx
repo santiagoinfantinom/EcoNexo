@@ -9,13 +9,16 @@ interface EcoNexoLogoProps {
 
 export default function EcoNexoLogo({ className = "", size = 60 }: EcoNexoLogoProps) {
   return (
-    <div className={`relative flex items-center justify-center ${className}`}>
+    <div
+      className={`relative flex items-center justify-center rounded-full overflow-hidden bg-white shadow-md ${className}`}
+      style={{ width: size, height: size }}
+    >
       <Image
-        src="/logo-econexo-v3.png"
+        src="/logo-econexo-v3.png?v=5"
         alt="EcoNexo Logo"
         width={size}
         height={size}
-        className="transition-transform hover:scale-105 duration-300 object-cover object-center rounded-full"
+        className="transition-transform hover:scale-105 duration-300 object-cover object-center"
         priority
       />
     </div>
