@@ -97,7 +97,7 @@ Vercel debería detectar automáticamente que es un proyecto Next.js, pero verif
 
    **Variable 1:**
    - **Name**: `NEXT_PUBLIC_SITE_URL`
-   - **Value**: `https://econexo.io`
+   - **Value**: `https://econexo.app`
    - **Environment**: Selecciona todas (Production, Preview, Development)
    - Haz clic en **"Save"** o **"Add"**
 

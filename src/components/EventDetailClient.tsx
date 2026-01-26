@@ -496,7 +496,7 @@ async function getLocalizedEventData(eventId: string, locale: string) {
     }
     if (!localizedEvent.organizer) localizedEvent.organizer = 'EcoNexo Community';
     if (!localizedEvent.category) localizedEvent.category = 'community';
-    if (!localizedEvent.contact) localizedEvent.contact = 'info@econexo.org';
+    if (!localizedEvent.contact) localizedEvent.contact = 'info@econexo.app';
     if (!localizedEvent.date) localizedEvent.date = new Date().toISOString().split('T')[0];
     if (!localizedEvent.time) localizedEvent.time = '09:00';
     if (typeof localizedEvent.duration !== 'number') localizedEvent.duration = 2;
@@ -548,11 +548,11 @@ async function getLocalizedEventData(eventId: string, locale: string) {
     }
     if (!result.organizer) result.organizer = 'EcoNexo Community';
     if (!result.category) result.category = 'community';
-    // Remove the hardcoded info@econexo.org fallback if it's already set to something else
-    if (!result.contact || result.contact === 'info@econexo.org') {
+    // Remove the hardcoded info@econexo.app fallback if it's already set to something else
+    if (!result.contact || result.contact === 'info@econexo.app') {
       // Only set if truly missing
       if (baseEvent.contact) result.contact = baseEvent.contact;
-      else result.contact = result.contact || 'info@econexo.org';
+      else result.contact = result.contact || 'info@econexo.app';
     }
     if (!result.date) result.date = new Date().toISOString().split('T')[0];
     if (!result.time) result.time = '09:00';
@@ -601,7 +601,7 @@ async function getLocalizedEventData(eventId: string, locale: string) {
       currentVolunteers: 0,
       requirements: [],
       benefits: [],
-      contact: 'info@econexo.org'
+      contact: 'info@econexo.app'
     };
   }
 }
@@ -611,7 +611,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
   // This is required by React's Rules of Hooks
   const { t, locale } = useI18n();
   const { user } = useAuth();
-  const { addPoints, unlockBadge, gamification } = useSmartContext();
+  const { addPoints, unlockBadge, gamification, updateQuestProgress } = useSmartContext();
   const [saved, setSaved] = React.useState<boolean>(false);
   const [apiEvent, setApiEvent] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
@@ -728,7 +728,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
                 benefits: Array.isArray(data.benefits) ? data.benefits : [],
                 benefits_en: Array.isArray(data.benefits_en) ? data.benefits_en : undefined,
                 benefits_de: Array.isArray(data.benefits_de) ? data.benefits_de : undefined,
-                contact: data.contact || 'info@econexo.org'
+                contact: data.contact || 'info@econexo.app'
               };
 
               // Apply localization based on current locale, using *_en / *_de fields when available

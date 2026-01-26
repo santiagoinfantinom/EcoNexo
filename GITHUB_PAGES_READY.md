@@ -7,7 +7,7 @@ Your EcoNexo project is now ready for GitHub Pages deployment. Here's what has b
 ### 📁 **Files Created/Modified:**
 
 1. **`next.config.ts`** - Static export configuration
-2. **`public/CNAME`** - Custom domain setup (econexo.org)
+2. **`public/CNAME`** - Custom domain setup (econexo.app)
 3. **`GITHUB_PAGES_SETUP.md`** - Complete setup documentation
 4. **All API routes** - Updated for static export compatibility
 5. **Dynamic pages** - Added generateStaticParams functions
@@ -63,17 +63,17 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./out
-        cname: econexo.org
+        cname: econexo.app
 ```
 
 ### 🌐 **URLs After Deployment:**
 
-- **GitHub Pages**: https://santiagoinfantinom.github.io/EcoNexo/
-- **Custom Domain**: https://econexo.org (when DNS is configured)
+- **GitHub Pages**: https://econexo.app/EcoNexo/
+- **Custom Domain**: https://econexo.app (when DNS is configured)
 
 ### 🔧 **Custom Domain Setup:**
 
-To use econexo.org:
+To use econexo.app:
 
 1. **Add DNS records:**
    ```
@@ -95,7 +95,7 @@ To use econexo.org:
    
    Type: CNAME
    Name: www
-   Value: santiagoinfantinom.github.io
+   Value: econexo.app
    ```
 
 2. **Enable HTTPS** in GitHub Pages settings
@@ -104,7 +104,7 @@ To use econexo.org:
 - **38 static pages** generated
 - **All routes** working (except advanced-demo temporarily disabled)
 - **API routes** configured for static export
-- **Custom domain** ready (econexo.org)
+- **Custom domain** ready (econexo.app)
 
 ### 🎯 **Features Available:**
 - ✅ Event management and calendar

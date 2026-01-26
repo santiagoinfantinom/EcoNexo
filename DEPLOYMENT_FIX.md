@@ -2,7 +2,7 @@
 
 ## Problemas Identificados
 
-1. **Vercel (econexo.io)**: Muestra una página diferente (EcoNexo Sustainable Strategies)
+1. **Vercel (econexo.app)**: Muestra una página diferente (EcoNexo Sustainable Strategies)
 2. **econexo.ai**: No está configurado, da error de conexión
 3. **GitHub Pages**: Da 404 porque no hay deployment configurado
 
@@ -42,7 +42,7 @@
 
 3. **Configurar dominios:**
    - Ve a **Settings** → **Domains**
-   - Agrega `econexo.io` si no está
+   - Agrega `econexo.app` si no está
    - Agrega `econexo.ai` si no está
    - Verifica que ambos dominios apunten al proyecto correcto
 
@@ -50,7 +50,7 @@
    - Ve a **Settings** → **Environment Variables**
    - Asegúrate de tener:
      ```
-     NEXT_PUBLIC_SITE_URL=https://econexo.io
+     NEXT_PUBLIC_SITE_URL=https://econexo.app
      NEXT_PUBLIC_SUPABASE_URL=tu_supabase_url
      NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_key
      ```
@@ -87,7 +87,7 @@
 ### Vercel
 ```bash
 # Verifica ambos dominios:
-# https://econexo.io
+# https://econexo.app
 # https://econexo.ai
 ```
 

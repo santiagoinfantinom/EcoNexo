@@ -87,12 +87,12 @@ Vercel debería detectar automáticamente que es un proyecto Next.js, pero verif
 
    **Variable 1:**
    - **Name**: `NEXT_PUBLIC_SITE_URL`
-   - **Value**: `https://econexo.io`
+   - **Value**: `https://econexo.app`
    - **Environment**: Selecciona todas (Production, Preview, Development)
 
    **Variable 2:**
    - **Name**: `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`
-   - **Value**: `econexo.io`
+   - **Value**: `econexo.app`
    - **Environment**: Selecciona todas
 
    **Variable 3 (si tienes Supabase):**
@@ -138,10 +138,10 @@ Vercel debería detectar automáticamente que es un proyecto Next.js, pero verif
 
 1. Ve a **Settings → Domains**
 2. Verás una lista de dominios configurados
-3. **Para `econexo.io`:**
+3. **Para `econexo.app`:**
    - Si ya está agregado, verifica que apunte a este proyecto
    - Si no está, haz clic en **"Add"** o **"Add Domain"**
-   - Escribe: `econexo.io`
+   - Escribe: `econexo.app`
    - Haz clic en **"Add"**
 
 4. **Para `econexo.ai`:**
@@ -158,7 +158,7 @@ Vercel debería detectar automáticamente que es un proyecto Next.js, pero verif
 
 1. Espera unos minutos para que los cambios se propaguen
 2. Abre en tu navegador:
-   - **https://econexo.io** - Debería mostrar el proyecto colorido
+   - **https://econexo.app** - Debería mostrar el proyecto colorido
    - **https://econexo.ai** - Debería funcionar (después de configurar DNS)
 
 3. Verifica que veas:
@@ -197,7 +197,7 @@ Vercel debería detectar automáticamente que es un proyecto Next.js, pero verif
 - [ ] Branch `2025-11-03-ol3k-5a7de` seleccionado
 - [ ] Variables de entorno configuradas
 - [ ] Deploy exitoso
-- [ ] Dominio `econexo.io` configurado y funcionando
+- [ ] Dominio `econexo.app` configurado y funcionando
 - [ ] Dominio `econexo.ai` configurado (si aplica)
 - [ ] Sitio muestra el contenido correcto (proyecto colorido)
 

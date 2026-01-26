@@ -309,7 +309,7 @@ This project is under the MIT License. See the `LICENSE` file for more details.
 
 ## 📞 Contact
 
-- **Email:** contacto@econexo.org
+- **Email:** contacto@econexo.app
 - **Website:** [EcoNexo](https://econexo.app)
 - **GitHub:** [github.com/santiagoinfantinom/EcoNexo](https://github.com/santiagoinfantinom/EcoNexo)
 

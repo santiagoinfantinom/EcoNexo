@@ -88,7 +88,7 @@ export class GoogleOAuthService {
       }
 
       // Verificación final: asegurar que el redirect_uri es válido
-      if (!finalRedirectUri || finalRedirectUri.includes('econexo.app')) {
+      if (!finalRedirectUri) {
         console.error('❌ ERROR CRÍTICO: redirect_uri inválido detectado:', finalRedirectUri);
         if (typeof window !== 'undefined') {
           finalRedirectUri = `${window.location.origin}/auth/google/callback`;
@@ -164,9 +164,9 @@ export class GoogleOAuthService {
         console.log('✅ Redirect URI corregido a:', finalRedirectUri);
       }
 
-      // Verificación adicional: asegurar que no contiene econexo.app
-      if (finalRedirectUri.includes('econexo.app') && typeof window !== 'undefined') {
-        console.error('❌ ERROR: redirect_uri contiene econexo.app, corrigiendo...');
+      // Verificación adicional: asegurar que el dominio es correcto
+      if (typeof window !== 'undefined' && !finalRedirectUri.includes(window.location.hostname)) {
+        console.error('❌ ERROR: redirect_uri no coincide con el dominio actual!');
         finalRedirectUri = `${window.location.origin}/auth/google/callback`;
         authUrl.searchParams.set('redirect_uri', finalRedirectUri);
         console.log('✅ Redirect URI corregido a:', finalRedirectUri);
