@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { autoTranslateEventText } from "@/lib/dictionaries";
 import { useI18n, locationLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -116,126 +117,6 @@ const EVENT_I18N: Record<string, { en: Partial<EventDetails>; de: Partial<EventD
   },
 };
 
-// Very small phrase dictionaries to automatically translate common words
-// used across our demo events. Unknown words are preserved.
-const ES_EN: Record<string, string> = {
-  "Taller": "Workshop",
-  "Plantación": "Planting",
-  "árboles": "trees",
-  "Limpieza": "Cleanup",
-  "de": "of",
-  "río": "river",
-  "playas": "beaches",
-  "Mercado": "Market",
-  "productos": "products",
-  "locales": "local",
-  "energía": "energy",
-  "solar": "solar",
-  "hidroeléctrica": "hydropower",
-  "Reciclaje": "Recycling",
-  "Huertos": "Gardens",
-  "urbanos": "urban",
-  "Conferencia": "Conference",
-  "cambio climático": "climate change",
-  "Monitoreo": "Monitoring",
-  "calidad del aire": "air quality",
-  "Fiesta": "Festival",
-  "sostenibilidad": "sustainability",
-  // Common requirements/benefits
-  "Bolsa reutilizable": "Reusable bag",
-  "Dinero para compras": "Money for purchases",
-  "Descuentos especiales": "Special discounts",
-  "Degustaciones": "Tastings",
-  "Red de productores": "Producers network",
-  "Entrada gratuita": "Free entry",
-  "Registro previo": "Prior registration",
-  "Guía marina": "Marine guide",
-  "Certificado": "Certificate",
-  "Material educativo": "Educational material",
-};
-
-const ES_DE: Record<string, string> = {
-  "Taller": "Workshop",
-  "Plantación": "Aufforstung",
-  "árboles": "Bäume",
-  "Limpieza": "Reinigung",
-  "de": "von",
-  "río": "Fluss",
-  "playas": "Strände",
-  "Mercado": "Markt",
-  "productos": "Produkte",
-  "locales": "lokal",
-  "energía": "Energie",
-  "solar": "Solar",
-  "hidroeléctrica": "Wasserkraft",
-  "Reciclaje": "Recycling",
-  "Huertos": "Gärten",
-  "urbanos": "urban",
-  "Conferencia": "Konferenz",
-  "cambio climático": "Klimawandel",
-  "Monitoreo": "Überwachung",
-  "calidad del aire": "Luftqualität",
-  "Fiesta": "Fest",
-  "sostenibilidad": "Nachhaltigkeit",
-  // Common requirements/benefits
-  "Bolsa reutilizable": "Wiederverwendbare Tasche",
-  "Dinero para compras": "Geld für Einkäufe",
-  "Descuentos especiales": "Sonderrabatte",
-  "Degustaciones": "Verkostungen",
-  "Red de productores": "Netz der Produzenten",
-  "Entrada gratuita": "Freier Eintritt",
-  "Registro previo": "Vorherige Anmeldung",
-  "Guía marina": "Meeresführer",
-  "Certificado": "Zertifikat",
-  "Material educativo": "Bildungsmaterial",
-  // Specific translations for e16
-  "conservación de alimentos": "Lebensmittelkonservierung",
-  "conservar alimentos": "Lebensmittel konservieren",
-  "reducir el desperdicio": "Abfall reduzieren",
-  "técnicas tradicionales": "traditionelle Techniken",
-  "técnicas modernas": "moderne Techniken",
-  "Delantal": "Schürze",
-  "Cuaderno": "Notizbuch",
-  "Contenedores": "Behälter",
-  "Alimentos conservados": "Konservierte Lebensmittel",
-  "Recetas": "Rezepte",
-  // Specific translations for e16b
-  "compost en casa": "Kompostieren zu Hause",
-  "compostar en casa": "zu Hause kompostieren",
-  "forma sencilla": "einfache Weise",
-  "forma segura": "sichere Weise",
-  "principiantes": "Anfänger",
-  "familias": "Familien",
-  "Residuo orgánico limpio": "Saubere organische Abfälle",
-  "Kit de compostaje": "Kompostierungs-Kit",
-  "Manual práctico": "Praktisches Handbuch",
-  "Soporte online": "Online-Support",
-};
-
-function autoTranslate(text: string, locale: string): string {
-  if (!text) return text;
-  if (locale === "es") return text;
-  const dict = locale === "en" ? ES_EN : ES_DE;
-  // Replace longer phrases first
-  const entries = Object.entries(dict).sort((a, b) => b[0].length - a[0].length);
-  let out = text;
-
-  // Use a constructed regex string to avoid Tailwind parser confusion with brackets
-  const escapeChars = "-/\\^$*+?.()|[]{}";
-  const escapePattern = "[" + escapeChars.replace(new RegExp("[" + escapeChars + "]", "g"), "\\$&") + "]";
-
-  for (const [es, tr] of entries) {
-    // word boundaries break on accents/compound words; do a safer global replace
-    const esEscaped = es.replace(new RegExp(escapePattern, "g"), "\\$&");
-    const re = new RegExp(esEscaped, "gi");
-    out = out.replace(re, (m) => {
-      const isCap = m[0] === m[0].toUpperCase();
-      const rep = tr;
-      return isCap ? rep.charAt(0).toUpperCase() + rep.slice(1) : rep;
-    });
-  }
-  return out;
-}
 
 function translateLocationSpan(span: string, locale: string): string {
   // Try to map standalone city/country tokens via locationLabel
@@ -259,15 +140,15 @@ function autoTranslateEvent(base: EventDetails, locale: string): Partial<EventDe
   const result: Partial<EventDetails> = {};
 
   try {
-    if (base.title) result.title = autoTranslate(String(base.title), locale);
-    if (base.description) result.description = autoTranslate(String(base.description), locale);
+    if (base.title) result.title = autoTranslateEventText(String(base.title), locale);
+    if (base.description) result.description = autoTranslateEventText(String(base.description), locale);
     if (base.location) result.location = translateLocation(String(base.location), locale);
-    if (base.organizer) result.organizer = autoTranslate(String(base.organizer), locale);
+    if (base.organizer) result.organizer = autoTranslateEventText(String(base.organizer), locale);
 
     if (Array.isArray(base.benefits)) {
       result.benefits = base.benefits.map((b) => {
         try {
-          return autoTranslate(String(b || ''), locale);
+          return autoTranslateEventText(String(b || ''), locale);
         } catch {
           return String(b || '');
         }
@@ -279,7 +160,7 @@ function autoTranslateEvent(base: EventDetails, locale: string): Partial<EventDe
     if (Array.isArray(base.requirements)) {
       result.requirements = base.requirements.map((r) => {
         try {
-          return autoTranslate(String(r || ''), locale);
+          return autoTranslateEventText(String(r || ''), locale);
         } catch {
           return String(r || '');
         }
@@ -512,7 +393,8 @@ async function getLocalizedEventData(eventId: string, locale: string) {
     const auto = autoTranslateEvent(localizedEvent, locale);
 
     // Apply manual overrides if they exist
-    const overridesFromMap = (EVENT_I18N as Record<string, Record<string, Partial<EventDetails>>>)[eventId]?.[locale as 'en' | 'de'] || {};
+    const currentLocale = locale as 'en' | 'de';
+    const overridesFromMap = (EVENT_I18N as Record<string, Record<string, Partial<EventDetails>>>)[eventId]?.[currentLocale] || {};
 
     // Merge carefully, ensuring arrays are properly handled
     const result: EventDetails = {

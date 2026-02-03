@@ -6,9 +6,6 @@ const basePath = isGitHubPages ? '/EcoNexo' : '';
 const assetPrefix = isGitHubPages ? '/EcoNexo' : '';
 
 const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -26,6 +23,12 @@ const nextConfig: NextConfig = {
   ...(!isGitHubPages && {
     images: {
       unoptimized: false, // Enable optimization for Vercel
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'images.unsplash.com',
+        },
+      ],
     },
   }),
 };

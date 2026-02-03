@@ -30,40 +30,97 @@ export default function HeaderNav() {
   // Rendering a fully consistent layout from the start
   return (
     <>
-      <header className="bg-gls-primary text-gls-primary px-4 sm:px-6 lg:px-8 py-4 sm:py-5 relative shadow-lg z-30">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <header className="bg-gls-primary text-white stitch-border-b relative shadow-2xl z-30">
+        <div className="w-full px-4 sm:px-8 lg:px-12 py-6 flex flex-col lg:flex-row items-center justify-between gap-8">
 
-          {/* Left: User Info / Auth */}
-          <div className="flex-1 flex items-center justify-start">
-            <AuthButton variant="outline" size="sm" />
-          </div>
-
-          {/* Center: Brand Logo & Title */}
-          <div className="flex-[2] flex items-center justify-center">
-            <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-105">
-              <EcoNexoLogo size={28} className="sm:w-9 sm:h-9" />
-              <span className="text-xl sm:text-2xl lg:text-3xl text-white font-black tracking-tight drop-shadow-md">
-                {t("app")}
-              </span>
+          {/* Left: Logo & Title Cluster - Large & Prominent */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="flex items-center gap-8 group transition-all hover:scale-[1.02]">
+              <EcoNexoLogo size={180} className="sm:w-[200px] sm:h-[200px] lg:w-[220px] lg:h-[220px]" />
+              <div className="flex flex-col">
+                <h1 className="text-6xl sm:text-7xl lg:text-9xl text-white font-black tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] leading-tight">
+                  EcoNexo
+                </h1>
+                <div className="flex items-center gap-2 mt-[-8px]">
+                  <div className="h-px w-8 bg-green-400"></div>
+                  <span className="text-base sm:text-lg lg:text-xl text-green-400 font-bold tracking-[0.2em] uppercase">
+                    Sustainability Network
+                  </span>
+                </div>
+              </div>
             </Link>
           </div>
 
-          {/* Right: Menu Button */}
-          <div className="flex-1 flex items-center justify-end">
+          {/* Right Section: Nav + Auth */}
+          <div className="flex-1 flex flex-col items-center lg:items-end gap-6 w-full">
+            {/* Upper row: Auth & Settings - positioned at top of navigation cluster */}
+            <div className="flex items-center gap-6 absolute top-4 right-4 lg:relative lg:top-auto lg:right-auto">
+              <AuthButton variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 py-2 rounded-xl font-bold transition-all hover:border-green-400/50" />
+            </div>
+
+            {/* Main Navigation - Aligned to the left */}
+            <nav className="hidden xl:flex items-center justify-start gap-1">
+              {[
+                { href: "/", label: t("map"), icon: MapIcon },
+                { href: "/calendario", label: t("calendar"), icon: Calendar },
+                { href: "/trabajos", label: t("jobs"), icon: Briefcase },
+                { href: "/chat", label: t("chat"), icon: MessageCircle },
+                { href: "/matching", label: "Matching", icon: Target },
+                { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/perfil", label: t("profile"), icon: User },
+                { href: "/about", label: t("aboutUs"), icon: Info },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="flex flex-col items-center gap-2 px-6 py-3 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-green-400/0 group-hover:bg-green-400/5 transition-colors"></div>
+                  <item.icon className="w-8 h-8 text-green-400 group-hover:text-green-300 group-hover:scale-110 transition-all duration-300" />
+                  <span className="font-extrabold text-sm tracking-wide text-white/90 group-hover:text-white transition-colors">{item.label}</span>
+                  <div className="w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300"></div>
+                </Link>
+              ))}
+            </nav>
+
+            {/* Medium screen Nav (md-xl) */}
+            <nav className="hidden md:flex xl:hidden flex-wrap justify-center gap-3">
+              {[
+                { href: "/", label: t("map"), icon: MapIcon },
+                { href: "/calendario", label: t("calendar"), icon: Calendar },
+                { href: "/trabajos", label: t("jobs"), icon: Briefcase },
+                { href: "/chat", label: t("chat"), icon: MessageCircle },
+                { href: "/matching", label: "Matching", icon: Target },
+                { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/perfil", label: t("profile"), icon: User },
+                { href: "/about", label: t("aboutUs"), icon: Info },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
+                >
+                  <item.icon className="w-5 h-5 text-green-400 group-hover:text-green-300" />
+                  <span className="font-bold text-xs text-white/90">{item.label}</span>
+                </Link>
+              ))}
+            </nav>
+
+            {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-white transition-all shadow-sm backdrop-blur-sm border border-white/10 group"
+              className="md:hidden flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 rounded-3xl text-white transition-all shadow-2xl backdrop-blur-md border border-white/20 group"
             >
-              <Menu className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
-              <span className="hidden sm:inline font-medium">{t("menu") || "Menú"}</span>
+              <Menu className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
+              <span className="font-extrabold text-xl tracking-tight">{t("menu") || "Menú"}</span>
             </button>
           </div>
         </div>
 
         {/* Mobile Menu Dropdown */}
         {mobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 mx-4 sm:mx-8 bg-slate-900/95 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10 shadow-2xl z-50 p-4 animate-in slide-in-from-top-2 fade-in duration-200">
-            <nav className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="absolute top-full left-0 right-0 mt-2 mx-4 bg-slate-900/98 backdrop-blur-2xl rounded-3xl overflow-hidden border border-white/20 shadow-2xl z-50 p-6 animate-in slide-in-from-top-4 fade-in duration-300">
+            <nav className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
@@ -78,9 +135,11 @@ export default function HeaderNav() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-white font-medium hover:bg-white/10 rounded-xl transition-colors flex items-center gap-3 group"
+                  className="px-6 py-4 text-white font-bold text-lg hover:bg-white/10 rounded-2xl transition-all flex items-center gap-4 group"
                 >
-                  <item.icon className="w-5 h-5 text-green-400 group-hover:text-green-300 transition-colors" />
+                  <div className="p-2 bg-white/5 rounded-lg group-hover:bg-green-400/20 transition-colors">
+                    <item.icon className="w-6 h-6 text-green-400 transition-transform group-hover:scale-110" />
+                  </div>
                   {item.label}
                 </Link>
               ))}

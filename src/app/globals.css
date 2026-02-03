@@ -1,5 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
-@import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap'); */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   /* Nueva paleta inspirada en las imágenes */
@@ -25,12 +27,14 @@
   --light-beige: #CFCBBA;
 }
 
-@theme inline {
+
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-}
+} */
+
 
 /* Theme override by data attribute - Inspirado en Ecosia y GLS Bank */
 [data-theme="dark"] {
@@ -664,4 +668,38 @@ div[class*="recaptcha-error"] {
   .impact-stats {
     flex-direction: column;
   }
+}
+
+/* force rebuild */
+
+/* Stitch Aesthetic Utilities */
+.stitched {
+  position: relative;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 0 0 4px var(--dark-teal),
+    0 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.stitched-green {
+  position: relative;
+  border: 2px dashed rgba(16, 185, 129, 0.4);
+  box-shadow:
+    0 0 0 4px white,
+    0 0 0 5px rgba(16, 185, 129, 0.1);
+}
+
+.stitch-border-b {
+  position: relative;
+}
+
+.stitch-border-b::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.3) 50%, transparent 50%);
+  background-size: 10px 100%;
 }

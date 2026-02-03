@@ -3,14 +3,14 @@ import { useI18n, Locale } from "@/lib/i18n";
 import { useState, useEffect } from "react";
 import { trackEvent } from "@/lib/analytics";
 
-const FLAGS: Record<Locale, string> = { 
-  es: "🇪🇸", 
-  en: "🇬🇧", 
-  de: "🇩🇪", 
-  fr: "🇫🇷", 
-  it: "🇮🇹", 
-  pl: "🇵🇱", 
-  nl: "🇳🇱" 
+const FLAGS: Record<Locale, string> = {
+  es: "🇪🇸",
+  en: "🇬🇧",
+  de: "🇩🇪",
+  fr: "🇫🇷",
+  it: "🇮🇹",
+  pl: "🇵🇱",
+  nl: "🇳🇱"
 };
 
 export default function LanguageSwitcher() {
@@ -47,20 +47,6 @@ export default function LanguageSwitcher() {
         title={next.toUpperCase()}
       >
         {FLAGS[locale]}
-      </button>
-
-      {/* Temporary reset button for testing */}
-      <button
-        onClick={() => {
-          localStorage.removeItem('econexo-onboarding-completed');
-          localStorage.removeItem('econexo-language-set');
-          localStorage.removeItem('econexo-onboarding-last-seen');
-          window.location.reload();
-        }}
-        className="h-8 w-8 rounded-full bg-red-500/90 backdrop-blur border border-red-600 shadow-lg flex items-center justify-center text-xs hover:scale-110 transition-transform text-white"
-        title="Reset onboarding"
-      >
-        ↻
       </button>
     </div>
   );

@@ -174,7 +174,9 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         }
 
         // Initialize default quests if empty
-        if (currentGamification.activeQuests.length === 0 && currentGamification.completedQuests.length === 0) {
+        const activeQuests = currentGamification.activeQuests || [];
+        const completedQuests = currentGamification.completedQuests || [];
+        if (activeQuests.length === 0 && completedQuests.length === 0) {
             setGamification(prev => {
                 const initialQuests: UserQuest[] = [
                     {

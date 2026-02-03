@@ -32,6 +32,9 @@ class AgentState(TypedDict):
     refinement_needed: bool
     preferences_updated: bool
     
+    # RAG Context
+    retrieved_knowledge: List[Dict[str, Any]]
+    
     # Metadata
     iteration_count: int  # Track number of refinements
 

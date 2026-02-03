@@ -38,6 +38,7 @@ type Job = {
   remote: boolean;
   description: LocalizedString;
   apply_url?: string;
+  logo_url?: string; // New field for company logos
   isCurated?: boolean; // New field for agent jobs
   curatorLog?: string[]; // New field for agent logs
 };
@@ -105,7 +106,8 @@ const JOBS: Job[] = [
       pl: "Kieruj rozwojem wielkoskalowych projektów energii odnawialnej w całej Europie. Zarządzaj interesariuszami, pozwoleniami i przyłączeniami do sieci.",
       nl: "Leid de ontwikkeling van grootschalige projecten voor hernieuwbare energie in heel Europa. Beheer belanghebbenden, vergunningen en netaansluitingen."
     },
-    apply_url: "https://europeanenergy.com/career/vacancies/"
+    apply_url: "https://europeanenergy.com/career/vacancies/",
+    logo_url: "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j2",
@@ -161,7 +163,8 @@ const JOBS: Job[] = [
       pl: "Projektowanie i walidacja systemów zarządzania bateriami dla pojazdów elektrycznych nowej generacji.",
       nl: "Ontwerp en valideer batterijbeheersystemen voor elektrische voertuigen van de volgende generatie."
     },
-    apply_url: "https://northvolt.com/career/"
+    apply_url: "https://northvolt.com/career/",
+    logo_url: "https://images.unsplash.com/photo-1569163139394-de6e4f6f4c8a?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j3",
@@ -217,7 +220,8 @@ const JOBS: Job[] = [
       pl: "Wykonywanie konserwacji i rozwiązywanie problemów w turbinach wiatrowych.",
       nl: "Voer onderhoud en probleemoplossing uit aan windturbines."
     },
-    apply_url: "https://careers.vestas.com/"
+    apply_url: "https://careers.vestas.com/",
+    logo_url: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j4",
@@ -273,7 +277,8 @@ const JOBS: Job[] = [
       pl: "Kieruj projektami morskich farm wiatrowych od koncepcji do eksploatacji.",
       nl: "Leid offshore windparkprojecten van concept tot exploitatie."
     },
-    apply_url: "https://orsted.com/en/careers"
+    apply_url: "https://orsted.com/en/careers",
+    logo_url: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j5",
@@ -329,7 +334,8 @@ const JOBS: Job[] = [
       pl: "Projektowanie wielkoskalowych elektrowni fotowoltaicznych w Europie Południowej.",
       nl: "Ontwerp grootschalige zonne-PV-installaties in Zuid-Europa."
     },
-    apply_url: "https://www.enelgreenpower.com/careers"
+    apply_url: "https://www.enelgreenpower.com/careers",
+    logo_url: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - CLIMATE TECH & SOFTWARE ===
@@ -387,7 +393,8 @@ const JOBS: Job[] = [
       pl: "Buduj wyszukiwarkę, która sadzi drzewa. Optymalizuj wydajność wyszukiwania i infrastrukturę, minimalizując ślad węglowy.",
       nl: "Bouw de zoekmachine die bomen plant. Optimaliseer de zoekprestaties en infrastructuur terwijl je de ecologische voetafdruk minimaliseert."
     },
-    apply_url: "https://ecosia.workable.com/"
+    apply_url: "https://ecosia.workable.com/",
+    logo_url: "https://images.unsplash.com/photo-1542601906990-b4d3fb773b09?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j7",
@@ -443,7 +450,8 @@ const JOBS: Job[] = [
       pl: "Rozwijaj modele ML do przewidywania ryzyka klimatycznego dla rolnictwa i łańcuchów dostaw.",
       nl: "Ontwikkel ML-modellen om klimaatrisico's voor de landbouw en toeleveringsketens te voorspellen."
     },
-    apply_url: "https://climate.ai/careers"
+    apply_url: "https://climate.ai/careers",
+    logo_url: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j8",
@@ -499,7 +507,8 @@ const JOBS: Job[] = [
       pl: "Buduj oprogramowanie do zarządzania emisją dwutlenku węgla w przedsiębiorstwach, używane przez firmy na całym świecie.",
       nl: "Bouw bedrijfssoftware voor koolstofbeheer die wereldwijd door bedrijven wordt gebruikt."
     },
-    apply_url: "https://plana.earth/careers"
+    apply_url: "https://plana.earth/careers",
+    logo_url: "https://images.unsplash.com/photo-1451187530220-3816127e1302?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - ESG & SUSTAINABILITY CONSULTING ===
@@ -557,7 +566,8 @@ const JOBS: Job[] = [
       pl: "Kieruj raportowaniem ESG dla jednej z największych firm przemysłowych w Europie.",
       nl: "Leid ESG-rapportage voor een van de grootste industriële bedrijven van Europa."
     },
-    apply_url: "https://jobs.siemens.com/"
+    apply_url: "https://jobs.siemens.com/",
+    logo_url: "https://images.unsplash.com/photo-1516383740770-fbcc5c2477ff?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j10",
@@ -613,7 +623,8 @@ const JOBS: Job[] = [
       pl: "Doradzaj dużym korporacjom w ich transformacji w kierunku zrównoważonego rozwoju.",
       nl: "Adviseer grote bedrijven over hun duurzaamheidstransformatie."
     },
-    apply_url: "https://www2.deloitte.com/careers"
+    apply_url: "https://www2.deloitte.com/careers",
+    logo_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j11",
@@ -669,7 +680,8 @@ const JOBS: Job[] = [
       pl: "Świadczenie usług doradztwa środowiskowego dla projektów infrastruktury zrównoważonej.",
       nl: "Lever milieuadviesdiensten voor duurzame infrastructuurprojecten."
     },
-    apply_url: "https://careers.arcadis.com/"
+    apply_url: "https://careers.arcadis.com/",
+    logo_url: "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - CIRCULAR ECONOMY & WASTE ===
@@ -728,7 +740,8 @@ const JOBS: Job[] = [
       pl: "Kieruj transformacją cyrkularną IKEA.",
       nl: "Stuur de circulaire transformatie van IKEA aan."
     },
-    apply_url: "https://www.ikea.com/careers"
+    apply_url: "https://www.ikea.com/careers",
+    logo_url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j13",
@@ -784,7 +797,8 @@ const JOBS: Job[] = [
       pl: "Kieruj projektami innowacyjnymi w gospodarce o obiegu zamkniętym.",
       nl: "Stuur innovatieprojecten in de circulaire economie aan."
     },
-    apply_url: "https://www.ecoembes.com/es/empleo"
+    apply_url: "https://www.ecoembes.com/es/empleo",
+    logo_url: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j14",
@@ -840,7 +854,8 @@ const JOBS: Job[] = [
       pl: "Kieruj przejściem Unilever na opakowania zrównoważone.",
       nl: "Leid de overgang van Unilever naar duurzame verpakkingen."
     },
-    apply_url: "https://careers.unilever.com/"
+    apply_url: "https://careers.unilever.com/",
+    logo_url: "https://images.unsplash.com/photo-1556761175-5973cf0f32e7?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - NGOs & ADVOCACY ===
@@ -898,7 +913,8 @@ const JOBS: Job[] = [
       pl: "Opracowywanie kampanii na rzecz transformacji energetycznej i sprawiedliwości klimatycznej.",
       nl: "Ontwikkel campagnes voor energietransitie en klimaatrechtvaardigheid."
     },
-    apply_url: "https://es.greenpeace.org/es/trabaja-con-nosotros/"
+    apply_url: "https://es.greenpeace.org/es/trabaja-con-nosotros/",
+    logo_url: "https://images.unsplash.com/photo-1542601906990-b4d3fb773b09?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j16",
@@ -954,7 +970,8 @@ const JOBS: Job[] = [
       pl: "Wpływaj na politykę klimatyczną i energetyczną UE.",
       nl: "Beïnvloed het EU-klimaat- en energiebeleid."
     },
-    apply_url: "https://www.wwf.eu/jobs"
+    apply_url: "https://www.wwf.eu/jobs",
+    logo_url: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb58f1?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - CLEAN CHEMICALS & MATERIALS ===
@@ -1012,7 +1029,8 @@ const JOBS: Job[] = [
       pl: "Kieruj innowacjami w zakresie zrównoważonego rozwoju w wiodącej na świecie firmie chemicznej.",
       nl: "Stuur duurzaamheidsinnovaties aan bij 's werelds toonaangevende chemiebedrijf."
     },
-    apply_url: "https://on.basf.com/careers"
+    apply_url: "https://on.basf.com/careers",
+    logo_url: "https://images.unsplash.com/photo-1516383740770-fbcc5c2477ff?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j18",
@@ -1068,7 +1086,8 @@ const JOBS: Job[] = [
       pl: "Opracowywanie tworzyw sztucznych i paliw odnawialnych nowej generacji z odpadów.",
       nl: "Ontwikkel hernieuwbare kunststoffen en brandstoffen van de volgende generatie uit afval."
     },
-    apply_url: "https://www.neste.com/careers"
+    apply_url: "https://www.neste.com/careers",
+    logo_url: "https://images.unsplash.com/photo-1569163139394-de6e4f6f4c8a?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - SUSTAINABLE FINANCE ===
@@ -1126,7 +1145,8 @@ const JOBS: Job[] = [
       pl: "Finansuj zieloną transformację Europy.",
       nl: "Financier de groene overgang van Europa."
     },
-    apply_url: "https://www.eib.org/jobs"
+    apply_url: "https://www.eib.org/jobs",
+    logo_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j20",
@@ -1182,7 +1202,8 @@ const JOBS: Job[] = [
       pl: "Modeluj fizyczne i przejściowe ryzyka klimatyczne dla portfeli ubezpieczeniowych.",
       nl: "Modelleer fysieke en transitieklimaatrisico's voor verzekeringsportefeuilles."
     },
-    apply_url: "https://careers.allianz.com/"
+    apply_url: "https://careers.allianz.com/",
+    logo_url: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - SUSTAINABLE MOBILITY ===
@@ -1240,7 +1261,8 @@ const JOBS: Job[] = [
       pl: "Kształtuj przyszłość elektromobilności. Kieruj rozwojem produktów dla ekosystemu EV BMW.",
       nl: "Geef vorm aan de toekomst van elektrische mobiliteit. Leid productontwikkeling voor BMW's EV-ecosysteem."
     },
-    apply_url: "https://www.bmwgroup.jobs/"
+    apply_url: "https://www.bmwgroup.jobs/",
+    logo_url: "https://images.unsplash.com/photo-1520183802803-06f731a2059f?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j22",
@@ -1296,7 +1318,8 @@ const JOBS: Job[] = [
       pl: "Projektowanie zrównoważonych rozwiązań transportowych dla miast europejskich.",
       nl: "Ontwerp duurzame transportoplossingen voor Europese steden."
     },
-    apply_url: "https://careers.ramboll.com/"
+    apply_url: "https://careers.ramboll.com/",
+    logo_url: "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - FOOD & AGRICULTURE ===
@@ -1354,7 +1377,8 @@ const JOBS: Job[] = [
       pl: "Współpraca z producentami mleka w celu wdrożenia praktyk regeneracyjnych.",
       nl: "Werk samen met melkveehouders om regeneratieve praktijken te implementeren."
     },
-    apply_url: "https://careers.danone.com/"
+    apply_url: "https://careers.danone.com/",
+    logo_url: "https://images.unsplash.com/photo-1556761175-5973cf0f32e7?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j24",
@@ -1410,7 +1434,8 @@ const JOBS: Job[] = [
       pl: "Walcz z marnowaniem żywności dzięki największemu w Europie rynkowi nadwyżek żywności.",
       nl: "Bestrijd voedselverspilling met Europa's grootste marktplaats voor surplusvoedsel."
     },
-    apply_url: "https://toogoodtogo.com/careers"
+    apply_url: "https://toogoodtogo.com/careers",
+    logo_url: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - ENERGY EFFICIENCY & BUILDINGS ===
@@ -1468,7 +1493,8 @@ const JOBS: Job[] = [
       pl: "Projektowanie rozwiązań inteligentnych budynków w celu optymalizacji zużycia energii.",
       nl: "Ontwerp smart building-oplossingen om energieverbruik te optimaliseren."
     },
-    apply_url: "https://www.se.com/careers"
+    apply_url: "https://www.se.com/careers",
+    logo_url: "https://images.unsplash.com/photo-1516383740770-fbcc5c2477ff?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "real_j26",
@@ -1524,7 +1550,8 @@ const JOBS: Job[] = [
       pl: "Dostarczanie certyfikatów LEED i BREEAM dla przełomowych budynków.",
       nl: "Lever LEED- en BREEAM-certificeringen voor prominente gebouwen."
     },
-    apply_url: "https://www.burohappold.com/careers/"
+    apply_url: "https://www.burohappold.com/careers/",
+    logo_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=200&auto=format&fit=crop"
   },
 
   // === REAL JOBS 2026 - WATER & ENVIRONMENT ===
@@ -1582,7 +1609,8 @@ const JOBS: Job[] = [
       pl: "Projektowanie i optymalizacja systemów uzdatniania wody.",
       nl: "Ontwerp en optimaliseer waterzuiveringssystemen."
     },
-    apply_url: "https://www.veolia.com/careers"
+    apply_url: "https://www.veolia.com/careers",
+    logo_url: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=200&auto=format&fit=crop"
   },
 
   // === PART-TIME JOBS 2026 ===
@@ -1640,7 +1668,8 @@ const JOBS: Job[] = [
       pl: "Wspieraj inicjatywy klimatyczne w całej Europie (20-30 godz./tydzień).",
       nl: "Ondersteun klimaatinitiatieven in heel Europa (20-30 uur/week)."
     },
-    apply_url: "https://europeanclimate.org/about-us/jobs-ecf/"
+    apply_url: "https://europeanclimate.org/about-us/jobs-ecf/",
+    logo_url: "https://images.unsplash.com/photo-1550005808-721262d51785?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "pt_j2",
@@ -1808,7 +1837,8 @@ const JOBS: Job[] = [
       pl: "Doradzaj firmom w zakresie transformacji w kierunku gospodarki o obiegu zamkniętym (20 godz./tydzień).",
       nl: "Adviseer bedrijven over transities naar de circulaire economie (20 uur/week)."
     },
-    apply_url: "https://ellenmacarthurfoundation.org/about-us/work-with-us"
+    apply_url: "https://ellenmacarthurfoundation.org/about-us/work-with-us",
+    logo_url: "https://images.unsplash.com/photo-1542601906990-b4d3fb773b09?q=80&w=200&auto=format&fit=crop"
   },
   {
     id: "pt_j5",
@@ -2304,7 +2334,7 @@ export default function JobsPage() {
           </div>
 
           {/* Contador de resultados */}
-          <div className="mt-4 text-sm text-slate-500 dark:text-slate-400">{filtered.length} {t("results")}</div>
+          <div className="mt-4 text-sm text-slate-700 dark:text-slate-400 font-medium">{filtered.length} {t("results")}</div>
         </div>
 
         <div className="content-separator" />
@@ -2325,45 +2355,59 @@ export default function JobsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filtered.map((job) => (
-            <div key={job.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-5 hover-lift border border-gray-200 dark:border-slate-700 transition-all duration-200">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <h2 className="text-xl font-semibold text-slate-900 dark:text-white">{getJobTitle(job)}</h2>
-                  <p className="text-slate-600 dark:text-slate-400">
-                    <span className="flex items-center gap-2 flex-wrap">
-                      <a
-                        href={getCompanyUrl(job.company)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:underline font-medium transition-colors"
-                        title={`Ver ${job.company} en LinkedIn`}
-                      >
-                        {job.company}
-                      </a>
-                      <a
-                        href={getEcosiaSearchUrl(job.company)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors"
-                        title={`Buscar ${job.company} en Ecosia`}
-                      >
-                        <Search size={14} />
-                      </a>
-                      {' — '}
-                      {locationLabel(getJobCity(job), locale as any)}, {locationLabel(getJobCountry(job), locale as any)}
-                    </span>
-                  </p>
+            <div key={job.id} className="bg-white rounded-xl shadow-lg p-5 hover-lift border border-gray-200 transition-all duration-200">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex gap-4">
+                  <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-200 flex-shrink-0 bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center">
+                    <img
+                      src={job.logo_url || `https://images.unsplash.com/photo-1542601906990-b4d3fb773b09?q=80&w=200&auto=format&fit=crop`}
+                      alt={job.company}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Hide the broken image and show parent's gradient background with initial
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <span className="absolute text-white font-bold text-xl">{job.company.charAt(0)}</span>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-black">{getJobTitle(job)}</h2>
+                    <p className="text-gray-700">
+                      <span className="flex items-center gap-2 flex-wrap">
+                        <a
+                          href={getCompanyUrl(job.company)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-700 hover:text-green-800 hover:underline font-medium transition-colors"
+                          title={`Ver ${job.company} en LinkedIn`}
+                        >
+                          {job.company}
+                        </a>
+                        <a
+                          href={getEcosiaSearchUrl(job.company)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-500 hover:text-primary transition-colors"
+                          title={`Buscar ${job.company} en Ecosia`}
+                        >
+                          <Search size={14} />
+                        </a>
+                        {' — '}
+                        {locationLabel(getJobCity(job), locale as any)}, {locationLabel(getJobCountry(job), locale as any)}
+                      </span>
+                    </p>
+                  </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-green-600 font-bold">{fmtCurrency(job.salaryMinEur)}–{fmtCurrency(job.salaryMaxEur)}</div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">{t(job.level === 'junior' ? 'levelJunior' : job.level === 'mid' ? 'levelMid' : job.level === 'senior' ? 'levelSenior' : 'levelLead')} • {job.contract}{job.remote ? " · Remote" : ""}</div>
+                  <div className="text-green-700 font-bold">{fmtCurrency(job.salaryMinEur)}–{fmtCurrency(job.salaryMaxEur)}</div>
+                  <div className="text-xs text-gray-600">{t(job.level === 'junior' ? 'levelJunior' : job.level === 'mid' ? 'levelMid' : job.level === 'senior' ? 'levelSenior' : 'levelLead')} • {job.contract}{job.remote ? " · Remote" : ""}</div>
                 </div>
               </div>
-              <div className="mt-3 text-slate-700 dark:text-slate-300">{getJobDescription(job)}</div>
+              <div className="mt-3 text-gray-800">{getJobDescription(job)}</div>
               <div className="mt-4 flex flex-wrap gap-2">
-                <span className="badge-modern px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">{job.experienceYears} {t("yearsExp")}</span>
+                <span className="badge-modern px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-200">{job.experienceYears} {t("yearsExp")}</span>
                 {getJobKnowledgeAreas(job).map((a) => (
-                  <span key={a} className="badge-modern px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600">{getKnowledgeArea(a)}</span>
+                  <span key={a} className="badge-modern px-3 py-1 bg-gray-100 text-gray-800 border border-gray-200">{getKnowledgeArea(a)}</span>
                 ))}
               </div>
               <div className="mt-4 flex gap-3">

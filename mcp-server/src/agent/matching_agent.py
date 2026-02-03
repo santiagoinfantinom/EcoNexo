@@ -12,7 +12,7 @@ from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
 
 from .state import AgentState
-from ..tools import user_tools, project_tools, matching_tools, scraper_tools
+from ..tools import user_tools, project_tools, matching_tools, scraper_tools, rag_tools, distance_calculator
 
 logger = logging.getLogger(__name__)
 
@@ -123,6 +123,21 @@ Return ONLY valid JSON, no other text."""),
             "radius_km": state.get("user_profile", {}).get("preferences", {}).get("maxDistance", 25),
             "is_refinement": False
         }
+    
+    return state
+
+
+def retrieve_knowledge(state: AgentState) -> AgentState:
+    """Node 2.5: Retrieve relevant knowledge from RAG hub."""
+    logger.info("Retrieving knowledge snippets")
+    
+    query = state.get("current_query", "")
+    if not query:
+        query = state["messages"][-1].content if state["messages"] else ""
+    
+    # Use the new RAG search tool
+    snippets = rag_tools.search_knowledge(query)
+    state["retrieved_knowledge"] = snippets
     
     return state
 
@@ -583,6 +598,31 @@ def generate_explanation(state: AgentState) -> AgentState:
                  else:
                      explanation = "Here are the best matches I could find."
     
+    # Augment explanation with RAG context if available
+    snippets = state.get("retrieved_knowledge", [])
+    if snippets:
+        rag_context = "\n\nInformación Adicional (Fuentes):\n"
+        for s in snippets:
+            rag_context += f"- {s['content']} (Fuente: {s['source']})\n"
+        
+        # Use LLM to blend the information naturally if possible
+        try:
+            blend_prompt = f"""
+            Basándote en estos resultados de búsqueda:
+            {explanation}
+            
+            Y esta información adicional:
+            {rag_context}
+            
+            Escribe una sola respuesta coherente y amable que integre ambos. 
+            Cita las fuentes (archivo.md o JSON) brevemente entre paréntesis.
+            Mantén el idioma original (español si el input es español).
+            """
+            response = llm.invoke(blend_prompt)
+            explanation = response.content.strip()
+        except:
+             explanation += rag_context
+
     state["explanations"] = {"general": explanation}
     return state
 
@@ -635,6 +675,7 @@ def create_matching_agent() -> StateGraph:
     # Add nodes
     workflow.add_node("analyze_profile", analyze_profile)
     workflow.add_node("understand_intent", understand_intent)
+    workflow.add_node("retrieve_knowledge", retrieve_knowledge) # New node
     workflow.add_node("search_projects", search_projects)
     workflow.add_node("search_external_jobs", search_external_jobs)
     workflow.add_node("calculate_matches", calculate_matches)
@@ -645,7 +686,8 @@ def create_matching_agent() -> StateGraph:
     # Define edges
     workflow.set_entry_point("analyze_profile")
     workflow.add_edge("analyze_profile", "understand_intent")
-    workflow.add_edge("understand_intent", "search_projects")
+    workflow.add_edge("understand_intent", "retrieve_knowledge") # Path updated
+    workflow.add_edge("retrieve_knowledge", "search_projects")    # Path updated
     workflow.add_edge("search_projects", "search_external_jobs")
     workflow.add_edge("search_external_jobs", "calculate_matches")
     workflow.add_edge("calculate_matches", "rank_matches")

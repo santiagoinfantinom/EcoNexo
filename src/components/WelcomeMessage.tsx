@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import AuthModal from "./AuthModal";
 import ProjectsCarousel from "./ProjectsCarousel";
 
+import EcoNexoLogo from "./EcoNexoLogo";
+
 interface WelcomeMessageProps {
   onClose: () => void;
 }
@@ -32,7 +34,7 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
 
   const values = [
     {
-      icon: "🌱",
+      icon: <EcoNexoLogo size={32} />,
       title: t('sustainabilityTitle'),
       description: t('sustainabilityDescription')
     },
@@ -54,24 +56,22 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
   ];
 
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${
-      isVisible ? 'opacity-100' : 'opacity-0'
-    }`}>
+    <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={handleClose}
       />
-      
+
       {/* Modal Content */}
-      <div className={`relative bg-gls-primary rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${
-        isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
-      }`}>
+      <div className={`relative bg-gls-primary rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
+        }`}>
         {/* Header */}
         <div className="bg-gls-secondary p-8 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <span className="text-4xl">🌿</span>
+              <EcoNexoLogo size={48} className="bg-white/10 p-2" />
               <div>
                 <h1 className="text-3xl font-bold text-white">
                   {t('welcomeMessageTitle')}
@@ -97,7 +97,7 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
             {values.map((value, index) => (
               <div key={index} className="card-ecosia">
                 <div className="flex items-start gap-4">
-                  <span className="text-3xl">{value.icon}</span>
+                  <span className="text-3xl flex items-center justify-center min-w-[40px]">{value.icon}</span>
                   <div>
                     <h3 className="text-xl font-bold text-gls-primary mb-2">
                       {value.title}
@@ -148,19 +148,19 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
                   setTimeout(() => {
                     // Use the specific ID for the map section
                     const mapSection = document.getElementById('map-section');
-                    
+
                     if (mapSection) {
-                      mapSection.scrollIntoView({ 
+                      mapSection.scrollIntoView({
                         behavior: 'smooth',
                         block: 'start',
                         inline: 'nearest'
                       });
                     } else {
                       // Fallback: try other selectors
-                      const fallbackSection = document.querySelector('.col-span-2') || 
-                                            document.querySelector('.layout-gls-right');
+                      const fallbackSection = document.querySelector('.col-span-2') ||
+                        document.querySelector('.layout-gls-right');
                       if (fallbackSection) {
-                        fallbackSection.scrollIntoView({ 
+                        fallbackSection.scrollIntoView({
                           behavior: 'smooth',
                           block: 'start',
                           inline: 'nearest'
@@ -176,21 +176,20 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
               >
                 {t('viewMap')}
               </button>
-            <button
-              onClick={() => {
-                if (!paypalUrl || paypalUrl === '#') return;
-                window.open(paypalUrl, '_blank', 'noopener');
-              }}
-              className={`px-8 py-3 text-lg rounded-lg font-semibold transition-colors ${
-                paypalUrl && paypalUrl !== '#'
+              <button
+                onClick={() => {
+                  if (!paypalUrl || paypalUrl === '#') return;
+                  window.open(paypalUrl, '_blank', 'noopener');
+                }}
+                className={`px-8 py-3 text-lg rounded-lg font-semibold transition-colors ${paypalUrl && paypalUrl !== '#'
                   ? 'bg-amber-500 hover:bg-amber-600 text-white'
                   : 'bg-gray-400 text-white cursor-not-allowed'
-              }`}
-              title={paypalUrl && paypalUrl !== '#' ? '' : (locale === 'de' ? 'Demnächst verfügbar' : locale === 'en' ? 'Coming soon' : 'Próximamente')}
-              disabled={!paypalUrl || paypalUrl === '#'}
-            >
-              {t('supportUs')}
-            </button>
+                  }`}
+                title={paypalUrl && paypalUrl !== '#' ? '' : (locale === 'de' ? 'Demnächst verfügbar' : locale === 'en' ? 'Coming soon' : 'Próximamente')}
+                disabled={!paypalUrl || paypalUrl === '#'}
+              >
+                {t('supportUs')}
+              </button>
             </div>
           </div>
         </div>

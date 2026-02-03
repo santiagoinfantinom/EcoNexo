@@ -1,17 +1,15 @@
 "use client";
 import React, { useState } from 'react';
-import {
-    Zap,
-    Trophy,
-    Users,
-    Flame,
-    ChevronRight,
-    Star,
-    ShieldCheck,
-    TrendingUp,
-    Award,
-    CircleDot
-} from 'lucide-react';
+import Zap from 'lucide-react/dist/esm/icons/zap';
+import Trophy from 'lucide-react/dist/esm/icons/trophy';
+import Users from 'lucide-react/dist/esm/icons/users';
+import Flame from 'lucide-react/dist/esm/icons/flame';
+import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
+import Star from 'lucide-react/dist/esm/icons/star';
+import ShieldCheck from 'lucide-react/dist/esm/icons/shield-check';
+import TrendingUp from 'lucide-react/dist/esm/icons/trending-up';
+import Award from 'lucide-react/dist/esm/icons/award';
+import CircleDot from 'lucide-react/dist/esm/icons/circle-dot';
 import { useSmartContext, UserQuest } from '@/context/SmartContext';
 import { useI18n } from '@/lib/i18n';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,7 +24,7 @@ export default function GamificationHub() {
     const nextLevelXP = 1000 - (gamification.points % 1000);
 
     return (
-        <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3 font-sans">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-3 font-sans">
             <AnimatePresence>
                 {isExpanded && (
                     <motion.div
@@ -40,8 +38,8 @@ export default function GamificationHub() {
                             <button
                                 onClick={() => setActiveTab('stats')}
                                 className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'stats'
-                                        ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
-                                        : 'text-slate-400 hover:text-slate-600'
+                                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
+                                    : 'text-slate-400 hover:text-slate-600'
                                     }`}
                             >
                                 <TrendingUp className="w-3.5 h-3.5" /> Stats
@@ -49,8 +47,8 @@ export default function GamificationHub() {
                             <button
                                 onClick={() => setActiveTab('quests')}
                                 className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'quests'
-                                        ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
-                                        : 'text-slate-400 hover:text-slate-600'
+                                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
+                                    : 'text-slate-400 hover:text-slate-600'
                                     }`}
                             >
                                 <CircleDot className="w-3.5 h-3.5" /> Quests
@@ -81,8 +79,8 @@ export default function GamificationHub() {
             <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className={`relative group p-4 rounded-2xl shadow-xl transition-all duration-300 flex items-center gap-3 ${isExpanded
-                        ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
-                        : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white hover:-translate-y-1'
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                    : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white hover:-translate-y-1'
                     }`}
             >
                 <div className="relative">

@@ -23,9 +23,11 @@ description: [TODO: Complete and informative explanation of what the skill does 
 # {skill_title}
 
 ## Overview
+
 [TODO: 1-2 sentences explaining what this skill enables]
 
 ## Structuring This Skill
+
 [TODO: Choose the structure that best fits this skill's purpose. Common patterns:
 
 **1. Workflow-Based** (best for sequential processes)
@@ -53,6 +55,7 @@ Patterns can be mixed and matched as needed. Most skills combine patterns (e.g.,
 Delete this entire "Structuring This Skill" section when done - it's just guidance.]
 
 ## [TODO: Replace with the first main section based on chosen structure]
+
 [TODO: Add content here. See examples in existing skills:
 - Code samples for technical skills
 - Decision trees for complex workflows
@@ -60,6 +63,7 @@ Delete this entire "Structuring This Skill" section when done - it's just guidan
 - References to scripts/templates/references as needed]
 
 ## Resources
+
 This skill includes example resource directories that demonstrate how to organize different types of bundled resources:
 
 ### scripts/
@@ -137,6 +141,22 @@ Reference docs are ideal for:
 - Complex multi-step processes
 - Information too lengthy for main SKILL.md
 - Content that's only needed for specific use cases
+
+## Structure Suggestions
+
+### API Reference Example
+- Overview
+- Authentication
+- Endpoints with examples
+- Error codes
+- Rate limits
+
+### Workflow Guide Example
+- Prerequisites
+- Step-by-step instructions
+- Common patterns
+- Troubleshooting
+- Best practices
 """
 
 EXAMPLE_ASSET = """# Example Asset File
@@ -154,6 +174,7 @@ Example asset files from other skills:
 - Data: sample_data.csv, test_dataset.json
 
 ## Common Asset Types
+
 - Templates: .pptx, .docx, boilerplate directories
 - Images: .png, .jpg, .svg, .gif
 - Fonts: .ttf, .otf, .woff, .woff2
@@ -240,8 +261,8 @@ def init_skill(skill_name, path):
         return None
 
     # Print next steps
-    print(f"\\n✅ Skill '{skill_name}' initialized successfully at {skill_dir}")
-    print("\\nNext steps:")
+    print(f"\n✅ Skill '{skill_name}' initialized successfully at {skill_dir}")
+    print("\nNext steps:")
     print("1. Edit SKILL.md to complete the TODO items and update the description")
     print("2. Customize or delete the example files in scripts/, references/, and assets/")
     print("3. Run the validator when ready to check the skill structure")
@@ -252,12 +273,12 @@ def init_skill(skill_name, path):
 def main():
     if len(sys.argv) < 4 or sys.argv[2] != '--path':
         print("Usage: init_skill.py <skill-name> --path <path>")
-        print("\\nSkill name requirements:")
+        print("\nSkill name requirements:")
         print("  - Hyphen-case identifier (e.g., 'data-analyzer')")
         print("  - Lowercase letters, digits, and hyphens only")
         print("  - Max 40 characters")
         print("  - Must match directory name exactly")
-        print("\\nExamples:")
+        print("\nExamples:")
         print("  init_skill.py my-new-skill --path skills/public")
         print("  init_skill.py my-api-helper --path skills/private")
         print("  init_skill.py custom-skill --path /custom/location")

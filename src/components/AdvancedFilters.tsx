@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import EcoNexoLogo from "./EcoNexoLogo";
 
 export interface FilterOptions {
   dateRange: {
@@ -22,9 +23,9 @@ interface AdvancedFiltersProps {
   initialFilters?: Partial<FilterOptions>;
 }
 
-export default function AdvancedFilters({ 
-  onFiltersChange, 
-  initialFilters = {} 
+export default function AdvancedFilters({
+  onFiltersChange,
+  initialFilters = {}
 }: AdvancedFiltersProps) {
   const [filters, setFilters] = useState<FilterOptions>({
     dateRange: {
@@ -46,7 +47,7 @@ export default function AdvancedFilters({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const impactTypes = [
-    { id: 'environmental', label: 'Medioambiental', icon: '🌱' },
+    { id: 'environmental', label: 'Medioambiental', icon: <EcoNexoLogo size={20} /> },
     { id: 'social', label: 'Social', icon: '👥' },
     { id: 'economic', label: 'Económico', icon: '💰' },
     { id: 'educational', label: 'Educativo', icon: '📚' },
@@ -60,7 +61,7 @@ export default function AdvancedFilters({
   ];
 
   const categories = [
-    { id: 'environment', label: 'Medio ambiente', icon: '🌿' },
+    { id: 'environment', label: 'Medio ambiente', icon: <EcoNexoLogo size={20} /> },
     { id: 'education', label: 'Educación', icon: '🎓' },
     { id: 'community', label: 'Comunidad', icon: '🏘️' },
     { id: 'technology', label: 'Tecnología', icon: '💻' },
@@ -92,7 +93,7 @@ export default function AdvancedFilters({
   }, [filters, onFiltersChange]);
 
   const updateFilter = <K extends keyof FilterOptions>(
-    key: K, 
+    key: K,
     value: FilterOptions[K]
   ) => {
     setFilters(prev => ({ ...prev, [key]: value }));
@@ -167,21 +168,19 @@ export default function AdvancedFilters({
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={() => updateFilter('freeOnly', !filters.freeOnly)}
-          className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-            filters.freeOnly
-              ? 'bg-green-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
-          }`}
+          className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${filters.freeOnly
+            ? 'bg-green-600 text-white'
+            : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
+            }`}
         >
           🆓 Solo gratuitos
         </button>
         <button
           onClick={() => updateFilter('accessibility', !filters.accessibility)}
-          className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-            filters.accessibility
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
-          }`}
+          className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${filters.accessibility
+            ? 'bg-blue-600 text-white'
+            : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
+            }`}
         >
           ♿ Accesible
         </button>
@@ -205,9 +204,9 @@ export default function AdvancedFilters({
                 <input
                   type="date"
                   value={filters.dateRange.start}
-                  onChange={(e) => updateFilter('dateRange', { 
-                    ...filters.dateRange, 
-                    start: e.target.value 
+                  onChange={(e) => updateFilter('dateRange', {
+                    ...filters.dateRange,
+                    start: e.target.value
                   })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                 />
@@ -216,9 +215,9 @@ export default function AdvancedFilters({
                 <input
                   type="date"
                   value={filters.dateRange.end}
-                  onChange={(e) => updateFilter('dateRange', { 
-                    ...filters.dateRange, 
-                    end: e.target.value 
+                  onChange={(e) => updateFilter('dateRange', {
+                    ...filters.dateRange,
+                    end: e.target.value
                   })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                 />
@@ -267,11 +266,10 @@ export default function AdvancedFilters({
                 <button
                   key={type.id}
                   onClick={() => toggleArrayFilter('impactType', type.id)}
-                  className={`p-2 rounded-lg text-sm font-medium transition-all ${
-                    filters.impactType.includes(type.id)
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
-                  }`}
+                  className={`p-2 rounded-lg text-sm font-medium transition-all ${filters.impactType.includes(type.id)
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
+                    }`}
                 >
                   {type.icon} {type.label}
                 </button>
@@ -289,11 +287,10 @@ export default function AdvancedFilters({
                 <button
                   key={level.id}
                   onClick={() => toggleArrayFilter('difficulty', level.id)}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-                    filters.difficulty.includes(level.id)
-                      ? `bg-${level.color}-100 text-${level.color}-800 dark:bg-${level.color}-900/20 dark:text-${level.color}-400`
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
-                  }`}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${filters.difficulty.includes(level.id)
+                    ? `bg-${level.color}-100 text-${level.color}-800 dark:bg-${level.color}-900/20 dark:text-${level.color}-400`
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
+                    }`}
                 >
                   {level.label}
                 </button>
@@ -311,11 +308,10 @@ export default function AdvancedFilters({
                 <button
                   key={category.id}
                   onClick={() => toggleArrayFilter('category', category.id)}
-                  className={`p-2 rounded-lg text-sm font-medium transition-all ${
-                    filters.category.includes(category.id)
-                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
-                  }`}
+                  className={`p-2 rounded-lg text-sm font-medium transition-all ${filters.category.includes(category.id)
+                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
+                    }`}
                 >
                   {category.icon} {category.label}
                 </button>
@@ -333,11 +329,10 @@ export default function AdvancedFilters({
                 <button
                   key={organizer}
                   onClick={() => toggleArrayFilter('organizer', organizer)}
-                  className={`p-2 rounded-lg text-sm font-medium transition-all text-left ${
-                    filters.organizer.includes(organizer)
-                      ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
-                  }`}
+                  className={`p-2 rounded-lg text-sm font-medium transition-all text-left ${filters.organizer.includes(organizer)
+                    ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
+                    }`}
                 >
                   {organizer}
                 </button>
@@ -355,11 +350,10 @@ export default function AdvancedFilters({
                 <button
                   key={lang.id}
                   onClick={() => toggleArrayFilter('language', lang.id)}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-                    filters.language.includes(lang.id)
-                      ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
-                  }`}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${filters.language.includes(lang.id)
+                    ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
+                    }`}
                 >
                   {lang.flag} {lang.label}
                 </button>

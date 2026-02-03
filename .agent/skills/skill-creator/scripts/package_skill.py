@@ -13,14 +13,8 @@ Example:
 import sys
 import zipfile
 from pathlib import Path
-# from quick_validate import validate_skill 
-# Commented out robust validation dependency to simplify installation
-# In a full install, you'd want quick_validate.py too.
-# For now, we'll mock the validator or skip it.
+from quick_validate import validate_skill
 
-def validate_skill(path):
-    # Simple mock validation
-    return True, "Validation skipped in this simplified version"
 
 def package_skill(skill_path, output_dir=None):
     """

@@ -96,8 +96,8 @@ export default function GreenCompass() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 className={`relative flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 ${isOpen
-                        ? "bg-slate-800 text-white rotate-45"
-                        : "bg-gradient-to-br from-emerald-400 to-teal-600 text-white"
+                    ? "bg-slate-800 text-white rotate-45"
+                    : "bg-gradient-to-br from-emerald-400 to-teal-600 text-white"
                     }`}
             >
                 {isOpen ? (

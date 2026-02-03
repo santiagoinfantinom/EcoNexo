@@ -5,7 +5,7 @@ These tools calculate match scores and provide explanations.
 import os
 from typing import Dict, List, Optional, Any
 import logging
-from .project_tools import calculate_distance as calc_distance
+from .distance_calculator import distance_calculator
 
 logger = logging.getLogger(__name__)
 
@@ -43,12 +43,16 @@ def calculate_match_score(user_profile: Dict[str, Any], project: Dict[str, Any])
         p_lng = project.get("lng", 0)
         # Skip distance check if project has no coordinates (e.g. online event)
         if p_lat != 0 or p_lng != 0:
-            distance = calc_distance(
+            # We use the core logic here. Since distance_calculator is async for the agent, 
+            # we'll use a sync version or just the direct calculation for the internal scoring engine.
+            import asyncio
+            res = asyncio.run(distance_calculator(
                 user_location["lat"],
                 user_location["lng"],
                 p_lat,
                 p_lng
-            )
+            ))
+            distance = res["data"]["distance"]
             max_distance = preferences.get("maxDistance", 25)
             if distance <= max_distance:
                 # Closer = higher score
@@ -201,12 +205,14 @@ def explain_match(user_profile: Dict[str, Any], project: Dict[str, Any], score: 
         p_lat = project.get("lat", 0)
         p_lng = project.get("lng", 0)
         if p_lat != 0 or p_lng != 0:
-            distance = calc_distance(
+            import asyncio
+            res = asyncio.run(distance_calculator(
                 user_location["lat"],
                 user_location["lng"],
                 p_lat,
                 p_lng
-            )
+            ))
+            distance = res["data"]["distance"]
             max_distance = preferences.get("maxDistance", 25)
             if distance <= max_distance:
                 reasons.append(f"A solo {distance:.1f} km de tu ubicación")

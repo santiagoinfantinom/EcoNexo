@@ -9,9 +9,9 @@ export interface CalendarEvent {
 }
 
 export function generateGoogleCalendarLink(event: CalendarEvent): string {
-    const start = event.startDate.replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const start = event.startDate.replace(/-/g, '').replace(/:/g, '').split('.')[0] + 'Z';
     const end = event.endDate
-        ? event.endDate.replace(/[-:]/g, '').split('.')[0] + 'Z'
+        ? event.endDate.replace(/-/g, '').replace(/:/g, '').split('.')[0] + 'Z'
         : start;
 
     const params = new URLSearchParams({
@@ -43,9 +43,9 @@ export function generateOutlookCalendarLink(event: CalendarEvent): string {
 }
 
 export function generateICSFileContent(event: CalendarEvent): string {
-    const start = event.startDate.replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const start = event.startDate.replace(/-/g, '').replace(/:/g, '').split('.')[0] + 'Z';
     const end = event.endDate
-        ? event.endDate.replace(/[-:]/g, '').split('.')[0] + 'Z'
+        ? event.endDate.replace(/-/g, '').replace(/:/g, '').split('.')[0] + 'Z'
         : start;
 
     return [

@@ -7,22 +7,26 @@ interface EcoNexoLogoProps {
   size?: number;
 }
 
-export default function EcoNexoLogo({ className = "", size = 40 }: EcoNexoLogoProps) {
+export default function EcoNexoLogo({ className = "", size = 60 }: EcoNexoLogoProps) {
+  const isLarge = size > 100;
+
   return (
-    <div
-      className={`relative flex items-start justify-center rounded-full overflow-hidden ${className}`}
-      style={{ width: size, height: size }}
-    >
-      <Image
-        src="/logo-icon-v3.png"
-        alt="EcoNexo Logo"
-        width={size * 1.5}
-        height={size * 1.5}
-        className="transition-transform hover:scale-105 duration-300 object-cover"
-        style={{ objectPosition: 'center center' }}
-        priority
-      />
+    <div className={`flex items-center ${className}`}>
+      <div
+        className={`rounded-full overflow-hidden shadow-2xl bg-gradient-to-br from-green-500 via-teal-500 to-blue-500 ${isLarge ? 'p-1.5' : 'p-1'}`}
+        style={{ width: size, height: size }}
+      >
+        <Image
+          src={isLarge ? "/logo-icon-v3.png" : "/logo-econexo.png"}
+          alt="EcoNexo Logo"
+          width={size}
+          height={size}
+          className="object-cover w-full h-full rounded-full scale-110"
+          priority
+        />
+      </div>
+      {/* Visual separator - only for small header logos */}
+      {size <= 100 && <div className="h-8 w-px bg-white/30 hidden sm:block mx-2"></div>}
     </div>
   );
 }
-
