@@ -24,13 +24,13 @@ type Badge = {
 const BADGES: Badge[] = [
     // Events
     {
-        id: "first-event",
-        name_es: "Primer Evento",
-        name_en: "First Event",
-        name_de: "Erstes Event",
-        description_es: "Participa en tu primer evento ambiental",
-        description_en: "Participate in your first environmental event",
-        description_de: "Nehmen Sie an Ihrem ersten Umweltevent teil",
+        id: "first-step",
+        name_es: "Primer Paso",
+        name_en: "First Step",
+        name_de: "Erster Schritt",
+        description_es: "Di tu primer paso hacia un mundo más sostenible",
+        description_en: "Take your first step towards a more sustainable world",
+        description_de: "Machen Sie Ihren ersten Schritt zu einer nachhaltigeren Welt",
         icon: "🌱",
         requirement: 1,
         category: "events",
@@ -254,7 +254,7 @@ export default function BadgesPage() {
             setUserProgress(JSON.parse(savedProgress));
         } else {
             setUserProgress({
-                "first-event": 1,
+                "first-step": 1,
                 "eco-warrior": 3,
                 "community-leader": 1,
                 "ethical-banking": 0,
