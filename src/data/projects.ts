@@ -7,6 +7,16 @@ export type Category =
   | "Alimentación"
   | "Tecnología";
 
+// Payment/financial information for project donations
+export type PaymentInfo = {
+  iban?: string;               // International Bank Account Number
+  paypal?: string;             // PayPal email or payment link
+  stripeAccountId?: string;    // Stripe connected account ID
+  btcAddress?: string;         // Bitcoin wallet address
+  donationUrl?: string;        // Custom donation page URL
+  acceptsDonations?: boolean;  // Whether project accepts donations
+};
+
 export type Project = {
   id: string;
   name: string;
@@ -30,6 +40,8 @@ export type Project = {
   endsAt?: string;
   isPermanent?: boolean;
   tags?: string[];
+  // Payment/financial information
+  paymentInfo?: PaymentInfo;
 };
 
 // Canonical in-repo dataset used by map, API, and static params

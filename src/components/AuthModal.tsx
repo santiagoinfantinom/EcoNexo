@@ -180,19 +180,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     setError("");
 
     try {
-      // Check if Google Client ID is configured
-      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-      console.log('📍 process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID:', clientId);
-
-      if (!clientId || clientId === 'demo-client-id' || clientId === 'your_google_client_id_here') {
-        setError(t("errorStartingGoogleAuth") + " - Google Client ID no configurado");
-        setIsLoading(false);
-        console.error('❌ Google Client ID no configurado:', clientId);
-        return;
-      }
-
       console.log('🔐 Iniciando autenticación con Google...');
-      console.log('📍 Client ID:', clientId);
       console.log('📍 Creando OAuth Service...');
 
       const oauthService = await createOAuthService();
