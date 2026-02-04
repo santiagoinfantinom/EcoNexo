@@ -20,6 +20,7 @@ interface GamificationState {
     calendarSyncCount: number;
     activeQuests: UserQuest[];
     completedQuests: string[];
+    lastUnlockedBadge?: { id: string; name: string; icon: string } | null;
 }
 
 export interface QuestStep {
@@ -83,7 +84,8 @@ interface SmartContextType {
     // Gamification
     gamification: GamificationState;
     addPoints: (amount: number, reason: string) => void;
-    unlockBadge: (badgeId: string) => void;
+    unlockBadge: (badgeId: string, badgeName?: string, badgeIcon?: string) => void;
+    clearLastBadge: () => void;
     getGroupData: () => Group | null;
     updateQuestProgress: (type: QuestStep['type'], category?: string) => void;
 }
@@ -298,13 +300,26 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         });
     };
 
-    const unlockBadge = (badgeId: string) => {
+    const unlockBadge = (badgeId: string, badgeName?: string, badgeIcon?: string) => {
         setGamification(prev => {
             if (prev.badges.includes(badgeId)) return prev;
 
-            showToast(t('newBadge'), "success");
+            const displayName = badgeName || badgeId;
+            showToast(`${t('newBadge')}: ${displayName}`, "success");
 
-            const updated = { ...prev, badges: [...prev.badges, badgeId] };
+            const updated = {
+                ...prev,
+                badges: [...prev.badges, badgeId],
+                lastUnlockedBadge: { id: badgeId, name: displayName, icon: badgeIcon || '🏆' }
+            };
+            saveGamification(updated);
+            return updated;
+        });
+    };
+
+    const clearLastBadge = () => {
+        setGamification(prev => {
+            const updated = { ...prev, lastUnlockedBadge: null };
             saveGamification(updated);
             return updated;
         });
@@ -380,6 +395,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
             gamification,
             addPoints,
             unlockBadge,
+            clearLastBadge,
             getGroupData: () => gamification.currentGroupId ? MOCK_GROUPS[gamification.currentGroupId] : null,
             updateQuestProgress
         }}>

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Zap from 'lucide-react/dist/esm/icons/zap';
 import Trophy from 'lucide-react/dist/esm/icons/trophy';
 import Users from 'lucide-react/dist/esm/icons/users';
@@ -10,21 +11,53 @@ import ShieldCheck from 'lucide-react/dist/esm/icons/shield-check';
 import TrendingUp from 'lucide-react/dist/esm/icons/trending-up';
 import Award from 'lucide-react/dist/esm/icons/award';
 import CircleDot from 'lucide-react/dist/esm/icons/circle-dot';
+import X from 'lucide-react/dist/esm/icons/x';
 import { useSmartContext, UserQuest } from '@/context/SmartContext';
 import { useI18n } from '@/lib/i18n';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function GamificationHub() {
-    const { gamification, preferences } = useSmartContext();
+    const { gamification, preferences, clearLastBadge } = useSmartContext();
     const { t } = useI18n();
     const [isExpanded, setIsExpanded] = useState(false);
     const [activeTab, setActiveTab] = useState<'stats' | 'quests'>('stats');
 
     const levelProgress = (gamification.points % 1000) / 10;
     const nextLevelXP = 1000 - (gamification.points % 1000);
+    const lastBadge = gamification.lastUnlockedBadge;
 
     return (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-3 font-sans">
+            {/* New Badge Notification */}
+            <AnimatePresence>
+                {lastBadge && !isExpanded && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                        className="relative"
+                    >
+                        <Link
+                            href="/badges"
+                            className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 rounded-2xl shadow-xl hover:scale-105 transition-all"
+                        >
+                            <span className="text-2xl">{lastBadge.icon}</span>
+                            <div>
+                                <div className="text-[10px] font-bold uppercase tracking-wider opacity-70">New Badge!</div>
+                                <div className="font-black text-sm">{lastBadge.name}</div>
+                            </div>
+                            <ChevronRight className="w-4 h-4" />
+                        </Link>
+                        <button
+                            onClick={(e) => { e.stopPropagation(); clearLastBadge(); }}
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors shadow-lg"
+                        >
+                            <X className="w-3 h-3" />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <AnimatePresence>
                 {isExpanded && (
                     <motion.div
@@ -67,9 +100,9 @@ export default function GamificationHub() {
                         </div>
 
                         <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-white/10">
-                            <button className="w-full py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-sm font-bold hover:opacity-90 transition-opacity">
-                                View Full Profile
-                            </button>
+                            <Link href="/badges" className="block w-full py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-sm font-bold hover:opacity-90 transition-opacity text-center">
+                                View All Badges
+                            </Link>
                         </div>
                     </motion.div>
                 )}
@@ -85,8 +118,8 @@ export default function GamificationHub() {
             >
                 <div className="relative">
                     <Zap className={`w-6 h-6 ${isExpanded ? 'text-yellow-400' : 'text-slate-900 dark:text-white'}`} />
-                    {!isExpanded && (
-                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-white dark:border-slate-800 rounded-full"></span>
+                    {!isExpanded && lastBadge && (
+                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 border-2 border-white dark:border-slate-800 rounded-full animate-pulse"></span>
                     )}
                 </div>
                 <div className="text-left pr-2">
