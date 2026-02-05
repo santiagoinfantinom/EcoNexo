@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
-import { createOAuthService } from "@/lib/oauth";
+
 import { CaptchaComponent, MathCaptchaComponent } from "@/lib/captcha";
 import EcoNexoLogo from "./EcoNexoLogo";
 import { Leaf, X, Mail, Globe, LogIn, UserPlus } from "lucide-react";
@@ -172,37 +172,22 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   };
 
   const handleGoogleAuth = async () => {
-    console.log('🚀 handleGoogleAuth llamado');
-    console.log('📍 window.location:', typeof window !== 'undefined' ? window.location.href : 'SERVER');
-    console.log('📍 window.location.origin:', typeof window !== 'undefined' ? window.location.origin : 'SERVER');
-
     setIsLoading(true);
     setError("");
 
     try {
-      console.log('🔐 Iniciando autenticación con Google...');
-      console.log('📍 Creando OAuth Service...');
+      const result = await signInWithOAuth("google");
 
-      const oauthService = await createOAuthService();
-      console.log('📍 OAuth Service creado, llamando authenticateWithGoogle...');
-
-      const result = await oauthService.authenticateWithGoogle();
-      console.log('📍 Resultado de authenticateWithGoogle:', result);
-
-      if (!result.success) {
-        setError(result.error || t("errorStartingGoogleAuth"));
+      if (result.error) {
+        setError(result.error);
         setIsLoading(false);
-        console.error('❌ Error en autenticación:', result.error);
       } else {
-        console.log('✅ Redirección iniciada a Google OAuth');
-        // If successful, user will be redirected to Google OAuth
-        // Don't set loading to false, let the redirect happen
+        // Redirect is handled by Supabase
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(t("unexpectedError") + ": " + errorMessage);
       setIsLoading(false);
-      console.error('❌ Error inesperado:', err);
     }
   };
 
@@ -211,14 +196,14 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     setError("");
 
     try {
-      const oauthService = await createOAuthService();
-      const result = await oauthService.authenticateWithOutlook();
+      // Use 'azure' provider for Microsoft/Outlook
+      const result = await signInWithOAuth("azure");
 
-      if (!result.success) {
-        setError(result.error || t("errorStartingOutlookAuth"));
+      if (result.error) {
+        setError(result.error);
         setIsLoading(false);
       }
-      // If successful, user will be redirected to Outlook OAuth
+      // Redirect is handled by Supabase
     } catch (err) {
       setError(t("unexpectedError"));
       setIsLoading(false);

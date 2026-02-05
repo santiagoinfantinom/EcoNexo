@@ -17,6 +17,8 @@ import {
   Heart
 } from "lucide-react";
 
+import OnboardingTour from "./OnboardingTour";
+
 export default function HeaderNav() {
   const { t, locale } = useI18n();
   const [mounted, setMounted] = useState(false);
@@ -30,6 +32,7 @@ export default function HeaderNav() {
   // Rendering a fully consistent layout from the start
   return (
     <>
+      <OnboardingTour />
       <header className="bg-gls-primary text-white stitch-border-b relative shadow-2xl z-30">
         <div className="w-full px-4 sm:px-8 lg:px-12 py-6 flex flex-col items-center justify-between gap-8">
 
@@ -74,6 +77,7 @@ export default function HeaderNav() {
               ].map((item) => (
                 <Link
                   key={item.href}
+                  id={`nav-${item.href.replace(/^\//, "") || "map"}`}
                   href={item.href}
                   className="flex flex-col items-center gap-2 px-6 py-3 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden"
                 >
