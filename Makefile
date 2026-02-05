@@ -1,7 +1,7 @@
 # EcoNexo Makefile
 
 # Usage:
-#   make supabase-link PROJECT_REF=abcd1234
+#   make supabase-link PROJECT_REF=inxwrvmdspmajqqjenlr
 #   make supabase-apply
 #   make supabase-rollback
 

@@ -31,9 +31,9 @@ export default function HeaderNav() {
   return (
     <>
       <header className="bg-gls-primary text-white stitch-border-b relative shadow-2xl z-30">
-        <div className="w-full px-4 sm:px-8 lg:px-12 py-6 flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div className="w-full px-4 sm:px-8 lg:px-12 py-6 flex flex-col items-center justify-between gap-8">
 
-          {/* Left: Logo & Title Cluster - Large & Prominent */}
+          {/* Top: Logo & Title Cluster - Large & Prominent */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-8 group transition-all hover:scale-[1.02]">
               <EcoNexoLogo size={180} className="sm:w-[200px] sm:h-[200px] lg:w-[220px] lg:h-[220px]" />
@@ -51,15 +51,20 @@ export default function HeaderNav() {
             </Link>
           </div>
 
-          {/* Right Section: Nav + Auth */}
-          <div className="flex-1 flex flex-col items-center lg:items-end gap-6 w-full">
-            {/* Upper row: Auth & Settings - positioned at top of navigation cluster */}
-            <div className="flex items-center gap-6 absolute top-4 right-4 lg:relative lg:top-auto lg:right-auto">
-              <AuthButton variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 py-2 rounded-xl font-bold transition-all hover:border-green-400/50" />
+          {/* Bottom Section: Nav + Auth */}
+          <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 w-full">
+
+            {/* Auth Button - Placed before Nav (Between Logo and Map) on Desktop */}
+            <div className="order-2 lg:order-1 flex-shrink-0">
+              <AuthButton
+                variant="outline"
+                size="sm"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 py-2 rounded-xl font-bold transition-all hover:border-green-400/50"
+              />
             </div>
 
-            {/* Main Navigation - Aligned to the left */}
-            <nav className="hidden xl:flex items-center justify-start gap-1">
+            {/* Main Navigation */}
+            <nav className="order-1 lg:order-2 hidden xl:flex items-center justify-center gap-1">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
@@ -84,7 +89,7 @@ export default function HeaderNav() {
             </nav>
 
             {/* Medium screen Nav (md-xl) */}
-            <nav className="hidden md:flex xl:hidden flex-wrap justify-center gap-3">
+            <nav className="order-1 lg:order-2 hidden md:flex xl:hidden flex-wrap justify-center gap-3">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
@@ -107,13 +112,15 @@ export default function HeaderNav() {
             </nav>
 
             {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 rounded-3xl text-white transition-all shadow-2xl backdrop-blur-md border border-white/20 group"
-            >
-              <Menu className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
-              <span className="font-extrabold text-xl tracking-tight">{t("menu") || "Menú"}</span>
-            </button>
+            <div className="order-1 md:hidden w-full flex justify-end">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 rounded-3xl text-white transition-all shadow-2xl backdrop-blur-md border border-white/20 group"
+              >
+                <Menu className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
+                <span className="font-extrabold text-xl tracking-tight">{t("menu") || "Menú"}</span>
+              </button>
+            </div>
           </div>
         </div>
 

@@ -27,9 +27,9 @@ ON public.event_administrators
 FOR INSERT 
 WITH CHECK (
   EXISTS (
-    SELECT 1 FROM public.event_administrators 
-    WHERE event_id = NEW.event_id 
-    AND user_id = auth.uid()
+    SELECT 1 FROM public.event_administrators ea
+    WHERE ea.event_id = event_administrators.event_id 
+    AND ea.user_id = auth.uid()
   )
 );
 

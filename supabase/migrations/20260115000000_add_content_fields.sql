@@ -1,7 +1,7 @@
 -- Auth & Profiles
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
-  email text generated always as (lower((auth.jwt() ->> 'email')::text)) stored,
+  email text,
   full_name text,
   birthdate date,
   birth_place text,
@@ -22,7 +22,11 @@ create policy "Profiles can be updated by owner" on public.profiles
   for update using (auth.uid() = id);
 
 -- Favorites (projects and events)
-create type if not exists public.favorite_type as enum ('project', 'event');
+DO $$ BEGIN
+    CREATE TYPE public.favorite_type AS ENUM ('project', 'event');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 create table if not exists public.favorites (
   id uuid primary key default gen_random_uuid(),

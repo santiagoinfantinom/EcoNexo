@@ -68,7 +68,22 @@ class RefineRequest(BaseModel):
     user_id: str
     query: str
     feedback: Dict[str, Any]
+    feedback: Dict[str, Any]
     previous_matches: Optional[List[str]] = None
+
+
+class OutreachRequest(BaseModel):
+    user_id: str
+    project_id: str
+
+
+class BadgeRequest(BaseModel):
+    user_id: str
+
+
+class CategorizeRequest(BaseModel):
+    text: str
+
 
 
 @app.get("/health")
@@ -137,9 +152,77 @@ async def search_events(request: EventSearchRequest):
         )
         
         return {"events": events}
+        return {"events": events}
     except Exception as e:
         logger.error(f"Error searching events: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/outreach/generate")
+async def generate_outreach(request: OutreachRequest):
+    """
+    Generate a personalized outreach message.
+    """
+    try:
+        from .tools import user_tools, project_tools, outreach_tools
+        
+        user_profile = await user_tools.get_user_profile(request.user_id)
+        project = await project_tools.get_project_details(request.project_id)
+        
+        if not project:
+            raise HTTPException(status_code=404, detail="Project not found")
+            
+        result = await outreach_tools.generate_outreach_message(user_profile, project)
+        
+        if result["status"] == "error":
+            raise HTTPException(status_code=500, detail=result["message"])
+            
+        return result["data"]
+    except Exception as e:
+        logger.error(f"Error generating outreach: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/gamification/badges")
+async def get_badges(request: BadgeRequest):
+    """
+    Evaluate and return user badges.
+    """
+    try:
+        from .tools import user_tools, gamification_tools
+        
+        user_profile = await user_tools.get_user_profile(request.user_id)
+        user_history = await user_tools.get_user_history(request.user_id)
+        
+        result = await gamification_tools.evaluate_badges(user_profile, user_history)
+        
+        if result["status"] == "error":
+            raise HTTPException(status_code=500, detail=result["message"])
+            
+        return result["data"]
+    except Exception as e:
+        logger.error(f"Error evaluating badges: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/projects/categorize")
+async def categorize_project(request: CategorizeRequest):
+    """
+    Categorize a project description.
+    """
+    try:
+        from .tools import classification_tools
+        
+        result = await classification_tools.categorize_project_text(request.text)
+        
+        if result["status"] == "error":
+            raise HTTPException(status_code=500, detail=result["message"])
+            
+        return result["data"]
+    except Exception as e:
+        logger.error(f"Error categorizing project: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @app.post("/match", response_model=MatchResponse)

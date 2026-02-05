@@ -28,7 +28,7 @@ const BADGES: Badge[] = [
         name_es: "Primer Paso",
         name_en: "First Step",
         name_de: "Erster Schritt",
-        description_es: "Di tu primer paso hacia un mundo más sostenible",
+        description_es: "Da tu primer paso hacia un mundo más sostenible",
         description_en: "Take your first step towards a more sustainable world",
         description_de: "Machen Sie Ihren ersten Schritt zu einer nachhaltigeren Welt",
         icon: "🌱",

@@ -997,6 +997,8 @@ export const DICTS: Record<Locale, Dict> = {
     descProfileComplete: "Completed your profile",
     badgeSocialSharer: "Sharer",
     descSocialSharer: "Shared 10 times",
+    badgeCalendarSyncMaster: "Time Manager",
+    descCalendarSyncMaster: "Synced 3 events",
 
     // Impact Page UI
     yourImpact: "Your Impact",
@@ -2026,6 +2028,8 @@ export const DICTS: Record<Locale, Dict> = {
     descProfileComplete: "Profil vervollständigt",
     badgeSocialSharer: "Teiler",
     descSocialSharer: "10 Mal geteilt",
+    badgeCalendarSyncMaster: "Zeitmanager",
+    descCalendarSyncMaster: "3 Events synchronisiert",
 
     // Impact Page UI
     yourImpact: "Dein Einfluss",
@@ -3075,6 +3079,8 @@ export const DICTS: Record<Locale, Dict> = {
     descProfileComplete: "Completaste tu perfil",
     badgeSocialSharer: "Compartidor",
     descSocialSharer: "Compartiste 10 veces",
+    badgeCalendarSyncMaster: "Gestor del Tiempo",
+    descCalendarSyncMaster: "Sincronizó 3 eventos",
 
     // Impact Page UI
     yourImpact: "Tu Impacto",

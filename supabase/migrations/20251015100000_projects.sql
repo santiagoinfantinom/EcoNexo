@@ -21,22 +21,26 @@ create table if not exists public.projects (
 alter table public.projects enable row level security;
 
 -- Basic RLS: public read; authenticated can write
-create policy if not exists projects_read_public
+drop policy if exists projects_read_public on public.projects;
+create policy projects_read_public
   on public.projects for select
   to anon, authenticated
   using (true);
 
-create policy if not exists projects_write_auth
+drop policy if exists projects_write_auth on public.projects;
+create policy projects_write_auth
   on public.projects for insert
   to authenticated
   with check (true);
 
-create policy if not exists projects_update_auth
+drop policy if exists projects_update_auth on public.projects;
+create policy projects_update_auth
   on public.projects for update
   to authenticated
   using (true) with check (true);
 
-create policy if not exists projects_delete_auth
+drop policy if exists projects_delete_auth on public.projects;
+create policy projects_delete_auth
   on public.projects for delete
   to authenticated
   using (true);

@@ -8,36 +8,67 @@ export async function GET(
 ) {
   try {
     const { eventId } = await params;
-    
-    // Mock events (starting with 'e') don't have administrators in the database
-    // Return empty array instead of trying to query Supabase
-    if (eventId.startsWith('e') && eventId.match(/^e\d+/)) {
+
+    // Verify if eventId is a valid UUID (mock events use short IDs)
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(eventId);
+
+    if (!isUuid) {
+      console.log(`[administrators API] Skipping DB for mock/invalid event ID: ${eventId}`);
       return NextResponse.json([]);
     }
-    
+
     const supabase = getSupabase();
     if (!supabase) {
-      // If Supabase is not configured, return empty array for mock events
       return NextResponse.json([]);
     }
-    
-    // Get administrators with user profiles
-    const { data, error } = await supabase
+
+    // 1. Get administrator IDs
+    const { data: adminLinks, error: linkError } = await supabase
       .from("event_administrators")
-      .select("*, profiles!user_id(*)")
+      .select("user_id")
       .eq("event_id", eventId);
-    
-    if (error) {
-      // If table doesn't exist or there's an error, return empty array instead of 500
-      console.warn(`[administrators API] Error fetching administrators for event ${eventId}:`, error);
+
+    if (linkError) {
+      console.warn(`[administrators API] Error fetching admin links:`, linkError);
       return NextResponse.json([]);
     }
-    
-    return NextResponse.json(data || []);
+
+    if (!adminLinks || adminLinks.length === 0) {
+      return NextResponse.json([]);
+    }
+
+    const userIds = adminLinks.map(link => link.user_id);
+
+    // 2. Get profiles for these users
+    const { data: profiles, error: profileError } = await supabase
+      .from("profiles")
+      .select("*")
+      .in("id", userIds);
+
+    if (profileError) {
+      console.warn(`[administrators API] Error fetching profiles:`, profileError);
+      // Return empty if we can't get profiles, or maybe partial data? 
+      // Safer to return empty for now to avoid breaking UI
+      return NextResponse.json([]);
+    }
+
+    // Transform to expected format (mimicking the original joined structure if needed, or just profiles)
+    // The UI likely expects the profile data directly or an object with profile. 
+    // Checking previous code: .select("*, profiles!user_id(*)")
+    // This would return [{ ...adminLink, profiles: { ...profile } }]
+
+    const result = adminLinks.map(link => {
+      const profile = profiles?.find(p => p.id === link.user_id);
+      return {
+        ...link,
+        profiles: profile || null
+      };
+    });
+
+    return NextResponse.json(result);
   } catch (e) {
-    // Always return empty array instead of 500 error for better UX
-    console.warn(`[administrators API] Exception fetching administrators for event:`, e);
-    return NextResponse.json([]);
+    console.error(`[administrators API] Critical error:`, e);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -50,16 +81,16 @@ export async function POST(
     const { eventId } = await params;
     const body = await req.json();
     const { user_id } = body;
-    
+
     if (!user_id) {
       return NextResponse.json(
         { error: "user_id is required" },
         { status: 400 }
       );
     }
-    
+
     const supabase = getSupabase();
-    
+
     // Add administrator
     const { data, error } = await supabase
       .from("event_administrators")
@@ -69,7 +100,7 @@ export async function POST(
       })
       .select()
       .single();
-    
+
     if (error) throw error;
     return NextResponse.json(data, { status: 201 });
   } catch (e) {
@@ -87,23 +118,23 @@ export async function DELETE(
     const { eventId } = await params;
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("user_id");
-    
+
     if (!userId) {
       return NextResponse.json(
         { error: "user_id query parameter is required" },
         { status: 400 }
       );
     }
-    
+
     const supabase = getSupabase();
-    
+
     // Remove administrator
     const { error } = await supabase
       .from("event_administrators")
       .delete()
       .eq("event_id", eventId)
       .eq("user_id", userId);
-    
+
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (e) {

@@ -165,8 +165,9 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                 if (newStreak === 7) {
                     updated.points += 50;
                     updated.history.push(`${t('weeklyStreak')} (+50 XP)`);
-                    if (!updated.badges.includes('daily_streak_7')) {
-                        updated.badges = [...updated.badges, 'daily_streak_7'];
+                    if (!updated.badges.includes('daily-streak-7')) {
+                        updated.badges = [...updated.badges, 'daily-streak-7'];
+                        unlockBadge('daily-streak-7', t('badgeDailyStreak7'), '🔥');
                     }
                 }
 
@@ -229,8 +230,8 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         setShowOnboarding(false);
         localStorage.setItem('econexo_onboarded', 'true');
         // Award "First Step" badge if not present
-        if (!gamification.badges.includes('first_step')) {
-            unlockBadge('first_step');
+        if (!gamification.badges.includes('first-step')) {
+            unlockBadge('first-step', t('badgeFirstStep'), '🌱');
             addPoints(50, t('completedProfile'));
         }
     };
@@ -247,8 +248,9 @@ export function SmartProvider({ children }: { children: ReactNode }) {
 
             if (reason.includes("Compartir") || reason.includes("Share")) {
                 newShareCount += 1;
-                if (newShareCount === 10 && !newBadges.includes('social_sharer')) {
-                    newBadges.push('social_sharer');
+                if (newShareCount === 10 && !newBadges.includes('social-sharer')) {
+                    newBadges.push('social-sharer');
+                    unlockBadge('social-sharer', t('badgeSocialSharer'), '🗣️');
                 }
             }
 
@@ -258,15 +260,17 @@ export function SmartProvider({ children }: { children: ReactNode }) {
 
             if (reason.includes("Unirse a proyecto") || reason.includes("Join project") || reason.includes("Voluntariado")) {
                 newJoinedProjectCount += 1;
-                if (newJoinedProjectCount === 5 && !newBadges.includes('project_joiner')) {
-                    newBadges.push('project_joiner');
+                if (newJoinedProjectCount === 5 && !newBadges.includes('project-joiner')) {
+                    newBadges.push('project-joiner');
+                    unlockBadge('project-joiner', t('badgeProjectJoiner'), '🤝');
                 }
             }
 
             if (reason.includes("calendario") || reason.includes("calendar")) {
                 prev.calendarSyncCount = (prev.calendarSyncCount || 0) + 1;
-                if (prev.calendarSyncCount >= 3 && !newBadges.includes('calendar_sync_master')) {
-                    newBadges.push('calendar_sync_master');
+                if (prev.calendarSyncCount >= 3 && !newBadges.includes('calendar-sync-master')) {
+                    newBadges.push('calendar-sync-master');
+                    unlockBadge('calendar-sync-master', t('badgeCalendarSyncMaster'), '📅');
                 }
             }
 

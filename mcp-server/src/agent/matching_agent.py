@@ -12,7 +12,7 @@ from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
 
 from .state import AgentState
-from ..tools import user_tools, project_tools, matching_tools, scraper_tools, rag_tools, distance_calculator
+from ..tools import user_tools, project_tools, matching_tools, scraper_tools, rag_tools, distance_calculator, gamification_tools, outreach_tools, classification_tools
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +40,10 @@ def analyze_profile(state: AgentState) -> AgentState:
     profile = loop.run_until_complete(user_tools.get_user_profile(state["user_id"]))
     history = loop.run_until_complete(user_tools.get_user_history(state["user_id"]))
     
+    # Get gamification badges
+    badges_result = loop.run_until_complete(gamification_tools.evaluate_badges(profile, history))
+    badges = badges_result.get("data", {}).get("badges", [])
+    
     state["user_profile"] = profile
     state["user_history"] = history
     
@@ -54,6 +58,7 @@ User Profile:
 - Preferred Categories: {', '.join(profile.get('preferences', {}).get('preferredCategories', []))}
 - Max Distance: {profile.get('preferences', {}).get('maxDistance', 25)} km
 - Past Events: {len(history)} events participated
+- Badges: {', '.join([b.get('name') for b in badges]) if badges else 'None'}
 
 Your goal is to understand the user's intent and find the best matching projects.
 """)
