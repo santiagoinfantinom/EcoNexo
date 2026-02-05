@@ -35,18 +35,15 @@ export default function HeaderNav() {
 
           {/* Top: Logo & Title Cluster - Large & Prominent */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center gap-8 group transition-all hover:scale-[1.02]">
-              <EcoNexoLogo size={180} className="sm:w-[200px] sm:h-[200px] lg:w-[220px] lg:h-[220px]" />
-              <div className="flex flex-col">
-                <h1 className="text-6xl sm:text-7xl lg:text-9xl text-white font-black tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] leading-tight">
+            <Link href="/" className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 group transition-all hover:scale-[1.02]">
+              <EcoNexoLogo size={120} className="sm:w-[140px] sm:h-[140px] lg:w-[100px] lg:h-[100px]" />
+              <div className="flex flex-col lg:flex-row lg:items-baseline gap-2 lg:gap-6 text-center lg:text-left">
+                <h1 className="text-6xl sm:text-7xl lg:text-8xl text-white font-black tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] leading-none">
                   EcoNexo
                 </h1>
-                <div className="flex items-center gap-2 mt-[-8px]">
-                  <div className="h-px w-8 bg-green-400"></div>
-                  <span className="text-base sm:text-lg lg:text-xl text-green-400 font-bold tracking-[0.2em] uppercase">
-                    Sustainability Network
-                  </span>
-                </div>
+                <span className="text-lg lg:text-2xl text-green-300 font-black tracking-[0.15em] uppercase drop-shadow-md whitespace-nowrap">
+                  Sustainability Network
+                </span>
               </div>
             </Link>
           </div>
