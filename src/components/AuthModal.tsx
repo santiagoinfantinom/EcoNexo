@@ -289,7 +289,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
 
           {/* OAuth Buttons */}
           <div className="mb-8">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center font-medium">
+            <p className="text-sm text-gray-600 dark:text-white mb-6 text-center font-bold tracking-wide">
               {mode === "login" ? t("orContinueWith") : t("registerWith")}
             </p>
 
@@ -305,7 +305,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                 </svg>
-                <span className="font-bold text-foreground md:text-base text-sm font-sans tracking-tight">Google</span>
+                <span className="font-bold text-foreground dark:text-white md:text-base text-sm font-sans tracking-tight">Google</span>
               </button>
 
               {/* Outlook Button */}
@@ -315,7 +315,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-background dark:bg-slate-800 border border-foreground/10 dark:border-white/10 rounded-2xl hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 shadow-sm hover:shadow-xl hover-lift group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Mail className="w-5 h-5 text-[#0078D4] group-hover:scale-110 transition-transform" />
-                <span className="font-bold text-foreground md:text-base text-sm font-sans tracking-tight">Microsoft Outlook</span>
+                <span className="font-bold text-foreground dark:text-white md:text-base text-sm font-sans tracking-tight">Microsoft Outlook</span>
               </button>
             </div>
           </div>
@@ -323,17 +323,17 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+              <div className="w-full border-t border-gray-300 dark:border-white/20"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-slate-800 text-gray-500">{t("or")}</span>
+              <span className="px-2 bg-white dark:bg-slate-900 text-gray-500 dark:text-white font-medium">{t("or")}</span>
             </div>
           </div>
 
           {/* Email Form */}
           <form onSubmit={handleEmailAuth} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-bold text-gray-700 dark:text-white mb-2">
                 {t("email")}
               </label>
               <input
@@ -342,7 +342,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t("emailPlaceholder")}
-                className="w-full px-4 py-3 border border-foreground/10 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-foreground/5 dark:bg-slate-900 text-foreground dark:text-white placeholder:text-foreground/40 dark:placeholder:text-white/20 font-bold transition-all"
+                className="w-full px-4 py-3 border border-foreground/10 dark:border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-foreground/5 dark:bg-slate-800 text-foreground dark:text-white placeholder:text-foreground/40 dark:placeholder:text-white/50 font-bold transition-all"
                 required
               />
             </div>
@@ -378,7 +378,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                           theme={locale === "es" ? "light" : "light"}
                         />
                         {/* Math Captcha as fallback */}
-                        <div className="text-center text-sm text-gray-500">{t("or")}</div>
+                        <div className="text-center text-sm text-gray-500 dark:text-gray-400">{t("or")}</div>
                       </>
                     );
                   }
@@ -413,13 +413,13 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
 
           {/* Additional Info */}
           <div className="mt-6 text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-500 dark:text-gray-300">
               {mode === "login" ? t("bySigningIn") : t("byRegistering")}{" "}
-              <a href="/terms" className="text-green-600 hover:text-green-700">
+              <a href="/terms" className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300">
                 {t("termsOfService")}
               </a>{" "}
               {t("and")}{" "}
-              <a href="/privacy" className="text-green-600 hover:text-green-700">
+              <a href="/privacy" className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300">
                 {t("privacyPolicy")}
               </a>
             </p>
