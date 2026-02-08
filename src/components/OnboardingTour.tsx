@@ -9,9 +9,44 @@ export default function OnboardingTour() {
     const { t } = useI18n();
 
     useEffect(() => {
-        // Check if user has seen tour
-        const hasSeenTour = localStorage.getItem("econexo_tour_seen");
-        if (hasSeenTour) return;
+        // Check if user has seen the tour
+        const tourSeen = localStorage.getItem("econexo_tour_seen");
+
+        // Visitor Tracking Logic (IP & Visit History)
+        const trackVisitor = async () => {
+            try {
+                const storedInfo = localStorage.getItem("econexo_visitor_info");
+                let visitorInfo = storedInfo ? JSON.parse(storedInfo) : null;
+
+                // If we don't have IP or it's been > 24h, refresh identification
+                if (!visitorInfo || !visitorInfo.ip || (Date.now() - new Date(visitorInfo.lastVisit).getTime() > 86400000)) {
+                    try {
+                        const res = await fetch('/api/identify');
+                        if (res.ok) {
+                            const data = await res.json();
+                            visitorInfo = {
+                                ...visitorInfo,
+                                ip: data.ip,
+                                lastVisit: new Date().toISOString(),
+                                firstVisit: visitorInfo?.firstVisit || new Date().toISOString()
+                            };
+                            localStorage.setItem("econexo_visitor_info", JSON.stringify(visitorInfo));
+                            console.log("Visitor identified:", visitorInfo.ip);
+                        }
+                    } catch (e) {
+                        console.error("Failed to identify visitor via API", e);
+                    }
+                }
+            } catch (err) {
+                console.error("Visitor tracking error:", err);
+            }
+        };
+
+        trackVisitor();
+
+        if (tourSeen) {
+            return;
+        }
 
         // Initialize driver
         const driverObj = driver({
