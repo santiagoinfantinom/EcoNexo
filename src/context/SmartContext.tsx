@@ -121,10 +121,34 @@ export function SmartProvider({ children }: { children: ReactNode }) {
     const [gamification, setGamification] = useState<GamificationState>(defaultGamification);
 
     // Load from localStorage on mount
+    // Load from localStorage on mount
     useEffect(() => {
         const savedPrefs = localStorage.getItem('econexo_preferences');
         const savedGamification = localStorage.getItem('econexo_gamification');
-        const hasOnboarded = localStorage.getItem('econexo_onboarded');
+
+        // Logic to determine if we should show onboarding (Preferences Modal)
+        const checkOnboardingStatus = () => {
+            const hasOnboarded = localStorage.getItem('econexo_onboarded');
+            const introShown = localStorage.getItem('econexo-intro-shown');
+
+            // Only show onboarding if NOT onboarded yet AND intro (language) has been shown
+            if (!hasOnboarded && introShown) {
+                setShowOnboarding(true);
+            }
+        };
+
+        checkOnboardingStatus();
+
+        // Listen for when SimpleIntro finishes
+        const handleIntroComplete = () => {
+            // We check local storage again or just assume it's time
+            const hasOnboarded = localStorage.getItem('econexo_onboarded');
+            if (!hasOnboarded) {
+                setShowOnboarding(true);
+            }
+        };
+
+        window.addEventListener('intro-completed', handleIntroComplete);
 
         let currentGamification = defaultGamification;
         if (savedGamification) {
@@ -133,7 +157,6 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         }
 
         if (savedPrefs) setPreferences(JSON.parse(savedPrefs));
-        if (!hasOnboarded) setShowOnboarding(true);
 
         // Check for daily streak
         const now = new Date();
@@ -210,6 +233,10 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                 return updated;
             });
         }
+
+        return () => {
+            window.removeEventListener('intro-completed', handleIntroComplete);
+        };
     }, []);
 
     const { showToast } = useToast();
