@@ -234,6 +234,8 @@ export function SmartProvider({ children }: { children: ReactNode }) {
             unlockBadge('first-step', t('badgeFirstStep'), '🌱');
             addPoints(50, t('completedProfile'));
         }
+        // Notify listeners that onboarding is complete
+        window.dispatchEvent(new Event('onboarding-completed'));
     };
 
     const addPoints = (amount: number, reason: string) => {

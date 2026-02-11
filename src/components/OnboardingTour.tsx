@@ -151,24 +151,25 @@ export default function OnboardingTour() {
 
         trackVisitor();
 
-        // CHECK: Has intro been shown (language selected)?
-        const introShown = localStorage.getItem("econexo-intro-shown");
+        // CHECK: Has user completed onboarding (preferences)?
+        const isOnboarded = localStorage.getItem("econexo_onboarded");
 
-        if (introShown) {
-            // If language already selected (or skipped), start tour logic immediately
+        if (isOnboarded) {
+            // If already onboarded, start tour check immediately
             startTour();
         } else {
-            // If not, wait for the event
-            const handleIntroComplete = () => {
+            // If not onboarded yet, wait for the 'onboarding-completed' event
+            // which is fired from SmartContext when preferences are saved/skipped
+            const handleOnboardingComplete = () => {
                 startTour();
                 // Remove listener to avoid double triggers
-                window.removeEventListener('intro-completed', handleIntroComplete);
+                window.removeEventListener('onboarding-completed', handleOnboardingComplete);
             };
 
-            window.addEventListener('intro-completed', handleIntroComplete);
+            window.addEventListener('onboarding-completed', handleOnboardingComplete);
 
             return () => {
-                window.removeEventListener('intro-completed', handleIntroComplete);
+                window.removeEventListener('onboarding-completed', handleOnboardingComplete);
             };
         }
     }, [t]);
