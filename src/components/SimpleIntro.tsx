@@ -8,10 +8,13 @@ export default function SimpleIntro() {
   const { setLocale, t } = useI18n();
 
   useEffect(() => {
-    // Check if intro has been shown before
+    // Check if intro has been shown before OR if user is already onboarded
     const hasSeenIntro = localStorage.getItem('econexo-intro-shown');
+    const hasOnboarded = localStorage.getItem('econexo_onboarded');
 
-    if (!hasSeenIntro) {
+    // Only show intro if neither flag is set.
+    // If they are onboarded, we assume they've set their language or don't need the intro.
+    if (!hasSeenIntro && !hasOnboarded) {
       // Show intro immediately (no delay)
       setShowIntro(true);
     }
