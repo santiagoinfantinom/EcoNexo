@@ -153,6 +153,13 @@ export default function OnboardingTour() {
 
         // CHECK: Has user completed onboarding (preferences)?
         const isOnboarded = localStorage.getItem("econexo_onboarded");
+        const introShown = localStorage.getItem("econexo-intro-shown");
+
+        // BLOCKING GUARD: If Intro hasn't been shown AND user isn't onboarded, 
+        // the SimpleIntro modal is definitely visible. Do not start tour.
+        if (!introShown && !isOnboarded) {
+            return;
+        }
 
         // FAIL-SAFE: Check if Intro Modal is currently visible in DOM to prevent overlap
         // This handles race conditions where localStorage might be "true" but modal is still mounting/closing
@@ -162,12 +169,9 @@ export default function OnboardingTour() {
             // If already onboarded and intro is NOT visible, start tour check immediately
             startTour();
         } else {
-            // ... wait for event ...
-            // If not onboarded yet, wait for the 'onboarding-completed' event
-            // which is fired from SmartContext when preferences are saved/skipped
+            // ... match existing else block ...
             const handleOnboardingComplete = () => {
                 startTour();
-                // Remove listener to avoid double triggers
                 window.removeEventListener('onboarding-completed', handleOnboardingComplete);
             };
 
