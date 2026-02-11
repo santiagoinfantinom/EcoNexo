@@ -11,11 +11,11 @@ interface AuthButtonProps {
   showUserMenu?: boolean;
 }
 
-export default function AuthButton({ 
-  className = "", 
-  variant = "primary", 
+export default function AuthButton({
+  className = "",
+  variant = "primary",
   size = "md",
-  showUserMenu = true 
+  showUserMenu = true
 }: AuthButtonProps) {
   const { t, locale } = useI18n();
   const { user, signOut, loading } = useAuth();
@@ -31,7 +31,7 @@ export default function AuthButton({
 
   const getButtonClasses = () => {
     const baseClasses = "font-medium transition-all focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2";
-    
+
     const sizeClasses = {
       sm: "px-3 py-1.5 text-sm",
       md: "px-4 py-2 text-sm",
@@ -72,11 +72,11 @@ export default function AuthButton({
         {showUserDropdown && (
           <>
             {/* Backdrop */}
-            <div 
-              className="fixed inset-0 z-10" 
+            <div
+              className="fixed inset-0 z-10"
               onClick={() => setShowUserDropdown(false)}
             ></div>
-            
+
             {/* Dropdown */}
             <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 z-20">
               <div className="py-1">
@@ -102,7 +102,7 @@ export default function AuthButton({
                   💼 {t("myJobs")}
                 </a>
                 <a
-                  href="/comunidad"
+                  href="/community"
                   className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
                   onClick={() => setShowUserDropdown(false)}
                 >
@@ -125,7 +125,7 @@ export default function AuthButton({
 
   // Special styling for header buttons (outline + sm) to match Support Us button exactly
   const isHeaderButton = variant === "outline" && size === "sm";
-  
+
   // Exact same classes as Support Us button
   const headerButtonClasses = "btn-gls-primary text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-2.5 shadow-md hover:shadow-lg";
 

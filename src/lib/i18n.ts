@@ -13,7 +13,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     try {
       if (typeof window !== "undefined") {
         const saved = localStorage.getItem("econexo:locale");
-        if (saved && ["es", "en", "de"].includes(saved)) {
+        if (saved && ["es", "en", "de", "fr"].includes(saved)) {
           setLocaleState(saved as Locale);
         }
       }
@@ -137,6 +137,58 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         backToEvents: "Zurück zu Veranstaltungen",
         backToMap: "Zurück zur Karte",
       },
+      fr: {
+        // General
+        all: "Tous",
+        apply: "Appliquer",
+        filters: "Filtres",
+        search: "Rechercher",
+        searchProjects: "Rechercher des projets, villes ou pays",
+        categories: "Catégories",
+        onlyAvailableSpots: "Places disponibles uniquement",
+        maxDistance: "Distance max",
+        anyDistance: "Toute distance",
+        dateRange: "Plage de dates",
+        country: "Pays",
+        city: "Ville",
+        type: "Type",
+        events: "Événements",
+        permanent: "Permanent",
+        centerOnLocation: "Centrer sur ma position",
+        clearFilters: "Effacer les filtres",
+        availableSpots: "Places disponibles",
+        category: "Catégorie",
+        // EcoTips
+        ecoTips: "Éco-conseils",
+        ecoTipsDescription: "Des idées pratiques pour réduire votre empreinte et vivre durablement.",
+        ecoTipCategoryFinance: "Finance",
+        ecoTipCategoryTransport: "Transport",
+        ecoTipCategoryFood: "Alimentation",
+        ecoTipCategoryEnergy: "Énergie",
+        ecoTipCategoryWaste: "Déchets",
+        ecoTipCategoryWater: "Eau",
+        highImpact: "Impact élevé",
+        mediumImpact: "Impact moyen",
+        lowImpact: "Faible impact",
+        easy: "Facile",
+        medium: "Moyen",
+        hard: "Difficile",
+        // Event detail common
+        date: "Date",
+        time: "Heure",
+        location: "Lieu",
+        contact: "Contact",
+        volunteerProgress: "Progression des bénévoles",
+        volunteers: "bénévoles",
+        spotsLeft: "places restantes",
+        fullyBooked: "Complet",
+        requirements: "Prérequis",
+        benefits: "Avantages",
+        joinEvent: "Rejoindre l'événement",
+        shareEvent: "Partager",
+        backToEvents: "Retour aux événements",
+        backToMap: "Retour à la carte",
+      },
       es: {},
     } as any;
     const humanizeKey = (key: string) => {
@@ -151,9 +203,17 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return (k: string, vars?: Record<string, any>) => {
       let translation = dict[k];
       if (!translation) {
-        console.warn(`Missing translation key "${k}" for locale "${locale}"`);
-        const fb = (FALLBACKS as any)[locale]?.[k];
-        translation = fb || humanizeKey(k);
+        // Fallback to English dictionary if key is missing in generic lookups
+        if (locale !== 'en' && DICTS['en'] && DICTS['en'][k]) {
+          translation = DICTS['en'][k];
+        }
+
+        // If still missing, try FALLBACKS
+        if (!translation) {
+          console.warn(`Missing translation key "${k}" for locale "${locale}"`);
+          const fb = (FALLBACKS as any)[locale]?.[k];
+          translation = fb || humanizeKey(k);
+        }
       }
 
       if (vars && typeof translation === 'string') {

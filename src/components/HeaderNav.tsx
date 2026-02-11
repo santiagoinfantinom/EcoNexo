@@ -69,7 +69,7 @@ export default function HeaderNav() {
                 { href: "/trabajos", label: t("jobs"), icon: Briefcase },
                 { href: "/chat", label: t("chat"), icon: MessageCircle },
                 { href: "/matching", label: "Matching", icon: Target },
-                { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/community", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
                 { href: "/perfil", label: t("profile"), icon: User },
                 { href: "/about", label: t("aboutUs"), icon: Info },
               ].map((item) => (
@@ -95,7 +95,7 @@ export default function HeaderNav() {
                 { href: "/trabajos", label: t("jobs"), icon: Briefcase },
                 { href: "/chat", label: t("chat"), icon: MessageCircle },
                 { href: "/matching", label: "Matching", icon: Target },
-                { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/community", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
                 { href: "/perfil", label: t("profile"), icon: User },
                 { href: "/about", label: t("aboutUs"), icon: Info },
               ].map((item) => (
@@ -134,7 +134,7 @@ export default function HeaderNav() {
                 { href: "/trabajos", label: t("jobs"), icon: Briefcase },
                 { href: "/chat", label: t("chat"), icon: MessageCircle },
                 { href: "/matching", label: "Matching", icon: Target },
-                { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/community", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
                 { href: "/perfil", label: t("profile"), icon: User },
                 { href: "/about", label: t("aboutUs"), icon: Info },
               ].map((item) => (

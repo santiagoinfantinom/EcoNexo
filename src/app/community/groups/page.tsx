@@ -93,7 +93,7 @@ export default function GruposPage() {
           </div>
           {user && (
             <Link
-              href="/comunidad/grupos/nuevo"
+              href="/community/groups/nuevo"
               className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
             >
               + {t('createGroup')}
@@ -112,11 +112,10 @@ export default function GruposPage() {
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id as any)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  filter === f.id
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === f.id
                     ? 'bg-green-600 text-white'
                     : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
-                }`}
+                  }`}
               >
                 {f.label}
               </button>

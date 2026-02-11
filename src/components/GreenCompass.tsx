@@ -49,11 +49,11 @@ export default function GreenCompass() {
                 label: "Publicar Empleo", // Add i18n key later
                 action: () => router.push("/trabajos/nuevo"),
             });
-        } else if (pathname.startsWith("/comunidad")) {
+        } else if (pathname.startsWith("/community")) {
             setSuggestion({
                 icon: <Users size={20} />,
                 label: t("searchGroups") || "Grupos",
-                action: () => router.push("/comunidad/grupos"),
+                action: () => router.push("/community/groups"),
             });
         } else {
             setSuggestion({

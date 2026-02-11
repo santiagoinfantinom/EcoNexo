@@ -127,7 +127,7 @@ export default function ComunidadPage() {
                   {t('localGroupsDesc')}
                 </p>
                 <Link
-                  href="/comunidad/grupos"
+                  href="/community/groups"
                   className="inline-block px-8 py-3 bg-primary text-white rounded-xl font-bold hover:shadow-xl transition-all hover-lift cursor-pointer"
                 >
                   {t('viewAllGroups')}

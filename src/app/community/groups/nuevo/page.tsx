@@ -64,7 +64,7 @@ export default function NuevoGrupoPage() {
         addPoints(200, locale === 'es' ? 'Insignia: Creador' : 'Badge: Creator');
       }
 
-      router.push(`/comunidad/grupos/${data.id}`);
+      router.push(`/community/groups/${data.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error creating group");
     } finally {
@@ -105,7 +105,7 @@ export default function NuevoGrupoPage() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       <div className="max-w-3xl mx-auto px-4 py-8">
         <Link
-          href="/comunidad/grupos"
+          href="/community/groups"
           className="text-green-600 hover:text-green-700 mb-4 inline-block"
         >
           ← {t('backToGroups')}
@@ -281,7 +281,7 @@ export default function NuevoGrupoPage() {
                 : t('createGroup')}
             </button>
             <Link
-              href="/comunidad/grupos"
+              href="/community/groups"
               className="px-6 py-3 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors"
             >
               {t('cancel')}

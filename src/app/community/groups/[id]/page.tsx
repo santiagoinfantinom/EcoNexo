@@ -12,7 +12,7 @@ export default function GrupoDetailPage() {
   const params = useParams();
   const router = useRouter();
   const groupId = params.id as string;
-  
+
   const [group, setGroup] = useState<LocalGroup | null>(null);
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [isMember, setIsMember] = useState(false);
@@ -126,7 +126,7 @@ export default function GrupoDetailPage() {
             {locale === 'es' ? 'Grupo no encontrado' : locale === 'de' ? 'Gruppe nicht gefunden' : 'Group not found'}
           </p>
           <Link
-            href="/comunidad/grupos"
+            href="/community/groups"
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors inline-block"
           >
             {locale === 'es' ? 'Volver a Grupos' : locale === 'de' ? 'Zurück zu Gruppen' : 'Back to Groups'}
@@ -142,7 +142,7 @@ export default function GrupoDetailPage() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <Link
-          href="/comunidad/grupos"
+          href="/community/groups"
           className="text-green-600 hover:text-green-700 mb-4 inline-block"
         >
           ← {locale === 'es' ? 'Volver a Grupos' : locale === 'de' ? 'Zurück zu Gruppen' : 'Back to Groups'}
@@ -181,7 +181,7 @@ export default function GrupoDetailPage() {
             <div className="flex gap-2">
               {isCreator && (
                 <Link
-                  href={`/comunidad/grupos/${groupId}/editar`}
+                  href={`/community/groups/${groupId}/editar`}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   {locale === 'es' ? 'Editar' : locale === 'de' ? 'Bearbeiten' : 'Edit'}
@@ -252,11 +252,10 @@ export default function GrupoDetailPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-6 py-3 font-medium border-b-2 transition-colors ${
-                  activeTab === tab.id
+                className={`px-6 py-3 font-medium border-b-2 transition-colors ${activeTab === tab.id
                     ? 'border-green-600 text-green-600 dark:text-green-400'
                     : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
