@@ -148,7 +148,7 @@ async def search_events(request: EventSearchRequest):
         events = await search_online_events(
             query=request.query,
             location=request.city,
-            limit=10
+            limit=20
         )
         
         return {"events": events}

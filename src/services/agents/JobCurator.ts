@@ -11,6 +11,7 @@ export interface ScrapedJob {
     confidenceScore: number;
     tags: string[];
     log: string[];
+    apply_url?: string;
 }
 
 class JobCuratorAgent {
@@ -39,6 +40,9 @@ class JobCuratorAgent {
             // 1. Simulate Scraping
             await this.simulateDelay(1500);
             const jobAttempt = this.parseSource(source);
+
+            // Add simulated apply_url
+            jobAttempt.apply_url = `https://www.ecosia.org/search?q=${encodeURIComponent(jobAttempt.company + " " + jobAttempt.title + " apply")}`;
 
             // 2. Simulate Validation & Self-Correction
             if (jobAttempt.status === 'rejected') {

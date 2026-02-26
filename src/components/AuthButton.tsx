@@ -171,7 +171,7 @@ export default function AuthButton({
                 setAuthMode("register");
                 setIsAuthModalOpen(true);
               }}
-              className={`${getButtonClasses().replace("bg-green-600 hover:bg-green-700", "bg-green-100 hover:bg-green-200 text-green-700 dark:bg-green-900 dark:hover:bg-green-800 dark:text-green-300")} ${className}`}
+              className={`${getButtonClasses()} bg-green-500 hover:bg-green-600 text-black border border-transparent px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-bold transition-all hover:scale-105 shadow-[0_0_15px_rgba(34,197,94,0.4)]`}
             >
               {t("signUp")}
             </button>

@@ -355,22 +355,22 @@ export default function EventosPage() {
                 <RefreshCw size={16} /> {t('refresh')}
               </button>
             </div>
-            <div className="overflow-hidden border border-foreground/10 dark:border-white/10 rounded-2xl shadow-xl bg-background dark:bg-slate-900">
+            <div className="overflow-hidden border border-white/20 rounded-2xl shadow-xl bg-white/5 backdrop-blur-md dark:bg-slate-800">
               <table className="min-w-full text-sm">
-                <thead className="bg-foreground/5 dark:bg-white/5">
+                <thead className="bg-white/10 dark:bg-slate-700/50 border-b border-white/10">
                   <tr>
-                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("title")}</th>
-                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("date")}</th>
-                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("city")}</th>
-                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("country")}</th>
-                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("category")}</th>
-                    <th className="text-left p-4 text-foreground/60 dark:text-white/40 font-bold uppercase tracking-widest text-[10px]">{t("capacity")}</th>
+                    <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{t("title")}</th>
+                    <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{t("date")}</th>
+                    <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{t("city")}</th>
+                    <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{t("country")}</th>
+                    <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{t("category")}</th>
+                    <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{t("capacity")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredList.length === 0 ? (
                     <tr>
-                      <td className="p-3 text-slate-400" colSpan={6}>
+                      <td className="p-4 text-white/70 text-center font-medium" colSpan={6}>
                         {list.length === 0 ? t("noParticipatedEvents") : t("noResultsFound") || "No se encontraron eventos"}
                       </td>
                     </tr>
@@ -379,34 +379,34 @@ export default function EventosPage() {
                       <tr
                         key={idx}
                         onClick={() => window.location.href = `/eventos/${(ev as any).id}`}
-                        className="bg-background dark:bg-slate-900 hover:bg-foreground/5 dark:hover:bg-white/5 cursor-pointer transition-all border-b border-foreground/5 dark:border-white/5 group"
+                        className="hover:bg-white/10 cursor-pointer transition-all border-b border-white/10 group"
                       >
-                        <td className="p-4 text-foreground dark:text-white">
-                          <div className="flex items-center gap-2 group-hover:text-primary transition-colors font-bold font-sans">
+                        <td className="p-4 text-white">
+                          <div className="flex items-center gap-2 group-hover:text-green-300 transition-colors font-bold font-sans">
                             {ev.title}
                             <Eye size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                         </td>
-                        <td className="p-4 text-foreground dark:text-white">
+                        <td className="p-4 text-white">
                           <div className="font-bold flex items-center gap-2">
-                            <Calendar size={14} className="text-secondary" />
+                            <Calendar size={14} className="text-green-400" />
                             {formatDate(ev.date, locale)}
                           </div>
                           {ev.start_time && (
-                            <div className="text-xs text-foreground/40 font-mono mt-1 flex items-center gap-1">
+                            <div className="text-xs text-white/60 font-mono mt-1 flex items-center gap-1">
                               <Clock size={12} /> {ev.start_time}{ev.end_time ? `–${ev.end_time}` : ""}
                             </div>
                           )}
                         </td>
-                        <td className="p-4 text-foreground dark:text-white font-mono text-sm">{ev.city}</td>
-                        <td className="p-4 text-foreground dark:text-white font-mono text-sm">{ev.country}</td>
+                        <td className="p-4 text-white font-mono text-sm">{ev.city}</td>
+                        <td className="p-4 text-white font-mono text-sm">{ev.country}</td>
                         <td className="p-4">
-                          <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 w-fit ${(COLOR_BY_CATEGORY[ev.category as Category] || { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" }).bg} ${(COLOR_BY_CATEGORY[ev.category as Category] || { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" }).text} border ${(COLOR_BY_CATEGORY[ev.category as Category] || { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" }).border}`}>
-                            {CATEGORY_ICON[ev.category as Category] && React.cloneElement(CATEGORY_ICON[ev.category as Category] as React.ReactElement<any>, { size: 10 })}
+                          <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 w-fit bg-white/10 text-white border border-white/20`}>
+                            {CATEGORY_ICON[ev.category as Category] && React.cloneElement(CATEGORY_ICON[ev.category as Category] as React.ReactElement<any>, { size: 12 })}
                             {categoryLabel(ev.category as Category, locale)}
                           </span>
                         </td>
-                        <td className="p-4 text-foreground dark:text-white font-mono text-sm">{ev.capacity ?? "-"}</td>
+                        <td className="p-4 text-white font-mono text-sm">{ev.capacity ?? "-"}</td>
                       </tr>
                     ))
                   )}

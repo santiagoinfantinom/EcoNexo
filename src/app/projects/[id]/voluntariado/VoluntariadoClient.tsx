@@ -21,11 +21,30 @@ export default function VoluntariadoClient({ params }: { params: Promise<{ id: s
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) setList(JSON.parse(raw));
-    } catch { }
-  }, [storageKey]);
+    const fetchVolunteers = async () => {
+      try {
+        const res = await fetch(`/api/volunteers?project_id=${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          // We combine with local storage if there are any that failed to sync, but Supabase is the primary source.
+          // For simplicity and consistency, let's just use what Supabase returns.
+          if (data && data.length > 0) {
+            setList(data);
+            return;
+          }
+        }
+
+        // Fallback or empty state: check localStorage
+        const raw = localStorage.getItem(storageKey);
+        if (raw) setList(JSON.parse(raw));
+      } catch {
+        const raw = localStorage.getItem(storageKey);
+        if (raw) setList(JSON.parse(raw));
+      }
+    };
+
+    fetchVolunteers();
+  }, [id, storageKey]);
 
   function update<K extends keyof Volunteer>(k: K, v: Volunteer[K]) {
     setForm((f) => ({ ...f, [k]: v }));

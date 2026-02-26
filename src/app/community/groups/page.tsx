@@ -113,8 +113,8 @@ export default function GruposPage() {
                 key={f.id}
                 onClick={() => setFilter(f.id as any)}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === f.id
-                    ? 'bg-green-600 text-white'
-                    : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
                   }`}
               >
                 {f.label}
@@ -142,7 +142,7 @@ export default function GruposPage() {
             </p>
             {user && (
               <Link
-                href="/comunidad/grupos/nuevo"
+                href="/community/groups/new"
                 className="mt-4 inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
                 {t('createFirstGroup')}
@@ -154,7 +154,7 @@ export default function GruposPage() {
             {filteredGroups.map((group) => (
               <Link
                 key={group.id}
-                href={`/comunidad/grupos/${group.id}`}
+                href={`/community/groups/${group.id}`}
                 className="bg-white dark:bg-slate-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
               >
                 {/* Cover Image */}
@@ -168,17 +168,17 @@ export default function GruposPage() {
                   <div className="w-full h-32 bg-gradient-to-r from-green-500 to-blue-500"></div>
                 )}
 
-                <div className="p-6">
+                <div className="p-6 flex flex-col items-center">
                   {/* Avatar and Name */}
-                  <div className="flex items-start gap-3 -mt-12 mb-4">
+                  <div className="flex flex-col items-center -mt-16 mb-4">
                     <img
                       src={group.avatar_url || '/logo-econexo.png'}
                       alt={group.name}
-                      className="w-16 h-16 rounded-full border-4 border-white dark:border-slate-800"
+                      className="w-20 h-20 rounded-full border-4 border-white dark:border-slate-800 shadow-md bg-white object-contain"
                     />
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-800 dark:text-white">{group.name}</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="mt-3 text-center">
+                      <h3 className="text-xl font-bold text-gray-800 dark:text-white leading-tight">{group.name}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                         📍 {group.city}, {group.country}
                       </p>
                     </div>
@@ -186,18 +186,18 @@ export default function GruposPage() {
 
                   {/* Description */}
                   {group.description && (
-                    <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2">
+                    <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2 text-center text-sm w-full">
                       {group.description}
                     </p>
                   )}
 
                   {/* Tags */}
                   {group.tags && group.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap justify-center gap-2 mb-5 w-full">
                       {group.tags.slice(0, 3).map((tag, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full text-xs"
+                          className="px-2.5 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full text-xs font-medium"
                         >
                           {tag}
                         </span>
@@ -206,12 +206,12 @@ export default function GruposPage() {
                   )}
 
                   {/* Stats */}
-                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-                    <div className="flex items-center gap-1">
+                  <div className="flex items-center justify-center gap-6 text-sm text-gray-600 dark:text-gray-400 w-full pt-4 border-t border-gray-100 dark:border-slate-700">
+                    <div className="flex items-center gap-1.5 font-medium">
                       <span>👥</span>
                       <span>{group.members_count}</span>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5 font-medium">
                       <span>📅</span>
                       <span>{group.events_count} {t('eventsLabel')}</span>
                     </div>

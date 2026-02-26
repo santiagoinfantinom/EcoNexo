@@ -6,7 +6,8 @@ La aplicación ha sido desplegada exitosamente en Vercel con la configuración d
 ## 🔗 Enlaces Principales
 
 ### 🌍 Aplicación en Vivo (Producción)
-*   **URL Principal:** [https://econexo-azwyi4nut-hs-projects-8c0cd765.vercel.app](https://econexo-azwyi4nut-hs-projects-8c0cd765.vercel.app)
+*   **Nueva URL de Despliegue:** [https://econexo-7rjdg7gih-hs-projects-8c0cd765.vercel.app](https://econexo-7rjdg7gih-hs-projects-8c0cd765.vercel.app)
+*   **URL Anterior (Alias):** [https://econexo-azwyi4nut-hs-projects-8c0cd765.vercel.app](https://econexo-azwyi4nut-hs-projects-8c0cd765.vercel.app)
 *   _Nota: Si configuraste el dominio personalizado `econexo.app` en Vercel, también debería estar accesible allí una vez se propaguen los DNS._
 
 ### 🛠️ Tableros de Control

@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import Link from "next/link";
 import AuthButton from "./AuthButton";
+import { useRouter } from "next/navigation";
 
 interface Message {
   id: string;
@@ -396,6 +397,59 @@ export default function ChatComponent() {
     }
   };
 
+  const router = useRouter();
+
+  const handleSuggestedClick = (text: string) => {
+    if (!user) {
+      const key = locale === 'es' ? 'pleaseSignInFirstEs' : locale === 'de' ? 'pleaseSignInFirstDe' : 'pleaseSignInFirstEn';
+      alert(t(key));
+      return;
+    }
+
+    const message: Message = {
+      id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      text: text,
+      sender: user.email?.split("@")[0] || "Tú",
+      timestamp: new Date(),
+      avatar: "👤",
+      topic: selectedTopic
+    };
+    setMessages((prev) => [...prev, message]);
+
+    // Simulate a quick AI response and redirect
+    setTimeout(() => {
+      const isGettingStarted = text.toLowerCase().includes("getting started") || text.toLowerCase().includes("primeros pasos") || text.toLowerCase().includes("erste schritte");
+      const botResponse = locale === "en"
+        ? (isGettingStarted ? "Redirecting you to the map..." : "Let me redirect you to the relevant section...")
+        : locale === "de"
+          ? (isGettingStarted ? "Weiterleitung zur Karte..." : "Ich leite dich zur entsprechenden Seite weiter...")
+          : (isGettingStarted ? "Redirigiéndote al mapa interactivo..." : "Déjame redirigirte a la sección relevante...");
+
+      const botMsg: Message = {
+        id: `msg_bot_${Date.now()}`,
+        text: botResponse,
+        sender: "EcoBot",
+        timestamp: new Date(),
+        avatar: "🤖",
+        topic: selectedTopic
+      };
+      setMessages((prev) => [...prev, botMsg]);
+
+      setTimeout(() => {
+        if (isGettingStarted) {
+          router.push('/');
+        } else if (text.toLowerCase().includes("market") || text.toLowerCase().includes("mercado")) {
+          router.push('/community?tab=marketplace');
+        } else if (text.toLowerCase().includes("reforest") || text.toLowerCase().includes("clean") || text.toLowerCase().includes("limpieza")) {
+          router.push('/projects');
+        } else {
+          router.push('/community?tab=feed');
+        }
+      }, 1500);
+    }, 500);
+  };
+
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -420,11 +474,8 @@ export default function ChatComponent() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">{t("communityChat")}</h1>
-            <p className="text-green-100 text-sm">
-              {isConnected ?
-                (locale === 'de' ? "Verbunden" : locale === 'en' ? "Connected" : "Conectado") :
-                (locale === 'de' ? "Verbindung..." : locale === 'en' ? "Connecting..." : "Conectando...")
-              }
+            <p className="text-white text-sm">
+              {isConnected ? t('onlineStatus') : t('connectingStatus')}
             </p>
           </div>
           <div className="flex gap-2">
@@ -466,7 +517,7 @@ export default function ChatComponent() {
                     <span className="text-xl">{topic.icon}</span>
                     <div>
                       <div className="font-medium">{topic.name}</div>
-                      <div className={`text-xs ${selectedTopic === topic.id ? "text-white/80" : "text-slate-500 dark:text-slate-400"
+                      <div className={`text-xs ${selectedTopic === topic.id ? "text-white/95" : "text-slate-600 dark:text-slate-300"
                         }`}>
                         {topic.description}
                       </div>
@@ -494,7 +545,7 @@ export default function ChatComponent() {
                 <h3 className="font-semibold text-slate-900 dark:text-white">
                   {currentTopic?.name}
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300">
+                <p className="text-sm text-slate-700 dark:text-slate-200">
                   {currentTopic?.description}
                 </p>
               </div>
@@ -508,25 +559,25 @@ export default function ChatComponent() {
               <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg border border-green-200 dark:border-green-800">
                 <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
                   <span>💡</span>
-                  {locale === "en" ? "Suggested Topics" : locale === "de" ? "Vorgeschlagene Themen" : "Temas Sugeridos"}
+                  {t('suggestedTopics')}
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedTopic === "environment" && (
                     <>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "How to compost at home" : locale === "de" ? "Wie man zu Hause kompostiert" : "Cómo compostar en casa")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "How to compost at home" : locale === "de" ? "Wie man zu Hause kompostiert" : "Cómo compostar en casa")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🌱 How to compost at home" : locale === "de" ? "🌱 Wie man zu Hause kompostiert" : "🌱 Cómo compostar en casa"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Recycling best practices" : locale === "de" ? "Recycling Best Practices" : "Recycling mejores prácticas")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Recycling best practices" : locale === "de" ? "Recycling Best Practices" : "Recycling mejores prácticas")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "♻️ Recycling best practices" : locale === "de" ? "♻️ Recycling Best Practices" : "♻️ Mejores prácticas de reciclaje"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Urban reforestation" : locale === "de" ? "Urbane Aufforstung" : "Reforestación urbana")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Urban reforestation" : locale === "de" ? "Urbane Aufforstung" : "Reforestación urbana")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🌳 Urban reforestation" : locale === "de" ? "🌳 Urbane Aufforstung" : "🌳 Reforestación urbana"}
@@ -536,19 +587,19 @@ export default function ChatComponent() {
                   {selectedTopic === "food" && (
                     <>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Urban gardens" : locale === "de" ? "Urbane Gärten" : "Huertos urbanos")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Urban gardens" : locale === "de" ? "Urbane Gärten" : "Huertos urbanos")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🥕 Urban gardens" : locale === "de" ? "🥕 Urbane Gärten" : "🥕 Huertos urbanos"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Sustainable agriculture" : locale === "de" ? "Nachhaltige Landwirtschaft" : "Agricultura sostenible")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Sustainable agriculture" : locale === "de" ? "Nachhaltige Landwirtschaft" : "Agricultura sostenible")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🌾 Sustainable agriculture" : locale === "de" ? "🌾 Nachhaltige Landwirtschaft" : "🌾 Agricultura sostenible"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Local food markets" : locale === "de" ? "Lokale Lebensmittelmärkte" : "Mercados locales")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Local food markets" : locale === "de" ? "Lokale Lebensmittelmärkte" : "Mercados locales")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🍎 Local food markets" : locale === "de" ? "🍎 Lokale Lebensmittelmärkte" : "🍎 Mercados locales"}
@@ -558,19 +609,19 @@ export default function ChatComponent() {
                   {selectedTopic === "oceans" && (
                     <>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Beach cleanup" : locale === "de" ? "Strandreinigung" : "Limpieza de playas")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Beach cleanup" : locale === "de" ? "Strandreinigung" : "Limpieza de playas")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🌊 Beach cleanup" : locale === "de" ? "🌊 Strandreinigung" : "🌊 Limpieza de playas"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Marine conservation" : locale === "de" ? "Meeresschutz" : "Conservación marina")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Marine conservation" : locale === "de" ? "Meeresschutz" : "Conservación marina")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🐠 Marine conservation" : locale === "de" ? "🐠 Meeresschutz" : "🐠 Conservación marina"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Reduce plastic use" : locale === "de" ? "Plastikverbrauch reduzieren" : "Reducir uso de plástico")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Reduce plastic use" : locale === "de" ? "Plastikverbrauch reduzieren" : "Reducir uso de plástico")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🚫 Reduce plastic use" : locale === "de" ? "🚫 Plastikverbrauch reduzieren" : "🚫 Reducir uso de plástico"}
@@ -580,19 +631,19 @@ export default function ChatComponent() {
                   {selectedTopic === "community" && (
                     <>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Neighborhood initiatives" : locale === "de" ? "Nachbarschaftsinitiativen" : "Iniciativas vecinales")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Neighborhood initiatives" : locale === "de" ? "Nachbarschaftsinitiativen" : "Iniciativas vecinales")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🤝 Neighborhood initiatives" : locale === "de" ? "🤝 Nachbarschaftsinitiativen" : "🤝 Iniciativas vecinales"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Repair cafés" : locale === "de" ? "Repair Cafés" : "Cafés de reparación")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Repair cafés" : locale === "de" ? "Repair Cafés" : "Cafés de reparación")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🔧 Repair cafés" : locale === "de" ? "🔧 Repair Cafés" : "🔧 Cafés de reparación"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Sustainable mobility" : locale === "de" ? "Nachhaltige Mobilität" : "Movilidad sostenible")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Sustainable mobility" : locale === "de" ? "Nachhaltige Mobilität" : "Movilidad sostenible")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🚲 Sustainable mobility" : locale === "de" ? "🚲 Nachhaltige Mobilität" : "🚲 Movilidad sostenible"}
@@ -602,19 +653,19 @@ export default function ChatComponent() {
                   {selectedTopic === "education" && (
                     <>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Environmental education" : locale === "de" ? "Umweltbildung" : "Educación ambiental")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Environmental education" : locale === "de" ? "Umweltbildung" : "Educación ambiental")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "📚 Environmental education" : locale === "de" ? "📚 Umweltbildung" : "📚 Educación ambiental"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Climate workshops" : locale === "de" ? "Klima-Workshops" : "Talleres climáticos")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Climate workshops" : locale === "de" ? "Klima-Workshops" : "Talleres climáticos")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🌍 Climate workshops" : locale === "de" ? "🌍 Klima-Workshops" : "🌍 Talleres climáticos"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Teaching sustainability" : locale === "de" ? "Nachhaltigkeit lehren" : "Enseñar sostenibilidad")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Teaching sustainability" : locale === "de" ? "Nachhaltigkeit lehren" : "Enseñar sostenibilidad")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "👨‍🏫 Teaching sustainability" : locale === "de" ? "👨‍🏫 Nachhaltigkeit lehren" : "👨‍🏫 Enseñar sostenibilidad"}
@@ -624,19 +675,19 @@ export default function ChatComponent() {
                   {selectedTopic === "health" && (
                     <>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Mental health and nature connection" : locale === "de" ? "Mentale Gesundheit und Naturverbindung" : "Salud mental y conexión con la naturaleza")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Mental health and nature connection" : locale === "de" ? "Mentale Gesundheit und Naturverbindung" : "Salud mental y conexión con la naturaleza")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🧘 Mental health & nature" : locale === "de" ? "🧘 Mentale Gesundheit & Natur" : "🧘 Salud mental y naturaleza"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Sustainable and healthy nutrition" : locale === "de" ? "Nachhaltige und gesunde Ernährung" : "Nutrición sostenible y saludable")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Sustainable and healthy nutrition" : locale === "de" ? "Nachhaltige und gesunde Ernährung" : "Nutrición sostenible y saludable")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🥗 Sustainable nutrition" : locale === "de" ? "🥗 Nachhaltige Ernährung" : "🥗 Nutrición sostenible"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Active lifestyle and green spaces" : locale === "de" ? "Aktiver Lebensstil und Grünflächen" : "Vida activa y espacios verdes")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Active lifestyle and green spaces" : locale === "de" ? "Aktiver Lebensstil und Grünflächen" : "Vida activa y espacios verdes")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🚶 Active lifestyle & green spaces" : locale === "de" ? "🚶 Aktiver Lebensstil & Grünflächen" : "🚶 Vida activa & espacios verdes"}
@@ -646,19 +697,19 @@ export default function ChatComponent() {
                   {selectedTopic === "general" && (
                     <>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Getting started" : locale === "de" ? "Erste Schritte" : "Primeros pasos")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Getting started" : locale === "de" ? "Erste Schritte" : "Primeros pasos")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "💬 Getting started" : locale === "de" ? "💬 Erste Schritte" : "💬 Primeros pasos"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "Sustainable lifestyle" : locale === "de" ? "Nachhaltiger Lebensstil" : "Estilo de vida sostenible")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "Sustainable lifestyle" : locale === "de" ? "Nachhaltiger Lebensstil" : "Estilo de vida sostenible")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🌱 Sustainable lifestyle" : locale === "de" ? "🌱 Nachhaltiger Lebensstil" : "🌱 Estilo de vida sostenible"}
                       </button>
                       <button
-                        onClick={() => setNewMessage(locale === "en" ? "I have a question about..." : locale === "de" ? "Ich habe eine Frage zu..." : "Tengo una pregunta sobre...")}
+                        onClick={() => handleSuggestedClick(locale === "en" ? "I have a question about..." : locale === "de" ? "Ich habe eine Frage zu..." : "Tengo una pregunta sobre...")}
                         className="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-full text-sm hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-slate-700 dark:text-slate-200"
                       >
                         {locale === "en" ? "🤔 Ask anything" : locale === "de" ? "🤔 Frag alles" : "🤔 Pregunta lo que sea"}
@@ -685,28 +736,28 @@ export default function ChatComponent() {
               </div>
             ) : (
               <div className="space-y-4">
-                {filteredMessages.map((message) => (
+                {filteredMessages.map((message: Message) => (
                   <div
                     key={message.id}
                     className={`flex ${message.sender === "Tú" ? "justify-end" : "justify-start"}`}
                   >
                     <div className={`flex max-w-[80%] ${message.sender === "Tú" ? "flex-row-reverse" : "flex-row"}`}>
                       <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-lg ${message.sender === "Tú"
-                        ? "bg-green-500 text-white ml-3"
-                        : "bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-300 mr-3"
+                        ? "bg-green-600 text-white ml-3 shadow-sm"
+                        : "bg-slate-300 dark:bg-slate-600 text-slate-800 dark:text-slate-200 mr-3 shadow-sm"
                         }`}>
                         {message.avatar}
                       </div>
                       <div className={`flex flex-col ${message.sender === "Tú" ? "items-end" : "items-start"}`}>
-                        <div className={`px-4 py-2 rounded-lg ${message.sender === "Tú"
-                          ? "bg-green-500 text-white"
-                          : "bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white"
+                        <div className={`px-4 py-2 rounded-2xl ${message.sender === "Tú"
+                          ? "bg-green-600 text-white shadow-md rounded-tr-none"
+                          : "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-md rounded-tl-none border border-slate-100 dark:border-slate-600"
                           }`}>
-                          <p className="text-sm">{message.text}</p>
+                          <p className="text-sm leading-relaxed font-medium">{message.text}</p>
                         </div>
-                        <div className="flex items-center mt-1 space-x-2 text-xs text-slate-500 dark:text-slate-400">
-                          <span className="font-medium">{message.sender}</span>
-                          <span>•</span>
+                        <div className="flex items-center mt-1 space-x-2 text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                          <span>{message.sender}</span>
+                          <span className="opacity-50">•</span>
                           <span>{formatTime(message.timestamp)}</span>
                         </div>
                       </div>
@@ -722,7 +773,7 @@ export default function ChatComponent() {
           <div className="border-t border-slate-200 dark:border-slate-600 p-4 bg-slate-50 dark:bg-slate-700">
             {!user ? (
               <div className="text-center py-4">
-                <p className="text-slate-600 dark:text-slate-300 mb-4">
+                <p className="text-slate-700 dark:text-slate-200 mb-4 font-semibold">
                   {locale === 'es'
                     ? 'Debes iniciar sesión para participar en el chat'
                     : locale === 'de'
@@ -742,18 +793,18 @@ export default function ChatComponent() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder={t("typeMessage")}
-                    className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-600 dark:text-slate-100"
+                    className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-600 dark:text-white placeholder:text-slate-400"
                     disabled={!isConnected}
                   />
                   <button
                     onClick={handleSendMessage}
                     disabled={!newMessage.trim() || !isConnected}
-                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors font-medium"
+                    className="px-6 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-all font-bold shadow-md active:scale-95"
                   >
                     {t("sendMessage")}
                   </button>
                 </div>
-                <div className="mt-2 text-xs text-slate-500 dark:text-slate-400 text-center">
+                <div className="mt-2 text-[10px] text-slate-500 dark:text-slate-400 text-center font-bold uppercase tracking-widest">
                   {t("onlineUsers")}: {onlineUsersCount} • {t("currentTopic")}: {currentTopic?.name}
                 </div>
               </>
@@ -764,42 +815,42 @@ export default function ChatComponent() {
         {/* Chat Rules Sidebar */}
         {showRules && (
           <div className="w-80 bg-slate-50 dark:bg-slate-700 p-6 border-l border-slate-200 dark:border-slate-600 overflow-y-auto">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
               {t("chatRulesTitle")}
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mb-6">
+            <p className="text-sm text-slate-700 dark:text-slate-200 mb-6 font-medium">
               {t("chatRulesIntro")}
             </p>
 
             <div className="space-y-4">
-              <div className="text-sm text-slate-700 dark:text-slate-200">
+              <div className="text-sm text-slate-900 dark:text-white font-medium border-l-2 border-green-500 pl-3">
                 {t("chatRule1")}
               </div>
-              <div className="text-sm text-slate-700 dark:text-slate-200">
+              <div className="text-sm text-slate-900 dark:text-white font-medium border-l-2 border-green-500 pl-3">
                 {t("chatRule2")}
               </div>
-              <div className="text-sm text-slate-700 dark:text-slate-200">
+              <div className="text-sm text-slate-900 dark:text-white font-medium border-l-2 border-green-500 pl-3">
                 {t("chatRule3")}
               </div>
-              <div className="text-sm text-slate-700 dark:text-slate-200">
+              <div className="text-sm text-slate-900 dark:text-white font-medium border-l-2 border-green-500 pl-3">
                 {t("chatRule4")}
               </div>
-              <div className="text-sm text-slate-700 dark:text-slate-200">
+              <div className="text-sm text-slate-900 dark:text-white font-medium border-l-2 border-green-500 pl-3">
                 {t("chatRule5")}
               </div>
-              <div className="text-sm text-slate-700 dark:text-slate-200">
+              <div className="text-sm text-slate-900 dark:text-white font-medium border-l-2 border-green-500 pl-3">
                 {t("chatRule6")}
               </div>
-              <div className="text-sm text-slate-700 dark:text-slate-200">
+              <div className="text-sm text-slate-900 dark:text-white font-medium border-l-2 border-green-500 pl-3">
                 {t("chatRule7")}
               </div>
-              <div className="text-sm text-slate-700 dark:text-slate-200">
+              <div className="text-sm text-slate-900 dark:text-white font-medium border-l-2 border-green-500 pl-3">
                 {t("chatRule8")}
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-              <p className="text-sm text-green-800 dark:text-green-200 font-medium">
+            <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/40 rounded-xl border border-green-200 dark:border-green-800">
+              <p className="text-sm text-green-900 dark:text-green-100 font-bold">
                 {t("chatRulesFooter")}
               </p>
             </div>
@@ -809,34 +860,34 @@ export default function ChatComponent() {
         {/* Recommendations Sidebar */}
         {showRecommendations && (
           <div className="w-80 bg-slate-50 dark:bg-slate-700 p-6 border-l border-slate-200 dark:border-slate-600 overflow-y-auto">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
               {t("recommendations")}
             </h2>
 
             <div className="space-y-4">
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/40 rounded-xl border border-blue-200 dark:border-blue-800 shadow-sm">
+                <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-2">
                   {t("popularDiscussions")}
                 </h3>
-                <p className="text-sm text-blue-700 dark:text-blue-200">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
                   {t("joinActiveConversations")}
                 </p>
               </div>
 
-              <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                <h3 className="font-medium text-green-900 dark:text-green-100 mb-2">
+              <div className="p-4 bg-green-50 dark:bg-green-900/40 rounded-xl border border-green-200 dark:border-green-800 shadow-sm">
+                <h3 className="font-bold text-green-900 dark:text-green-100 mb-2">
                   {t("newProjects")}
                 </h3>
-                <p className="text-sm text-green-700 dark:text-green-200">
+                <p className="text-sm text-green-800 dark:text-green-200">
                   {t("discoverLatestInitiatives")}
                 </p>
               </div>
 
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-                <h3 className="font-medium text-purple-900 dark:text-purple-100 mb-2">
+              <div className="p-4 bg-purple-50 dark:bg-purple-900/40 rounded-xl border border-purple-200 dark:border-purple-800 shadow-sm">
+                <h3 className="font-bold text-purple-900 dark:text-purple-100 mb-2">
                   {t("eventsNearYou")}
                 </h3>
-                <p className="text-sm text-purple-700 dark:text-purple-200">
+                <p className="text-sm text-purple-800 dark:text-purple-200">
                   {t("findLocalEvents")}
                 </p>
               </div>

@@ -16,7 +16,7 @@ import { CalendarPlus, Download, ExternalLink } from "lucide-react";
 import { generateGoogleCalendarLink, generateOutlookCalendarLink, downloadICSFile } from "@/lib/calendarUtils";
 
 // Localized overrides for event strings (progressive coverage)
-const EVENT_I18N: Record<string, { en: Partial<EventDetails>; de: Partial<EventDetails> }> = {
+const EVENT_I18N: Record<string, { en: Partial<EventDetails>; de: Partial<EventDetails>; fr?: Partial<EventDetails> }> = {
   e15: {
     en: {
       title: "Autumn planting",
@@ -276,6 +276,25 @@ async function getLocalizedEventData(eventId: string, locale: string) {
       if (baseEvent.benefits_de && Array.isArray(baseEvent.benefits_de)) {
         localizedEvent.benefits = baseEvent.benefits_de;
       }
+    } else if (locale === 'fr') {
+      if (baseEvent.title_fr) localizedEvent.title = baseEvent.title_fr;
+      else if (baseEvent.title_en) localizedEvent.title = baseEvent.title_en; // Fallback to EN
+      if (baseEvent.description_fr) localizedEvent.description = baseEvent.description_fr;
+      else if (baseEvent.description_en) localizedEvent.description = baseEvent.description_en;
+      if (baseEvent.location_fr) localizedEvent.location = baseEvent.location_fr;
+      else if (baseEvent.location_en) localizedEvent.location = baseEvent.location_en;
+      if (baseEvent.organizer_fr) localizedEvent.organizer = baseEvent.organizer_fr;
+      else if (baseEvent.organizer_en) localizedEvent.organizer = baseEvent.organizer_en;
+      if (baseEvent.requirements_fr && Array.isArray(baseEvent.requirements_fr)) {
+        localizedEvent.requirements = baseEvent.requirements_fr;
+      } else if (baseEvent.requirements_en && Array.isArray(baseEvent.requirements_en)) {
+        localizedEvent.requirements = baseEvent.requirements_en;
+      }
+      if (baseEvent.benefits_fr && Array.isArray(baseEvent.benefits_fr)) {
+        localizedEvent.benefits = baseEvent.benefits_fr;
+      } else if (baseEvent.benefits_en && Array.isArray(baseEvent.benefits_en)) {
+        localizedEvent.benefits = baseEvent.benefits_en;
+      }
     }
 
     // Ensure required fields have defaults (only if truly missing after localization)
@@ -393,7 +412,7 @@ async function getLocalizedEventData(eventId: string, locale: string) {
     const auto = autoTranslateEvent(localizedEvent, locale);
 
     // Apply manual overrides if they exist
-    const currentLocale = locale as 'en' | 'de';
+    const currentLocale = locale as 'en' | 'de' | 'fr';
     const overridesFromMap = (EVENT_I18N as Record<string, Record<string, Partial<EventDetails>>>)[eventId]?.[currentLocale] || {};
 
     // Merge carefully, ensuring arrays are properly handled
@@ -757,15 +776,18 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
   });
 
   // Translate category within the component where t is available
-  const translatedCategory = baseEvent.category === 'environment' ?
+  const normCat = (baseEvent.category || 'community').toLowerCase().trim();
+  const isEnv = normCat.includes('environment') || normCat.includes('umwelt') || normCat.includes('medio ambiente') || normCat.includes('nature') || normCat.includes('océanos');
+  const isEdu = normCat.includes('education') || normCat.includes('bildung') || normCat.includes('educación');
+  const isTech = normCat.includes('technology') || normCat.includes('technologie') || normCat.includes('tecnología');
+
+  const translatedCategory = isEnv ?
     t('categoryEnvironment') :
-    baseEvent.category === 'education' ?
+    isEdu ?
       t('categoryEducation') :
-      baseEvent.category === 'community' ?
-        t('categoryCommunity') :
-        baseEvent.category === 'technology' ?
-          t('categoryTechnology') :
-          baseEvent.category;
+      isTech ?
+        t('categoryTechnology') :
+        t('categoryCommunity');
 
   const event = {
     ...baseEvent,

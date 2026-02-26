@@ -97,7 +97,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
         // Let's assume /api/agents/matching/stats exists (we need to create it).
 
         // For this specific turn, I will assume I'll create the Next.js route next.
-        const res = await fetch('/api/agents/matching/stats');
+        const res = await fetch('/api/agents/matching/stats/');
         if (res.ok) {
           const data = await res.json();
           setStats(data);
@@ -132,7 +132,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
     setError(null);
 
     try {
-      const response = await fetch('/api/agents/matching', {
+      const response = await fetch('/api/agents/matching/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

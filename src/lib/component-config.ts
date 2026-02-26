@@ -19,7 +19,7 @@ export const COMPONENT_CONFIG = {
       strong: 'border-gray-400 dark:border-gray-500'
     }
   },
-  
+
   // Configuración de botones
   buttons: {
     primary: 'bg-green-600 text-white hover:bg-green-700 shadow-md transition-all',
@@ -27,26 +27,26 @@ export const COMPONENT_CONFIG = {
     outline: 'border border-gray-400 dark:border-gray-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all',
     ghost: 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all'
   },
-  
+
   // Configuración de tarjetas
   cards: {
     default: 'border border-gray-300 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 shadow-sm transition-all',
     elevated: 'border border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-900 shadow-md transition-all',
     flat: 'rounded-lg p-4 bg-gray-50 dark:bg-gray-800 transition-all'
   },
-  
+
   // Configuración de inputs
   inputs: {
     default: 'w-full px-3 py-2 border border-gray-500 dark:border-gray-400 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all',
     select: 'px-3 py-2 border border-gray-400 dark:border-gray-500 rounded-md text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800 capitalize shadow-sm transition-all'
   },
-  
+
   // Configuración de etiquetas
   labels: {
     default: 'block text-sm font-medium text-gray-800 dark:text-gray-100 mb-1',
     checkbox: 'text-sm font-medium text-gray-800 dark:text-gray-100'
   },
-  
+
   // Configuración de títulos
   titles: {
     h1: 'text-3xl font-bold text-gray-900 dark:text-white',
@@ -54,13 +54,13 @@ export const COMPONENT_CONFIG = {
     h3: 'text-lg font-semibold text-gray-900 dark:text-white',
     h4: 'text-base font-semibold text-gray-900 dark:text-white'
   },
-  
+
   // Configuración de navegación
   navigation: {
     container: 'flex items-center justify-between mb-4 text-gray-900 dark:text-white',
     button: 'p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors'
   },
-  
+
   // Configuración de calendario
   calendar: {
     weekDays: 'p-2 text-center text-sm font-semibold text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-800',
@@ -71,22 +71,22 @@ export const COMPONENT_CONFIG = {
     dayNumberToday: 'text-green-700 dark:text-green-300',
     eventText: 'text-xs text-gray-800 dark:text-gray-100'
   },
-  
+
   // Configuración de filtros
   filters: {
     panel: 'bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-4 border border-gray-200 dark:border-gray-700',
     grid: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
   },
-  
+
   // Configuración de eventos
   events: {
-    card: 'border border-gray-300 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 shadow-sm transition-all',
-    title: 'font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors',
-    location: 'text-sm text-gray-700 dark:text-gray-200',
-    details: 'flex items-center gap-4 mt-2 text-sm text-gray-600 dark:text-gray-300',
+    card: 'border border-slate-700 rounded-lg p-4 hover:bg-slate-800 bg-slate-900 shadow-xl transition-all',
+    title: 'font-medium text-white hover:text-green-300 transition-colors',
+    location: 'text-sm text-slate-300 font-medium',
+    details: 'flex flex-wrap items-center gap-x-4 gap-y-2 mt-2 text-sm text-slate-400 font-medium',
     actions: 'flex gap-2'
   },
-  
+
   // Configuración de estados vacíos
   empty: {
     container: 'text-center py-8 text-gray-800 dark:text-gray-100',

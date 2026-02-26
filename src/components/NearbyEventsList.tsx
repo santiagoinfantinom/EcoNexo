@@ -10,6 +10,7 @@ type Event = {
     title: string;
     title_en?: string;
     title_de?: string;
+    title_fr?: string;
     date: string;
     city: string;
     country: string;
@@ -47,6 +48,7 @@ export default function NearbyEventsList() {
     const getEventTitle = (event: Event) => {
         if (locale === 'en' && event.title_en) return event.title_en;
         if (locale === 'de' && event.title_de) return event.title_de;
+        if (locale === 'fr' && event.title_fr) return event.title_fr;
         return event.title;
     };
 

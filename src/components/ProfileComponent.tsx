@@ -471,10 +471,7 @@ export default function ProfileComponent() {
               )}
             </div>
             <p className="text-green-100 text-sm mt-1">
-              {isEditing ?
-                (locale === 'de' ? "Bearbeitungsmodus" : locale === 'en' ? "Edit mode" : "Modo edición") :
-                (locale === 'de' ? "Profilansicht" : locale === 'en' ? "Profile view" : "Vista de perfil")
-              }
+              {isEditing ? t("editMode") : t("profileView")}
             </p>
           </div>
           <div className="flex gap-3">
@@ -839,14 +836,14 @@ export default function ProfileComponent() {
                       <span className="text-xl">🏆</span>
                     </div>
                     <h3 className="text-lg font-bold text-white">
-                      {locale === 'es' ? 'Logros y Medallas' : locale === 'de' ? 'Abzeichen & Erfolge' : 'Achievements & Badges'}
+                      {t('achievementsAndBadges')}
                     </h3>
                   </div>
                   <Link
                     href="/medallas"
                     className="text-ecosia-green hover:underline flex items-center gap-1 text-sm font-medium"
                   >
-                    {locale === 'es' ? 'Ver todas' : locale === 'de' ? 'Alle ansehen' : 'View all'}
+                    {t('viewAll')}
                     <span>→</span>
                   </Link>
                 </div>
@@ -877,7 +874,7 @@ export default function ProfileComponent() {
                     <span className="text-xl">🔗</span>
                   </div>
                   <h3 className="text-lg font-bold text-white">
-                    {locale === 'es' ? 'Redes Sociales' : locale === 'de' ? 'Soziale Medien' : 'Social Media'}
+                    {t('socialMedia')}
                   </h3>
                 </div>
                 {profileData.oauth_data?.age && (

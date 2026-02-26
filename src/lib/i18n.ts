@@ -84,6 +84,10 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         shareEvent: "Share",
         backToEvents: "Back to events",
         backToMap: "Back to map",
+        categoryEnvironment: "Environment",
+        categoryEducation: "Education",
+        categoryCommunity: "Community",
+        categoryTechnology: "Technology",
       },
       de: {
         // General
@@ -136,6 +140,10 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         shareEvent: "Teilen",
         backToEvents: "Zurück zu Veranstaltungen",
         backToMap: "Zurück zur Karte",
+        categoryEnvironment: "Umwelt",
+        categoryEducation: "Bildung",
+        categoryCommunity: "Gemeinschaft",
+        categoryTechnology: "Technologie",
       },
       fr: {
         // General
@@ -188,6 +196,10 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         shareEvent: "Partager",
         backToEvents: "Retour aux événements",
         backToMap: "Retour à la carte",
+        categoryEnvironment: "Environnement",
+        categoryEducation: "Éducation",
+        categoryCommunity: "Communauté",
+        categoryTechnology: "Technologie",
       },
       es: {},
     } as any;

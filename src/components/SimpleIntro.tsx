@@ -27,11 +27,12 @@ export default function SimpleIntro() {
     buttons: [
       { label: '🇪🇸 Español', locale: 'es' as const },
       { label: '🇬🇧 English', locale: 'en' as const },
-      { label: '🇩🇪 Deutsch', locale: 'de' as const }
+      { label: '🇩🇪 Deutsch', locale: 'de' as const },
+      { label: '🇫🇷 Français', locale: 'fr' as const }
     ]
   };
 
-  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
+  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de' | 'fr') => {
     setLocale(selectedLocale);
 
     // Mark intro as shown and close

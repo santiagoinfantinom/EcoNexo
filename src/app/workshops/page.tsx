@@ -42,6 +42,7 @@ export default function WorkshopsPage() {
             const matchesSearch =
                 ws.title_en.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 ws.title_de.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                ws.title_fr?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 ws.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 ws.location_en.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -54,6 +55,7 @@ export default function WorkshopsPage() {
     const getLocalizedValue = (ws: Workshop, key: "title" | "description" | "location") => {
         if (locale === "es") return ws[key];
         if (locale === "de") return ws[`${key}_de` as keyof Workshop] as string;
+        if (locale === "fr" && ws[`${key}_fr` as keyof Workshop]) return ws[`${key}_fr` as keyof Workshop] as string;
         return ws[`${key}_en` as keyof Workshop] as string;
     };
 

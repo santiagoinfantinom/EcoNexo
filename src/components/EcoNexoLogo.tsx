@@ -13,7 +13,7 @@ export default function EcoNexoLogo({ className = "", size = 60 }: EcoNexoLogoPr
   return (
     <div className={`flex items-center ${className}`}>
       <div
-        className={`rounded-full overflow-hidden shadow-2xl bg-gradient-to-br from-green-500 via-teal-500 to-blue-500 ${isLarge ? 'p-1.5' : 'p-1'}`}
+        className={`rounded-full flex items-center justify-center overflow-hidden shadow-2xl bg-white p-2`}
         style={{ width: size, height: size }}
       >
         <Image

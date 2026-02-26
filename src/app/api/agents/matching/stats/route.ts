@@ -4,20 +4,30 @@ const MCP_SERVER_URL = process.env.MCP_SERVER_URL || 'http://localhost:8001';
 
 export async function GET() {
     try {
-        const response = await fetch(`${MCP_SERVER_URL}/stats`);
+        const response = await fetch(`${MCP_SERVER_URL}/stats`, {
+            signal: AbortSignal.timeout(1000)
+        });
         if (!response.ok) {
-            return NextResponse.json(
-                { error: 'Stats service unavailable', details: await response.text() },
-                { status: response.status }
-            );
+            return NextResponse.json({
+                status: 'fallback',
+                active_threads: 0,
+                saturation_index: 0.1,
+                rate_limits: {
+                    remaining_requests: 100
+                }
+            });
         }
         const data = await response.json();
         return NextResponse.json(data);
     } catch (error) {
-        console.error('Error in stats API:', error);
-        return NextResponse.json(
-            { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
-            { status: 500 }
-        );
+        console.warn('MCP server unreachable for stats, falling back to mock stats');
+        return NextResponse.json({
+            status: 'fallback',
+            active_threads: 0,
+            saturation_index: 0.1,
+            rate_limits: {
+                remaining_requests: 100
+            }
+        });
     }
 }

@@ -2040,13 +2040,19 @@ export default function JobsPage() {
     } catch { }
   }, [query, minSalary, minExperience, city, contract, remoteOnly, levelFilter]);
 
+  const [savedJobs, setSavedJobs] = useState<Record<string, boolean>>({});
+  const [curatedJobs, setCuratedJobs] = useState<Job[]>([]);
+  const [isCurating, setIsCurating] = useState(false);
+  const [curationLogs, setCurationLogs] = useState<string[]>([]);
+
   // Filter to show only real jobs (jobs with apply_url)
   const realJobs = useMemo(() => JOBS.filter(job => job.apply_url), []);
 
   const filtered = useMemo(() => {
     const queryLower = query.toLowerCase().trim();
+    const combinedJobs = [...realJobs, ...curatedJobs];
 
-    return realJobs.filter((j) => {
+    return combinedJobs.filter((j) => {
       // Si no hay query, mostrar todos (solo aplicar filtros)
       if (!queryLower) return true;
 
@@ -2109,7 +2115,7 @@ export default function JobsPage() {
       .filter(j => contract === "all" ? true : j.contract === contract)
       .filter(j => levelFilter === 'all' ? true : j.level === levelFilter)
       .filter(j => remoteOnly ? j.remote : true);
-  }, [query, minSalary, minExperience, city, contract, levelFilter, remoteOnly, locale]);
+  }, [query, minSalary, minExperience, city, contract, levelFilter, remoteOnly, locale, curatedJobs, realJobs]);
 
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES', { style: 'currency', currency: 'EUR' }).format(v);
@@ -2158,7 +2164,41 @@ export default function JobsPage() {
     }
   };
 
-  const [savedJobs, setSavedJobs] = useState<Record<string, boolean>>({});
+
+  // Start curation on mount
+  useEffect(() => {
+    let active = true;
+    setIsCurating(true);
+
+    jobCurator.startCurating((scraped) => {
+      if (!active) return;
+
+      // Transform ScrapedJob to Job
+      const newJob: Job = {
+        id: scraped.id,
+        title: scraped.title,
+        company: scraped.company,
+        city: scraped.location.split(',')[0].trim(),
+        country: scraped.location.split(',')[1]?.trim() || "Germany",
+        salaryMinEur: 45000,
+        salaryMaxEur: 65000,
+        level: 'mid',
+        experienceYears: 3,
+        knowledgeAreas: scraped.tags,
+        contract: "full-time",
+        remote: true,
+        description: scraped.log.join("\n"),
+        apply_url: scraped.apply_url,
+        isCurated: true,
+        curatorLog: scraped.log
+      };
+
+      setCuratedJobs(prev => [...prev.filter(j => j.id !== scraped.id), newJob]);
+    });
+
+    return () => { active = false; };
+  }, [locale]);
+
   const [applyFor, setApplyFor] = useState<Job | null>(null);
   const [applicant, setApplicant] = useState({
     name: "",
@@ -2416,7 +2456,7 @@ export default function JobsPage() {
                     href={job.apply_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative touch-target px-4 py-2 bg-cta text-white rounded-lg hover:bg-cta/90 transition-all duration-200 font-medium shadow-md hover:shadow-lg hover-lift flex items-center justify-center text-center cursor-pointer"
+                    className="group relative touch-target px-4 py-2 bg-white text-black border border-slate-300 rounded-lg hover:bg-slate-50 transition-all duration-200 font-medium shadow-md hover:shadow-lg hover-lift flex items-center justify-center text-center cursor-pointer"
                     title={t("rememberToTellThemTooltip") || "Recuerda decir que llegaste por aquí!"}
                   >
                     {t("applyBtn")} <ExternalLink size={16} className="ml-2" />
@@ -2428,7 +2468,7 @@ export default function JobsPage() {
                     </div>
                   </a>
                 ) : (
-                  <button onClick={() => setApplyFor(job)} className="touch-target px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg hover-lift">{t("applyBtn")}</button>
+                  <button onClick={() => setApplyFor(job)} className="touch-target px-4 py-2 bg-white text-black border border-slate-300 rounded-lg hover:bg-slate-50 transition-all duration-200 font-medium shadow-md hover:shadow-lg hover-lift">{t("applyBtn")}</button>
                 )}
                 <button onClick={() => toggleSave(job.id)} className="touch-target px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 font-medium">{savedJobs[job.id] ? t("saved") : t("saveBtn")}</button>
               </div>
