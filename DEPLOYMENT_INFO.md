@@ -6,7 +6,7 @@ La aplicación ha sido desplegada exitosamente en Vercel con la configuración d
 ## 🔗 Enlaces Principales
 
 ### 🌍 Aplicación en Vivo (Producción)
-*   **URL de Producción (Sugerida):** [https://econexo.io](https://econexo.io)
+*   **URL de Producción (Sugerida):** [https://econexo-web.vercel.app](https://econexo-web.vercel.app)
 *   **URL de Vercel:** [https://econexo-web.vercel.app](https://econexo-web.vercel.app) (Sugerida) o [https://econexo.vercel.app](https://econexo.vercel.app)
 *   _Nota: Asegúrate de añadir el dominio `econexo.io` en Settings > Domains en Vercel._
 
