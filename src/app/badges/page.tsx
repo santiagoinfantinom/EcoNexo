@@ -309,11 +309,11 @@ export default function BadgesPage() {
             <section className="relative py-16 px-4 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-ecosia-green/20 via-transparent to-blue-500/10 -z-10" />
                 <div className="max-w-7xl mx-auto text-center relative z-10">
-                    <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">
+                    <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
                         {locale === 'es' ? 'Tus ' : locale === 'de' ? 'Deine ' : 'Your '}
                         <span className="text-emerald-600">{locale === 'es' ? 'Insignias' : locale === 'de' ? 'Abzeichen' : 'Badges'}</span>
                     </h1>
-                    <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                    <p className="text-xl text-white/90 max-w-2xl mx-auto">
                         {locale === 'es'
                             ? 'Gana logros por cada acción positiva que realices. ¡Construyamos juntos un futuro más verde!'
                             : locale === 'de'

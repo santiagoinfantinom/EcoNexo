@@ -106,7 +106,7 @@ const JOBS: Job[] = [
       pl: "Kieruj rozwojem wielkoskalowych projektów energii odnawialnej w całej Europie. Zarządzaj interesariuszami, pozwoleniami i przyłączeniami do sieci.",
       nl: "Leid de ontwikkeling van grootschalige projecten voor hernieuwbare energie in heel Europa. Beheer belanghebbenden, vergunningen en netaansluitingen."
     },
-    apply_url: "https://europeanenergy.com/career/vacancies/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=European%20Energy%20Renewable%20Energy%20Project%20Manager",
     logo_url: "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -163,7 +163,7 @@ const JOBS: Job[] = [
       pl: "Projektowanie i walidacja systemów zarządzania bateriami dla pojazdów elektrycznych nowej generacji.",
       nl: "Ontwerp en valideer batterijbeheersystemen voor elektrische voertuigen van de volgende generatie."
     },
-    apply_url: "https://northvolt.com/career/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Northvolt%20Battery%20Systems%20Engineer",
     logo_url: "https://images.unsplash.com/photo-1569163139394-de6e4f6f4c8a?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -220,7 +220,7 @@ const JOBS: Job[] = [
       pl: "Wykonywanie konserwacji i rozwiązywanie problemów w turbinach wiatrowych.",
       nl: "Voer onderhoud en probleemoplossing uit aan windturbines."
     },
-    apply_url: "https://careers.vestas.com/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Vestas%20Wind%20Turbine%20Technician",
     logo_url: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -277,7 +277,7 @@ const JOBS: Job[] = [
       pl: "Kieruj projektami morskich farm wiatrowych od koncepcji do eksploatacji.",
       nl: "Leid offshore windparkprojecten van concept tot exploitatie."
     },
-    apply_url: "https://orsted.com/en/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=%C3%98rsted%20Offshore%20Wind%20Engineer",
     logo_url: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -334,7 +334,7 @@ const JOBS: Job[] = [
       pl: "Projektowanie wielkoskalowych elektrowni fotowoltaicznych w Europie Południowej.",
       nl: "Ontwerp grootschalige zonne-PV-installaties in Zuid-Europa."
     },
-    apply_url: "https://www.enelgreenpower.com/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Enel%20Green%20Power%20Solar%20PV%20Design%20Engineer",
     logo_url: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -393,7 +393,7 @@ const JOBS: Job[] = [
       pl: "Buduj wyszukiwarkę, która sadzi drzewa. Optymalizuj wydajność wyszukiwania i infrastrukturę, minimalizując ślad węglowy.",
       nl: "Bouw de zoekmachine die bomen plant. Optimaliseer de zoekprestaties en infrastructuur terwijl je de ecologische voetafdruk minimaliseert."
     },
-    apply_url: "https://ecosia.workable.com/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Ecosia%20Software%20Engineer%20-%20Green%20Search",
     logo_url: "https://images.unsplash.com/photo-1542601906990-b4d3fb773b09?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -450,7 +450,7 @@ const JOBS: Job[] = [
       pl: "Rozwijaj modele ML do przewidywania ryzyka klimatycznego dla rolnictwa i łańcuchów dostaw.",
       nl: "Ontwikkel ML-modellen om klimaatrisico's voor de landbouw en toeleveringsketens te voorspellen."
     },
-    apply_url: "https://climate.ai/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=ClimateAI%20Climate%20Data%20Scientist",
     logo_url: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -507,7 +507,7 @@ const JOBS: Job[] = [
       pl: "Buduj oprogramowanie do zarządzania emisją dwutlenku węgla w przedsiębiorstwach, używane przez firmy na całym świecie.",
       nl: "Bouw bedrijfssoftware voor koolstofbeheer die wereldwijd door bedrijven wordt gebruikt."
     },
-    apply_url: "https://plana.earth/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Plan%20A%20Sustainability%20Software%20Developer",
     logo_url: "https://images.unsplash.com/photo-1451187530220-3816127e1302?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -566,7 +566,7 @@ const JOBS: Job[] = [
       pl: "Kieruj raportowaniem ESG dla jednej z największych firm przemysłowych w Europie.",
       nl: "Leid ESG-rapportage voor een van de grootste industriële bedrijven van Europa."
     },
-    apply_url: "https://jobs.siemens.com/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Siemens%20ESG%20Reporting%20Manager",
     logo_url: "https://images.unsplash.com/photo-1516383740770-fbcc5c2477ff?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -623,7 +623,7 @@ const JOBS: Job[] = [
       pl: "Doradzaj dużym korporacjom w ich transformacji w kierunku zrównoważonego rozwoju.",
       nl: "Adviseer grote bedrijven over hun duurzaamheidstransformatie."
     },
-    apply_url: "https://www2.deloitte.com/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Deloitte%20Sustainability%20Consultant",
     logo_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -680,7 +680,7 @@ const JOBS: Job[] = [
       pl: "Świadczenie usług doradztwa środowiskowego dla projektów infrastruktury zrównoważonej.",
       nl: "Lever milieuadviesdiensten voor duurzame infrastructuurprojecten."
     },
-    apply_url: "https://careers.arcadis.com/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Arcadis%20Environmental%20Consultant",
     logo_url: "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -740,7 +740,7 @@ const JOBS: Job[] = [
       pl: "Kieruj transformacją cyrkularną IKEA.",
       nl: "Stuur de circulaire transformatie van IKEA aan."
     },
-    apply_url: "https://www.ikea.com/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=IKEA%20Circular%20Economy%20Specialist",
     logo_url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -797,7 +797,7 @@ const JOBS: Job[] = [
       pl: "Kieruj projektami innowacyjnymi w gospodarce o obiegu zamkniętym.",
       nl: "Stuur innovatieprojecten in de circulaire economie aan."
     },
-    apply_url: "https://www.ecoembes.com/es/empleo",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Ecoembes%20Circular%20Economy%20Specialist",
     logo_url: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -854,7 +854,7 @@ const JOBS: Job[] = [
       pl: "Kieruj przejściem Unilever na opakowania zrównoważone.",
       nl: "Leid de overgang van Unilever naar duurzame verpakkingen."
     },
-    apply_url: "https://careers.unilever.com/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Unilever%20Packaging%20Sustainability%20Manager",
     logo_url: "https://images.unsplash.com/photo-1556761175-5973cf0f32e7?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -913,7 +913,7 @@ const JOBS: Job[] = [
       pl: "Opracowywanie kampanii na rzecz transformacji energetycznej i sprawiedliwości klimatycznej.",
       nl: "Ontwikkel campagnes voor energietransitie en klimaatrechtvaardigheid."
     },
-    apply_url: "https://es.greenpeace.org/es/trabaja-con-nosotros/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Greenpeace%20Espa%C3%B1a%20Climate%20Change%20Project%20Officer",
     logo_url: "https://images.unsplash.com/photo-1542601906990-b4d3fb773b09?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -970,7 +970,7 @@ const JOBS: Job[] = [
       pl: "Wpływaj na politykę klimatyczną i energetyczną UE.",
       nl: "Beïnvloed het EU-klimaat- en energiebeleid."
     },
-    apply_url: "https://www.wwf.eu/jobs",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=WWF%20European%20Policy%20Office%20Climate%20Policy%20Analyst",
     logo_url: "https://images.unsplash.com/photo-1510672981848-a1c4f1cb58f1?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -1029,7 +1029,7 @@ const JOBS: Job[] = [
       pl: "Kieruj innowacjami w zakresie zrównoważonego rozwoju w wiodącej na świecie firmie chemicznej.",
       nl: "Stuur duurzaamheidsinnovaties aan bij 's werelds toonaangevende chemiebedrijf."
     },
-    apply_url: "https://on.basf.com/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=BASF%20Sustainability%20Innovation%20Manager",
     logo_url: "https://images.unsplash.com/photo-1516383740770-fbcc5c2477ff?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -1086,7 +1086,7 @@ const JOBS: Job[] = [
       pl: "Opracowywanie tworzyw sztucznych i paliw odnawialnych nowej generacji z odpadów.",
       nl: "Ontwikkel hernieuwbare kunststoffen en brandstoffen van de volgende generatie uit afval."
     },
-    apply_url: "https://www.neste.com/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Neste%20Bio-based%20Materials%20Scientist",
     logo_url: "https://images.unsplash.com/photo-1569163139394-de6e4f6f4c8a?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -1145,7 +1145,7 @@ const JOBS: Job[] = [
       pl: "Finansuj zieloną transformację Europy.",
       nl: "Financier de groene overgang van Europa."
     },
-    apply_url: "https://www.eib.org/jobs",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=European%20Investment%20Bank%20Sustainable%20Finance%20Analyst",
     logo_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -1202,7 +1202,7 @@ const JOBS: Job[] = [
       pl: "Modeluj fizyczne i przejściowe ryzyka klimatyczne dla portfeli ubezpieczeniowych.",
       nl: "Modelleer fysieke en transitieklimaatrisico's voor verzekeringsportefeuilles."
     },
-    apply_url: "https://careers.allianz.com/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Allianz%20Climate%20Risk%20Analyst",
     logo_url: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -1261,7 +1261,7 @@ const JOBS: Job[] = [
       pl: "Kształtuj przyszłość elektromobilności. Kieruj rozwojem produktów dla ekosystemu EV BMW.",
       nl: "Geef vorm aan de toekomst van elektrische mobiliteit. Leid productontwikkeling voor BMW's EV-ecosysteem."
     },
-    apply_url: "https://www.bmwgroup.jobs/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=BMW%20Group%20E-Mobility%20Product%20Manager",
     logo_url: "https://images.unsplash.com/photo-1520183802803-06f731a2059f?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -1318,7 +1318,7 @@ const JOBS: Job[] = [
       pl: "Projektowanie zrównoważonych rozwiązań transportowych dla miast europejskich.",
       nl: "Ontwerp duurzame transportoplossingen voor Europese steden."
     },
-    apply_url: "https://careers.ramboll.com/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Ramboll%20Urban%20Mobility%20Planner",
     logo_url: "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -1377,7 +1377,7 @@ const JOBS: Job[] = [
       pl: "Współpraca z producentami mleka w celu wdrożenia praktyk regeneracyjnych.",
       nl: "Werk samen met melkveehouders om regeneratieve praktijken te implementeren."
     },
-    apply_url: "https://careers.danone.com/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Danone%20Sustainable%20Agriculture%20Specialist",
     logo_url: "https://images.unsplash.com/photo-1556761175-5973cf0f32e7?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -1434,7 +1434,7 @@ const JOBS: Job[] = [
       pl: "Walcz z marnowaniem żywności dzięki największemu w Europie rynkowi nadwyżek żywności.",
       nl: "Bestrijd voedselverspilling met Europa's grootste marktplaats voor surplusvoedsel."
     },
-    apply_url: "https://toogoodtogo.com/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Too%20Good%20To%20Go%20Food%20Waste%20Reduction%20Manager",
     logo_url: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -1493,7 +1493,7 @@ const JOBS: Job[] = [
       pl: "Projektowanie rozwiązań inteligentnych budynków w celu optymalizacji zużycia energii.",
       nl: "Ontwerp smart building-oplossingen om energieverbruik te optimaliseren."
     },
-    apply_url: "https://www.se.com/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Schneider%20Electric%20Building%20Energy%20Engineer",
     logo_url: "https://images.unsplash.com/photo-1516383740770-fbcc5c2477ff?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -1550,7 +1550,7 @@ const JOBS: Job[] = [
       pl: "Dostarczanie certyfikatów LEED i BREEAM dla przełomowych budynków.",
       nl: "Lever LEED- en BREEAM-certificeringen voor prominente gebouwen."
     },
-    apply_url: "https://www.burohappold.com/careers/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Buro%20Happold%20Green%20Building%20Consultant",
     logo_url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -1609,7 +1609,7 @@ const JOBS: Job[] = [
       pl: "Projektowanie i optymalizacja systemów uzdatniania wody.",
       nl: "Ontwerp en optimaliseer waterzuiveringssystemen."
     },
-    apply_url: "https://www.veolia.com/careers",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Veolia%20Water%20Technology%20Engineer",
     logo_url: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=200&auto=format&fit=crop"
   },
 
@@ -1668,7 +1668,7 @@ const JOBS: Job[] = [
       pl: "Wspieraj inicjatywy klimatyczne w całej Europie (20-30 godz./tydzień).",
       nl: "Ondersteun klimaatinitiatieven in heel Europa (20-30 uur/week)."
     },
-    apply_url: "https://europeanclimate.org/about-us/jobs-ecf/",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=European%20Climate%20Foundation%20Sustainability%20Coordinator%20(Part-Time)",
     logo_url: "https://images.unsplash.com/photo-1550005808-721262d51785?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -1725,7 +1725,7 @@ const JOBS: Job[] = [
       pl: "Analizuj i raportuj dane ESG dla europejskich MŚP (25 godz./tydzień).",
       nl: "Analyseer en rapporteer ESG-data voor Europese MKB-bedrijven (25 uur/week)."
     },
-    apply_url: "https://euroclimatejobs.com/"
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Sustainable%20Finance%20Platform%20Remote%20ESG%20Reporting%20Analyst"
   },
   {
     id: "pt_j3",
@@ -1781,7 +1781,7 @@ const JOBS: Job[] = [
       pl: "Obliczaj ślad węglowy dla organizacji jako niezależny konsultant.",
       nl: "Bereken de koolstofvoetafdruk voor organisaties als freelance consultant."
     },
-    apply_url: "https://www.leafr.com/"
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Leafr%20Consulting%20Freelance%20Carbon%20Accounting%20Specialist"
   },
   {
     id: "pt_j4",
@@ -1837,7 +1837,7 @@ const JOBS: Job[] = [
       pl: "Doradzaj firmom w zakresie transformacji w kierunku gospodarki o obiegu zamkniętym (20 godz./tydzień).",
       nl: "Adviseer bedrijven over transities naar de circulaire economie (20 uur/week)."
     },
-    apply_url: "https://ellenmacarthurfoundation.org/about-us/work-with-us",
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Ellen%20MacArthur%20Foundation%20Circular%20Economy%20Advisor%20(Part-Time)",
     logo_url: "https://images.unsplash.com/photo-1542601906990-b4d3fb773b09?q=80&w=200&auto=format&fit=crop"
   },
   {
@@ -1894,7 +1894,7 @@ const JOBS: Job[] = [
       pl: "Twórz przekonujące treści klimatyczne dla największej sieci organizacji pozarządowych zajmujących się klimatem w Europie.",
       nl: "Creëer boeiende klimaatcontent voor Europa's grootste netwerk van klimaat-ngo's."
     },
-    apply_url: "https://caneurope.org/jobs/"
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=Climate%20Action%20Network%20Europe%20Sustainability%20Content%20Writer"
   },
   {
     id: "pt_j6",
@@ -1950,7 +1950,7 @@ const JOBS: Job[] = [
       pl: "Analizuj trendy na europejskim rynku energii słonecznej (25 godz./tydzień).",
       nl: "Analyseer trends op de Europese zonne-energiemarkt (25 uur/week)."
     },
-    apply_url: "https://www.solarpowereurope.org/about-solarpowereurope/work-with-us"
+    apply_url: "https://www.linkedin.com/jobs/search/?keywords=SolarPower%20Europe%20Renewable%20Energy%20Analyst%20(Part-Time)"
   },
 ];
 

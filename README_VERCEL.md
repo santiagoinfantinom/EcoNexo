@@ -41,7 +41,6 @@ El script:
 ### Pasos Manuales (Si Prefieres)
 
 Si prefieres hacerlo manualmente, el script también te muestra los pasos exactos:
-
 1. Ve a: https://vercel.com/santiagoinfantinoms-projects/econexo
 2. Settings → Git → Disconnect
 3. Connect Git Repository → `santiagoinfantinom/EcoNexo`
