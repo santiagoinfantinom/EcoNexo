@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { verifyEmailToken } from '@/lib/emailVerification';
 
 function VerifyEmailContent() {
   const router = useRouter();
@@ -20,12 +19,17 @@ function VerifyEmailContent() {
       }
 
       try {
-        const result = verifyEmailToken(token);
+        const response = await fetch('/api/email/verify-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+        const result = await response.json();
 
         if (result.success) {
           setStatus('success');
           setMessage(`¡Email verificado correctamente! Bienvenido a EcoNexo.`);
-          
+
           // Redirect to profile after 3 seconds
           setTimeout(() => {
             router.push('/perfil');
@@ -59,13 +63,13 @@ function VerifyEmailContent() {
               <span className="text-2xl">❌</span>
             )}
           </div>
-          
+
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
             {status === 'loading' && 'Verificando email...'}
             {status === 'success' && '¡Email verificado!'}
             {status === 'error' && 'Error de verificación'}
           </h2>
-          
+
           <p className="text-gray-600 dark:text-gray-300">
             {message}
           </p>
@@ -74,7 +78,7 @@ function VerifyEmailContent() {
         {status === 'success' && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
             <p className="text-green-800 text-sm">
-              🎉 Tu cuenta ha sido verificada exitosamente. 
+              🎉 Tu cuenta ha sido verificada exitosamente.
               Ya puedes disfrutar de todas las funcionalidades de EcoNexo.
             </p>
           </div>
