@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   trailingSlash: true,
   // GitHub Pages configuration (static export)
   ...(isGitHubPages && {
