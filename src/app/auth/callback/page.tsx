@@ -24,8 +24,9 @@ function AuthCallbackContent() {
                 return;
             }
 
+            const supabase = getSupabase();
+
             if (code) {
-                const supabase = getSupabase();
                 try {
                     const { error: sessionError } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -36,15 +37,31 @@ function AuthCallbackContent() {
                     }
 
                     // Successful authentication
-                    // The onAuthStateChange listener in AuthProvider will pick up the session
-                    // We just redirect to the destination
                     router.push("/perfil");
                 } catch (err) {
                     console.error("Unexpected error during auth callback:", err);
                     setError("An unexpected error occurred.");
                 }
+            } else if (typeof window !== "undefined" && window.location.hash.includes("access_token")) {
+                // Handling implicit flow (hash fragment)
+                // Supabase client automatically parses the hash into a session
+                const { data } = supabase.auth.onAuthStateChange((event, session) => {
+                    if (event === "SIGNED_IN" || session) {
+                        router.push("/perfil");
+                    }
+                });
+
+                // Fallback timeout in case event doesn't fire
+                setTimeout(async () => {
+                    const { data: sessionData } = await supabase.auth.getSession();
+                    if (sessionData.session) {
+                        router.push("/perfil");
+                    } else {
+                        router.push("/");
+                    }
+                }, 2000);
             } else {
-                // No code, redirect home
+                // No code and no hash, redirect home
                 router.push("/");
             }
         };

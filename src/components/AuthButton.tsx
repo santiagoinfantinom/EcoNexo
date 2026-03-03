@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import AuthModal from "./AuthModal";
@@ -59,76 +60,24 @@ export default function AuthButton({
 
   if (user) {
     return (
-      <div className="relative">
-        <button
-          onClick={() => setShowUserDropdown(!showUserDropdown)}
-          className={`${getButtonClasses()} flex items-center gap-2`}
-        >
-          <div className="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center overflow-hidden">
-            {user.profile?.avatar_url ? (
-              <img src={user.profile.avatar_url} alt="User Avatar" className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-green-600 dark:text-green-400 text-xs font-bold uppercase">
-                {user.profile?.full_name?.charAt(0) || user.profile?.first_name?.charAt(0) || user.email?.charAt(0) || "U"}
-              </span>
-            )}
-          </div>
-          <span className="hidden sm:inline">
-            {user.profile?.full_name || user.profile?.first_name || user.email?.split("@")[0] || t("myAccount")}
-          </span>
-        </button>
-
-        {showUserDropdown && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 z-10"
-              onClick={() => setShowUserDropdown(false)}
-            ></div>
-
-            {/* Dropdown */}
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 z-20">
-              <div className="py-1">
-                <a
-                  href="/perfil"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
-                  onClick={() => setShowUserDropdown(false)}
-                >
-                  👤 {t("myProfile")}
-                </a>
-                <a
-                  href="/eventos"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
-                  onClick={() => setShowUserDropdown(false)}
-                >
-                  📅 {t("myEvents")}
-                </a>
-                <a
-                  href="/trabajos"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
-                  onClick={() => setShowUserDropdown(false)}
-                >
-                  💼 {t("myJobs")}
-                </a>
-                <a
-                  href="/community"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
-                  onClick={() => setShowUserDropdown(false)}
-                >
-                  👥 {locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community'}
-                </a>
-                <div className="border-t border-gray-200 dark:border-slate-700 my-1"></div>
-                <button
-                  onClick={handleSignOut}
-                  className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-slate-700"
-                >
-                  🚪 {t("signOut")}
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
+      <Link
+        href="/perfil"
+        className={`${getButtonClasses()} flex items-center gap-2`}
+        title={t("myProfile")}
+      >
+        <div className="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center overflow-hidden">
+          {user.profile?.avatar_url ? (
+            <img src={user.profile.avatar_url} alt="User Avatar" className="w-full h-full object-cover" />
+          ) : (
+            <span className="text-green-600 dark:text-green-400 text-xs font-bold uppercase">
+              {user.profile?.full_name?.charAt(0) || user.profile?.first_name?.charAt(0) || user.email?.charAt(0) || "U"}
+            </span>
+          )}
+        </div>
+        <span className="hidden sm:inline">
+          {user.profile?.full_name || user.profile?.first_name || user.email?.split("@")[0] || t("myAccount")}
+        </span>
+      </Link>
     );
   }
 

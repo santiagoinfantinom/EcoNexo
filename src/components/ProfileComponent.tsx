@@ -495,12 +495,24 @@ export default function ProfileComponent() {
                 </button>
               </>
             ) : (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="bg-white hover:bg-green-50 text-green-600 px-4 py-2 rounded-lg transition-colors text-sm font-medium"
-              >
-                {t("editProfile")}
-              </button>
+              <>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="bg-white hover:bg-green-50 text-green-600 px-4 py-2 rounded-lg transition-colors text-sm font-medium shadow-sm"
+                >
+                  {t("editProfile")}
+                </button>
+                <button
+                  onClick={async () => {
+                    const { signOut } = await import('@/lib/auth').then(m => m.useAuth());
+                    await signOut();
+                    window.location.href = '/';
+                  }}
+                  className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg transition-colors text-sm font-medium shadow-sm border border-red-200"
+                >
+                  {t("signOut")}
+                </button>
+              </>
             )}
           </div>
         </div>
