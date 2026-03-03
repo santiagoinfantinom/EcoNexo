@@ -18,6 +18,13 @@ export default function OnboardingTour() {
                 return;
             }
 
+            const getNavSelector = (baseId: string) => {
+                const w = window.innerWidth;
+                if (w >= 1280) return `#nav-${baseId}`;
+                if (w >= 768) return `#nav-md-${baseId}`;
+                return "#mobile-menu-button";
+            };
+
             // Initialize driver
             const driverObj = driver({
                 showProgress: true,
@@ -36,7 +43,7 @@ export default function OnboardingTour() {
                         }
                     },
                     {
-                        element: "#nav-map",
+                        element: getNavSelector("map"),
                         popover: {
                             title: t("tourMapTitle") || "Map",
                             description: t("tourMapDesc") || "Explore the map.",
@@ -45,7 +52,16 @@ export default function OnboardingTour() {
                         }
                     },
                     {
-                        element: "#nav-calendario",
+                        element: getNavSelector("noticias"),
+                        popover: {
+                            title: t("news") || "Noticias",
+                            description: t("tourNewsDesc") || "Stay updated with the latest news.",
+                            side: "bottom",
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: getNavSelector("calendario"),
                         popover: {
                             title: t("tourCalendarTitle") || "Calendar",
                             description: t("tourCalendarDesc") || "Find events.",
@@ -54,7 +70,7 @@ export default function OnboardingTour() {
                         }
                     },
                     {
-                        element: "#nav-trabajos",
+                        element: getNavSelector("trabajos"),
                         popover: {
                             title: t("tourJobsTitle") || "Jobs",
                             description: t("tourJobsDesc") || "Find green jobs.",
@@ -63,7 +79,7 @@ export default function OnboardingTour() {
                         }
                     },
                     {
-                        element: "#nav-chat",
+                        element: getNavSelector("chat"),
                         popover: {
                             title: t("tourChatTitle") || "Chat",
                             description: t("tourChatDesc") || "Chat with community.",
@@ -72,7 +88,7 @@ export default function OnboardingTour() {
                         }
                     },
                     {
-                        element: "#nav-matching",
+                        element: getNavSelector("matching"),
                         popover: {
                             title: t("tourMatchingTitle") || "Matching",
                             description: t("tourMatchingDesc") || "Find your match.",
@@ -81,7 +97,7 @@ export default function OnboardingTour() {
                         }
                     },
                     {
-                        element: "#nav-comunidad",
+                        element: getNavSelector("comunidad"),
                         popover: {
                             title: t("tourCommunityTitle") || "Community",
                             description: t("tourCommunityDesc") || "Join groups.",
@@ -90,7 +106,7 @@ export default function OnboardingTour() {
                         }
                     },
                     {
-                        element: "#nav-perfil",
+                        element: getNavSelector("perfil"),
                         popover: {
                             title: t("tourProfileTitle") || "Profile",
                             description: t("tourProfileDesc") || "Your achievements.",
@@ -99,7 +115,7 @@ export default function OnboardingTour() {
                         }
                     },
                     {
-                        element: "#nav-about",
+                        element: getNavSelector("about"),
                         popover: {
                             title: t("tourAboutTitle") || "About",
                             description: t("tourAboutDesc") || "Learn more.",
