@@ -13,11 +13,11 @@ export default function EcoNexoLogo({ className = "", size = 60 }: EcoNexoLogoPr
   return (
     <div className={`flex items-center ${className}`}>
       <div
-        className={`rounded-full flex items-center justify-center overflow-hidden shadow-2xl bg-white p-2`}
+        className={`rounded-full overflow-hidden shadow-2xl bg-gradient-to-br from-green-500 via-teal-500 to-blue-500 ${isLarge ? 'p-1.5' : 'p-1'}`}
         style={{ width: size, height: size }}
       >
         <Image
-          src={isLarge ? "/logo-icon-v3.png" : "/logo-econexo.png"}
+          src="/logo-econexo.png"
           alt="EcoNexo Logo"
           width={size}
           height={size}

@@ -17,8 +17,6 @@ import {
   Heart
 } from "lucide-react";
 
-import OnboardingTour from "./OnboardingTour";
-
 export default function HeaderNav() {
   const { t, locale } = useI18n();
   const [mounted, setMounted] = useState(false);
@@ -32,73 +30,77 @@ export default function HeaderNav() {
   // Rendering a fully consistent layout from the start
   return (
     <>
-      <OnboardingTour />
       <header className="bg-gls-primary text-white stitch-border-b relative shadow-2xl z-30">
-        <div className="w-full px-4 sm:px-8 lg:px-12 py-6 flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div className="w-full px-4 sm:px-8 lg:px-12 py-6 flex flex-col items-center justify-between gap-8">
 
-          {/* Left: Logo & Title Cluster - Large & Prominent */}
+          {/* Top: Logo & Title Cluster - Large & Prominent */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center gap-4 lg:gap-6 group transition-all hover:scale-[1.02]">
-              <EcoNexoLogo size={65} className="sm:w-[75px] sm:h-[75px] lg:w-[90px] lg:h-[90px]" />
-              <div className="flex flex-col">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white font-black tracking-tighter drop-shadow-md leading-none">
+            <Link href="/" className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 group transition-all hover:scale-[1.02]">
+              <EcoNexoLogo size={120} className="sm:w-[140px] sm:h-[140px] lg:w-[100px] lg:h-[100px]" />
+              <div className="flex flex-col lg:flex-row lg:items-baseline gap-2 lg:gap-6 text-center lg:text-left">
+                <h1 className="text-6xl sm:text-7xl lg:text-8xl text-white font-black tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] leading-none">
                   EcoNexo
                 </h1>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="h-px w-8 bg-green-400"></div>
-                  <span className="text-sm sm:text-base lg:text-lg text-green-300 font-bold tracking-[0.2em] uppercase">
-                    Sustainability Network
-                  </span>
-                </div>
+                <span className="text-lg lg:text-2xl text-green-300 font-black tracking-[0.15em] uppercase drop-shadow-md whitespace-nowrap">
+                  Sustainability Network
+                </span>
               </div>
             </Link>
           </div>
 
-          {/* Right Section: Nav + Auth */}
-          {/* Right Section: Nav + Auth */}
-          <div className="flex-1 flex justify-end items-center gap-6 w-full relative">
-            {/* Auth Button */}
-            <div className="hidden md:flex items-center">
-              <AuthButton variant="primary" size="md" className="bg-[#ccff90] text-green-900 border border-transparent hover:bg-[#b2ff59] px-6 py-2 rounded-xl font-bold transition-all hover:scale-105 shadow-[0_0_15px_rgba(204,255,144,0.3)]" />
+          {/* Bottom Section: Nav + Auth */}
+          <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 w-full">
+
+            {/* Auth Button - Placed before Nav (Between Logo and Map) on Desktop */}
+            <div className="order-2 lg:order-1 flex-shrink-0">
+              <AuthButton
+                variant="outline"
+                size="sm"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 py-2 rounded-xl font-bold transition-all hover:border-green-400/50"
+              />
             </div>
 
-            {/* Main Navigation - Desktop */}
-            <nav className="hidden xl:flex items-center mx-4">
+            {/* Main Navigation */}
+            <nav className="order-1 lg:order-2 hidden xl:flex items-center justify-center gap-1">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
                 { href: "/trabajos", label: t("jobs"), icon: Briefcase },
                 { href: "/chat", label: t("chat"), icon: MessageCircle },
                 { href: "/matching", label: "Matching", icon: Target },
-                { href: "/community", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/perfil", label: t("profile"), icon: User },
+                { href: "/about", label: t("aboutUs"), icon: Info },
               ].map((item) => (
                 <Link
                   key={item.href}
-                  id={`nav-${item.href.replace(/^\//, "") || "map"}`}
                   href={item.href}
-                  className="flex flex-col items-center gap-1.5 px-4 lg:px-5 hover:bg-white/10 rounded-2xl transition-all group relative overflow-hidden py-2"
+                  className="flex flex-col items-center gap-2 px-6 py-3 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden"
                 >
-                  <item.icon className="w-7 h-7 text-green-400 group-hover:text-green-300 group-hover:scale-110 transition-all duration-300" />
-                  <span className="font-bold text-sm tracking-wide text-white/90 group-hover:text-white transition-colors">{item.label}</span>
+                  <div className="absolute inset-0 bg-green-400/0 group-hover:bg-green-400/5 transition-colors"></div>
+                  <item.icon className="w-8 h-8 text-green-400 group-hover:text-green-300 group-hover:scale-110 transition-all duration-300" />
+                  <span className="font-extrabold text-sm tracking-wide text-white/90 group-hover:text-white transition-colors">{item.label}</span>
+                  <div className="w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300"></div>
                 </Link>
               ))}
             </nav>
 
             {/* Medium screen Nav (md-xl) */}
-            <nav className="hidden md:flex xl:hidden flex-wrap justify-end gap-2 mx-4">
+            <nav className="order-1 lg:order-2 hidden md:flex xl:hidden flex-wrap justify-center gap-3">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
                 { href: "/trabajos", label: t("jobs"), icon: Briefcase },
                 { href: "/chat", label: t("chat"), icon: MessageCircle },
                 { href: "/matching", label: "Matching", icon: Target },
-                { href: "/community", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/perfil", label: t("profile"), icon: User },
+                { href: "/about", label: t("aboutUs"), icon: Info },
               ].map((item) => (
                 <Link
                   key={item.href}
-                  id={`nav-md-${item.href.replace(/^\//, "") || "map"}`}
                   href={item.href}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/10 transition-all group"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
                 >
                   <item.icon className="w-5 h-5 text-green-400 group-hover:text-green-300" />
                   <span className="font-bold text-xs text-white/90">{item.label}</span>
@@ -106,14 +108,14 @@ export default function HeaderNav() {
               ))}
             </nav>
 
-            {/* Mobile Menu Button - Also shows AuthButton on Mobile next to hamburger */}
-            <div className="md:hidden flex flex-1 justify-end items-center gap-4">
-              <AuthButton variant="primary" size="sm" className="bg-[#ccff90] text-green-900 rounded-lg px-4 py-2 font-bold" />
+            {/* Mobile Menu Button */}
+            <div className="order-1 md:hidden w-full flex justify-end">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="flex items-center justify-center p-3 bg-white/10 hover:bg-white/20 rounded-xl text-white transition-all shadow-md backdrop-blur-md border border-white/20 group"
+                className="flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 rounded-3xl text-white transition-all shadow-2xl backdrop-blur-md border border-white/20 group"
               >
-                <Menu className="w-7 h-7 group-hover:rotate-90 transition-transform duration-500" />
+                <Menu className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
+                <span className="font-extrabold text-xl tracking-tight">{t("menu") || "Menú"}</span>
               </button>
             </div>
           </div>
@@ -129,7 +131,7 @@ export default function HeaderNav() {
                 { href: "/trabajos", label: t("jobs"), icon: Briefcase },
                 { href: "/chat", label: t("chat"), icon: MessageCircle },
                 { href: "/matching", label: "Matching", icon: Target },
-                { href: "/community", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
                 { href: "/perfil", label: t("profile"), icon: User },
                 { href: "/about", label: t("aboutUs"), icon: Info },
               ].map((item) => (

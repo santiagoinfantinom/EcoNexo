@@ -39,9 +39,9 @@ export default function AuthButton({
     };
 
     const variantClasses = {
-      primary: "bg-green-600 hover:bg-green-700 text-white",
-      secondary: "bg-gray-600 hover:bg-gray-700 text-white",
-      outline: "border border-green-600 text-green-600 hover:bg-green-50 dark:border-green-400 dark:text-green-400 dark:hover:bg-green-900/20"
+      primary: className.includes('bg-') ? "" : "bg-green-600 hover:bg-green-700 text-white",
+      secondary: className.includes('bg-') ? "" : "bg-gray-600 hover:bg-gray-700 text-white",
+      outline: className.includes('border-') ? "" : "border border-green-600 text-green-600 hover:bg-green-50 dark:border-green-400 dark:text-green-400 dark:hover:bg-green-900/20"
     };
 
     return `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} rounded-lg`;
