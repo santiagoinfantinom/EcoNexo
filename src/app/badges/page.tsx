@@ -35,7 +35,7 @@ const BADGES: Badge[] = [
         requirement: 1,
         category: "events",
         color: "bg-emerald-500",
-        target: "eventos"
+        target: ""
     },
     {
         id: "eco-warrior",
@@ -49,7 +49,7 @@ const BADGES: Badge[] = [
         requirement: 10,
         category: "events",
         color: "bg-blue-500",
-        target: "eventos"
+        target: ""
     },
     // Community
     {
@@ -151,7 +151,7 @@ const BADGES: Badge[] = [
         requirement: 5,
         category: "impact",
         color: "bg-blue-700",
-        target: "eventos"
+        target: ""
     },
     {
         id: "solar-pioneer",
@@ -349,14 +349,16 @@ export default function BadgesPage() {
                         const unlocked = isUnlocked(badge.id, badge.requirement);
                         const progress = getProgress(badge.id, badge.requirement);
 
+                        const Component = badge.target ? Link : "div";
+
                         return (
-                            <Link
+                            <Component
                                 key={badge.id}
-                                href={`/${badge.target}`}
+                                href={badge.target ? `/${badge.target}` : undefined}
                                 className={`group relative rounded-3xl p-6 border transition-all duration-300 flex flex-col h-full
                                     ${unlocked
-                                        ? 'bg-white dark:bg-slate-800 border-emerald-100 dark:border-emerald-900/30 shadow-xl shadow-emerald-500/5 hover:scale-[1.02] hover:-translate-y-1'
-                                        : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 opacity-80 hover:opacity-100 hover:bg-white dark:hover:bg-slate-800'}`}
+                                        ? 'bg-white dark:bg-slate-800 border-emerald-100 dark:border-emerald-900/30 shadow-xl shadow-emerald-500/5 ' + (badge.target ? 'hover:scale-[1.02] hover:-translate-y-1 cursor-pointer' : '')
+                                        : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 opacity-80 ' + (badge.target ? 'hover:opacity-100 hover:bg-white dark:hover:bg-slate-800 cursor-pointer' : '')}`}
                             >
                                 {/* Badge Icon */}
                                 <div className="flex justify-center mb-6 relative">
@@ -410,7 +412,7 @@ export default function BadgesPage() {
                                         </span>
                                     </div>
                                 )}
-                            </Link>
+                            </Component>
                         );
                     })}
                 </div>

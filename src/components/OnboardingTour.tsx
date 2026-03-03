@@ -19,9 +19,19 @@ export default function OnboardingTour() {
             }
 
             const getNavSelector = (baseId: string) => {
-                const w = window.innerWidth;
-                if (w >= 1280) return `#nav-${baseId}`;
-                if (w >= 768) return `#nav-md-${baseId}`;
+                // Return whichever version of the link is actually visible.
+                const desktopId = `#nav-${baseId}`;
+                const mdId = `#nav-md-${baseId}`;
+
+                // Get elements
+                const desktopEl = document.querySelector(desktopId);
+                const mdEl = document.querySelector(mdId);
+
+                // Return the desktop element if it exists and has layout width (is visible)
+                if (desktopEl && (desktopEl as HTMLElement).offsetWidth > 0) return desktopId;
+                if (mdEl && (mdEl as HTMLElement).offsetWidth > 0) return mdId;
+
+                // Fallback to mobile button if we're on small screens
                 return "#mobile-menu-button";
             };
 
