@@ -313,6 +313,7 @@ export default function InteractiveMap({
   function createGradientIcon(freq: 'once' | 'regular' | 'permanent'): L.DivIcon {
     const size = 18;
     const gradient = gradientForFrequency(freq);
+    const isToday = freq === 'once'; // Treat 'once' as active/today for demo purposes
     // Soft glow using box-shadow; inner ring for contrast
     const html = `
       <span style="
@@ -320,6 +321,7 @@ export default function InteractiveMap({
         border-radius:9999px; background:${gradient};
         box-shadow: 0 0 0 2px rgba(255,255,255,0.9), 0 8px 14px rgba(0,0,0,0.18);
         position: relative;
+        ${isToday ? 'animation: econexo-pulse 1.5s infinite;' : ''}
       ">
         <span style="
           position:absolute; inset:2px; border-radius:9999px;
@@ -581,11 +583,26 @@ export default function InteractiveMap({
         </div>
 
 
-        {/* Asegurar que popups estén por encima de controles */}
+        {/* Asegurar que popups estén por encima de controles y estilos de animación */}
         <style jsx>{`
       :global(.leaflet-popup) { z-index: 4000 !important; }
       :global(.leaflet-popup-content-wrapper) { z-index: 4000 !important; }
       :global(.leaflet-popup-tip) { z-index: 4000 !important; }
+
+      @keyframes econexo-pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7), 0 0 0 2px rgba(255,255,255,0.9);
+          transform: scale(0.95);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(239, 68, 68, 0), 0 0 0 2px rgba(255,255,255,0.9);
+          transform: scale(1.1);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0), 0 0 0 2px rgba(255,255,255,0.9);
+          transform: scale(0.95);
+        }
+      }
     `}</style>
       </div >
 

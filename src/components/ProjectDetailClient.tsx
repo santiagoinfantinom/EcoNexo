@@ -7,6 +7,7 @@ import ProjectImage from "@/components/ProjectImage";
 import { useAuth } from "@/lib/auth";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import { trackEvent } from "@/lib/analytics";
+import { useSmartContext } from "@/context/SmartContext";
 
 type ProjectDetails = {
   id: string;
@@ -39,7 +40,9 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
 }) {
   const { t, locale } = useI18n();
   const { user } = useAuth();
+  const { addPoints, unlockBadge } = useSmartContext();
   const [favorite, setFavorite] = React.useState(false);
+  const [isSponsoring, setIsSponsoring] = React.useState(false);
 
   React.useEffect(() => {
     const fetchFav = async () => {
@@ -134,6 +137,18 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
       try { trackEvent('save_item', { type: 'project', id, action: 'add', auth: 1 }); } catch { }
     }
   };
+
+  const handleSponsor = () => {
+    setIsSponsoring(true);
+    // Simulate payment flow
+    setTimeout(() => {
+      setIsSponsoring(false);
+      addPoints(100, `Sponsored Project: ${details.name}`);
+      unlockBadge('sponsor', '🌟 Sponsor', '🌟');
+      alert(`🎉 ${locale === 'en' ? 'Thank you for sponsoring!' : locale === 'de' ? 'Danke für das Sponsoring!' : '¡Gracias por patrocinar este proyecto!'} 🎉`);
+    }, 1500);
+  };
+
   const progress = Math.min(100, Math.round((details.budgetRaisedEur / details.budgetGoalEur) * 100));
 
   return (
@@ -211,8 +226,15 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
           )}
 
           {/* Botones de acción - Mejorados para móvil */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center sm:justify-start">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center sm:justify-start flex-wrap">
             <Link href={`/projects/${details.id}/voluntariado`} className="bg-green-700 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-green-800 transition-colors shadow-md hover:shadow-lg text-center text-sm sm:text-base">{t("beVolunteer")}</Link>
+            <button
+              onClick={handleSponsor}
+              disabled={isSponsoring}
+              className={`bg-yellow-500 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-extrabold hover:bg-yellow-600 transition-colors shadow-md hover:shadow-lg text-center text-sm sm:text-base ${isSponsoring ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {isSponsoring ? '⏳...' : '🌟 ' + (locale === 'en' ? 'Sponsor Project' : locale === 'de' ? 'Projekt sponsern' : 'Patrocinar Proyecto')}
+            </button>
             <a href={paypalLink} target="_blank" rel="noopener noreferrer" className="bg-blue-600 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg border-2 border-blue-700 text-center text-sm sm:text-base">{t("donatePaypal")}</a>
             <a href="https://www.klarna.com" target="_blank" rel="noopener noreferrer" className="bg-pink-500 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-pink-600 transition-colors shadow-md hover:shadow-lg border-2 border-pink-600 text-center text-sm sm:text-base">{t("donateKlarna")}</a>
             <a href={stripeLink} target="_blank" rel="noopener noreferrer" className="bg-indigo-600 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg border-2 border-indigo-700 text-center text-sm sm:text-base">{t("donateStripe")}</a>

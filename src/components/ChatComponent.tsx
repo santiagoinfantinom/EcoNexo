@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import Link from "next/link";
 import AuthButton from "./AuthButton";
 import { useRouter } from "next/navigation";
+import EcoBuddiesList from "./EcoBuddiesList";
 
 interface Message {
   id: string;
@@ -554,6 +555,10 @@ export default function ChatComponent() {
 
           {/* Messages */}
           <div className="flex-1 p-6 overflow-y-auto bg-white dark:bg-slate-800">
+
+            {/* Eco-Buddies Suggestions */}
+            <EcoBuddiesList />
+
             {/* Suggested Topics */}
             {filteredMessages.length > 0 && (
               <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg border border-green-200 dark:border-green-800">

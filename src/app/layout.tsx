@@ -15,6 +15,7 @@ import PlausibleProvider from "next-plausible";
 import DynamicManifest from "@/components/DynamicManifest";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import IOSMetaTags from "@/components/IOSMetaTags";
+import EcoTickerBanner from "@/components/EcoTickerBanner";
 import { generateMetadata, generateViewport } from "@/lib/metadata";
 import { ToastProvider } from "@/components/ToastNotification";
 import { SmartProvider } from "@/context/SmartContext";
@@ -62,8 +63,9 @@ export default function RootLayout({
                       <SimpleIntro />
                       <LanguageSwitcher />
                       <HeaderNav />
-                      <main className="min-h-screen">{children}</main>
+                      <main className="min-h-screen pb-12">{children}</main>
                       <GreenCompass />
+                      <EcoTickerBanner />
                     </ErrorBoundary>
                   </SmartProvider>
                 </ToastProvider>
