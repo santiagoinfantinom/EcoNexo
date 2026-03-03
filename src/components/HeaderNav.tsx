@@ -117,6 +117,7 @@ export default function HeaderNav() {
             {/* Mobile Menu Button */}
             <div className="md:hidden w-full flex justify-end">
               <button
+                id="mobile-menu-button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 rounded-3xl text-white transition-all shadow-2xl backdrop-blur-md border border-white/20 group"
               >

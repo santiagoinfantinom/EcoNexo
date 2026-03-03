@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Twitter, Instagram, MessageSquare, Heart, Share2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
@@ -58,9 +57,14 @@ const MOCK_POSTS: SocialPost[] = [
     }
 ];
 
+const CARD_DELAY_CLASSES = [
+    "perf-card-enter",
+    "perf-card-enter-delay-1",
+    "perf-card-enter-delay-2",
+];
+
 export default function SocialMediaFeed() {
     const { t } = useI18n();
-    const [posts, setPosts] = useState<SocialPost[]>(MOCK_POSTS);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
@@ -96,52 +100,46 @@ export default function SocialMediaFeed() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <AnimatePresence mode="popLayout">
-                        {visiblePosts.map((post, index) => (
-                            <motion.div
-                                key={`${post.id}-${currentIndex}-${index}`}
-                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9, y: -20 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                className="glass-card p-6 flex flex-col h-full hover:shadow-xl transition-shadow border border-white/40 dark:border-slate-700/40"
-                            >
-                                <div className="flex items-center gap-3 mb-4">
-                                    <img src={post.avatar} alt={post.author} className="w-10 h-10 rounded-full ring-2 ring-green-600/20" />
-                                    <div className="flex-1 min-w-0">
-                                        <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{post.author}</h4>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{post.handle}</p>
-                                    </div>
-                                    {post.source === "twitter" ? (
-                                        <Twitter className="w-4 h-4 text-sky-500" />
-                                    ) : (
-                                        <Instagram className="w-4 h-4 text-pink-500" />
-                                    )}
+                <div key={currentIndex} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {visiblePosts.map((post, index) => (
+                        <div
+                            key={`${post.id}-${currentIndex}-${index}`}
+                            className={`glass-card p-6 flex flex-col h-full hover:shadow-xl transition-shadow border border-white/40 dark:border-slate-700/40 ${CARD_DELAY_CLASSES[index] || ''}`}
+                        >
+                            <div className="flex items-center gap-3 mb-4">
+                                <img src={post.avatar} alt={post.author} className="w-10 h-10 rounded-full ring-2 ring-green-600/20" />
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{post.author}</h4>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{post.handle}</p>
                                 </div>
+                                {post.source === "twitter" ? (
+                                    <Twitter className="w-4 h-4 text-sky-500" />
+                                ) : (
+                                    <Instagram className="w-4 h-4 text-pink-500" />
+                                )}
+                            </div>
 
-                                <p className="text-slate-700 dark:text-slate-300 text-sm mb-6 flex-1 italic">
-                                    "{post.content}"
-                                </p>
+                            <p className="text-slate-700 dark:text-slate-300 text-sm mb-6 flex-1 italic">
+                                &quot;{post.content}&quot;
+                            </p>
 
-                                <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700/50">
-                                    <div className="flex gap-4">
-                                        <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-red-500 transition-colors">
-                                            <Heart className="w-3.5 h-3.5" />
-                                            {post.likes}
-                                        </button>
-                                        <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-green-600 transition-colors">
-                                            <Share2 className="w-3.5 h-3.5" />
-                                            {post.shares}
-                                        </button>
-                                    </div>
-                                    <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                                        <MessageSquare className="w-4 h-4" />
+                            <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700/50">
+                                <div className="flex gap-4">
+                                    <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-red-500 transition-colors">
+                                        <Heart className="w-3.5 h-3.5" />
+                                        {post.likes}
+                                    </button>
+                                    <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-green-600 transition-colors">
+                                        <Share2 className="w-3.5 h-3.5" />
+                                        {post.shares}
                                     </button>
                                 </div>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
+                                <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                                    <MessageSquare className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

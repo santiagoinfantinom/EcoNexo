@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
   trailingSlash: true,
   // GitHub Pages configuration (static export)
   ...(isGitHubPages && {

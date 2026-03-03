@@ -14,7 +14,6 @@ import { PROJECTS } from "@/data/projects";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useSmartContext } from "@/context/SmartContext";
-import { motion } from "framer-motion";
 import {
   Sprout,
   BookOpen,
@@ -104,10 +103,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-hero opacity-95 transform -skew-y-3 origin-top-left scale-110"></div>
 
         <div className="relative max-w-7xl mx-auto text-center z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+          <div
           >
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-sm">
               {t('welcomeMessageTitle')}
@@ -142,13 +138,10 @@ export default function Home() {
               </Link>
 
             </div>
-          </motion.div>
+          </div>
 
           {/* Stats Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
+          <div
             className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto"
           >
             <div className="glass-card p-6 text-center transform hover:scale-105 transition-transform duration-300">
@@ -163,7 +156,7 @@ export default function Home() {
               <div className="text-4xl font-bold text-purple-600 mb-2">50+</div>
               <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">{t('cities')}</div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -174,10 +167,7 @@ export default function Home() {
         <div className="lg:col-span-2 space-y-8">
           {/* Interactive Map Section */}
           {showMap && isClient && typeof window !== 'undefined' && (
-            <motion.section
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
+            <section
               className="glass-card p-2 overflow-hidden"
             >
               <div className="flex items-center gap-2 px-4 py-3 mb-2">
@@ -189,7 +179,7 @@ export default function Home() {
               <div className="rounded-xl overflow-hidden h-[400px] md:h-[500px] shadow-inner">
                 <InteractiveMap projects={PROJECTS} region="europe" />
               </div>
-            </motion.section>
+            </section>
           )}
 
           {/* Featured Projects */}

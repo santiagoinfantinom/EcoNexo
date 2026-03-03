@@ -14,7 +14,6 @@ import CircleDot from 'lucide-react/dist/esm/icons/circle-dot';
 import X from 'lucide-react/dist/esm/icons/x';
 import { useSmartContext, UserQuest } from '@/context/SmartContext';
 import { useI18n } from '@/lib/i18n';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export default function GamificationHub() {
     const { gamification, preferences, clearLastBadge } = useSmartContext();
@@ -29,84 +28,70 @@ export default function GamificationHub() {
     return (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-3 font-sans">
             {/* New Badge Notification */}
-            <AnimatePresence>
-                {lastBadge && !isExpanded && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.9 }}
-                        className="relative"
+            {lastBadge && !isExpanded && (
+                <div className="relative perf-scale-in">
+                    <Link
+                        href="/badges"
+                        className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 rounded-2xl shadow-xl hover:scale-105 transition-all"
                     >
-                        <Link
-                            href="/badges"
-                            className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 rounded-2xl shadow-xl hover:scale-105 transition-all"
-                        >
-                            <span className="text-2xl">{lastBadge.icon}</span>
-                            <div>
-                                <div className="text-[10px] font-bold uppercase tracking-wider opacity-70">{t('newBadge')}</div>
-                                <div className="font-black text-sm">{lastBadge.name}</div>
-                            </div>
-                            <ChevronRight className="w-4 h-4" />
-                        </Link>
+                        <span className="text-2xl">{lastBadge.icon}</span>
+                        <div>
+                            <div className="text-[10px] font-bold uppercase tracking-wider opacity-70">{t('newBadge')}</div>
+                            <div className="font-black text-sm">{lastBadge.name}</div>
+                        </div>
+                        <ChevronRight className="w-4 h-4" />
+                    </Link>
+                    <button
+                        onClick={(e) => { e.stopPropagation(); clearLastBadge(); }}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors shadow-lg"
+                    >
+                        <X className="w-3 h-3" />
+                    </button>
+                </div>
+            )}
+
+            {isExpanded && (
+                <div className="w-80 glass-card p-0 shadow-2xl border border-white/20 dark:border-slate-700/50 mb-2 overflow-hidden flex flex-col max-h-[500px] perf-scale-in">
+                    {/* Tab Switcher */}
+                    <div className="flex bg-slate-50 dark:bg-slate-900/50 p-1 border-b border-white/10">
                         <button
-                            onClick={(e) => { e.stopPropagation(); clearLastBadge(); }}
-                            className="absolute -top-2 -right-2 w-6 h-6 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors shadow-lg"
+                            onClick={() => setActiveTab('stats')}
+                            className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'stats'
+                                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
+                                : 'text-slate-400 hover:text-slate-600'
+                                }`}
                         >
-                            <X className="w-3 h-3" />
+                            <TrendingUp className="w-3.5 h-3.5" /> {t('stats')}
                         </button>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <AnimatePresence>
-                {isExpanded && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="w-80 glass-card p-0 shadow-2xl border border-white/20 dark:border-slate-700/50 mb-2 overflow-hidden flex flex-col max-h-[500px]"
-                    >
-                        {/* Tab Switcher */}
-                        <div className="flex bg-slate-50 dark:bg-slate-900/50 p-1 border-b border-white/10">
-                            <button
-                                onClick={() => setActiveTab('stats')}
-                                className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'stats'
-                                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
-                                    : 'text-slate-400 hover:text-slate-600'
-                                    }`}
-                            >
-                                <TrendingUp className="w-3.5 h-3.5" /> {t('stats')}
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('quests')}
-                                className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'quests'
-                                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
-                                    : 'text-slate-400 hover:text-slate-600'
-                                    }`}
-                            >
-                                <CircleDot className="w-3.5 h-3.5" /> {t('quests')}
-                                {gamification.activeQuests.length > 0 && (
-                                    <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                                )}
-                            </button>
-                        </div>
-
-                        <div className="p-6 overflow-y-auto">
-                            {activeTab === 'stats' ? (
-                                <StatsPanel gamification={gamification} t={t} levelProgress={levelProgress} nextLevelXP={nextLevelXP} />
-                            ) : (
-                                <QuestsPanel gamification={gamification} t={t} />
+                        <button
+                            onClick={() => setActiveTab('quests')}
+                            className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'quests'
+                                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm'
+                                : 'text-slate-400 hover:text-slate-600'
+                                }`}
+                        >
+                            <CircleDot className="w-3.5 h-3.5" /> {t('quests')}
+                            {gamification.activeQuests.length > 0 && (
+                                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
                             )}
-                        </div>
+                        </button>
+                    </div>
 
-                        <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-white/10">
-                            <Link href="/badges" className="block w-full py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-sm font-bold hover:opacity-90 transition-opacity text-center">
-                                {t('viewAllBadges')}
-                            </Link>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    <div className="p-6 overflow-y-auto">
+                        {activeTab === 'stats' ? (
+                            <StatsPanel gamification={gamification} t={t} levelProgress={levelProgress} nextLevelXP={nextLevelXP} />
+                        ) : (
+                            <QuestsPanel gamification={gamification} t={t} />
+                        )}
+                    </div>
+
+                    <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-white/10">
+                        <Link href="/badges" className="block w-full py-2.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl text-sm font-bold hover:opacity-90 transition-opacity text-center">
+                            {t('viewAllBadges')}
+                        </Link>
+                    </div>
+                </div>
+            )}
 
             {/* Floating Trigger */}
             <button
@@ -134,7 +119,7 @@ export default function GamificationHub() {
 
 function StatsPanel({ gamification, t, levelProgress, nextLevelXP }: any) {
     return (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <div className="perf-fade-in">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                     <div className="p-2 bg-yellow-400/10 rounded-lg">
@@ -154,10 +139,9 @@ function StatsPanel({ gamification, t, levelProgress, nextLevelXP }: any) {
                     <span className="text-xs text-slate-400">{nextLevelXP} {t('xpToLevel')} {gamification.level + 1}</span>
                 </div>
                 <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200 dark:border-slate-700">
-                    <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${levelProgress}%` }}
-                        className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full"
+                    <div
+                        className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full perf-progress-bar"
+                        style={{ width: `${levelProgress}%` }}
                     />
                 </div>
             </div>
@@ -198,13 +182,13 @@ function StatsPanel({ gamification, t, levelProgress, nextLevelXP }: any) {
                     />
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 }
 
 function QuestsPanel({ gamification, t }: any) {
     return (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <div className="perf-fade-in">
             <h3 className="font-bold text-slate-900 dark:text-white mb-4">{t('activeQuestsLabel')}</h3>
             {gamification.activeQuests.length === 0 ? (
                 <div className="text-center py-8">
@@ -229,10 +213,9 @@ function QuestsPanel({ gamification, t }: any) {
                                             <span className="font-bold text-slate-900 dark:text-white">{step.current}/{step.target}</span>
                                         </div>
                                         <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                                            <motion.div
-                                                initial={{ width: 0 }}
-                                                animate={{ width: `${(step.current / step.target) * 100}%` }}
-                                                className="h-full bg-blue-500"
+                                            <div
+                                                className="h-full bg-blue-500 perf-progress-bar"
+                                                style={{ width: `${(step.current / step.target) * 100}%` }}
                                             />
                                         </div>
                                     </div>
@@ -242,7 +225,7 @@ function QuestsPanel({ gamification, t }: any) {
                     ))}
                 </div>
             )}
-        </motion.div>
+        </div>
     );
 }
 
@@ -262,10 +245,9 @@ function ChallengeItem({ icon, title, desc, progress, max }: { icon: React.React
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2 truncate">{desc}</p>
                 <div className="w-full h-1 bg-slate-100 dark:bg-slate-700/50 rounded-full overflow-hidden">
-                    <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${percentage}%` }}
-                        className={`h-full ${isCompleted ? 'bg-green-500' : 'bg-blue-500'}`}
+                    <div
+                        className={`h-full perf-progress-bar ${isCompleted ? 'bg-green-500' : 'bg-blue-500'}`}
+                        style={{ width: `${percentage}%` }}
                     />
                 </div>
             </div>
