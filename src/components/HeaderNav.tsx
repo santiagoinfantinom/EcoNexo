@@ -17,6 +17,8 @@ import {
   Heart
 } from "lucide-react";
 
+import OnboardingTour from "./OnboardingTour";
+
 export default function HeaderNav() {
   const { t, locale } = useI18n();
   const [mounted, setMounted] = useState(false);
@@ -30,38 +32,37 @@ export default function HeaderNav() {
   // Rendering a fully consistent layout from the start
   return (
     <>
+      <OnboardingTour />
       <header className="bg-gls-primary text-white stitch-border-b relative shadow-2xl z-30">
-        <div className="w-full px-4 sm:px-8 lg:px-12 py-6 flex flex-col items-center justify-between gap-8">
+        <div className="w-full px-4 sm:px-8 lg:px-12 py-6 flex flex-col lg:flex-row items-center justify-between gap-8">
 
-          {/* Top: Logo & Title Cluster - Large & Prominent */}
+          {/* Left: Logo & Title Cluster - Large & Prominent */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 group transition-all hover:scale-[1.02]">
-              <EcoNexoLogo size={120} className="sm:w-[140px] sm:h-[140px] lg:w-[100px] lg:h-[100px]" />
-              <div className="flex flex-col lg:flex-row lg:items-baseline gap-2 lg:gap-6 text-center lg:text-left">
-                <h1 className="text-6xl sm:text-7xl lg:text-8xl text-white font-black tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] leading-none">
+            <Link href="/" className="flex items-center gap-8 group transition-all hover:scale-[1.02]">
+              <EcoNexoLogo size={180} className="sm:w-[200px] sm:h-[200px] lg:w-[220px] lg:h-[220px]" />
+              <div className="flex flex-col">
+                <h1 className="text-6xl sm:text-7xl lg:text-9xl text-white font-black tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] leading-tight">
                   EcoNexo
                 </h1>
-                <span className="text-lg lg:text-2xl text-green-300 font-black tracking-[0.15em] uppercase drop-shadow-md whitespace-nowrap">
-                  Sustainability Network
-                </span>
+                <div className="flex items-center gap-2 mt-[-8px]">
+                  <div className="h-px w-8 bg-green-400"></div>
+                  <span className="text-base sm:text-lg lg:text-xl text-green-300 font-bold tracking-[0.2em] uppercase">
+                    Sustainability Network
+                  </span>
+                </div>
               </div>
             </Link>
           </div>
 
-          {/* Bottom Section: Nav + Auth */}
-          <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 w-full">
-
-            {/* Auth Button - Placed before Nav (Between Logo and Map) on Desktop */}
-            <div className="order-2 lg:order-1 flex-shrink-0">
-              <AuthButton
-                variant="outline"
-                size="sm"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 py-2 rounded-xl font-bold transition-all hover:border-green-400/50"
-              />
+          {/* Right Section: Nav + Auth */}
+          <div className="flex-1 flex flex-col items-center lg:items-end gap-6 w-full">
+            {/* Upper row: Auth & Settings - positioned at top of navigation cluster */}
+            <div className="flex items-center gap-6 absolute top-4 right-4 lg:relative lg:top-auto lg:right-auto">
+              <AuthButton variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 py-2 rounded-xl font-bold transition-all hover:border-green-400/50" />
             </div>
 
-            {/* Main Navigation */}
-            <nav className="order-1 lg:order-2 hidden xl:flex items-center justify-center gap-1">
+            {/* Main Navigation - Desktop */}
+            <nav className="hidden xl:flex items-center gap-2 bg-white/5 p-2 rounded-3xl backdrop-blur-md border border-white/10 shadow-inner">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
@@ -74,6 +75,7 @@ export default function HeaderNav() {
               ].map((item) => (
                 <Link
                   key={item.href}
+                  id={`nav-${item.href.replace(/^\//, "") || "map"}`}
                   href={item.href}
                   className="flex flex-col items-center gap-2 px-6 py-3 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden"
                 >
@@ -86,7 +88,7 @@ export default function HeaderNav() {
             </nav>
 
             {/* Medium screen Nav (md-xl) */}
-            <nav className="order-1 lg:order-2 hidden md:flex xl:hidden flex-wrap justify-center gap-3">
+            <nav className="hidden md:flex xl:hidden flex-wrap justify-center lg:justify-end gap-3">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
@@ -99,6 +101,7 @@ export default function HeaderNav() {
               ].map((item) => (
                 <Link
                   key={item.href}
+                  id={`nav-md-${item.href.replace(/^\//, "") || "map"}`}
                   href={item.href}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
                 >
@@ -109,7 +112,7 @@ export default function HeaderNav() {
             </nav>
 
             {/* Mobile Menu Button */}
-            <div className="order-1 md:hidden w-full flex justify-end">
+            <div className="md:hidden w-full flex justify-end">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 rounded-3xl text-white transition-all shadow-2xl backdrop-blur-md border border-white/20 group"
