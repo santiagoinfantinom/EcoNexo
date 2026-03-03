@@ -6,10 +6,6 @@ import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import WelcomeMessage from "@/components/WelcomeMessage";
 import AuthModal from "@/components/AuthModal";
-import FeaturedProjectsSlider from "@/components/FeaturedProjectsSlider";
-import EcoTips from "@/components/EcoTips";
-import EcoTipsBulletPoints from "@/components/EcoTipsBulletPoints";
-import SocialMediaFeed from "@/components/SocialMediaFeed";
 import { PROJECTS } from "@/data/projects";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -26,11 +22,15 @@ import {
   ArrowRight
 } from "lucide-react";
 
-// New Smart Components
-import GamificationHub from "@/components/GamificationHub";
-import PreferencesModal from "@/components/PreferencesModal";
-import RecommendedProjects from "@/components/RecommendedProjects";
-import CityLeaderboard from "@/components/CityLeaderboard";
+// Dynamic Import Heavy Components
+const GamificationHub = dynamic(() => import("@/components/GamificationHub"), { ssr: false });
+const PreferencesModal = dynamic(() => import("@/components/PreferencesModal"), { ssr: false });
+const RecommendedProjects = dynamic(() => import("@/components/RecommendedProjects"), { ssr: false });
+const CityLeaderboard = dynamic(() => import("@/components/CityLeaderboard"), { ssr: false });
+const FeaturedProjectsSlider = dynamic(() => import("@/components/FeaturedProjectsSlider"));
+const SocialMediaFeed = dynamic(() => import("@/components/SocialMediaFeed"));
+const EcoTips = dynamic(() => import("@/components/EcoTips"));
+const EcoTipsBulletPoints = dynamic(() => import("@/components/EcoTipsBulletPoints"));
 
 // Dynamic import to avoid SSR issues with Leaflet
 const InteractiveMap = dynamic(

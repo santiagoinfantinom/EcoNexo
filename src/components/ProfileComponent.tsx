@@ -70,7 +70,7 @@ interface ProfileData {
 
 export default function ProfileComponent() {
   const { t, locale } = useI18n();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -215,7 +215,7 @@ export default function ProfileComponent() {
           .eq('id', user.id)
           .single();
 
-        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+        if (error && error.code !== 'PGRST116' && error.code !== '22P02') { // PGRST116 = no rows returned
           console.error('Error loading profile:', error);
           setError('Error cargando perfil');
           return;
@@ -504,7 +504,6 @@ export default function ProfileComponent() {
                 </button>
                 <button
                   onClick={async () => {
-                    const { signOut } = await import('@/lib/auth').then(m => m.useAuth());
                     await signOut();
                     window.location.href = '/';
                   }}

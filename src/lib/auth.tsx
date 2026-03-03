@@ -283,9 +283,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
-    if (!isSupabaseConfigured()) return;
-    const supabase = getSupabase();
-    await supabase.auth.signOut();
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem('econexo_user');
+        localStorage.removeItem('econexo_auth_provider');
+      }
+      if (isSupabaseConfigured()) {
+        const supabase = getSupabase();
+        await supabase.auth.signOut();
+      }
+    } catch (error) {
+      console.error("Error signing out:", error);
+    } finally {
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
+    }
   }, []);
 
   const value = useMemo<AuthContextValue>(() => ({ user, loading, signInWithMagicLink, signInWithOAuth, signOut }), [user, loading, signInWithMagicLink, signInWithOAuth, signOut]);
