@@ -32,6 +32,7 @@ import GamificationHub from "@/components/GamificationHub";
 import PreferencesModal from "@/components/PreferencesModal";
 import RecommendedProjects from "@/components/RecommendedProjects";
 import CityLeaderboard from "@/components/CityLeaderboard";
+import HomeTickerWindow from "@/components/HomeTickerWindow";
 
 // Dynamic import to avoid SSR issues with Leaflet
 const InteractiveMap = dynamic(
@@ -410,6 +411,9 @@ export default function Home() {
         onClose={() => setIsAuthModalOpen(false)}
         mode={authMode}
       />
+
+      {/* Auto-scroll Ticker Window exclusively for Homepage */}
+      <HomeTickerWindow />
     </div>
   );
 }

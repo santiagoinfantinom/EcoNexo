@@ -115,47 +115,58 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
         return;
       }
 
-      // Send verification email with welcome message
-      const response = await fetch('/api/email/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          locale,
-          captchaToken: captchaToken || undefined,
-        }),
-      });
+      if (isSupabaseReady) {
+        const result = await signInWithMagicLink(email);
 
-      const result = await response.json();
-
-      if (result.success) {
-        setSuccess(true);
-        setShowEmailVerification(true);
-        setTimeout(() => {
-          setSuccess(false);
-          onClose();
-        }, 3000);
-      } else {
-        // Don't show generic errors for configuration issues
-        const errorMessage = result.message || t("errorSendingEmail");
-        // Filter out reCAPTCHA errors and security verification errors if not configured
-        const isRecaptchaError = errorMessage.includes("Invalid site key") ||
-          errorMessage.includes("site owner") ||
-          errorMessage.includes("Error in security verification") ||
-          errorMessage.includes("Error en la verificación de seguridad") ||
-          errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
-        if (!isRecaptchaError) {
-          setError(errorMessage);
+        if (result.error) {
+          setError(result.error);
         } else {
-          // If it's a reCAPTCHA error, just show a generic message
-          setError(t("errorSendingEmail"));
+          setSuccess(true);
+          setShowEmailVerification(true);
+          setTimeout(() => {
+            setSuccess(false);
+            onClose();
+          }, 3000);
+        }
+      } else {
+        // Fallback for non-Supabase environments
+        const response = await fetch('/api/email/verify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            locale,
+            captchaToken: captchaToken || undefined,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          setSuccess(true);
+          setShowEmailVerification(true);
+          setTimeout(() => {
+            setSuccess(false);
+            onClose();
+          }, 3000);
+        } else {
+          const errorMessage = result.message || t("errorSendingEmail");
+          const isRecaptchaError = errorMessage.includes("Invalid site key") ||
+            errorMessage.includes("site owner") ||
+            errorMessage.includes("Error in security verification") ||
+            errorMessage.includes("Error en la verificación de seguridad") ||
+            errorMessage.includes("Fehler bei der Sicherheitsüberprüfung");
+          if (!isRecaptchaError) {
+            setError(errorMessage);
+          } else {
+            setError(t("errorSendingEmail"));
+          }
         }
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      // Don't show reCAPTCHA-related errors if not configured
       const isRecaptchaError = errorMessage.includes("Invalid site key") ||
         errorMessage.includes("site owner") ||
         errorMessage.includes("Error in security verification") ||
