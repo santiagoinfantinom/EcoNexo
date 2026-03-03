@@ -22,8 +22,13 @@ export default function AuthButton({
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  if (loading) {
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || loading) {
     return (
       <div className={`animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg ${size === "sm" ? "h-8 w-20" : size === "lg" ? "h-12 w-32" : "h-10 w-24"}`}></div>
     );

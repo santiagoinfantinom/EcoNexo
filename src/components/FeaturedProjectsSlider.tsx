@@ -4,9 +4,12 @@ import { useI18n, categoryLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { PROJECTS } from "@/data/projects";
 import { MapPin, Leaf, Users, Sprout, ChevronLeft, ChevronRight } from "lucide-react";
+import { useSmartContext } from "@/context/SmartContext";
+import { calculateMatchScore } from "@/lib/matching";
 
 export default function FeaturedProjectsSlider() {
   const { t, locale } = useI18n();
+  const { preferences } = useSmartContext();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -90,6 +93,12 @@ export default function FeaturedProjectsSlider() {
   const projectsPerView = 1;
   // Format all projects first to filter out invalid ones, then calculate slides
   const validFormattedProjects = activeProjects
+    .map(p => {
+      const hasPreferences = preferences.selectedCategories.length > 0 || preferences.selectedSkills.length > 0;
+      return { project: p, score: hasPreferences ? calculateMatchScore(p, preferences) : 0 };
+    })
+    .sort((a, b) => b.score - a.score)
+    .map(ps => ps.project)
     .map(formatProject)
     .filter((project): project is NonNullable<ReturnType<typeof formatProject>> => project !== null);
   const totalSlides = Math.max(1, Math.ceil(validFormattedProjects.length / projectsPerView));
