@@ -5,6 +5,7 @@ import { getSupabase, isSupabaseConfigured } from "./supabaseClient";
 type AuthUser = {
   id: string;
   email: string | null;
+  profile?: any | null;
 };
 
 type AuthContextValue = {
@@ -60,7 +61,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const sessionUser = data.session?.user ?? null;
 
       if (sessionUser) {
-        setUser({ id: sessionUser.id, email: sessionUser.email ?? null });
+        try {
+          const { data: profile } = await supabase.from('profiles').select('*').eq('id', sessionUser.id).single();
+          setUser({ id: sessionUser.id, email: sessionUser.email ?? null, profile });
+        } catch (err) {
+          setUser({ id: sessionUser.id, email: sessionUser.email ?? null });
+        }
       } else {
         // 2. Fallback to LocalStorage (for custom OAuth / Demo mode)
         if (typeof window !== 'undefined') {
@@ -197,11 +203,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           };
 
-          await supabase
+          const { data: finalProfile } = await supabase
             .from('profiles')
-            .upsert(profileData, { onConflict: 'id' });
+            .upsert(profileData, { onConflict: 'id' }).select().single();
+
+          if (mounted) {
+            setUser({ id: sessionUser.id, email: sessionUser.email ?? null, profile: finalProfile });
+          }
         } catch (error) {
           console.error('Error creating/updating profile:', error);
+          if (mounted) {
+            try {
+              const { data: fallbackProfile } = await supabase.from('profiles').select('*').eq('id', sessionUser.id).single();
+              setUser({ id: sessionUser.id, email: sessionUser.email ?? null, profile: fallbackProfile });
+            } catch (err) {
+              // Ignore failure
+            }
+          }
         }
       }
     });
@@ -225,7 +243,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Simulate session
         window.location.reload();
       }
-      return { error: null };
+      return {};
     }
     const supabase = getSupabase();
     const emailRedirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;

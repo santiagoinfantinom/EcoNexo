@@ -59,13 +59,17 @@ export default function AuthButton({
           onClick={() => setShowUserDropdown(!showUserDropdown)}
           className={`${getButtonClasses()} flex items-center gap-2`}
         >
-          <div className="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-            <span className="text-green-600 dark:text-green-400 text-xs font-bold">
-              {user.email?.charAt(0).toUpperCase() || "U"}
-            </span>
+          <div className="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center overflow-hidden">
+            {user.profile?.avatar_url ? (
+              <img src={user.profile.avatar_url} alt="User Avatar" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-green-600 dark:text-green-400 text-xs font-bold uppercase">
+                {user.profile?.full_name?.charAt(0) || user.profile?.first_name?.charAt(0) || user.email?.charAt(0) || "U"}
+              </span>
+            )}
           </div>
           <span className="hidden sm:inline">
-            {user.email?.split("@")[0] || t("myAccount")}
+            {user.profile?.full_name || user.profile?.first_name || user.email?.split("@")[0] || t("myAccount")}
           </span>
         </button>
 
