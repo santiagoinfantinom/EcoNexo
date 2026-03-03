@@ -14,7 +14,8 @@ import {
   Users,
   User,
   Info,
-  Heart
+  Heart,
+  Newspaper
 } from "lucide-react";
 
 import OnboardingTour from "./OnboardingTour";
@@ -65,6 +66,7 @@ export default function HeaderNav() {
             <nav className="hidden xl:flex items-center gap-2 bg-white/5 p-2 rounded-3xl backdrop-blur-md border border-white/10 shadow-inner">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
+                { href: "/noticias", label: t("news") || "Noticias", icon: Newspaper },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
                 { href: "/trabajos", label: t("jobs"), icon: Briefcase },
                 { href: "/chat", label: t("chat"), icon: MessageCircle },
@@ -91,6 +93,7 @@ export default function HeaderNav() {
             <nav className="hidden md:flex xl:hidden flex-wrap justify-center lg:justify-end gap-3">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
+                { href: "/noticias", label: t("news") || "Noticias", icon: Newspaper },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
                 { href: "/trabajos", label: t("jobs"), icon: Briefcase },
                 { href: "/chat", label: t("chat"), icon: MessageCircle },
@@ -130,6 +133,7 @@ export default function HeaderNav() {
             <nav className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
+                { href: "/noticias", label: t("news") || "Noticias", icon: Newspaper },
                 { href: "/calendario", label: t("calendar"), icon: Calendar },
                 { href: "/trabajos", label: t("jobs"), icon: Briefcase },
                 { href: "/chat", label: t("chat"), icon: MessageCircle },
