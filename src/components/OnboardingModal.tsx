@@ -215,7 +215,7 @@ export function OnboardingModal() {
                 onClick={() => handleLanguageSelect('fr')}
                 className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
-                🇫🇷 Français
+
               </button>
             </div>
           </div>

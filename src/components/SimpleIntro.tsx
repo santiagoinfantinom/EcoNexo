@@ -28,7 +28,6 @@ export default function SimpleIntro() {
       { label: '🇪🇸 Español', locale: 'es' as const },
       { label: '🇬🇧 English', locale: 'en' as const },
       { label: '🇩🇪 Deutsch', locale: 'de' as const },
-      { label: '🇫🇷 Français', locale: 'fr' as const }
     ]
   };
 

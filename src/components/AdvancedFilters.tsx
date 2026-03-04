@@ -84,7 +84,6 @@ export default function AdvancedFilters({
     { id: 'es', label: 'Español', flag: '🇪🇸' },
     { id: 'en', label: 'English', flag: '🇬🇧' },
     { id: 'de', label: 'Deutsch', flag: '🇩🇪' },
-    { id: 'fr', label: 'Français', flag: '🇫🇷' },
     { id: 'it', label: 'Italiano', flag: '🇮🇹' }
   ];
 

@@ -2555,7 +2555,6 @@ export default function JobsPage() {
                       { code: 'de', label: 'Deutsch' },
                       { code: 'en', label: 'English' },
                       { code: 'es', label: 'Español' },
-                      { code: 'fr', label: 'Français' },
                       { code: 'it', label: 'Italiano' },
                       { code: 'pt', label: 'Português' },
                       { code: 'nl', label: 'Nederlands' },

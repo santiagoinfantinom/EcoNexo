@@ -141,7 +141,7 @@ export default function WelcomeIntro() {
                   onClick={() => handleLanguageSelect('fr')}
                   className={`px-6 py-3 rounded-xl font-medium transition-colors ${locale === 'fr' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} flex items-center justify-center gap-2`}
                 >
-                  🇫🇷 Français
+
                 </button>
               </div>
 
