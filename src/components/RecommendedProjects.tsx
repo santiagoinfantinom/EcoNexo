@@ -6,6 +6,7 @@ import { calculateMatchScore } from '@/lib/matching';
 import { PROJECTS } from '@/data/projects';
 import Link from 'next/link';
 import { useI18n, categoryLabel } from '@/lib/i18n';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 export default function RecommendedProjects() {
     const { preferences } = useSmartContext();
@@ -49,9 +50,10 @@ export default function RecommendedProjects() {
                             </div>
 
                             <div className="h-40 -mx-5 -mt-5 mb-4 overflow-hidden relative">
-                                <img
-                                    src={project.image_url}
+                                <ImageWithFallback
+                                    src={project.image_url || '/assets/default-event.png'}
                                     alt={project.name}
+                                    category={project.category}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">

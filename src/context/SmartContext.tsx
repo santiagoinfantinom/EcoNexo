@@ -83,7 +83,7 @@ interface SmartContextType {
 
     // Gamification
     gamification: GamificationState;
-    addPoints: (amount: number, reason: string) => void;
+    addPoints: (amount: number, reason: string, explicitKarma?: number) => void;
     unlockBadge: (badgeId: string, badgeName?: string, badgeIcon?: string) => void;
     clearLastBadge: () => void;
     getGroupData: () => Group | null;
@@ -189,8 +189,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                     updated.points += 50;
                     updated.history.push(`${t('weeklyStreak')} (+50 XP)`);
                     if (!updated.badges.includes('daily-streak-7')) {
-                        updated.badges = [...updated.badges, 'daily-streak-7'];
-                        unlockBadge('daily-streak-7', t('badgeDailyStreak7'), '🔥');
+                        setTimeout(() => unlockBadge('daily-streak-7', t('badgeDailyStreak7'), '🔥'), 0);
                     }
                 }
 
@@ -265,7 +264,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         window.dispatchEvent(new Event('onboarding-completed'));
     };
 
-    const addPoints = (amount: number, reason: string) => {
+    const addPoints = (amount: number, reason: string, explicitKarma?: number) => {
         setGamification(prev => {
             const newPoints = prev.points + amount;
             const newLevel = Math.floor(newPoints / 1000) + 1;
@@ -278,8 +277,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
             if (reason.includes("Compartir") || reason.includes("Share")) {
                 newShareCount += 1;
                 if (newShareCount === 10 && !newBadges.includes('social-sharer')) {
-                    newBadges.push('social-sharer');
-                    unlockBadge('social-sharer', t('badgeSocialSharer'), '🗣️');
+                    setTimeout(() => unlockBadge('social-sharer', t('badgeSocialSharer'), '🗣️'), 0);
                 }
             }
 
@@ -290,30 +288,30 @@ export function SmartProvider({ children }: { children: ReactNode }) {
             if (reason.includes("Unirse a proyecto") || reason.includes("Join project") || reason.includes("Voluntariado")) {
                 newJoinedProjectCount += 1;
                 if (newJoinedProjectCount === 5 && !newBadges.includes('project-joiner')) {
-                    newBadges.push('project-joiner');
-                    unlockBadge('project-joiner', t('badgeProjectJoiner'), '🤝');
+                    setTimeout(() => unlockBadge('project-joiner', t('badgeProjectJoiner'), '🤝'), 0);
                 }
             }
 
             if (reason.includes("calendario") || reason.includes("calendar")) {
                 prev.calendarSyncCount = (prev.calendarSyncCount || 0) + 1;
                 if (prev.calendarSyncCount >= 3 && !newBadges.includes('calendar-sync-master')) {
-                    newBadges.push('calendar-sync-master');
-                    unlockBadge('calendar-sync-master', t('badgeCalendarSyncMaster'), '📅');
+                    setTimeout(() => unlockBadge('calendar-sync-master', t('badgeCalendarSyncMaster'), '📅'), 0);
                 }
             }
 
             // Karma logic: awarded for community-centric actions
-            let karmaEarned = 0;
-            if (reason.includes("Compartir") || reason.includes("Share") ||
-                reason.includes("calendario") || reason.includes("calendar") ||
-                reason.includes("Comunidad") || reason.includes("Community")) {
-                karmaEarned = Math.floor(amount / 5);
+            let karmaEarned = explicitKarma !== undefined ? explicitKarma : 0;
+            if (explicitKarma === undefined) {
+                if (reason.includes("Compartir") || reason.includes("Share") ||
+                    reason.includes("calendario") || reason.includes("calendar") ||
+                    reason.includes("Comunidad") || reason.includes("Community")) {
+                    karmaEarned = Math.floor(amount / 5);
+                }
             }
 
             // Level up check
             if (newLevel > prev.level) {
-                showToast(`${t('levelUp')} ${newLevel}`, "success");
+                setTimeout(() => showToast(`${t('levelUp')} ${newLevel}`, "success"), 0);
             }
 
             const updated = {
@@ -338,7 +336,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
             if (prev.badges.includes(badgeId)) return prev;
 
             const displayName = badgeName || badgeId;
-            showToast(`${t('newBadge')}: ${displayName}`, "success");
+            setTimeout(() => showToast(`${t('newBadge')}: ${displayName}`, "success"), 0);
 
             const updated = {
                 ...prev,
@@ -392,22 +390,17 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                 const updatedActive = newActiveQuests.filter(q => !q.isDone);
                 const updatedCompleted = [...prev.completedQuests, questId];
 
-                showToast(`${t('questCompleted') || 'Quest Completed'}: ${completedQuestTitle}`, "success");
+                setTimeout(() => showToast(`${t('questCompleted') || 'Quest Completed'}: ${completedQuestTitle}`, "success"), 0);
 
-                // Add rewards
-                addPoints(xpReward, `${t('questCompletedXP') || 'Quest Reward'}: ${completedQuestTitle}`);
-                // Note: addPoints already handles karma and points updates, but since we are inside setGamification,
-                // it might be cleaner to just calculate final state here. 
-                // However, for simplicity and reuse, I'll let the next render handle the point addition 
-                // OR I can manually add them here.
+                // Add rewards outside current setter to avoid double addition and missing level checks
+                setTimeout(() => {
+                    addPoints(xpReward, `${t('questCompletedXP') || 'Quest Reward'}: ${completedQuestTitle}`, karmaReward);
+                }, 0);
 
                 const finalState = {
                     ...prev,
                     activeQuests: updatedActive,
-                    completedQuests: updatedCompleted,
-                    points: prev.points + xpReward,
-                    karma: prev.karma + karmaReward,
-                    history: [...prev.history, `Quest ${completedQuestTitle} (+${xpReward} XP, +${karmaReward} Karma)`]
+                    completedQuests: updatedCompleted
                 };
                 saveGamification(finalState);
                 return finalState;

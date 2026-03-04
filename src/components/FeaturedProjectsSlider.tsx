@@ -6,6 +6,7 @@ import { PROJECTS } from "@/data/projects";
 import { MapPin, Leaf, Users, Sprout, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSmartContext } from "@/context/SmartContext";
 import { calculateMatchScore } from "@/lib/matching";
+import ImageWithFallback from "@/components/ImageWithFallback";
 
 export default function FeaturedProjectsSlider() {
   const { t, locale } = useI18n();
@@ -85,7 +86,8 @@ export default function FeaturedProjectsSlider() {
       location,
       metric,
       volunteers,
-      image_url: project.image_url
+      image_url: project.image_url,
+      category: project.category
     };
   };
 
@@ -165,23 +167,14 @@ export default function FeaturedProjectsSlider() {
                     className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 hover-lift border border-gray-200 dark:border-slate-700 group max-w-md w-full"
                   >
                     {/* Project Image - Always show image with fallback */}
-                    <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 relative">
-                      {project.image_url ? (
-                        <img
-                          src={project.image_url}
-                          alt={project.title}
-                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                          loading="lazy"
-                          onError={(e) => {
-                            // Fallback to gradient background if image fails to load
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Sprout className="w-12 h-12 text-green-600 opacity-50" />
-                        </div>
-                      )}
+                    <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 relative flex items-center justify-center">
+                      <ImageWithFallback
+                        src={project.image_url || '/assets/default-event.png'}
+                        alt={project.title}
+                        category={project.category}
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                        loading="lazy"
+                      />
                     </div>
 
                     {/* Header with icon */}

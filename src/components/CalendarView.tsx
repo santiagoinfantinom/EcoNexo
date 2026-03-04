@@ -5,6 +5,7 @@ import { useGlobalConfig } from "@/hooks/useGlobalConfig";
 import { BaseCard, BaseButton, BaseSelect, BaseTitle, BaseFilterPanel, BaseEmptyState, BaseLabel, BaseInput } from "@/components/ui";
 import Link from "next/link";
 import { ensureEventImage } from "@/lib/eventImages";
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 type CalendarViewProps = {
   projects: any[];
@@ -843,14 +844,13 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                       });
                       return (
                         <div className="w-32 h-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-slate-700">
-                          <img
-                            src={headerImageSrc}
+                          <ImageWithFallback
+                            src={headerImageSrc || '/assets/default-event.png'}
                             alt={event.title}
+                            category={(event as any).category}
                             className="w-full h-full object-cover"
                             loading="lazy"
                             referrerPolicy="no-referrer"
-                            decoding="async"
-                            crossOrigin="anonymous"
                           />
                         </div>
                       );

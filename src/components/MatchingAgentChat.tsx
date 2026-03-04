@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
 import { ensureEventImage } from '@/lib/eventImages';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 interface Match {
   id: string;
@@ -368,9 +369,10 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
                         }}
                       >
                         <div className="flex items-start gap-3">
-                          <img
-                            src={imageSrc}
+                          <ImageWithFallback
+                            src={imageSrc || '/assets/default-event.png'}
                             alt={getProjectName(match)}
+                            category={match.category}
                             className="w-16 h-16 object-cover rounded"
                           />
                           <div className="flex-1 min-w-0">

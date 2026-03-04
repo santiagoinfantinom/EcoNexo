@@ -1024,6 +1024,7 @@ export const DICTS: Record<Locale, Dict> = {
     tourWelcomeDesc: "Let's take a quick tour to help you get started with your sustainability journey.",
     tourMapTitle: "Interactive Map",
     tourMapDesc: "Explore environmental projects, events, and local groups near you.",
+    tourNewsDesc: "Stay updated with the latest environmental news and EcoNexo updates.",
     tourCalendarTitle: "Events Calendar",
     tourCalendarDesc: "Find and sync workshops, cleanups, and green activities.",
     tourJobsTitle: "Green Jobs",
@@ -2104,6 +2105,7 @@ export const DICTS: Record<Locale, Dict> = {
     tourWelcomeDesc: "Lassen Sie uns eine kurze Tour machen, um Ihnen den Einstieg zu erleichtern.",
     tourMapTitle: "Interaktive Karte",
     tourMapDesc: "Erkunden Sie Umweltprojekte, Veranstaltungen und lokale Gruppen in Ihrer Nähe.",
+    tourNewsDesc: "Bleiben Sie auf dem Laufenden mit den neuesten Umweltnachrichten und EcoNexo-Updates.",
     tourCalendarTitle: "Veranstaltungskalender",
     tourCalendarDesc: "Finden und synchronisieren Sie Workshops, Aufräumaktionen und grüne Aktivitäten.",
     tourJobsTitle: "Grüne Jobs",
@@ -3203,6 +3205,7 @@ export const DICTS: Record<Locale, Dict> = {
     tourWelcomeDesc: "Hagamos un recorrido rápido para ayudarte a comenzar tu viaje sostenible.",
     tourMapTitle: "Mapa Interactivo",
     tourMapDesc: "Explora proyectos ambientales, eventos y grupos locales cerca de ti.",
+    tourNewsDesc: "Mantente al día con las últimas noticias ambientales y novedades de EcoNexo.",
     tourCalendarTitle: "Calendario de Eventos",
     tourCalendarDesc: "Encuentra y sincroniza talleres, limpiezas y actividades verdes.",
     tourJobsTitle: "Empleos Verdes",
@@ -3284,7 +3287,7 @@ export const DICTS: Record<Locale, Dict> = {
 export function locationLabel(original: string, locale: Locale) {
   if (locale === "es") return original;
 
-  const locationMap: Record<string, Record<Locale, string>> = {
+  const locationMap: Record<string, Record<string, string>> = {
     "Berlín": { en: "Berlin", de: "Berlin", es: "Berlín", fr: "Berlin", it: "Berlino", pl: "Berlin", nl: "Berlijn" },
     "Madrid": { en: "Madrid", de: "Madrid", es: "Madrid", fr: "Madrid", it: "Madrid", pl: "Madryt", nl: "Madrid" },
     "París": { en: "Paris", de: "Paris", es: "París", fr: "Paris", it: "Parigi", pl: "Paryż", nl: "Parijs" },
@@ -3297,7 +3300,7 @@ export function locationLabel(original: string, locale: Locale) {
 }
 
 export function categoryLabel(category: string, locale: Locale) {
-  const categoryMap: Record<string, Record<Locale, string>> = {
+  const categoryMap: Record<string, Record<string, string>> = {
     "Medio ambiente": { en: "Environment", de: "Umwelt", es: "Medio ambiente", fr: "Environnement", it: "Ambiente", pl: "Środowisko", nl: "Milieu" },
     "Educación": { en: "Education", de: "Bildung", es: "Educación", fr: "Éducation", it: "Educazione", pl: "Edukacja", nl: "Onderwijs" },
     "Comunidad": { en: "Community", de: "Gemeinschaft", es: "Comunidad", fr: "Communauté", it: "Comunità", pl: "Społeczność", nl: "Gemeenschap" },
@@ -3400,7 +3403,7 @@ export function projectDescriptionLabel(projectId: string, original: string, loc
 export function impactTagLabel(original: string, locale: Locale) {
   if (locale === "es") return original;
 
-  const impactMap: Record<string, Record<Locale, string>> = {
+  const impactMap: Record<string, Record<string, string>> = {
     "Alto impacto": { en: "High impact", de: "Hohe Wirkung", es: "Alto impacto", fr: "Impact élevé", it: "Impatto alto", pl: "Wysoki wpływ", nl: "Hoge impact" },
     "Medio impacto": { en: "Medium impact", de: "Mittlere Wirkung", es: "Medio impacto", fr: "Impact moyen", it: "Impatto medio", pl: "Średni wpływ", nl: "Gemiddelde impact" },
     "Bajo impacto": { en: "Low impact", de: "Niedrige Wirkung", es: "Bajo impacto", fr: "Impact faible", it: "Impatto basso", pl: "Niski wpływ", nl: "Lage impact" },

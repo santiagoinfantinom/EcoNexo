@@ -1,7 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
-interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface ImageWithFallbackProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+    src?: string;
     fallbackSrc?: string;
     category?: string;
 }
@@ -15,13 +17,13 @@ export default function ImageWithFallback({
     referrerPolicy = "no-referrer",
     ...props
 }: ImageWithFallbackProps) {
-    const [imgSrc, setImgSrc] = useState(src);
-    const [retryStage, setRetryStage] = useState(0); // 0: initial, 1: category fallback, 2: default fallback
+    const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
+    const [retryStage, setRetryStage] = useState(0);
 
     useEffect(() => {
-        setImgSrc(src);
+        setImgSrc(src || fallbackSrc);
         setRetryStage(0);
-    }, [src]);
+    }, [src, fallbackSrc]);
 
     const handleError = () => {
         // Stage 1: Try category fallback if available
@@ -60,13 +62,15 @@ export default function ImageWithFallback({
     };
 
     return (
-        <img
-            src={imgSrc}
-            alt={alt}
+        <Image
+            src={imgSrc || fallbackSrc}
+            alt={alt || "Image"}
             onError={handleError}
             className={className}
-            referrerPolicy={referrerPolicy}
-            {...props}
+            referrerPolicy={referrerPolicy as any}
+            unoptimized={true}
+            fill={!props.width && !props.height}
+            {...(props as any)}
         />
     );
 }

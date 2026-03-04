@@ -1,14 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { DICTS } from "@/lib/i18n";
+import { DICTS } from "@/lib/dictionaries";
 
 export function generateMetadata(locale: string = "en"): Metadata {
   // Fallback values
   const fallbackTitle = "EcoNexo - Sustainable Projects in Europe";
   const fallbackDescription = "Connect with sustainable projects and events across Europe. Join the community building a greener future.";
-  
+
   let title = fallbackTitle;
   let description = fallbackDescription;
-  
+
   try {
     const dict = DICTS[locale as keyof typeof DICTS];
     if (dict && dict.appTitle) {
@@ -20,7 +20,7 @@ export function generateMetadata(locale: string = "en"): Metadata {
   } catch (error) {
     console.warn("Error loading translations for metadata:", error);
   }
-  
+
   return {
     title,
     description,

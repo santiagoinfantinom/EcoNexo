@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import MapFilters from "./MapFilters";
 import MapSearch from "./MapSearch";
 import MapLayers from "./MapLayers";
+import ImageWithFallback from "./ImageWithFallback";
 
 type Project = {
   id: string;
@@ -369,7 +370,12 @@ export default function InteractiveMap({
                 <Popup>
                   <div className="grid gap-1">
                     {p && (p as any).image_url && (
-                      <img src={(p as any).image_url} alt="Project" className="mb-2 rounded w-full max-w-[220px] h-auto" />
+                      <ImageWithFallback
+                        src={(p as any).image_url || '/assets/default-event.png'}
+                        alt="Project"
+                        category={p.category}
+                        className="mb-2 rounded w-full max-w-[220px] h-auto"
+                      />
                     )}
                     <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
                     <div className="text-xs text-gray-600">{locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}</div>

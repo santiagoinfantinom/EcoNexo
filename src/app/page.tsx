@@ -8,6 +8,7 @@ import WelcomeMessage from "@/components/WelcomeMessage";
 import AuthModal from "@/components/AuthModal";
 import { PROJECTS } from "@/data/projects";
 import { useState, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import dynamic from "next/dynamic";
 import { useSmartContext } from "@/context/SmartContext";
 import {
@@ -76,6 +77,9 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("register");
+
+  // Lazy loading observer for map
+  const { ref: mapRef, inView: mapInView } = useInView({ triggerOnce: true, rootMargin: "200px 0px" });
 
   // Context Hook
   const { showOnboarding, completeOnboarding } = useSmartContext();
@@ -166,21 +170,29 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           {/* Interactive Map Section */}
-          {showMap && isClient && typeof window !== 'undefined' && (
-            <section
-              className="glass-card p-2 overflow-hidden"
-            >
-              <div className="flex items-center gap-2 px-4 py-3 mb-2">
-                <MapIcon className="w-6 h-6 text-green-600" />
-                <h2 className="text-xl font-bold text-gray-800 dark:text-white">
-                  {t('interactiveMap')}
-                </h2>
-              </div>
-              <div className="rounded-xl overflow-hidden h-[400px] md:h-[500px] shadow-inner">
-                <InteractiveMap projects={PROJECTS} region="europe" />
-              </div>
-            </section>
-          )}
+          <section
+            ref={mapRef}
+            className="glass-card p-2 overflow-hidden"
+          >
+            <div className="flex items-center gap-2 px-4 py-3 mb-2">
+              <MapIcon className="w-6 h-6 text-green-600" />
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+                {t('interactiveMap')}
+              </h2>
+            </div>
+            <div className="rounded-xl overflow-hidden h-[400px] md:h-[500px] shadow-inner bg-gray-100 dark:bg-gray-800 flex justify-center items-center">
+              {showMap && isClient && typeof window !== 'undefined' ? (
+                mapInView ? (
+                  <InteractiveMap projects={PROJECTS} region="europe" />
+                ) : (
+                  <div className="animate-pulse flex flex-col items-center">
+                    <div className="rounded-full h-12 w-12 border-b-2 border-green-600 mb-4"></div>
+                    <span className="text-gray-500">Cargando mapa...</span>
+                  </div>
+                )
+              ) : null}
+            </div>
+          </section>
 
           {/* Featured Projects */}
           <section className="glass-card p-6 sm:p-8">
