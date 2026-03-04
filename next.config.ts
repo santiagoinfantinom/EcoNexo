@@ -9,11 +9,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   experimental: {
-    optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: ['lucide-react', '@supabase/supabase-js'],
   },
   trailingSlash: true,
   // GitHub Pages configuration (static export)
@@ -28,11 +25,15 @@ const nextConfig: NextConfig = {
   // Vercel configuration (SSR mode)
   ...(!isGitHubPages && {
     images: {
-      unoptimized: false, // Enable optimization for Vercel
+      unoptimized: false,
       remotePatterns: [
         {
           protocol: 'https',
           hostname: 'images.unsplash.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'i.pravatar.cc',
         },
       ],
     },
