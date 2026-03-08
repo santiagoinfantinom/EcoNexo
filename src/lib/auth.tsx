@@ -258,14 +258,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const supabase = getSupabase();
       const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
 
-      // Configure OAuth options with additional scopes for data import
+      // Configure OAuth options — only request basic profile scopes
+      // Restricted scopes (gmail.readonly, calendar.readonly) require Google app verification
+      // and cause "Unable to exchange external code" errors without it
       const options: any = { redirectTo };
 
-      // Add specific scopes for data import based on provider
       if (provider === "google") {
-        options.scopes = "openid email profile https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/calendar.readonly";
-      } else if (provider === "azure") {
-        options.scopes = "openid email profile Mail.Read User.Read Calendars.Read";
+        options.queryParams = {
+          access_type: 'offline',
+          prompt: 'consent',
+        };
       }
 
       const { error } = await supabase.auth.signInWithOAuth({ provider, options });
@@ -287,6 +289,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (typeof window !== "undefined") {
         localStorage.removeItem('econexo_user');
         localStorage.removeItem('econexo_auth_provider');
+        sessionStorage.removeItem('econexo_welcomed');
       }
       if (isSupabaseConfigured()) {
         const supabase = getSupabase();
