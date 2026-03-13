@@ -33,7 +33,10 @@ jobs:
         run: npm ci
         
       - name: Build static site
-        run: npm run build
+        run: |
+          node scripts/toggle-api.js hide
+          npm run build
+          node scripts/toggle-api.js restore
         env:
           NODE_ENV: production
           GITHUB_PAGES: 'true'

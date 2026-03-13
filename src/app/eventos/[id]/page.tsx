@@ -9,8 +9,8 @@ type EventDetailPageProps = {
   params: Promise<{ id: string }> | { id: string };
 };
 
-// Allow dynamic routes that aren't pre-generated
-export const dynamicParams = true;
+// Disable dynamic routes that aren't pre-generated for static export
+export const dynamicParams = false;
 
 // Required for static export
 export async function generateStaticParams() {
