@@ -18,7 +18,7 @@ This configuration enables automatic deployment of EcoNexo to GitHub Pages using
 - Uses GitHub token for authentication
 
 ### 3. public/CNAME
-- Custom domain configuration (econexo.org)
+- Custom domain configuration (econexo.app)
 - Enables custom domain for GitHub Pages
 
 ### 4. package.json
@@ -50,12 +50,12 @@ To enable GitHub Pages:
 
 ## Custom Domain Setup
 
-1. Add DNS records for econexo.org:
+1. Add DNS records for econexo.app:
    - A record: 185.199.108.153
    - A record: 185.199.109.153
    - A record: 185.199.110.153
    - A record: 185.199.111.153
-   - CNAME record: www -> santiagoinfantinom.github.io
+   - CNAME record: www -> econexo.app
 
 2. Enable "Enforce HTTPS" in GitHub Pages settings
 
@@ -78,5 +78,5 @@ npx serve out
 
 ## URLs
 
-- **GitHub Pages**: https://santiagoinfantinom.github.io/EcoNexo/
-- **Custom Domain**: https://econexo.org (when DNS is configured)
+- **GitHub Pages**: https://econexo.app/EcoNexo/
+- **Custom Domain**: https://econexo.app (when DNS is configured)

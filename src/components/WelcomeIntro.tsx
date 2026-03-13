@@ -2,19 +2,26 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useI18n } from '@/lib/i18n';
+import { useAuth } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import AuthModal from './AuthModal';
 
 export default function WelcomeIntro() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const { t, locale, setLocale } = useI18n();
+  const { user } = useAuth();
+  const router = useRouter();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("register");
 
   useEffect(() => {
     // Show intro after a short delay
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 500);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -57,16 +64,26 @@ export default function WelcomeIntro() {
     }
   ], [t]);
 
-  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
+  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de' | 'fr') => {
     setLocale(selectedLocale);
-    setCurrentStep(1);
   };
 
   const handleNext = () => {
     if (currentStep < features.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      // Cuando es el último paso y se hace clic en "Get Started"
       setIsVisible(false);
+      // Si el usuario está autenticado, redirigir a eventos
+      if (user) {
+        router.push('/eventos');
+      } else {
+        // Si no está autenticado, abrir modal de registro
+        setTimeout(() => {
+          setAuthMode("register");
+          setIsAuthModalOpen(true);
+        }, 300);
+      }
     }
   };
 
@@ -89,7 +106,7 @@ export default function WelcomeIntro() {
 
         {/* Progress bar */}
         <div className="w-full bg-gray-200 rounded-full h-3 mb-8">
-          <div 
+          <div
             className="bg-green-500 h-3 rounded-full transition-all duration-500"
             style={{ width: `${((currentStep + 1) / features.length) * 100}%` }}
           />
@@ -100,6 +117,34 @@ export default function WelcomeIntro() {
           {currentStep === 0 ? (
             // Language selection
             <div>
+              {/* Language buttons on top */}
+              <div className="flex justify-center gap-4 mb-8">
+                <button
+                  onClick={() => handleLanguageSelect('es')}
+                  className={`px-6 py-3 rounded-xl font-medium transition-colors ${locale === 'es' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} flex items-center justify-center gap-2`}
+                >
+                  🇪🇸 Español
+                </button>
+                <button
+                  onClick={() => handleLanguageSelect('en')}
+                  className={`px-6 py-3 rounded-xl font-medium transition-colors ${locale === 'en' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} flex items-center justify-center gap-2`}
+                >
+                  🇬🇧 English
+                </button>
+                <button
+                  onClick={() => handleLanguageSelect('de')}
+                  className={`px-6 py-3 rounded-xl font-medium transition-colors ${locale === 'de' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} flex items-center justify-center gap-2`}
+                >
+                  🇩🇪 Deutsch
+                </button>
+                <button
+                  onClick={() => handleLanguageSelect('fr')}
+                  className={`px-6 py-3 rounded-xl font-medium transition-colors ${locale === 'fr' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} flex items-center justify-center gap-2`}
+                >
+
+                </button>
+              </div>
+
               <div className="text-8xl mb-6">🌍</div>
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 {t('welcomeIntroWelcomeTitle')}
@@ -107,25 +152,19 @@ export default function WelcomeIntro() {
               <p className="text-xl text-gray-600 mb-8">
                 {t('welcomeIntroWelcomeDescription')}
               </p>
-              
-              <div className="space-y-4">
+
+              <div className="flex gap-4 justify-center">
                 <button
-                  onClick={() => handleLanguageSelect('es')}
-                  className="w-full bg-green-600 text-white px-8 py-4 rounded-xl hover:bg-green-700 transition-colors font-medium text-lg flex items-center justify-center gap-3"
+                  onClick={handleSkip}
+                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                 >
-                  🇪🇸 Español
+                  {t('welcomeIntroSkip')}
                 </button>
                 <button
-                  onClick={() => handleLanguageSelect('en')}
-                  className="w-full bg-green-600 text-white px-8 py-4 rounded-xl hover:bg-green-700 transition-colors font-medium text-lg flex items-center justify-center gap-3"
+                  onClick={handleNext}
+                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                 >
-                  🇬🇧 English
-                </button>
-                <button
-                  onClick={() => handleLanguageSelect('de')}
-                  className="w-full bg-green-600 text-white px-8 py-4 rounded-xl hover:bg-green-700 transition-colors font-medium text-lg flex items-center justify-center gap-3"
-                >
-                  🇩🇪 Deutsch
+                  {t('welcomeIntroNext')}
                 </button>
               </div>
             </div>
@@ -139,7 +178,7 @@ export default function WelcomeIntro() {
               <p className="text-xl text-gray-600 mb-8">
                 {features[currentStep].description}
               </p>
-              
+
               <div className="flex gap-4 justify-center">
                 <button
                   onClick={handleSkip}
@@ -151,8 +190,9 @@ export default function WelcomeIntro() {
                   onClick={handleNext}
                   className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                 >
-                  {currentStep === features.length - 1 ? 
-                    (currentStep === features.length - 1 ? t('welcomeIntroGetStarted') : t('welcomeIntroNext'))
+                  {currentStep === features.length - 1
+                    ? t('welcomeIntroGetStarted')
+                    : t('welcomeIntroNext')
                   }
                 </button>
               </div>
@@ -160,6 +200,13 @@ export default function WelcomeIntro() {
           )}
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        mode={authMode}
+      />
     </div>
   );
 }

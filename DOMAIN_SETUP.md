@@ -1,16 +1,16 @@
 # 🌐 Configuración de Dominio y Hosting - EcoNexo
 
-## 📋 Pasos para Configurar econexo.io
+## 📋 Pasos para Configurar econexo.app
 
 ### 1. **Registro de Dominio**
-- [ ] Registrar dominio `econexo.io` en un proveedor (Namecheap, GoDaddy, etc.)
+- [ ] Registrar dominio `econexo.app` en un proveedor (Namecheap, GoDaddy, etc.)
 - [ ] Configurar DNS para apuntar a Vercel
 
 ### 2. **Configuración DNS en Vercel**
 ```bash
 # Comandos para configurar dominio en Vercel
-vercel domains add econexo.io
-vercel domains verify econexo.io
+vercel domains add econexo.app
+vercel domains verify econexo.app
 ```
 
 ### 3. **Configuración DNS Records**
@@ -27,8 +27,8 @@ Value: cname.vercel-dns.com
 ### 4. **Variables de Entorno Actualizadas**
 ```bash
 # .env.local
-NEXT_PUBLIC_SITE_URL=https://econexo.io
-NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.io
+NEXT_PUBLIC_SITE_URL=https://econexo.app
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.app
 ```
 
 ### 5. **SSL Certificate**
@@ -73,7 +73,7 @@ git push origin main
 
 # Verificar deploy
 vercel ls
-vercel inspect econexo.io
+vercel inspect econexo.app
 ```
 
 ## 📊 Monitoring

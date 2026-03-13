@@ -1,6 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import AuthModal from "./AuthModal";
+import ProjectsCarousel from "./ProjectsCarousel";
+
+import EcoNexoLogo from "./EcoNexoLogo";
 
 interface WelcomeMessageProps {
   onClose: () => void;
@@ -8,7 +14,11 @@ interface WelcomeMessageProps {
 
 export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
   const { t, locale } = useI18n();
+  const { user } = useAuth();
+  const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("register");
   const paypalUrl = process.env.NEXT_PUBLIC_PAYPAL_URL || '#';
 
   useEffect(() => {
@@ -24,7 +34,7 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
 
   const values = [
     {
-      icon: "🌱",
+      icon: <EcoNexoLogo size={32} />,
       title: t('sustainabilityTitle'),
       description: t('sustainabilityDescription')
     },
@@ -46,24 +56,22 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
   ];
 
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${
-      isVisible ? 'opacity-100' : 'opacity-0'
-    }`}>
+    <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={handleClose}
       />
-      
+
       {/* Modal Content */}
-      <div className={`relative bg-gls-primary rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${
-        isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
-      }`}>
+      <div className={`relative bg-gls-primary rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
+        }`}>
         {/* Header */}
         <div className="bg-gls-secondary p-8 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <span className="text-4xl">🌿</span>
+              <EcoNexoLogo size={48} className="bg-white/10 p-2" />
               <div>
                 <h1 className="text-3xl font-bold text-white">
                   {t('welcomeMessageTitle')}
@@ -89,7 +97,7 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
             {values.map((value, index) => (
               <div key={index} className="card-ecosia">
                 <div className="flex items-start gap-4">
-                  <span className="text-3xl">{value.icon}</span>
+                  <span className="text-3xl flex items-center justify-center min-w-[40px]">{value.icon}</span>
                   <div>
                     <h3 className="text-xl font-bold text-gls-primary mb-2">
                       {value.title}
@@ -103,6 +111,9 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
             ))}
           </div>
 
+          {/* Projects Carousel */}
+          <ProjectsCarousel />
+
           {/* Call to Action */}
           <div className="bg-ecosia-green/20 rounded-xl p-6 text-center">
             <h3 className="text-2xl font-bold text-gls-primary mb-4">
@@ -115,13 +126,16 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
               <button
                 onClick={() => {
                   handleClose();
-                  // Scroll to the main content area to start exploring
-                  setTimeout(() => {
-                    const mainContent = document.querySelector('.layout-gls-left');
-                    if (mainContent) {
-                      mainContent.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }, 100);
+                  // Si el usuario está autenticado, redirigir a eventos
+                  if (user) {
+                    router.push('/eventos');
+                  } else {
+                    // Si no está autenticado, abrir modal de registro
+                    setTimeout(() => {
+                      setAuthMode("register");
+                      setIsAuthModalOpen(true);
+                    }, 300);
+                  }
                 }}
                 className="btn-gls-primary px-8 py-3 text-lg"
               >
@@ -134,19 +148,19 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
                   setTimeout(() => {
                     // Use the specific ID for the map section
                     const mapSection = document.getElementById('map-section');
-                    
+
                     if (mapSection) {
-                      mapSection.scrollIntoView({ 
+                      mapSection.scrollIntoView({
                         behavior: 'smooth',
                         block: 'start',
                         inline: 'nearest'
                       });
                     } else {
                       // Fallback: try other selectors
-                      const fallbackSection = document.querySelector('.col-span-2') || 
-                                            document.querySelector('.layout-gls-right');
+                      const fallbackSection = document.querySelector('.col-span-2') ||
+                        document.querySelector('.layout-gls-right');
                       if (fallbackSection) {
-                        fallbackSection.scrollIntoView({ 
+                        fallbackSection.scrollIntoView({
                           behavior: 'smooth',
                           block: 'start',
                           inline: 'nearest'
@@ -162,25 +176,31 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
               >
                 {t('viewMap')}
               </button>
-            <button
-              onClick={() => {
-                if (!paypalUrl || paypalUrl === '#') return;
-                window.open(paypalUrl, '_blank', 'noopener');
-              }}
-              className={`px-8 py-3 text-lg rounded-lg font-semibold transition-colors ${
-                paypalUrl && paypalUrl !== '#'
+              <button
+                onClick={() => {
+                  if (!paypalUrl || paypalUrl === '#') return;
+                  window.open(paypalUrl, '_blank', 'noopener');
+                }}
+                className={`px-8 py-3 text-lg rounded-lg font-semibold transition-colors ${paypalUrl && paypalUrl !== '#'
                   ? 'bg-amber-500 hover:bg-amber-600 text-white'
                   : 'bg-gray-400 text-white cursor-not-allowed'
-              }`}
-              title={paypalUrl && paypalUrl !== '#' ? '' : (locale === 'de' ? 'Demnächst verfügbar' : locale === 'en' ? 'Coming soon' : 'Próximamente')}
-              disabled={!paypalUrl || paypalUrl === '#'}
-            >
-              {t('supportUs')}
-            </button>
+                  }`}
+                title={paypalUrl && paypalUrl !== '#' ? '' : (locale === 'de' ? 'Demnächst verfügbar' : locale === 'en' ? 'Coming soon' : 'Próximamente')}
+                disabled={!paypalUrl || paypalUrl === '#'}
+              >
+                {t('supportUs')}
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        mode={authMode}
+      />
     </div>
   );
 }

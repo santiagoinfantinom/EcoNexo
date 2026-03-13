@@ -36,7 +36,7 @@
 - [ ] Sistema de moderación de contenido
 - [ ] Dashboard con métricas de uso
 
-### 6. Mejoras de UX
+- [ ] Perfeccionar el diseño del logo (plantas más realistas)
 - [ ] Onboarding tutorial para nuevos usuarios
 - [ ] Sistema de badges/achievements
 - [ ] Notificaciones in-app

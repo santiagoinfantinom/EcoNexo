@@ -12,7 +12,7 @@
 ## ✅ **Tareas Completadas**
 
 ### **1. Configuración de Dominio y Hosting**
-- ✅ **Dominio:** `econexo.org` configurado en Vercel
+- ✅ **Dominio:** `econexo.app` configurado en Vercel
 - ✅ **Variables de entorno:** Actualizadas con dominio personalizado
 - ✅ **SSL:** Automático con HTTPS redirect
 - ✅ **CDN:** Global con optimizaciones de performance
@@ -92,8 +92,8 @@
 
 ### **Variables de Entorno Actualizadas:**
 ```bash
-NEXT_PUBLIC_SITE_URL=https://econexo.org
-NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.org
+NEXT_PUBLIC_SITE_URL=https://econexo.app
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.app
 NEXT_PUBLIC_VAPID_PUBLIC_KEY=BHNlanVqzifD8JkkYn-Bqcp0uZsQvKYh6vT_Bw4pvWAv9SdvidhdagZBTAFDCGUIS3hnUErOrkMOdbO8iylLSqQ
 VAPID_PRIVATE_KEY=ndJfz8BTKa-6d4Qokh5o6-akDE6eeizc6spz9w1lPho
 ```
@@ -169,7 +169,7 @@ VAPID_PRIVATE_KEY=ndJfz8BTKa-6d4Qokh5o6-akDE6eeizc6spz9w1lPho
 ## 🎉 **¡EcoNexo está listo para conquistar Europa!**
 
 **El proyecto ahora incluye:**
-- ✅ Dominio profesional `econexo.org` configurado
+- ✅ Dominio profesional `econexo.app` configurado
 - ✅ Sistema completo de notificaciones push
 - ✅ Panel de administración funcional
 - ✅ Gamificación y engagement completo

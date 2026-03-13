@@ -2,25 +2,27 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createOAuthService } from '@/lib/oauth';
+import { useI18n } from '@/lib/i18n';
 
 export default function OutlookCallbackPage() {
   const router = useRouter();
+  const { locale } = useI18n();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     const handleRedirect = async () => {
       try {
-        const oauthService = createOAuthService();
+        const oauthService = await createOAuthService();
         const result = await oauthService.handleOutlookRedirect();
 
         if (result.success && result.user) {
           // Store user data in localStorage
           const user = result.user;
-          
+
           localStorage.setItem('econexo_user', JSON.stringify(user));
           localStorage.setItem('econexo_auth_provider', 'outlook');
-          
+
           // Store OAuth data
           localStorage.setItem('oauth_data', JSON.stringify({
             name: user.name,
@@ -30,7 +32,7 @@ export default function OutlookCallbackPage() {
             locale: user.locale || 'en',
             verified_email: true,
           }));
-          
+
           // Parse name into first and last name for Outlook
           let firstName = '';
           let lastName = '';
@@ -41,7 +43,7 @@ export default function OutlookCallbackPage() {
               lastName = nameParts.slice(1).join(' ');
             }
           }
-          
+
           // Store profile data with all available fields
           localStorage.setItem('econexo:profile', JSON.stringify({
             full_name: user.name || '',
@@ -53,18 +55,26 @@ export default function OutlookCallbackPage() {
             oauth_provider: 'outlook',
             oauth_imported: true,
           }));
-          
+
           setStatus('success');
-          setMessage('¡Autenticación exitosa! Redirigiendo...');
-          
+          setMessage(
+            locale === 'en' ? 'Authentication successful! Redirecting...' :
+              locale === 'de' ? 'Authentifizierung erfolgreich! Weiterleitung...' :
+                '¡Autenticación exitosa! Redirigiendo...'
+          );
+
           // Redirect to dashboard after 2 seconds
           setTimeout(() => {
             router.push('/perfil');
           }, 2000);
         } else {
           setStatus('error');
-          setMessage(result.error || 'Error de autenticación');
-          
+          setMessage(result.error || (
+            locale === 'en' ? 'Authentication error' :
+              locale === 'de' ? 'Authentifizierungsfehler' :
+                'Error de autenticación'
+          ));
+
           // Automatically redirect to home after 3 seconds
           setTimeout(() => {
             router.push('/');
@@ -73,7 +83,11 @@ export default function OutlookCallbackPage() {
       } catch (error) {
         console.error('Redirect error:', error);
         setStatus('error');
-        setMessage('Error interno del servidor');
+        setMessage(
+          locale === 'en' ? 'Internal server error' :
+            locale === 'de' ? 'Interner Serverfehler' :
+              'Error interno del servidor'
+        );
       }
     };
 
@@ -95,13 +109,13 @@ export default function OutlookCallbackPage() {
               <span className="text-2xl">❌</span>
             )}
           </div>
-          
+
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-            {status === 'loading' && 'Procesando autenticación...'}
-            {status === 'success' && '¡Autenticación exitosa!'}
-            {status === 'error' && 'Error de autenticación'}
+            {status === 'loading' && (locale === 'en' ? 'Processing authentication...' : locale === 'de' ? 'Authentifizierung wird verarbeitet...' : 'Procesando autenticación...')}
+            {status === 'success' && (locale === 'en' ? 'Authentication successful!' : locale === 'de' ? 'Authentifizierung erfolgreich!' : '¡Autenticación exitosa!')}
+            {status === 'error' && (locale === 'en' ? 'Authentication error' : locale === 'de' ? 'Authentifizierungsfehler' : 'Error de autenticación')}
           </h2>
-          
+
           <p className="text-gray-600 dark:text-gray-300">
             {message}
           </p>
@@ -113,13 +127,13 @@ export default function OutlookCallbackPage() {
               onClick={() => router.push('/')}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Volver al inicio
+              {locale === 'en' ? 'Back to home' : locale === 'de' ? 'Zurück zur Startseite' : 'Volver al inicio'}
             </button>
             <button
               onClick={() => router.push('/auth')}
               className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Intentar de nuevo
+              {locale === 'en' ? 'Try again' : locale === 'de' ? 'Erneut versuchen' : 'Intentar de nuevo'}
             </button>
           </div>
         )}

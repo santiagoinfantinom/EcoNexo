@@ -17,10 +17,10 @@ NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase_aqui
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anonima_aqui
 
 # Otras configuraciones existentes...
-NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.org
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.app
 NEXT_PUBLIC_VAPID_PUBLIC_KEY=BHNlanVqzifD8JkkYn-Bqcp0uZsQvKYh6vT_Bw4pvWAv9SdvidhdagZBTAFDCGUIS3hnUErOrkMOdbO8iylLSqQ
 VAPID_PRIVATE_KEY=ndJfz8BTKa-6d4Qokh5o6-akDE6eeizc6spz9w1lPho
-NEXT_PUBLIC_SITE_URL=https://econexo.org
+NEXT_PUBLIC_SITE_URL=https://econexo.app
 NODE_ENV=development
 ```
 

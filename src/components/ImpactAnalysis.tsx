@@ -233,7 +233,7 @@ export default function ImpactAnalysis({ event, onAnalysisComplete }: ImpactAnal
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-          <span className="ml-3 text-slate-600 dark:text-slate-400">Calculando impacto...</span>
+          <span className="ml-3 text-slate-600 dark:text-slate-300">Calculando impacto...</span>
         </div>
       </div>
     );
@@ -257,14 +257,14 @@ export default function ImpactAnalysis({ event, onAnalysisComplete }: ImpactAnal
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
           Análisis de Impacto
         </h3>
         <div className="flex items-center gap-2">
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${impactLevel.color}`}>
             {impactLevel.icon} {impactLevel.level}
           </span>
-          <span className="text-sm text-slate-600 dark:text-slate-400">
+          <span className="text-sm text-slate-600 dark:text-slate-300">
             {overallScore}/100
           </span>
         </div>
@@ -304,36 +304,36 @@ export default function ImpactAnalysis({ event, onAnalysisComplete }: ImpactAnal
       {/* Additional Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
-          <div className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          <div className="text-lg font-semibold text-slate-900 dark:text-white">
             {metrics.treesPlanted}
           </div>
-          <div className="text-sm text-slate-600 dark:text-slate-400">Árboles plantados</div>
+          <div className="text-sm text-slate-600 dark:text-slate-300">Árboles plantados</div>
         </div>
         
         <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
-          <div className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          <div className="text-lg font-semibold text-slate-900 dark:text-white">
             {metrics.biodiversityScore}/100
           </div>
-          <div className="text-sm text-slate-600 dark:text-slate-400">Puntuación biodiversidad</div>
+          <div className="text-sm text-slate-600 dark:text-slate-300">Puntuación biodiversidad</div>
         </div>
         
         <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
-          <div className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          <div className="text-lg font-semibold text-slate-900 dark:text-white">
             €{metrics.economicValue.toFixed(0)}
           </div>
-          <div className="text-sm text-slate-600 dark:text-slate-400">Valor económico</div>
+          <div className="text-sm text-slate-600 dark:text-slate-300">Valor económico</div>
         </div>
       </div>
 
       {/* Analysis Details */}
       {analysisDetails.length > 0 && (
         <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
-          <h4 className="font-medium text-slate-900 dark:text-slate-100 mb-3">
+          <h4 className="font-medium text-slate-900 dark:text-white mb-3">
             📊 Análisis Detallado
           </h4>
           <ul className="space-y-2">
             {analysisDetails.map((detail, index) => (
-              <li key={index} className="text-sm text-slate-600 dark:text-slate-400">
+              <li key={index} className="text-sm text-slate-600 dark:text-slate-300">
                 {detail}
               </li>
             ))}
@@ -343,12 +343,12 @@ export default function ImpactAnalysis({ event, onAnalysisComplete }: ImpactAnal
 
       {/* Impact Visualization */}
       <div className="mt-6">
-        <h4 className="font-medium text-slate-900 dark:text-slate-100 mb-3">
+        <h4 className="font-medium text-slate-900 dark:text-white mb-3">
           📈 Comparación de Impacto
         </h4>
         <div className="space-y-3">
           <div>
-            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400 mb-1">
+            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mb-1">
               <span>Impacto Ambiental</span>
               <span>{Math.round((metrics.co2Reduction + metrics.wasteReduced + metrics.energySaved) / 3)}%</span>
             </div>
@@ -361,7 +361,7 @@ export default function ImpactAnalysis({ event, onAnalysisComplete }: ImpactAnal
           </div>
           
           <div>
-            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400 mb-1">
+            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mb-1">
               <span>Impacto Social</span>
               <span>{metrics.socialImpact}%</span>
             </div>
@@ -374,7 +374,7 @@ export default function ImpactAnalysis({ event, onAnalysisComplete }: ImpactAnal
           </div>
           
           <div>
-            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400 mb-1">
+            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mb-1">
               <span>Biodiversidad</span>
               <span>{metrics.biodiversityScore}%</span>
             </div>

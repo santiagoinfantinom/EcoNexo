@@ -4,17 +4,17 @@ import { useEffect } from 'react';
 export default function TestModal() {
   useEffect(() => {
     console.log('🔧 TEST MODAL: Component mounted');
-    
+
     // Create modal immediately
     const createModal = () => {
       console.log('🔧 CREATING MODAL: Starting modal creation');
-      
+
       // Remove any existing modal
       const existingModal = document.getElementById('test-modal');
       if (existingModal) {
         existingModal.remove();
       }
-      
+
       // Create modal HTML
       const modalHTML = `
         <div id="test-modal" style="
@@ -91,15 +91,28 @@ export default function TestModal() {
                 transition: all 0.3s ease !important;
                 box-shadow: 0 4px 14px 0 rgba(4, 120, 87, 0.3) !important;
               " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px 0 rgba(4, 120, 87, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px 0 rgba(4, 120, 87, 0.3)'">🇩🇪 Deutsch</button>
+              <button onclick="localStorage.setItem('econexo:locale', 'fr'); localStorage.setItem('econexo-language-set', 'true'); localStorage.setItem('econexo-preferred-language', 'fr'); document.getElementById('test-modal').remove();" style="
+                width: 100% !important;
+                background: linear-gradient(135deg, #022c22 0%, #064e3b 50%, #065f46 100%) !important;
+                color: white !important;
+                padding: 16px 32px !important;
+                border-radius: 16px !important;
+                border: none !important;
+                font-size: 18px !important;
+                font-weight: 500 !important;
+                cursor: pointer !important;
+                transition: all 0.3s ease !important;
+                box-shadow: 0 4px 14px 0 rgba(2, 44, 34, 0.3) !important;
+              " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px 0 rgba(2, 44, 34, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px 0 rgba(2, 44, 34, 0.3)'">🇫🇷 Français</button>
             </div>
           </div>
         </div>
       `;
-      
+
       // Insert modal into body
       document.body.insertAdjacentHTML('beforeend', modalHTML);
       console.log('🔧 MODAL CREATED: Modal inserted into DOM');
-      
+
       // Force visibility
       const modal = document.getElementById('test-modal');
       if (modal) {
@@ -111,15 +124,15 @@ export default function TestModal() {
         console.error('🔧 MODAL ERROR: Modal not found after creation');
       }
     };
-    
+
     // Execute immediately
     createModal();
-    
+
     // Also try after a small delay
     setTimeout(createModal, 100);
     setTimeout(createModal, 500);
     setTimeout(createModal, 1000);
-    
+
   }, []);
 
   return null; // This component doesn't render anything

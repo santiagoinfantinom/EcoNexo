@@ -1,18 +1,43 @@
 import type { NextConfig } from "next";
 
+// Check if we're building for GitHub Pages
+const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+const basePath = isGitHubPages ? '/EcoNexo' : '';
+const assetPrefix = isGitHubPages ? '/EcoNexo' : '';
+
 const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Vercel configuration (SSR mode)
-  trailingSlash: true,
-  images: {
-    unoptimized: false, // Enable optimization for Vercel
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@supabase/supabase-js'],
   },
-  /* config options here */
+  trailingSlash: true,
+  // GitHub Pages configuration (static export)
+  ...(isGitHubPages && {
+    output: 'export',
+    basePath,
+    assetPrefix,
+    images: {
+      unoptimized: true,
+    },
+  }),
+  // Vercel configuration (SSR mode)
+  ...(!isGitHubPages && {
+    images: {
+      unoptimized: false,
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'images.unsplash.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'i.pravatar.cc',
+        },
+      ],
+    },
+  }),
 };
 
 export default nextConfig;

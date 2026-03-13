@@ -45,11 +45,11 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
     agreeToTerms: false,
     agreeToPhotos: false
   });
-  const [errors, setErrors] = useState<Partial<RegistrationData>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof RegistrationData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<RegistrationData> = {};
+    const newErrors: Partial<Record<keyof RegistrationData, string>> = {};
 
     // Required fields validation
     if (!formData.name.trim()) {
@@ -92,17 +92,17 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       onRegister(formData);
     } catch (error) {
       console.error('Error registering:', error);
@@ -122,7 +122,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
   const formatPhoneNumber = (value: string): string => {
     // Remove all non-digit characters
     const digits = value.replace(/\D/g, '');
-    
+
     // Format based on length
     if (digits.length <= 3) {
       return digits;
@@ -144,10 +144,10 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 {t('registerForEvent')}
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 mt-1">
+              <p className="text-slate-600 dark:text-slate-300 mt-1">
                 {event.title}
               </p>
             </div>
@@ -164,25 +164,25 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-slate-500 dark:text-slate-400">📅 {t('date')}:</span>
-                <span className="ml-2 font-medium text-slate-900 dark:text-slate-100">
+                <span className="ml-2 font-medium text-slate-900 dark:text-white">
                   {new Date(event.date).toLocaleDateString()}
                 </span>
               </div>
               <div>
                 <span className="text-slate-500 dark:text-slate-400">⏰ {t('time')}:</span>
-                <span className="ml-2 font-medium text-slate-900 dark:text-slate-100">
+                <span className="ml-2 font-medium text-slate-900 dark:text-white">
                   {event.time}
                 </span>
               </div>
               <div>
                 <span className="text-slate-500 dark:text-slate-400">📍 {t('location')}:</span>
-                <span className="ml-2 font-medium text-slate-900 dark:text-slate-100">
+                <span className="ml-2 font-medium text-slate-900 dark:text-white">
                   {event.location}
                 </span>
               </div>
               <div>
                 <span className="text-slate-500 dark:text-slate-400">👥 {t('availableSpots')}:</span>
-                <span className="ml-2 font-medium text-slate-900 dark:text-slate-100">{spotsLeft}</span>
+                <span className="ml-2 font-medium text-slate-900 dark:text-white">{spotsLeft}</span>
               </div>
             </div>
           </div>
@@ -191,7 +191,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Personal Information */}
             <div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
                 {t('personalInformation')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -203,9 +203,8 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
-                      errors.name ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
-                    }`}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${errors.name ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
+                      }`}
                     placeholder={t('fullName')}
                   />
                   {errors.name && (
@@ -221,10 +220,9 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
-                      errors.email ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
-                    }`}
-                    placeholder="tu@email.com"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${errors.email ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
+                      }`}
+                    placeholder={t('emailPlaceholder')}
                   />
                   {errors.email && (
                     <p className="text-red-500 text-sm mt-1">{errors.email}</p>
@@ -239,10 +237,9 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', formatPhoneNumber(e.target.value))}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
-                      errors.phone ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
-                    }`}
-                    placeholder="+34 123 456 789"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${errors.phone ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
+                      }`}
+                    placeholder={t('phonePh')}
                   />
                   {errors.phone && (
                     <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
@@ -268,7 +265,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
 
             {/* Emergency Contact */}
             <div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
                 {t('emergencyContact')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -280,9 +277,8 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     type="text"
                     value={formData.emergencyContact}
                     onChange={(e) => handleInputChange('emergencyContact', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
-                      errors.emergencyContact ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
-                    }`}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${errors.emergencyContact ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
+                      }`}
                     placeholder={t('emergencyContactName')}
                   />
                   {errors.emergencyContact && (
@@ -298,10 +294,9 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     type="tel"
                     value={formData.emergencyPhone}
                     onChange={(e) => handleInputChange('emergencyPhone', formatPhoneNumber(e.target.value))}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
-                      errors.emergencyPhone ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
-                    }`}
-                    placeholder="+34 123 456 789"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${errors.emergencyPhone ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
+                      }`}
+                    placeholder={t('phonePh')}
                   />
                   {errors.emergencyPhone && (
                     <p className="text-red-500 text-sm mt-1">{errors.emergencyPhone}</p>
@@ -312,7 +307,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
 
             {/* Additional Information */}
             <div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
                 {t('additionalInformation')}
               </h3>
               <div className="space-y-4">
@@ -324,9 +319,8 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     value={formData.motivation}
                     onChange={(e) => handleInputChange('motivation', e.target.value)}
                     rows={3}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
-                      errors.motivation ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
-                    }`}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${errors.motivation ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
+                      }`}
                     placeholder={t('motivationToParticipate')}
                   />
                   {errors.motivation && (
@@ -343,7 +337,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     value={formData.dietaryRestrictions}
                     onChange={(e) => handleInputChange('dietaryRestrictions', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
-                    placeholder="z. B. Vegetarisch, Allergien, etc."
+                    placeholder={t('dietaryRestrictionsPh')}
                   />
                 </div>
 
@@ -356,7 +350,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
                     value={formData.accessibilityNeeds}
                     onChange={(e) => handleInputChange('accessibilityNeeds', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
-                    placeholder="z. B. Rollstuhl, eingeschränkte Mobilität, etc."
+                    placeholder={t('accessibilityNeedsPh')}
                   />
                 </div>
               </div>
@@ -364,7 +358,7 @@ export default function EventRegistrationForm({ event, onRegister, onCancel }: E
 
             {/* Terms and Conditions */}
             <div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
                 {t('consents')}
               </h3>
               <div className="space-y-3">

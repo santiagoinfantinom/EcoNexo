@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useI18n } from '@/lib/i18n';
+import { useI18n, categoryLabel } from '@/lib/i18n';
 
 interface SocialMediaProject {
   id: string;
@@ -36,12 +36,12 @@ interface SocialMediaDetectionProps {
   autoDetection?: boolean;
 }
 
-export default function SocialMediaDetection({ 
-  onProjectDetected, 
+export default function SocialMediaDetection({
+  onProjectDetected,
   onProjectApproved,
-  autoDetection = true 
+  autoDetection = true
 }: SocialMediaDetectionProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [detectedProjects, setDetectedProjects] = useState<SocialMediaProject[]>([]);
   const [loading, setLoading] = useState(false);
   const [detectionEnabled, setDetectionEnabled] = useState(autoDetection);
@@ -175,17 +175,17 @@ export default function SocialMediaDetection({
     try {
       // Simulate API call to social media monitoring service
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Filter projects based on criteria
-      const filteredProjects = mockDetectedProjects.filter(project => 
+      const filteredProjects = mockDetectedProjects.filter(project =>
         project.authorFollowers >= filters.minFollowers &&
         (project.engagement.likes + project.engagement.shares + project.engagement.comments) >= filters.minEngagement &&
         project.sustainabilityScore >= filters.minSustainabilityScore &&
         filters.sources.includes(project.source)
       );
-      
+
       setDetectedProjects(filteredProjects);
-      
+
       // Notify about new detections
       filteredProjects.forEach(project => {
         onProjectDetected?.(project);
@@ -236,7 +236,7 @@ export default function SocialMediaDetection({
 
   const formatEngagement = (engagement: SocialMediaProject['engagement']): string => {
     const total = engagement.likes + engagement.shares + engagement.comments;
-    return `${total.toLocaleString()} interacciones`;
+    return `${total.toLocaleString()} ${t('interactions')}`;
   };
 
   const formatFollowers = (followers: number): string => {
@@ -248,17 +248,16 @@ export default function SocialMediaDetection({
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-          Detección Automática de Proyectos
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+          {t('socialMediaDetectionHeader')}
         </h3>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setDetectionEnabled(!detectionEnabled)}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-              detectionEnabled
+            className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${detectionEnabled
                 ? 'bg-green-600 text-white'
                 : 'bg-gray-200 text-gray-700 dark:bg-slate-600 dark:text-slate-300'
-            }`}
+              }`}
           >
             {detectionEnabled ? 'ON' : 'OFF'}
           </button>
@@ -267,7 +266,7 @@ export default function SocialMediaDetection({
             disabled={loading}
             className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
           >
-            {loading ? 'Escaneando...' : 'Escanear'}
+            {loading ? t('scanning') : t('scan')}
           </button>
         </div>
       </div>
@@ -277,11 +276,11 @@ export default function SocialMediaDetection({
         <div className="flex items-center gap-3 mb-2">
           <div className={`w-3 h-3 rounded-full ${detectionEnabled ? 'bg-green-500' : 'bg-gray-400'}`}></div>
           <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            {detectionEnabled ? 'Detección activa' : 'Detección pausada'}
+            {detectionEnabled ? t('detectionActive') : t('detectionPaused')}
           </span>
         </div>
-        <div className="text-sm text-slate-600 dark:text-slate-400">
-          Monitoreando redes sociales para proyectos ambientales verificados
+        <div className="text-sm text-slate-600 dark:text-slate-300">
+          {t('monitoringSocialMedia')}
         </div>
       </div>
 
@@ -289,7 +288,7 @@ export default function SocialMediaDetection({
       {detectedProjects.length === 0 ? (
         <div className="text-center py-8">
           <div className="text-slate-500 dark:text-slate-400 mb-2">
-            {loading ? 'Escaneando redes sociales...' : 'No se encontraron proyectos nuevos'}
+            {loading ? t('scanningSocialMedia') : t('noNewProjects')}
           </div>
           {loading && (
             <div className="flex items-center justify-center mt-4">
@@ -311,7 +310,7 @@ export default function SocialMediaDetection({
                 )}
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                    <h4 className="font-medium text-slate-900 dark:text-white">
                       {t(project.title)}
                     </h4>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSourceColor(project.source)}`}>
@@ -319,43 +318,43 @@ export default function SocialMediaDetection({
                     </span>
                     {project.verified && (
                       <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                        ✓ Verificado
+                        ✓ {locale === 'es' ? 'Verificado' : locale === 'de' ? 'Verifiziert' : 'Verified'}
                       </span>
                     )}
                   </div>
-                  
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+
+                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
                     {project.description}
                   </p>
-                  
+
                   <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 mb-3">
                     <span>👤 {project.author} ({formatFollowers(project.authorFollowers)} seguidores)</span>
                     <span>📅 {new Date(project.postDate).toLocaleDateString()}</span>
                     <span>📍 {project.location?.city}, {project.location?.country}</span>
                     <span>💬 {formatEngagement(project.engagement)}</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 mb-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSustainabilityColor(project.sustainabilityScore)}`}>
-                      🌱 {project.sustainabilityScore}% sostenible
+                      🌱 {project.sustainabilityScore}% {t('sustainable')}
                     </span>
                     <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
-                      {project.category}
+                      {categoryLabel(project.category, locale)}
                     </span>
                   </div>
-                  
+
                   <div className="flex gap-2">
                     <button
                       onClick={() => approveProject(project)}
                       className="px-3 py-1 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700 transition-colors"
                     >
-                      ✓ Aprobar
+                      ✓ {t('approved')}
                     </button>
                     <button
                       onClick={() => rejectProject(project.id)}
                       className="px-3 py-1 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 transition-colors"
                     >
-                      ✗ Rechazar
+                      ✗ {t('rejected')}
                     </button>
                     <a
                       href={project.postUrl}
@@ -363,7 +362,7 @@ export default function SocialMediaDetection({
                       rel="noopener noreferrer"
                       className="px-3 py-1 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 rounded text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
                     >
-                      Ver post
+                      {t('viewPost')}
                     </a>
                   </div>
                 </div>
@@ -375,13 +374,13 @@ export default function SocialMediaDetection({
 
       {/* Detection Settings */}
       <div className="mt-6 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-        <h4 className="font-medium text-slate-900 dark:text-slate-100 mb-3">
-          ⚙️ Configuración de Detección
+        <h4 className="font-medium text-slate-900 dark:text-white mb-3">
+          ⚙️ {t('detectionSettings')}
         </h4>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <label className="block text-slate-600 dark:text-slate-400 mb-1">
-              Seguidores mínimos: {filters.minFollowers.toLocaleString()}
+            <label className="block text-slate-600 dark:text-slate-300 mb-1">
+              {t('minFollowers')}: {filters.minFollowers.toLocaleString()}
             </label>
             <input
               type="range"
@@ -394,8 +393,8 @@ export default function SocialMediaDetection({
             />
           </div>
           <div>
-            <label className="block text-slate-600 dark:text-slate-400 mb-1">
-              Puntuación mínima: {filters.minSustainabilityScore}%
+            <label className="block text-slate-600 dark:text-slate-300 mb-1">
+              {t('minScore')}: {filters.minSustainabilityScore}%
             </label>
             <input
               type="range"

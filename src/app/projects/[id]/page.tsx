@@ -160,14 +160,14 @@ export async function generateStaticParams() {
   return PROJECTS.map((p) => ({ id: String(p.id) }));
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.org";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.app";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const project = PROJECTS.find((p) => String(p.id) === String(id)) as any;
   const title = project?.name ? `${project.name} | EcoNexo` : `Proyecto ${id} | EcoNexo`;
   const description = project?.description || "Proyecto de impacto en EcoNexo.";
-  const image = (project?.image_url as string | undefined) || 
+  const image = (project?.image_url as string | undefined) ||
     `${SITE_URL}/vercel.svg`;
   const url = `${SITE_URL}/projects/${id}/`;
 
@@ -195,10 +195,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 async function fetchProject(id: string): Promise<Project | null> {
   try {
-    const res = await fetch(`/api/projects`, { cache: "no-store" });
+    const res = await fetch(`/api/projects?id=${encodeURIComponent(id)}` as any, { cache: "no-store" });
     if (!res.ok) return null;
-    const list: Project[] = await res.json();
-    return list.find((p) => String(p.id) === String(id)) ?? null;
+    const data: Project | { error?: string } = await res.json();
+    if ((data as any)?.error) return null;
+    return data as Project;
   } catch {
     return null;
   }

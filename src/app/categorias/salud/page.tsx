@@ -14,10 +14,10 @@ export default function SaludPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gray-800 dark:text-white mb-4">
+          <h1 className="text-5xl font-bold text-white mb-4">
             {t('healthTitle')}
           </h1>
-          <p className="text-xl text-gray-700 dark:text-gray-200 opacity-90 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-200 opacity-90 max-w-3xl mx-auto">
             {t('healthDescription')}
           </p>
         </div>
@@ -48,34 +48,34 @@ export default function SaludPage() {
             <div key={project.id} className="bg-gls-secondary rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               {/* Project Image */}
               <div className="h-48">
-                <ProjectSpecificImage project={project} className="w-full h-full" locale={locale} />
+                <ProjectSpecificImage project={project} className="w-full h-full" locale={locale as 'en' | 'de' | 'es'} />
               </div>
-              
+
               {/* Project Content */}
               <div className="p-6 bg-black">
-                <h3 className="text-xl font-bold text-white mb-2">{project.title[locale] || project.title.es}</h3>
-                <p className="text-white opacity-80 mb-4 text-sm">{project.description[locale] || project.description.es}</p>
-                
+                <h3 className="text-xl font-bold text-white mb-2">{project.title[locale as 'en' | 'de' | 'es'] || project.title.es}</h3>
+                <p className="text-white opacity-80 mb-4 text-sm">{project.description[locale as 'en' | 'de' | 'es'] || project.description.es}</p>
+
                 {/* Location */}
                 <div className="flex items-center text-white opacity-70 text-sm mb-3">
                   <span className="mr-2">📍</span>
-                  <span>{project.location[locale] || project.location.es}</span>
+                  <span>{project.location[locale as 'en' | 'de' | 'es'] || project.location.es}</span>
                 </div>
-                
+
                 {/* Impact */}
                 <div className="flex items-center text-red-400 text-sm mb-4">
                   <span className="mr-2">🎯</span>
-                  <span className="font-medium">{project.impact[locale] || project.impact.es}</span>
+                  <span className="font-medium">{project.impact[locale as 'en' | 'de' | 'es'] || project.impact.es}</span>
                 </div>
-                
+
                 {/* Stats */}
                 <div className="flex justify-between text-sm text-white mb-4">
                   <span>👥 {project.volunteers} {t('volunteersLabel')}</span>
                   <span>🆓 {project.spots} {t('spotsLabel')}</span>
                 </div>
-                
+
                 {/* Action Button */}
-                <Link 
+                <Link
                   href={`/projects/${project.id}`}
                   className="w-full btn-gls-primary text-center block py-2 rounded-lg hover:opacity-90 transition-opacity"
                 >
@@ -88,7 +88,7 @@ export default function SaludPage() {
 
         {/* Back Button */}
         <div className="text-center mt-12">
-          <Link 
+          <Link
             href="/"
             className="btn-gls-secondary px-8 py-3 rounded-lg hover:opacity-90 transition-opacity"
           >

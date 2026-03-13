@@ -1,13 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
-@import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap'); */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   /* Nueva paleta inspirada en las imágenes */
-  --background: #1F3D3B; /* Dark teal como base (GLS Bank style) */
-  --foreground: #F2F6EB; /* Green tea - texto principal */
-  --accent: #92C3A4; /* Jade - acentos secundarios */
-  --accent-2: #DBF58E; /* Sour apple - acentos vibrantes */
-  
+  --background: #1F3D3B;
+  /* Dark teal como base (GLS Bank style) */
+  --foreground: #F2F6EB;
+  /* Green tea - texto principal */
+  --accent: #92C3A4;
+  /* Jade - acentos secundarios */
+  --accent-2: #DBF58E;
+  /* Sour apple - acentos vibrantes */
+
   /* Colores específicos de la nueva paleta */
   --green-tea: #F2F6EB;
   --sunflower: #FFCE55;
@@ -21,25 +27,36 @@
   --light-beige: #CFCBBA;
 }
 
-@theme inline {
+
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-}
+} */
+
 
 /* Theme override by data attribute - Inspirado en Ecosia y GLS Bank */
 [data-theme="dark"] {
-  --background: #1F3D3B; /* Dark teal - estilo Ecosia */
-  --foreground: #F2F6EB; /* Green tea - texto claro */
-  --accent: #92C3A4; /* Jade - acentos */
-  --accent-2: #DBF58E; /* Sour apple - acentos vibrantes */
+  --background: #1F3D3B;
+  /* Dark teal - estilo Ecosia */
+  --foreground: #F2F6EB;
+  /* Green tea - texto claro */
+  --accent: #92C3A4;
+  /* Jade - acentos */
+  --accent-2: #DBF58E;
+  /* Sour apple - acentos vibrantes */
 }
+
 [data-theme="light"] {
-  --background: #F2F6EB; /* Green tea - fondo claro */
-  --foreground: #1F3D3B; /* Dark teal - texto oscuro */
-  --accent: #668265; /* Forest - acentos */
-  --accent-2: #92C3A4; /* Jade - acentos secundarios */
+  --background: #F2F6EB;
+  /* Green tea - fondo claro */
+  --foreground: #1F3D3B;
+  /* Dark teal - texto oscuro */
+  --accent: #668265;
+  /* Forest - acentos */
+  --accent-2: #92C3A4;
+  /* Jade - acentos secundarios */
 }
 
 body {
@@ -50,25 +67,75 @@ body {
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Barra verde de fondo consistente */
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #10b981 0%, #059669 50%, #047857 100%);
+  opacity: 0.15;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Subtle dark-green blot background (no animation) */
+.animated-gradient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    /* blotches */
+    radial-gradient(28% 28% at 18% 22%, rgba(31, 61, 59, 0.55) 0 60%, transparent 62%),
+    radial-gradient(26% 26% at 78% 18%, rgba(39, 71, 66, 0.50) 0 60%, transparent 62%),
+    radial-gradient(24% 24% at 26% 78%, rgba(36, 64, 61, 0.50) 0 60%, transparent 63%),
+    radial-gradient(30% 30% at 72% 78%, rgba(25, 49, 47, 0.55) 0 60%, transparent 62%),
+    radial-gradient(22% 22% at 50% 50%, rgba(52, 94, 85, 0.35) 0 55%, transparent 58%),
+    /* base gradient in dark greens */
+    linear-gradient(180deg, #132826 0%, #1F3D3B 35%, #112423 100%);
+  background-blend-mode: normal, normal, normal, normal, normal, overlay;
+  filter: saturate(0.95) brightness(0.98);
 }
 
 /* Modern minimal gradient background container */
 .bg-modern {
-  background: 
-    linear-gradient(135deg, 
+  background:
+    linear-gradient(135deg,
       color-mix(in oklab, var(--background) 98%, var(--foreground) 2%) 0%,
       color-mix(in oklab, var(--background) 99%, var(--foreground) 1%) 50%,
-      color-mix(in oklab, var(--background) 98%, var(--foreground) 2%) 100%
-    );
+      color-mix(in oklab, var(--background) 98%, var(--foreground) 2%) 100%);
 }
 
 /* Typography utilities */
-.font-light { font-weight: 300; }
-.font-normal { font-weight: 400; }
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
-.font-extrabold { font-weight: 800; }
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
 
 /* Elegant text styles */
 .text-elegant {
@@ -132,18 +199,91 @@ body {
 
 /* Botones estilo GLS Bank */
 .btn-gls-primary {
-  background: var(--sour-apple);
-  color: var(--dark-teal);
-  font-weight: 600;
+  background: var(--sour-apple) !important;
+  color: var(--dark-teal) !important;
+  font-weight: 600 !important;
   border-radius: 8px;
   padding: 12px 24px;
   transition: all 0.2s ease;
+  border: none !important;
 }
 
 .btn-gls-primary:hover {
-  background: var(--jade);
+  background: var(--jade) !important;
+  color: var(--dark-teal) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Clase específica para botones del header - mayor especificidad */
+button.btn-gls-primary,
+.btn-gls-primary {
+  background: var(--sour-apple) !important;
+  color: var(--dark-teal) !important;
+}
+
+button.btn-gls-primary:hover,
+.btn-gls-primary:hover {
+  background: var(--jade) !important;
+  color: var(--dark-teal) !important;
+}
+
+/* Evitar herencia de color del header en botones */
+header button.btn-gls-primary,
+header .btn-gls-primary {
+  background: var(--sour-apple) !important;
+  color: var(--dark-teal) !important;
+  border: none !important;
+}
+
+header button.btn-gls-primary:hover,
+header .btn-gls-primary:hover {
+  background: var(--jade) !important;
+  color: var(--dark-teal) !important;
+}
+
+/* Asegurar que los botones del header mantengan sus estilos */
+header button[class*="btn-gls-primary"],
+header .btn-gls-primary {
+  background: var(--sour-apple) !important;
+  color: var(--dark-teal) !important;
+  border: none !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+}
+
+header button[class*="btn-gls-primary"]:hover,
+header .btn-gls-primary:hover {
+  background: var(--jade) !important;
+  color: var(--dark-teal) !important;
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari and Opera */
+}
+
+/* Ocultar errores de reCAPTCHA que aparecen directamente del widget */
+iframe[src*="recaptcha"],
+div[data-sitekey],
+.g-recaptcha-error,
+.g-recaptcha-error-message {
+  display: none !important;
+}
+
+/* Ocultar mensajes de error de reCAPTCHA */
+div[class*="recaptcha"]:has(> div[class*="error"]),
+div[class*="recaptcha-error"] {
+  display: none !important;
 }
 
 .btn-gls-secondary {
@@ -205,6 +345,18 @@ body {
 .btn-oauth-outlook:hover {
   background: #106ebe;
   border-color: #106ebe;
+}
+
+/* Elegant separator bar to split controls from content */
+.content-separator {
+  position: relative;
+  height: 1px;
+  margin: 20px 0;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.15), transparent);
+}
+
+.dark .content-separator {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
 }
 
 /* Botón Sign In/Sign Up mejorado */
@@ -288,13 +440,429 @@ body {
   font-weight: 500;
 }
 
+/* Animaciones modernas */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out;
+}
+
+/* Microinteracciones mejoradas */
+.hover-lift {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.hover-scale {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* New Premium Aesthetics */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .glass-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+.bg-gradient-hero {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 25%, #0ea5e9 50%, #0284c7 75%, #0369a1 100%);
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right, #16a34a, #0ea5e9);
+}
+
+/* Badges modernos */
+.badge-modern {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.badge-modern:hover {
+  transform: scale(1.05);
+}
+
+/* Mobile-specific utilities */
+.mobile-hidden {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .mobile-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: white;
+    overflow-y: auto;
+  }
+
+  .dark .mobile-fullscreen {
+    background: #1e293b;
+  }
+}
+
+/* Touch targets mejorados para móvil */
+@media (max-width: 768px) {
+
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .touch-target {
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+  }
+
+  /* Reduce header padding on mobile */
+  header {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Better spacing for mobile forms */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+    /* Prevents zoom on iOS */
+  }
+
+  /* Horizontal scroll for tables */
+  .table-mobile-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Optimize font sizes for mobile */
+  h1 {
+    font-size: 1.875rem !important;
+    /* 30px */
+    line-height: 2.25rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+    /* 24px */
+    line-height: 2rem !important;
+  }
+
+  h3 {
+    font-size: 1.25rem !important;
+    /* 20px */
+    line-height: 1.75rem !important;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .layout-gls {
     grid-template-columns: 1fr;
   }
-  
+
   .impact-stats {
     flex-direction: column;
   }
+}
+
+/* force rebuild */
+
+/* Stitch Aesthetic Utilities */
+.stitched {
+  position: relative;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 0 0 4px var(--dark-teal),
+    0 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.stitched-green {
+  position: relative;
+  border: 2px dashed rgba(16, 185, 129, 0.4);
+  box-shadow:
+    0 0 0 4px white,
+    0 0 0 5px rgba(16, 185, 129, 0.1);
+}
+
+.stitch-border-b {
+  position: relative;
+}
+
+.stitch-border-b::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.3) 50%, transparent 50%);
+  background-size: 10px 100%;
+}
+
+/* ============================================
+   Performance Optimization: CSS Animations
+   Replaces framer-motion for lighter bundles
+   ============================================ */
+
+/* Fade in + slide up — hero titles, stat cards */
+@keyframes perf-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.perf-fade-in-up {
+  animation: perf-fade-in-up 0.8s ease-out both;
+}
+
+.perf-fade-in-up-delay {
+  animation: perf-fade-in-up 0.8s ease-out 0.3s both;
+}
+
+/* Scale in — panels, modals, popups */
+@keyframes perf-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes perf-scale-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+}
+
+.perf-scale-in {
+  animation: perf-scale-in 0.3s ease-out both;
+}
+
+.perf-scale-out {
+  animation: perf-scale-out 0.2s ease-in both;
+}
+
+/* Map section scale — viewport triggered */
+@keyframes perf-map-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.perf-map-scale {
+  animation: perf-map-scale 0.6s ease-out both;
+}
+
+/* Social feed card transitions */
+@keyframes perf-card-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes perf-card-exit {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+}
+
+.perf-card-enter {
+  animation: perf-card-enter 0.5s ease-out both;
+}
+
+.perf-card-enter-delay-1 {
+  animation: perf-card-enter 0.5s ease-out 0.1s both;
+}
+
+.perf-card-enter-delay-2 {
+  animation: perf-card-enter 0.5s ease-out 0.2s both;
+}
+
+/* Simple opacity fade — tab content */
+@keyframes perf-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.perf-fade-in {
+  animation: perf-fade-in 0.3s ease-out both;
+}
+
+/* Progress bar animation */
+.perf-progress-bar {
+  transition: width 0.6s ease-out;
+}
+
+/* Hover scale replacement for motion whileHover */
+.perf-hover-scale {
+  transition: transform 0.15s ease;
+}
+
+.perf-hover-scale:hover {
+  transform: scale(1.1);
+}
+
+.perf-hover-scale:active {
+  transform: scale(0.95);
+}
+
+/* Slow compass pulse */
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
 }

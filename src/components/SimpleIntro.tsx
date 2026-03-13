@@ -5,94 +5,57 @@ import { useI18n } from '@/lib/i18n';
 
 export default function SimpleIntro() {
   const [showIntro, setShowIntro] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const { locale, setLocale, t } = useI18n();
+  const { setLocale, t } = useI18n();
 
   useEffect(() => {
-    console.log('🔧 SimpleIntro: useEffect ejecutándose');
-    
-    // Check if intro has been shown before
+    // Check if intro has been shown before OR if user is already onboarded
     const hasSeenIntro = localStorage.getItem('econexo-intro-shown');
-    console.log('🔧 SimpleIntro: hasSeenIntro =', hasSeenIntro);
-    
-    if (!hasSeenIntro) {
-      console.log('🔧 SimpleIntro: Mostrando intro...');
-      
+    const hasOnboarded = localStorage.getItem('econexo_onboarded');
+
+    // Only show intro if neither flag is set.
+    // If they are onboarded, we assume they've set their language or don't need the intro.
+    if (!hasSeenIntro && !hasOnboarded) {
       // Show intro immediately (no delay)
-      console.log('🔧 SimpleIntro: Mostrando intro inmediatamente');
       setShowIntro(true);
-    } else {
-      console.log('🔧 SimpleIntro: Intro ya se mostró antes, no mostrando');
     }
   }, []);
 
-  const steps = [
-    {
-      icon: '🌍',
-      title: t('welcomeIntroLanguageTitle'),
-      description: t('welcomeIntroLanguageDescription'),
-      buttons: [
-        { label: '🇪🇸 Español', locale: 'es' },
-        { label: '🇬🇧 English', locale: 'en' },
-        { label: '🇩🇪 Deutsch', locale: 'de' }
-      ]
-    },
-    {
-      icon: '🗺️',
-      title: t('welcomeIntroMapTitle'),
-      description: t('welcomeIntroMapDescription')
-    },
-    {
-      icon: '📅',
-      title: t('welcomeIntroEventsTitle'),
-      description: t('welcomeIntroEventsDescription')
-    },
-    {
-      icon: '💼',
-      title: t('welcomeIntroJobsTitle'),
-      description: t('welcomeIntroJobsDescription')
-    },
-    {
-      icon: '💬',
-      title: t('welcomeIntroChatTitle'),
-      description: t('welcomeIntroChatDescription')
-    },
-    {
-      icon: '👤',
-      title: t('welcomeIntroProfileTitle'),
-      description: t('welcomeIntroProfileDescription')
-    }
-  ];
+  const languageStep = {
+    icon: '🌍',
+    title: t('welcomeIntroLanguageTitle'),
+    description: t('welcomeIntroLanguageDescription'),
+    buttons: [
+      { label: '🇪🇸 Español', locale: 'es' as const },
+      { label: '🇬🇧 English', locale: 'en' as const },
+      { label: '🇩🇪 Deutsch', locale: 'de' as const },
+    ]
+  };
 
-  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
+  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de' | 'fr') => {
     setLocale(selectedLocale);
-    setCurrentStep(1);
-  };
 
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      // Mark intro as shown and close
-      localStorage.setItem('econexo-intro-shown', 'true');
-      setShowIntro(false);
-    }
-  };
-
-  const handleSkip = () => {
     // Mark intro as shown and close
     localStorage.setItem('econexo-intro-shown', 'true');
+
+    // Dispatch event to notify listeners (like OnboardingTour) that intro is done
+    window.dispatchEvent(new Event('intro-completed'));
+
     setShowIntro(false);
   };
 
-  console.log('🔧 SimpleIntro: showIntro =', showIntro);
+  const handleClose = () => {
+    // If closed without selection, we still mark as seen to avoid pestering? 
+    // Or maybe strictly require selection? 
+    // User request said "only the first time", so let's mark as seen if they manually close it too.
+    localStorage.setItem('econexo-intro-shown', 'true');
+    window.dispatchEvent(new Event('intro-completed'));
+    setShowIntro(false);
+  };
+
   if (!showIntro) return null;
 
-  const currentStepData = steps[currentStep];
-  console.log('🔧 SimpleIntro: RENDERIZANDO MODAL con step =', currentStep);
-
   return (
-    <div 
+    <div
       data-intro-modal="true"
       style={{
         position: 'fixed',
@@ -113,7 +76,7 @@ export default function SimpleIntro() {
         pointerEvents: 'auto'
       }}
     >
-      <div 
+      <div
         style={{
           backgroundColor: 'white',
           borderRadius: '16px',
@@ -121,12 +84,13 @@ export default function SimpleIntro() {
           maxWidth: '600px',
           width: '100%',
           textAlign: 'center',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          position: 'relative'
         }}
       >
         {/* Close button */}
         <button
-          onClick={handleSkip}
+          onClick={handleClose}
           style={{
             position: 'absolute',
             top: '16px',
@@ -137,105 +101,55 @@ export default function SimpleIntro() {
             cursor: 'pointer',
             color: '#666'
           }}
+          aria-label="Close"
         >
           ×
         </button>
 
-        {/* Progress bar */}
-        <div style={{ width: '100%', backgroundColor: '#e5e7eb', borderRadius: '8px', height: '8px', marginBottom: '32px' }}>
-          <div 
-            style={{ 
-              backgroundColor: '#10b981', 
-              height: '8px', 
-              borderRadius: '8px',
-              transition: 'width 0.5s ease',
-              width: `${((currentStep + 1) / steps.length) * 100}%`
-            }}
-          />
-        </div>
-
         {/* Content */}
         <div style={{ fontSize: '80px', marginBottom: '24px' }}>
-          {currentStepData.icon}
+          {languageStep.icon}
         </div>
-        
+
         <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#111827', marginBottom: '16px' }}>
-          {currentStepData.title}
+          {languageStep.title}
         </h2>
-        
+
         <p style={{ fontSize: '18px', color: '#6b7280', marginBottom: '32px', lineHeight: '1.6' }}>
-          {currentStepData.description}
+          {languageStep.description}
         </p>
 
         {/* Language selection buttons */}
-        {currentStep === 0 && currentStepData.buttons && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
-            {currentStepData.buttons.map((button, index) => (
-              <button
-                key={index}
-                onClick={() => handleLanguageSelect(button.locale)}
-                style={{
-                  width: '100%',
-                  backgroundColor: '#10b981',
-                  color: 'white',
-                  padding: '16px 32px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = '#059669';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = '#10b981';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                {button.label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Navigation buttons */}
-        {currentStep > 0 && (
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '12px' }}>
+          {languageStep.buttons.map((button, index) => (
             <button
-              onClick={handleSkip}
+              key={index}
+              onClick={() => handleLanguageSelect(button.locale)}
               style={{
-                backgroundColor: '#6b7280',
-                color: 'white',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                border: 'none',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}
-            >
-              {t('welcomeIntroSkip')}
-            </button>
-            <button
-              onClick={handleNext}
-              style={{
+                width: '100%',
                 backgroundColor: '#10b981',
                 color: 'white',
-                padding: '12px 24px',
-                borderRadius: '8px',
+                padding: '16px 32px',
+                borderRadius: '12px',
                 border: 'none',
-                fontSize: '16px',
+                fontSize: '18px',
                 fontWeight: '600',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#059669';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#10b981';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              {currentStep === steps.length - 1 ? t('welcomeIntroFinish') : t('welcomeIntroNext')}
+              {button.label}
             </button>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );

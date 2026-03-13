@@ -1,5 +1,5 @@
 // Service Worker para EcoNexo PWA
-const CACHE_NAME = 'econexo-v1';
+const CACHE_NAME = 'econexo-v3'; // Bumped version to force cache clear
 const urlsToCache = [
   '/',
   '/eventos',
@@ -12,6 +12,7 @@ const urlsToCache = [
 
 // Instalar Service Worker
 self.addEventListener('install', (event) => {
+  self.skipWaiting(); // Force the waiting service worker to become the active service worker.
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -33,38 +34,35 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
+    }).then(() => {
+      return self.clients.claim(); // Take control of all clients immediately
     })
   );
 });
 
-// Interceptar requests
+// Interceptar requests - NETWORK FIRST
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then((response) => {
-        // Cache hit - return response
-        if (response) {
+        // Check if we received a valid response
+        if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
 
-        return fetch(event.request).then(
-          (response) => {
-            // Check if we received a valid response
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
+        // Clone the response
+        const responseToCache = response.clone();
 
-            // Clone the response
-            const responseToCache = response.clone();
+        caches.open(CACHE_NAME)
+          .then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
 
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          }
-        );
+        return response;
+      })
+      .catch(() => {
+        // If network fails, try to return from cache
+        return caches.match(event.request);
       })
   );
 });

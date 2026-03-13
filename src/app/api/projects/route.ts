@@ -6,8 +6,31 @@ import { getSupabase } from "@/lib/supabaseClient";
 export const dynamic = 'force-static';
 export const revalidate = false;
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    // If a specific id is requested, try Supabase for that id first, then fall back to local dataset
+    if (id) {
+      try {
+        const supabase = getSupabase();
+        const res = await supabase
+          .from("projects")
+          .select("*")
+          .eq('id', id)
+          .maybeSingle();
+        if (!res.error && res.data) {
+          return NextResponse.json(res.data);
+        }
+      } catch {
+        // ignore and fall back to local dataset
+      }
+      const local = PROJECTS.find((p: any) => String(p.id) === String(id));
+      if (local) return NextResponse.json(local);
+      return NextResponse.json({ error: 'not found' }, { status: 404 });
+    }
+
     // Try Supabase first
     try {
       const supabase = getSupabase();

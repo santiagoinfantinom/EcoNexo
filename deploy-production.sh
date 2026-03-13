@@ -60,10 +60,10 @@ else
     echo -e "${GREEN}✅ Supabase key configured${NC}"
 fi
 
-if grep -q "econexo-dev.local" .env.local; then
-    echo -e "${YELLOW}⚠️  Plausible domain needs to be updated for production${NC}"
+if grep -q "NEXT_PUBLIC_SITE_URL" .env.local; then
+    echo -e "${GREEN}✅ Site URL configured${NC}"
 else
-    echo -e "${GREEN}✅ Plausible domain configured${NC}"
+    echo -e "${YELLOW}⚠️  NEXT_PUBLIC_SITE_URL needs to be configured in .env.local (e.g. your Vercel URL)${NC}"
 fi
 
 echo ""

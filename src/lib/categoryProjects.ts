@@ -10,7 +10,7 @@ export interface CategoryProject {
     en: string;
     de: string;
   };
-  category: 'Medio ambiente' | 'Educación' | 'Salud' | 'Comunidad' | 'Océanos' | 'Alimentación';
+  category: 'Medio ambiente' | 'Educación' | 'Salud' | 'Comunidad' | 'Océanos' | 'Alimentación' | 'Tecnología';
   imageUrl: string;
   location: {
     es: string;
@@ -734,6 +734,124 @@ export const categoryProjects: Record<string, CategoryProject[]> = {
         es: '800 personas capacitadas',
         en: '800 people trained',
         de: '800 Menschen ausgebildet'
+      }
+    }
+  ],
+  'Tecnología': [
+    {
+      id: 'tech-1',
+      title: {
+        es: 'Hackathon Verde',
+        en: 'Green Hackathon',
+        de: 'Grünes Hackathon'
+      },
+      description: {
+        es: 'Hackathon de 48 horas para desarrollar soluciones tecnológicas sostenibles. Incluye talleres de IoT, blockchain y apps de consumo responsable.',
+        en: '48-hour hackathon to develop sustainable technological solutions. Includes IoT workshops, blockchain and responsible consumption apps.',
+        de: '48-Stunden-Hackathon zur Entwicklung nachhaltiger technologischer Lösungen. Beinhaltet IoT-Workshops, Blockchain und Apps für verantwortungsvollen Konsum.'
+      },
+      category: 'Tecnología',
+      imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1600&auto=format&fit=crop',
+      location: {
+        es: 'Madrid, España',
+        en: 'Madrid, Spain',
+        de: 'Madrid, Spanien'
+      },
+      city: 'Madrid',
+      country: 'España',
+      spots: 100,
+      volunteers: 65,
+      impact: {
+        es: '15 proyectos desarrollados',
+        en: '15 projects developed',
+        de: '15 entwickelte Projekte'
+      }
+    },
+    {
+      id: 'tech-2',
+      title: {
+        es: 'Laboratorio de Innovación Sostenible',
+        en: 'Sustainable Innovation Lab',
+        de: 'Nachhaltiges Innovationslabor'
+      },
+      description: {
+        es: 'Espacio colaborativo para desarrollar tecnologías verdes: sensores IoT, apps de economía circular y plataformas de energía renovable.',
+        en: 'Collaborative space to develop green technologies: IoT sensors, circular economy apps and renewable energy platforms.',
+        de: 'Kollaborativer Raum zur Entwicklung grüner Technologien: IoT-Sensoren, Apps für Kreislaufwirtschaft und Plattformen für erneuerbare Energien.'
+      },
+      category: 'Tecnología',
+      imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1600&auto=format&fit=crop',
+      location: {
+        es: 'Berlín, Alemania',
+        en: 'Berlin, Germany',
+        de: 'Berlin, Deutschland'
+      },
+      city: 'Berlín',
+      country: 'Alemania',
+      spots: 50,
+      volunteers: 32,
+      impact: {
+        es: '20 prototipos creados',
+        en: '20 prototypes created',
+        de: '20 Prototypen erstellt'
+      }
+    },
+    {
+      id: 'tech-3',
+      title: {
+        es: 'Smart City Lab',
+        en: 'Smart City Lab',
+        de: 'Smart City Lab'
+      },
+      description: {
+        es: 'Desarrollo de soluciones de ciudad inteligente: gestión de residuos con sensores, optimización de transporte público y eficiencia energética.',
+        en: 'Development of smart city solutions: waste management with sensors, public transport optimization and energy efficiency.',
+        de: 'Entwicklung von Smart-City-Lösungen: Abfallmanagement mit Sensoren, Optimierung des öffentlichen Verkehrs und Energieeffizienz.'
+      },
+      category: 'Tecnología',
+      imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1600&auto=format&fit=crop',
+      location: {
+        es: 'Londres, Reino Unido',
+        en: 'London, United Kingdom',
+        de: 'London, Vereinigtes Königreich'
+      },
+      city: 'Londres',
+      country: 'Reino Unido',
+      spots: 40,
+      volunteers: 28,
+      impact: {
+        es: '5 ciudades implementando soluciones',
+        en: '5 cities implementing solutions',
+        de: '5 Städte implementieren Lösungen'
+      }
+    },
+    {
+      id: 'tech-4',
+      title: {
+        es: 'Blockchain para Transparencia Ambiental',
+        en: 'Blockchain for Environmental Transparency',
+        de: 'Blockchain für Umwelttransparenz'
+      },
+      description: {
+        es: 'Workshop sobre uso de blockchain para rastrear cadenas de suministro sostenibles y certificaciones ambientales verificables.',
+        en: 'Workshop on using blockchain to track sustainable supply chains and verifiable environmental certifications.',
+        de: 'Workshop zur Verwendung von Blockchain zur Verfolgung nachhaltiger Lieferketten und überprüfbarer Umweltzertifizierungen.'
+      },
+      category: 'Tecnología',
+      imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1600&auto=format&fit=crop',
+      location: {
+        es: 'París, Francia',
+        en: 'Paris, France',
+        de: 'Paris, Frankreich'
+      },
+      city: 'París',
+      country: 'Francia',
+      spots: 25,
+      volunteers: 18,
+      impact: {
+        es: '10 cadenas de suministro rastreadas',
+        en: '10 supply chains tracked',
+        de: '10 Lieferketten verfolgt'
       }
     }
   ]

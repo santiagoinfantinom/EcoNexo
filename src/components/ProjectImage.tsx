@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import Image from "next/image";
 
 type Props = {
   src: string;
@@ -8,22 +10,20 @@ type Props = {
 };
 
 export default function ProjectImage({ src, alt, fallbackSrc, className }: Props) {
-  // Use deterministic, relevant fallbacks only. Random pics can mismatch the topic.
   const candidates = [src, fallbackSrc, "/window.svg"];
-  let tried = 0;
+  const [imgIndex, setImgIndex] = useState(0);
+
   return (
-    <img
-      src={candidates[0]}
+    <Image
+      src={candidates[imgIndex]}
       alt={alt}
-      loading="lazy"
-      className={className}
-      referrerPolicy="no-referrer"
-      decoding="async"
-      crossOrigin="anonymous"
-      onError={(e) => {
-        const img = e.currentTarget as HTMLImageElement;
-        tried += 1;
-        if (tried < candidates.length) img.src = candidates[tried];
+      fill
+      className={`object-cover ${className || ""}`}
+      unoptimized={true}
+      onError={() => {
+        if (imgIndex < candidates.length - 1) {
+          setImgIndex(prev => prev + 1);
+        }
       }}
     />
   );

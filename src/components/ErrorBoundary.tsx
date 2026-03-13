@@ -76,7 +76,7 @@ class ErrorBoundary extends Component<Props, State> {
                   <summary className="cursor-pointer text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
                     Error Details (Development)
                   </summary>
-                  <div className="mt-2 p-3 bg-gray-100 dark:bg-slate-700 rounded text-xs font-mono text-gray-800 dark:text-gray-200 overflow-auto max-h-40">
+                  <div className="mt-2 p-3 bg-gray-100 dark:bg-slate-700 rounded text-xs font-mono text-gray-800 dark:text-gray-100 overflow-auto max-h-40">
                     <div className="mb-2">
                       <strong>Error:</strong> {this.state.error.message}
                     </div>

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 
-type Message = { id: string; from: string; text: string; ts: number };
+type Message = { id: string; from: string; to?: string; text: string; ts: number };
 
 export default function ChatsPage() {
   const { t } = useI18n();
@@ -40,7 +40,7 @@ export default function ChatsPage() {
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow p-4 h-[60vh] flex flex-col">
         <div className="flex-1 overflow-y-auto space-y-2">
           {messages.map((m) => (
-            <div key={m.id} className={`max-w-[75%] ${m.from === "Tú" ? "ml-auto bg-green-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100"} px-3 py-2 rounded-lg`}> 
+            <div key={m.id} className={`max-w-[75%] ${m.from === "Tú" ? "ml-auto bg-green-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white"} px-3 py-2 rounded-lg`}> 
               <div className="text-xs opacity-80 mb-1">{m.from}</div>
               <div>{m.text}</div>
             </div>

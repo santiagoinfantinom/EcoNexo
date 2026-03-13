@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from 'react-leaflet';
 import L from 'leaflet';
+import { ensureEventImage } from "@/lib/eventImages";
+import ImageWithFallback from "@/components/ImageWithFallback";
 
 interface Event {
   id: string;
@@ -37,10 +39,10 @@ interface IntelligentClusteringProps {
   onEventClick?: (event: Event) => void;
 }
 
-export default function IntelligentClustering({ 
-  events, 
-  onClusterClick, 
-  onEventClick 
+export default function IntelligentClustering({
+  events,
+  onClusterClick,
+  onEventClick
 }: IntelligentClusteringProps) {
   const [clusters, setClusters] = useState<Cluster[]>([]);
   const [zoomLevel, setZoomLevel] = useState(10);
@@ -56,16 +58,16 @@ export default function IntelligentClustering({
       const R = 6371; // Earth's radius in km
       const dLat = (e2.lat - e1.lat) * Math.PI / 180;
       const dLon = (e2.lng - e1.lng) * Math.PI / 180;
-      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(e1.lat * Math.PI / 180) * Math.cos(e2.lat * Math.PI / 180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(e1.lat * Math.PI / 180) * Math.cos(e2.lat * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       return R * c;
     };
 
     const getNeighbors = (event: Event, eps: number): Event[] => {
-      return events.filter(e => 
-        e.id !== event.id && 
+      return events.filter(e =>
+        e.id !== event.id &&
         getDistance(event, e) <= eps
       );
     };
@@ -74,7 +76,7 @@ export default function IntelligentClustering({
       if (visited.has(event.id)) return;
 
       const neighbors = getNeighbors(event, eps);
-      
+
       if (neighbors.length < minPts) {
         visited.add(event.id);
         return;
@@ -95,11 +97,11 @@ export default function IntelligentClustering({
       const queue = [...neighbors];
       while (queue.length > 0) {
         const neighbor = queue.shift()!;
-        
+
         if (!visited.has(neighbor.id)) {
           visited.add(neighbor.id);
           cluster.events.push(neighbor);
-          
+
           const neighborNeighbors = getNeighbors(neighbor, eps);
           if (neighborNeighbors.length >= minPts) {
             queue.push(...neighborNeighbors.filter(n => !visited.has(n.id)));
@@ -208,17 +210,16 @@ export default function IntelligentClustering({
           </label>
           <button
             onClick={() => setClusteringEnabled(!clusteringEnabled)}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-              clusteringEnabled
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-200 text-gray-700 dark:bg-slate-600 dark:text-slate-300'
-            }`}
+            className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${clusteringEnabled
+              ? 'bg-green-600 text-white'
+              : 'bg-gray-200 text-gray-700 dark:bg-slate-600 dark:text-slate-300'
+              }`}
           >
             {clusteringEnabled ? 'ON' : 'OFF'}
           </button>
         </div>
         {clusteringEnabled && (
-          <div className="mt-2 text-xs text-slate-600 dark:text-slate-400">
+          <div className="mt-2 text-xs text-slate-600 dark:text-slate-300">
             {clusters.length} clusters, {unclusteredEvents.length} individuales
           </div>
         )}
@@ -228,11 +229,11 @@ export default function IntelligentClustering({
         center={[50.1109, 8.6821]}
         zoom={zoomLevel}
         style={{ height: '100%', width: '100%' }}
-        whenReady={(map) => {
+        whenReady={((map: any) => {
           map.target.on('zoomend', () => {
             setZoomLevel(map.target.getZoom());
           });
-        }}
+        }) as any}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -256,7 +257,7 @@ export default function IntelligentClustering({
                 click: () => handleClusterClick(cluster)
               }}
             />
-            
+
             {/* Cluster marker */}
             <Marker
               position={[cluster.lat, cluster.lng]}
@@ -354,21 +355,23 @@ export default function IntelligentClustering({
                   {event.title}
                 </h3>
                 {(() => {
-                  const websitePreview = event.website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(event.website)}?w=560` : undefined;
-                  const headerImageSrc = event.image_url || websitePreview;
-                  return headerImageSrc ? (
+                  const headerImageSrc = ensureEventImage({
+                    image_url: event.image_url,
+                    category: event.category,
+                    website: event.website
+                  });
+                  return (
                     <div className="w-full h-28 overflow-hidden rounded mb-2 border border-gray-200">
-                      <img
-                        src={headerImageSrc}
+                      <ImageWithFallback
+                        src={headerImageSrc || '/assets/default-event.png'}
                         alt={event.title}
+                        category={event.category}
                         className="w-full h-full object-cover"
                         loading="lazy"
                         referrerPolicy="no-referrer"
-                        decoding="async"
-                        crossOrigin="anonymous"
                       />
                     </div>
-                  ) : null;
+                  );
                 })()}
                 <div className="text-sm text-slate-600 space-y-1">
                   <div>📅 {new Date(event.date).toLocaleDateString()}</div>

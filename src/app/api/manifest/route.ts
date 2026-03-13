@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { DICTS } from '@/lib/i18n';
+import { DICTS } from '@/lib/dictionaries';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const locale = searchParams.get('locale') || 'en';
-  
+
   const dict = DICTS[locale as keyof typeof DICTS] || DICTS.en;
-  
+
   const manifest = {
     name: dict.appTitle || "EcoNexo - Sustainability Platform",
     short_name: "EcoNexo",

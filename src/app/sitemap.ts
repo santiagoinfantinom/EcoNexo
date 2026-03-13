@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { PROJECTS } from "@/data/projects";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.org";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.app";
 
 function toUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;

@@ -2,20 +2,35 @@ import EventDetailClient from "@/components/EventDetailClient";
 import type { Metadata } from "next";
 import Script from "next/script";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.org";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.app";
 
 type EventDetailPageProps = {
   // In Next.js 15, dynamic route params are provided as a Promise
   params: Promise<{ id: string }> | { id: string };
 };
 
+// Allow dynamic routes that aren't pre-generated
+export const dynamicParams = true;
+
 // Required for static export
 export async function generateStaticParams() {
   // Generate static params for all possible event IDs
+  // Include common event IDs from CalendarView mock events
   const eventIds = [];
-  for (let i = 1; i <= 20; i++) {
+
+  // Generate e1 to e36 (covers most mock events)
+  for (let i = 1; i <= 36; i++) {
     eventIds.push({ id: `e${i}` });
   }
+
+  // Add variant IDs like e1b, e1c, etc.
+  const variants = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
+  for (let i = 1; i <= 30; i++) {
+    variants.forEach(v => {
+      eventIds.push({ id: `e${i}${v}` });
+    });
+  }
+
   return eventIds;
 }
 

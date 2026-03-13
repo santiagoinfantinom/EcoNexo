@@ -3,10 +3,12 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createOAuthService } from '@/lib/oauth';
 import { verifyCaptchaToken } from '@/lib/captcha';
+import { useI18n } from '@/lib/i18n';
 
 function GoogleCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { locale } = useI18n();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
 
@@ -18,14 +20,22 @@ function GoogleCallbackContent() {
 
       if (error) {
         setStatus('error');
-        setMessage('Error de autenticación: ' + error);
+        setMessage(
+          (locale === 'en' ? 'Authentication error: ' :
+            locale === 'de' ? 'Authentifizierungsfehler: ' :
+              'Error de autenticación: ') + error
+        );
         return;
       }
 
       if (!code || !state) {
         setStatus('error');
-        setMessage('No puedes acceder directamente a esta página. Por favor, inicia sesión desde la página principal.');
-        
+        setMessage(
+          locale === 'en' ? 'You cannot access this page directly. Please sign in from the main page.' :
+            locale === 'de' ? 'Sie können nicht direkt auf diese Seite zugreifen. Bitte melden Sie sich von der Hauptseite an.' :
+              'No puedes acceder directamente a esta página. Por favor, inicia sesión desde la página principal.'
+        );
+
         // Automatically redirect to home after 3 seconds
         setTimeout(() => {
           router.push('/');
@@ -41,7 +51,7 @@ function GoogleCallbackContent() {
         if (result.success && result.user) {
           // Store user data in localStorage
           const user = result.user;
-          
+
           localStorage.setItem('econexo_user', JSON.stringify({
             id: user.id,
             email: user.email,
@@ -49,9 +59,9 @@ function GoogleCallbackContent() {
             picture: user.picture,
             provider: user.provider,
           }));
-          
+
           localStorage.setItem('econexo_auth_provider', 'google');
-          
+
           // Store OAuth data
           localStorage.setItem('oauth_data', JSON.stringify({
             name: user.name,
@@ -60,35 +70,53 @@ function GoogleCallbackContent() {
             provider: 'google',
             locale: user.locale || 'en',
             verified_email: user.verified_email || true,
+            birthdate: user.birthdate,
+            gender: user.gender,
+            pronouns: user.pronouns,
           }));
-          
+
           // Store profile data with all available fields
           localStorage.setItem('econexo:profile', JSON.stringify({
             full_name: user.name || '',
             first_name: user.given_name || '',
             last_name: user.family_name || '',
             email: user.email,
-                   avatar_url: user.picture || '/logo-econexo.png',
+            avatar_url: user.picture || '/logo-econexo.png',
             preferred_language: user.locale || 'en',
             oauth_provider: 'google',
             oauth_imported: true,
+            birthdate: user.birthdate || '',
+            gender: user.gender || '',
+            pronouns: user.pronouns || '',
           }));
-          
+
           setStatus('success');
-          setMessage('¡Autenticación exitosa! Redirigiendo...');
-          
+          setMessage(
+            locale === 'en' ? 'Authentication successful! Redirecting...' :
+              locale === 'de' ? 'Authentifizierung erfolgreich! Weiterleitung...' :
+                '¡Autenticación exitosa! Redirigiendo...'
+          );
+
           // Redirect to dashboard after 2 seconds
           setTimeout(() => {
             router.push('/perfil');
           }, 2000);
         } else {
           setStatus('error');
-          setMessage(result.error || 'Error de autenticación');
+          setMessage(result.error || (
+            locale === 'en' ? 'Authentication error' :
+              locale === 'de' ? 'Authentifizierungsfehler' :
+                'Error de autenticación'
+          ));
         }
       } catch (error) {
         console.error('Callback error:', error);
         setStatus('error');
-        setMessage('Error interno del servidor');
+        setMessage(
+          locale === 'en' ? 'Internal server error' :
+            locale === 'de' ? 'Interner Serverfehler' :
+              'Error interno del servidor'
+        );
       }
     };
 
@@ -110,13 +138,13 @@ function GoogleCallbackContent() {
               <span className="text-2xl">❌</span>
             )}
           </div>
-          
+
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-            {status === 'loading' && 'Procesando autenticación...'}
-            {status === 'success' && '¡Autenticación exitosa!'}
-            {status === 'error' && 'Error de autenticación'}
+            {status === 'loading' && (locale === 'en' ? 'Processing authentication...' : locale === 'de' ? 'Authentifizierung wird verarbeitet...' : 'Procesando autenticación...')}
+            {status === 'success' && (locale === 'en' ? 'Authentication successful!' : locale === 'de' ? 'Authentifizierung erfolgreich!' : '¡Autenticación exitosa!')}
+            {status === 'error' && (locale === 'en' ? 'Authentication error' : locale === 'de' ? 'Authentifizierungsfehler' : 'Error de autenticación')}
           </h2>
-          
+
           <p className="text-gray-600 dark:text-gray-300">
             {message}
           </p>
@@ -128,13 +156,13 @@ function GoogleCallbackContent() {
               onClick={() => router.push('/')}
               className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
             >
-              Volver al inicio
+              {locale === 'en' ? 'Back to home' : locale === 'de' ? 'Zurück zur Startseite' : 'Volver al inicio'}
             </button>
             <button
               onClick={() => router.push('/auth')}
               className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Intentar de nuevo
+              {locale === 'en' ? 'Try again' : locale === 'de' ? 'Erneut versuchen' : 'Intentar de nuevo'}
             </button>
           </div>
         )}
@@ -152,6 +180,7 @@ export default function GoogleCallbackPage() {
             <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            {/* This will use the parent's locale context */}
             Cargando...
           </h2>
         </div>

@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { sendWelcomeVerificationEmail } from './emailService';
 
 // Email verification token storage (in production, use Redis or database)
 const verificationTokens = new Map<string, { email: string; expires: number; verified: boolean }>();
@@ -23,49 +22,13 @@ export function generateVerificationToken(): string {
   return crypto.randomBytes(32).toString('hex');
 }
 
-/**
- * Send verification email (server-side only)
- */
-export async function sendVerificationEmail(
-  email: string,
-  token: string,
-  locale: string = 'en'
-): Promise<EmailVerificationResult> {
-  try {
-    // Store token with expiration (24 hours)
-    verificationTokens.set(token, {
-      email,
-      expires: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
-      verified: false,
-    });
-
-    // Send welcome email with verification link
-    const result = await sendWelcomeVerificationEmail(email, token, locale);
-
-    if (result.success) {
-      // Log the verification URL for development
-      const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/verify-email?token=${token}`;
-      console.log(`✅ Verification email sent to ${email}`);
-      console.log(`🔗 Verification URL: ${verificationUrl}`);
-      
-      return {
-        success: true,
-        message: 'Email de verificación enviado correctamente',
-        token,
-      };
-    } else {
-      return {
-        success: false,
-        message: result.message,
-      };
-    }
-  } catch (error) {
-    console.error('Error sending verification email:', error);
-    return {
-      success: false,
-      message: 'Error al enviar el email de verificación',
-    };
-  }
+// Register token in memory (server or client call)
+export function registerVerificationToken(token: string, email: string) {
+  verificationTokens.set(token, {
+    email,
+    expires: Date.now() + 24 * 60 * 60 * 1000,
+    verified: false,
+  });
 }
 
 /**

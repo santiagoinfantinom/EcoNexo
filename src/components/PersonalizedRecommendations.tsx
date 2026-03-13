@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { ensureEventImage } from "@/lib/eventImages";
+import { useI18n, categoryLabel } from '@/lib/i18n';
 
 interface UserProfile {
   id: string;
@@ -57,11 +59,12 @@ interface PersonalizedRecommendationsProps {
   onEventClick?: (event: Event) => void;
 }
 
-export default function PersonalizedRecommendations({ 
-  userId, 
-  events, 
-  onEventClick 
+export default function PersonalizedRecommendations({
+  userId,
+  events,
+  onEventClick
 }: PersonalizedRecommendationsProps) {
+  const { t, locale } = useI18n();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [recommendations, setRecommendations] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -100,7 +103,7 @@ export default function PersonalizedRecommendations({
       impactScore: 85,
       joinDate: "2024-01-15"
     };
-    
+
     setUserProfile(mockProfile);
     setLoading(false);
   };
@@ -109,10 +112,10 @@ export default function PersonalizedRecommendations({
     const R = 6371; // Earth's radius in km
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lng2 - lng1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
 
@@ -129,15 +132,15 @@ export default function PersonalizedRecommendations({
 
     // Distance factor (closer = higher score)
     const distance = calculateDistance(
-      profile.location.lat, 
-      profile.location.lng, 
-      event.location.lat, 
+      profile.location.lat,
+      profile.location.lng,
+      event.location.lat,
       event.location.lng
     );
-    
+
     if (distance <= profile.preferences.maxDistance) {
       score += 30;
-      reasons.push(`A solo ${distance.toFixed(1)} km de ti`);
+      reasons.push(t('proximityReason', { distance: distance.toFixed(1) }));
     } else {
       score -= 20;
     }
@@ -145,20 +148,20 @@ export default function PersonalizedRecommendations({
     // Category preference
     if (profile.preferences.preferredCategories.includes(event.category)) {
       score += 25;
-      reasons.push(`Coincide con tu interés en ${event.category}`);
+      reasons.push(t('interestReason', { category: categoryLabel(event.category, locale) }));
     }
 
     // Time preference
     const eventTimeOfDay = getTimeOfDay(event.time);
     if (profile.preferences.preferredTimes.includes(eventTimeOfDay)) {
       score += 15;
-      reasons.push(`En tu horario preferido (${eventTimeOfDay})`);
+      reasons.push(t('preferredTimeReason', { time: eventTimeOfDay }));
     }
 
     // Difficulty preference
     if (profile.preferences.difficulty.includes(event.difficulty)) {
       score += 10;
-      reasons.push(`Nivel de dificultad adecuado`);
+      reasons.push(t('difficultyReason'));
     }
 
     // Accessibility
@@ -195,7 +198,7 @@ export default function PersonalizedRecommendations({
       // In real app, would check event similarity
       return Math.random() > 0.7; // Mock similarity
     });
-    
+
     if (hasSimilarPastEvent) {
       score += 15;
       reasons.push(`Similar a eventos que te gustaron`);
@@ -217,21 +220,21 @@ export default function PersonalizedRecommendations({
     const scoredEvents = events.map(event => ({
       event,
       score: calculateRecommendationScore(event, userProfile),
-      reasons: []
+      reasons: [] as string[]
     }));
 
     // Calculate reasons for each event
     scoredEvents.forEach(item => {
       const reasons: string[] = [];
-      
+
       // Distance
       const distance = calculateDistance(
-        userProfile.location.lat, 
-        userProfile.location.lng, 
-        item.event.location.lat, 
+        userProfile.location.lat,
+        userProfile.location.lng,
+        item.event.location.lat,
         item.event.location.lng
       );
-      
+
       if (distance <= userProfile.preferences.maxDistance) {
         reasons.push(`A solo ${distance.toFixed(1)} km de ti`);
       }
@@ -310,11 +313,11 @@ export default function PersonalizedRecommendations({
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-          Recomendaciones para ti
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+          {t('recommendationsForYou')}
         </h3>
-        <div className="text-sm text-slate-600 dark:text-slate-400">
-          Basado en tus preferencias y ubicación
+        <div className="text-sm text-slate-600 dark:text-slate-300">
+          {t('basedOnPrefs')}
         </div>
       </div>
 
@@ -337,7 +340,7 @@ export default function PersonalizedRecommendations({
             >
               <div className="flex items-start justify-between mb-2 gap-4">
                 <div className="min-w-0 flex-1">
-                  <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                  <h4 className="font-medium text-slate-900 dark:text-white">
                     {event.title}
                   </h4>
                 </div>
@@ -346,16 +349,19 @@ export default function PersonalizedRecommendations({
                     {getScoreLabel(85)}
                   </span>
                   <span className="text-xs text-slate-500 dark:text-slate-400">
-                    {85}% match
+                    {85}% {t('match')}
                   </span>
                 </div>
               </div>
 
-              {/* Optional website/image preview */}
+              {/* Event image - Always show */}
               {(() => {
-                const websitePreview = event.website ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(event.website)}?w=640` : undefined;
-                const headerImageSrc = event.image_url || websitePreview;
-                return headerImageSrc ? (
+                const headerImageSrc = ensureEventImage({
+                  image_url: event.image_url,
+                  category: event.category || 'community',
+                  website: event.website
+                });
+                return (
                   <div className="w-full h-36 overflow-hidden rounded-md border border-gray-200 mb-3">
                     <img
                       src={headerImageSrc}
@@ -367,10 +373,10 @@ export default function PersonalizedRecommendations({
                       crossOrigin="anonymous"
                     />
                   </div>
-                ) : null;
+                );
               })()}
 
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+              <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
                 {event.description.substring(0, 120)}...
               </p>
 
@@ -386,29 +392,27 @@ export default function PersonalizedRecommendations({
               </div>
 
               <div className="flex items-center gap-2 mt-3">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  event.category === 'environment' ? 'bg-green-100 text-green-800' :
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${event.category === 'environment' ? 'bg-green-100 text-green-800' :
                   event.category === 'education' ? 'bg-blue-100 text-blue-800' :
-                  event.category === 'community' ? 'bg-purple-100 text-purple-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
-                  {event.category}
+                    event.category === 'community' ? 'bg-purple-100 text-purple-800' :
+                      'bg-gray-100 text-gray-800'
+                  }`}>
+                  {categoryLabel(event.category, locale)}
                 </span>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  event.difficulty === 'easy' ? 'bg-green-100 text-green-800' :
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${event.difficulty === 'easy' ? 'bg-green-100 text-green-800' :
                   event.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-red-100 text-red-800'
-                }`}>
+                    'bg-red-100 text-red-800'
+                  }`}>
                   {event.difficulty}
                 </span>
                 {event.accessibility && (
                   <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    ♿ Accesible
+                    ♿ {locale === 'es' ? 'Accesible' : locale === 'de' ? 'Barrierefrei' : 'Accessible'}
                   </span>
                 )}
                 {event.cost === 0 && (
                   <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    🆓 Gratis
+                    🆓 {locale === 'es' ? 'Gratis' : locale === 'de' ? 'Kostenlos' : 'Free'}
                   </span>
                 )}
               </div>
@@ -418,15 +422,15 @@ export default function PersonalizedRecommendations({
       )}
 
       <div className="mt-6 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-        <h4 className="font-medium text-slate-900 dark:text-slate-100 mb-2">
-          💡 Cómo funcionan las recomendaciones
+        <h4 className="font-medium text-slate-900 dark:text-white mb-2">
+          💡 {t('howRecsWork')}
         </h4>
-        <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-1">
-          <li>• Ubicación: Priorizamos eventos cerca de ti</li>
-          <li>• Intereses: Basado en tus categorías favoritas</li>
-          <li>• Horarios: Consideramos tus momentos preferidos</li>
-          <li>• Historial: Aprendemos de eventos anteriores</li>
-          <li>• Disponibilidad: Solo eventos con plazas libres</li>
+        <ul className="text-sm text-slate-600 dark:text-slate-300 space-y-1">
+          <li>• {t('locationPrio')}</li>
+          <li>• {t('interestsPrio')}</li>
+          <li>• {t('timesPrio')}</li>
+          <li>• {t('historyPrio')}</li>
+          <li>• {t('availabilityPrio')}</li>
         </ul>
       </div>
     </div>

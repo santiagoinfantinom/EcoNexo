@@ -4,9 +4,19 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/lib/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/hooks/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
   theme: {
+    screens: {
+      'xs': '375px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       colors: {
         // Colores de contraste mejorados
@@ -78,7 +88,7 @@ module.exports = {
   },
   plugins: [
     // Plugin para utilidades de contraste
-    function({ addUtilities }) {
+    function ({ addUtilities }) {
       const newUtilities = {
         '.text-contrast-high': {
           color: 'var(--text-primary)',

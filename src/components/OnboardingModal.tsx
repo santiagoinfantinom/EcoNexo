@@ -24,10 +24,10 @@ export function OnboardingModal() {
     // DISABLED - DO NOT SHOW ONBOARDING
     console.log('🔧 ONBOARDING DISABLED: Not showing onboarding modal');
     return;
-    
+
     // FORCE SHOW ONBOARDING IN DEVELOPMENT - ALWAYS SHOW
     const isDevelopment = process.env.NODE_ENV === 'development';
-    
+
     if (isDevelopment) {
       // ALWAYS show onboarding in development mode - ignore localStorage
       console.log('🔧 DEVELOPMENT MODE: Forcing onboarding to show');
@@ -37,13 +37,13 @@ export function OnboardingModal() {
       const hasCompletedOnboarding = localStorage.getItem('econexo-onboarding-completed');
       const hasLanguagePreference = localStorage.getItem('econexo-language-set');
       const lastSeenOnboarding = localStorage.getItem('econexo-onboarding-last-seen');
-      
+
       // Show onboarding if:
       // 1. Never completed onboarding, OR
       // 2. Haven't seen it in the last 7 days (for returning users)
-      const shouldShowOnboarding = !hasCompletedOnboarding || 
-        (lastSeenOnboarding && Date.now() - parseInt(lastSeenOnboarding) > 7 * 24 * 60 * 60 * 1000);
-      
+      const shouldShowOnboarding = !hasCompletedOnboarding ||
+        (lastSeenOnboarding && Date.now() - parseInt(lastSeenOnboarding || '0') > 7 * 24 * 60 * 60 * 1000);
+
       if (shouldShowOnboarding) {
         if (!hasLanguagePreference) {
           // Show language selection first
@@ -56,7 +56,7 @@ export function OnboardingModal() {
     }
   }, []);
 
-  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
+  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de' | 'fr') => {
     setLocale(selectedLocale);
     localStorage.setItem('econexo-language-set', 'true');
     localStorage.setItem('econexo-preferred-language', selectedLocale);
@@ -117,14 +117,14 @@ export function OnboardingModal() {
   const handleNext = () => {
     const currentStepData = steps[currentStep];
     if (currentStepData.action) {
-      trackEvent('Onboarding Action', { 
-        step: currentStepData.id, 
-        action: currentStepData.action 
+      trackEvent('Onboarding Action', {
+        step: currentStepData.id,
+        action: currentStepData.action
       });
     }
 
     setCompletedSteps([...completedSteps, currentStepData.id]);
-    
+
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -141,15 +141,15 @@ export function OnboardingModal() {
     localStorage.setItem('econexo-onboarding-completed', 'true');
     localStorage.setItem('econexo-onboarding-last-seen', Date.now().toString());
     setIsOpen(false);
-    trackEvent('Onboarding Completed', { 
+    trackEvent('Onboarding Completed', {
       completedSteps: completedSteps.length,
-      totalSteps: steps.length 
+      totalSteps: steps.length
     });
   };
 
   const handleAction = (action: string) => {
     trackEvent('Onboarding Action Clicked', { action });
-    
+
     // Navigate to different sections
     switch (action) {
       case 'explore-map':
@@ -185,13 +185,13 @@ export function OnboardingModal() {
             <p className="text-gray-600 mb-6">
               {t('onboardingLanguageDescription')}
             </p>
-            
+
             <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
               <p className="text-sm text-blue-700">
                 💡 {t('onboardingLanguageTip')}
               </p>
             </div>
-            
+
             <div className="space-y-3">
               <button
                 onClick={() => handleLanguageSelect('es')}
@@ -211,6 +211,12 @@ export function OnboardingModal() {
               >
                 🇩🇪 Deutsch
               </button>
+              <button
+                onClick={() => handleLanguageSelect('fr')}
+                className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
+              >
+
+              </button>
             </div>
           </div>
         </div>
@@ -226,7 +232,7 @@ export function OnboardingModal() {
       <div className="bg-white rounded-lg max-w-md w-full p-6 relative">
         {/* Progress Bar */}
         <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
-          <div 
+          <div
             className="bg-green-500 h-2 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
@@ -261,14 +267,13 @@ export function OnboardingModal() {
           >
             {t('onboardingSkip')}
           </button>
-          
+
           <div className="flex space-x-2">
             {steps.map((_, index) => (
               <div
                 key={index}
-                className={`w-2 h-2 rounded-full ${
-                  index <= currentStep ? 'bg-green-500' : 'bg-gray-300'
-                }`}
+                className={`w-2 h-2 rounded-full ${index <= currentStep ? 'bg-green-500' : 'bg-gray-300'
+                  }`}
               />
             ))}
           </div>

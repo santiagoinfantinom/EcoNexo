@@ -122,10 +122,10 @@ export default function EcoNexoAdvanced({
           />
         ) : (
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
               Rutas Sostenibles
             </h3>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-slate-600 dark:text-slate-300">
               Selecciona un evento para calcular rutas sostenibles hacia él.
             </p>
           </div>
@@ -154,10 +154,10 @@ export default function EcoNexoAdvanced({
           />
         ) : (
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
               Análisis de Impacto
             </h3>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-slate-600 dark:text-slate-300">
               Selecciona un evento para analizar su impacto ambiental.
             </p>
           </div>
@@ -186,10 +186,10 @@ export default function EcoNexoAdvanced({
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
             EcoNexo Avanzado
           </h1>
-          <p className="text-slate-600 dark:text-slate-400">
+          <p className="text-slate-600 dark:text-slate-300">
             Funcionalidades avanzadas para una experiencia sostenible completa
           </p>
         </div>
@@ -222,7 +222,7 @@ export default function EcoNexoAdvanced({
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
               🚀 Acciones Rápidas
             </h3>
             <div className="space-y-2">
@@ -242,10 +242,10 @@ export default function EcoNexoAdvanced({
           </div>
 
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
               📊 Estadísticas
             </h3>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
               <div className="flex justify-between">
                 <span>Eventos disponibles:</span>
                 <span className="font-medium">{events.length}</span>
@@ -268,7 +268,7 @@ export default function EcoNexoAdvanced({
           </div>
 
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
               🔧 Herramientas
             </h3>
             <div className="space-y-2">
@@ -306,15 +306,15 @@ export default function EcoNexoAdvanced({
         {/* Selected Event Info */}
         {selectedEvent && (
           <div className="mt-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
               📍 Evento Seleccionado
             </h3>
             <div className="flex items-center gap-4">
               <div className="flex-1">
-                <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                <h4 className="font-medium text-slate-900 dark:text-white">
                   {selectedEvent.title}
                 </h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
+                <p className="text-sm text-slate-600 dark:text-slate-300">
                   {selectedEvent.description.substring(0, 100)}...
                 </p>
                 <div className="flex items-center gap-4 mt-2 text-xs text-slate-500 dark:text-slate-400">
