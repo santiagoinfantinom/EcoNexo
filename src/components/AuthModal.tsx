@@ -244,8 +244,8 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           <div className="absolute inset-0 bg-white/5 backdrop-blur-[2px]"></div>
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-xl border border-white/20 hover-lift">
-                <Leaf size={32} className="text-white" />
+              <div className="flex items-center justify-center p-1">
+                <EcoNexoLogo size={65} className="!gap-0" />
               </div>
               <div className="font-sans">
                 <h2 className="text-2xl font-bold tracking-tight">
