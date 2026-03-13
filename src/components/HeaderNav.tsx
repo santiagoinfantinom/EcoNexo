@@ -79,31 +79,48 @@ export default function HeaderNav() {
               <AuthButton variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 py-2 rounded-xl font-bold transition-all hover:border-green-400/50" />
             </div>
 
-            {/* Main Navigation - Desktop */}
-            <nav className="hidden xl:flex items-center gap-2 bg-white/5 p-2 rounded-3xl backdrop-blur-md border border-white/10 shadow-inner">
-              {[
-                { href: "/", label: t("map"), icon: MapIcon },
-                { href: "/noticias", label: t("news") || "Noticias", icon: Newspaper },
-                { href: "/calendario", label: t("calendar"), icon: Calendar },
-                { href: "/trabajos", label: t("jobs"), icon: Briefcase },
-                { href: "/chat", label: t("chat"), icon: MessageCircle },
-                { href: "/matching", label: "Matching", icon: Target },
-                { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
-                { href: "/perfil", label: t("profile"), icon: User },
-                { href: "/about", label: t("aboutUs"), icon: Info },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  id={`nav-${item.href.replace(/^\//, "") || "map"}`}
-                  href={item.href}
-                  className="flex flex-col items-center gap-2 px-6 py-3 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-green-400/0 group-hover:bg-green-400/5 transition-colors"></div>
-                  <item.icon className="w-8 h-8 text-green-400 group-hover:text-green-300 group-hover:scale-110 transition-all duration-300" />
-                  <span className="font-extrabold text-sm tracking-wide text-white/90 group-hover:text-white transition-colors">{item.label}</span>
-                  <div className="w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300"></div>
-                </Link>
-              ))}
+            {/* Main Navigation - Desktop (Two Rows) */}
+            <nav className="hidden xl:flex flex-col items-center lg:items-end gap-3 w-full">
+              {/* Row 1: Tools & Core Features */}
+              <div className="flex items-center gap-2 bg-white/5 p-1.5 rounded-2xl backdrop-blur-md border border-white/10 shadow-inner">
+                {[
+                  { href: "/", label: t("map"), icon: MapIcon },
+                  { href: "/noticias", label: t("news") || "Noticias", icon: Newspaper },
+                  { href: "/calendario", label: t("calendar"), icon: Calendar },
+                  { href: "/trabajos", label: t("jobs"), icon: Briefcase },
+                  { href: "/chat", label: t("chat"), icon: MessageCircle },
+                  { href: "/matching", label: "Matching", icon: Target },
+                ].map((item) => (
+                  <Link
+                    key={item.href}
+                    id={`nav-${item.href.replace(/^\//, "") || "map"}`}
+                    href={item.href}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/10 transition-all group relative overflow-hidden"
+                  >
+                    <item.icon className="w-5 h-5 text-green-400 group-hover:text-green-300 group-hover:scale-110 transition-all duration-300" />
+                    <span className="font-bold text-xs tracking-wide text-white/90 group-hover:text-white transition-colors">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Row 2: Social & Info */}
+              <div className="flex items-center gap-2 bg-white/5 p-1.5 rounded-2xl backdrop-blur-sm border border-white/5 shadow-sm">
+                {[
+                  { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
+                  { href: "/perfil", label: t("profile"), icon: User },
+                  { href: "/about", label: t("aboutUs"), icon: Info },
+                ].map((item) => (
+                  <Link
+                    key={item.href}
+                    id={`nav-social-${item.href.replace(/^\//, "")}`}
+                    href={item.href}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all group"
+                  >
+                    <item.icon className="w-4 h-4 text-green-300/70 group-hover:text-green-200" />
+                    <span className="font-semibold text-[10px] uppercase tracking-widest text-white/70 group-hover:text-white transition-colors">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
             </nav>
 
             {/* Medium screen Nav (md-xl) */}
