@@ -1,7 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useAuth } from "@/lib/auth";
+import { useToast } from "./ToastNotification";
 import AuthButton from "./AuthButton";
 import EcoNexoLogo from "./EcoNexoLogo";
 import {
@@ -22,8 +24,23 @@ import OnboardingTour from "./OnboardingTour";
 
 export default function HeaderNav() {
   const { t, locale } = useI18n();
+  const { user, loading } = useAuth();
+  const { showToast } = useToast();
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const previousUser = useRef(user);
+
+  useEffect(() => {
+    if (!loading && user) {
+      const welcomed = sessionStorage.getItem('econexo_welcomed');
+      if (!welcomed) {
+        sessionStorage.setItem('econexo_welcomed', 'true');
+        const name = user.profile?.first_name || user.profile?.full_name || user.email?.split('@')[0] || '';
+        showToast(locale === 'es' ? `¡Bienvenido/a de nuevo, ${name}!` : `Welcome back, ${name}!`, "success");
+      }
+    }
+  }, [user, loading, showToast, locale]);
 
   useEffect(() => {
     setMounted(true);

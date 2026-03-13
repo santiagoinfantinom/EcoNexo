@@ -16,10 +16,8 @@ from ..tools import user_tools, project_tools, matching_tools, scraper_tools, ra
 
 logger = logging.getLogger(__name__)
 
-# Initialize LLM with a supported model
-# gemini-pro is deprecated/404ing, using gemini-1.5-flash
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-2.5-flash",
     temperature=0,
     google_api_key=os.getenv("GOOGLE_API_KEY")
 )
@@ -174,16 +172,25 @@ def search_projects(state: AgentState) -> AgentState:
     
     # Search internal projects
     try:
-        # Use simple string match for demonstration if vector store not available
-        projects = project_tools.search_projects(
-            query=state.get("current_query", ""),
-            category=criteria.get("category"),
-            city=criteria.get("city"),
-            country=criteria.get("country"),
-            lat=criteria.get("lat"),
-            lng=criteria.get("lng"),
-            radius_km=criteria.get("radius_km")
-        )
+        import asyncio
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            
+        projects = loop.run_until_complete(project_tools.search_projects(criteria))
+        
+        # Simple string match for demonstration
+        if state.get("current_query"):
+            query_lower = state.get("current_query").lower()
+            filtered_projects = [
+                p for p in projects 
+                if query_lower in p.get("name", "").lower() or query_lower in p.get("description", "").lower()
+            ]
+            if filtered_projects:
+                projects = filtered_projects
+                
         state["candidate_projects"] = projects
     except Exception as e:
         logger.error(f"Error searching projects: {e}")

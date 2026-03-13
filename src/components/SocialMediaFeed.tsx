@@ -17,43 +17,43 @@ interface SocialPost {
 const MOCK_POSTS: SocialPost[] = [
     {
         id: "1",
-        author: "Elena Verde",
-        handle: "@elenagreen",
-        content: "Just joined the beach cleanup in Barcelona! Incredible energy today. #EcoNexo #Sustainability",
+        author: "European Eco-Watch",
+        handle: "@ecowatch_eu",
+        content: "The new Industrial Accelerator Act is a game changer for local clean-tech. Support for sustainable factories is finally here! ⚡ #EcoNexo #Sustainability2026",
         source: "twitter",
-        likes: 24,
-        shares: 5,
-        avatar: "https://i.pravatar.cc/150?u=elena"
+        likes: 142,
+        shares: 38,
+        avatar: "https://i.pravatar.cc/150?u=ecowatch"
     },
     {
         id: "2",
-        author: "Marco Sostenible",
-        handle: "@marcos_eco",
-        content: "The new community garden in Madrid is looking amazing. Thanks #EcoNexo for the coordination!",
-        source: "instagram",
-        likes: 56,
-        shares: 12,
-        avatar: "https://i.pravatar.cc/150?u=marco"
+        author: "Green Policy Institute",
+        handle: "@greenpolicy_inst",
+        content: "Huge win for consumers! The EU's new greenwashing ban means labels must finally be honest. No more fake claims. ✅ #CircularEconomy #EcoNexo",
+        source: "twitter",
+        likes: 215,
+        shares: 89,
+        avatar: "https://i.pravatar.cc/150?u=policy"
     },
     {
         id: "3",
-        author: "Green Warrior",
-        handle: "@grnwarrior",
-        content: "Reforestation goals for 2026 are looking bright. Proud to be part of this community. #EcoNexo",
-        source: "twitter",
-        likes: 89,
-        shares: 42,
-        avatar: "https://i.pravatar.cc/150?u=warrior"
+        author: "Marine Defenders",
+        handle: "@ocean_defenders",
+        content: "OceanEye data is rolling in! We're seeing better underwater monitoring than ever before thanks to the new €50M Horizon Europe fund. 🌊 #SaveOurOceans #EcoNexo",
+        source: "instagram",
+        likes: 567,
+        shares: 124,
+        avatar: "https://i.pravatar.cc/150?u=ocean"
     },
     {
         id: "4",
-        author: "Sophie Nature",
-        handle: "@sophie_n",
-        content: "Amazing workshop today in Berlin about urban composting. Highly recommended! #EcoNexo",
+        author: "EcoFashion Global",
+        handle: "@ecofashion_mag",
+        content: "Circular economy in action: Unsold clothes in the EU now HAVE to be recycled or repurposed. The end of fast-fashion waste begins now! 👗♻️",
         source: "instagram",
-        likes: 112,
-        shares: 18,
-        avatar: "https://i.pravatar.cc/150?u=sophie"
+        likes: 892,
+        shares: 456,
+        avatar: "https://i.pravatar.cc/150?u=fashion"
     }
 ];
 

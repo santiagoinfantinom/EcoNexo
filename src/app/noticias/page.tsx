@@ -9,12 +9,34 @@ export default function NoticiasPage() {
     const { t } = useI18n();
 
     const newsItems = [
-        { title: t('tickerTitle1'), category: "🌿 Environment", date: "Hoy" },
-        { title: t('tickerTitle2'), category: "📋 Policy", date: "Ayer" },
-        { title: t('tickerTitle3'), category: "🌲 Community", date: "Mar 1" },
-        { title: t('tickerTitle4'), category: "⚡ Technology", date: "Feb 28" },
-        { title: t('tickerTitle5'), category: "♻️ Lifestyle", date: "Feb 27" },
-        { title: t('tickerTitle6'), category: "👗 Society", date: "Feb 26" },
+        {
+            title: "EU Adopts New Packaging and Waste Regulation for 2030",
+            category: "♻️ Circular Economy",
+            date: "Mar 5, 2026",
+            link: "https://environment.ec.europa.eu/strategy/circular-economy-action-plan_en",
+            image: "https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+            title: "EU Deforestation Regulation Delay: Core Obligations Shift to December 2026",
+            category: "📋 Policy",
+            date: "Feb 28, 2026",
+            link: "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal_en",
+            image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+            title: "EU Green Week 2026: Focus on the Nature-Positive Economy",
+            category: "🌿 Environment",
+            date: "Feb 20, 2026",
+            link: "https://www.eea.europa.eu/en",
+            image: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+            title: "New Water and Air Quality Laws Mandate Corporate Responsibility",
+            category: "💧 Sustainability",
+            date: "Feb 10, 2026",
+            link: "https://www.unep.org/regions/europe",
+            image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop"
+        },
     ];
 
     return (
@@ -41,16 +63,20 @@ export default function NoticiasPage() {
             <main className="max-w-5xl mx-auto px-4">
                 <div className="grid gap-6 md:gap-8">
                     {newsItems.map((news, idx) => (
-                        <Link
+                        <a
                             key={idx}
-                            href="#"
+                            href={news.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="group glass-card overflow-hidden block rounded-2xl border border-white/40 shadow-sm"
                         >
                             <div className="flex flex-col sm:flex-row h-full">
-                                <div className="sm:w-1/4 bg-green-900/10 p-8 flex items-center justify-center border-b sm:border-b-0 sm:border-r border-white/20">
-                                    <span className="text-5xl">
-                                        {idx % 3 === 0 ? "🌱" : idx % 3 === 1 ? "🌍" : "♻️"}
-                                    </span>
+                                <div className="sm:w-1/3 relative h-48 sm:h-auto overflow-hidden border-b sm:border-b-0 sm:border-r border-white/20">
+                                    <img
+                                        src={news.image}
+                                        alt={news.title}
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
                                 </div>
                                 <div className="p-6 md:p-8 flex-1 flex flex-col justify-center bg-white/60 dark:bg-slate-900/60 backdrop-blur-md">
                                     <div className="flex items-center gap-3 mb-3">
@@ -69,7 +95,7 @@ export default function NoticiasPage() {
                                     </div>
                                 </div>
                             </div>
-                        </Link>
+                        </a>
                     ))}
                 </div>
             </main>
