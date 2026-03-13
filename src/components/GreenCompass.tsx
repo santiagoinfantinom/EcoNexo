@@ -1,104 +1,103 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { Compass, Plus, Map as MapIcon, Users, Rocket, Briefcase } from "lucide-react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+    Plus,
+    Compass,
+    Calendar,
+    Heart,
+    Rocket,
+    Users,
+    AlertTriangle,
+    X
+} from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
 export default function GreenCompass() {
-    const pathname = usePathname();
     const router = useRouter();
     const { t } = useI18n();
     const [isOpen, setIsOpen] = useState(false);
-    const [suggestion, setSuggestion] = useState<{
-        icon: React.ReactNode;
-        label: string;
-        action: () => void;
-    } | null>(null);
-
-    // Determine suggestion based on route
-    useEffect(() => {
-        if (pathname === "/" || pathname === "/explore") {
-            setSuggestion({
-                icon: <MapIcon size={20} />,
-                label: t("explore") || "Explorar",
-                action: () => {
-                    const mapElement = document.getElementById("map");
-                    if (mapElement) {
-                        mapElement.scrollIntoView({ behavior: "smooth" });
-                    } else {
-                        router.push("/#map");
-                    }
-                },
-            });
-        } else if (pathname.startsWith("/eventos")) {
-            setSuggestion({
-                icon: <Plus size={20} />,
-                label: t("createEvent") || "Crear Evento",
-                action: () => router.push("/eventos?create=true"),
-            });
-        } else if (pathname.startsWith("/proyectos")) {
-            setSuggestion({
-                icon: <Rocket size={20} />,
-                label: t("publishProject") || "Iniciar Proyecto",
-                action: () => router.push("/proyectos/nuevo"),
-            });
-        } else if (pathname.startsWith("/trabajos")) {
-            setSuggestion({
-                icon: <Briefcase size={20} />,
-                label: "Publicar Empleo",
-                action: () => router.push("/trabajos/nuevo"),
-            });
-        } else if (pathname.startsWith("/community")) {
-            setSuggestion({
-                icon: <Users size={20} />,
-                label: t("searchGroups") || "Grupos",
-                action: () => router.push("/community/groups"),
-            });
-        } else {
-            setSuggestion({
-                icon: <Compass size={20} />,
-                label: t("explore") || "Explorar",
-                action: () => router.push("/"),
-            });
-        }
-    }, [pathname, router, t]);
 
     const toggleOpen = () => setIsOpen(!isOpen);
 
-    if (!suggestion) return null;
+    const menuItems = [
+        {
+            icon: <Calendar size={20} />,
+            label: t("createEvent") || "Crear Evento",
+            action: () => router.push("/eventos?create=true"),
+            color: "text-blue-500 bg-blue-100 dark:bg-blue-900/30"
+        },
+        {
+            icon: <Heart size={20} />,
+            label: "Apoyar Iniciativas",
+            action: () => router.push("/impact"),
+            color: "text-rose-500 bg-rose-100 dark:bg-rose-900/30"
+        },
+        {
+            icon: <Rocket size={20} />,
+            label: "Proponer Proyecto",
+            action: () => router.push("/proyectos/nuevo"),
+            color: "text-amber-500 bg-amber-100 dark:bg-amber-900/30"
+        },
+        {
+            icon: <Users size={20} />,
+            label: "Buscar Voluntariado",
+            action: () => router.push("/trabajos?type=volunteering"),
+            color: "text-emerald-500 bg-emerald-100 dark:bg-emerald-900/30"
+        },
+        {
+            icon: <AlertTriangle size={20} />,
+            label: "Reportar Problema",
+            action: () => router.push("/chat?report=true"),
+            color: "text-orange-500 bg-orange-100 dark:bg-orange-900/30"
+        }
+    ];
 
     return (
-        <div className="fixed bottom-6 right-6 z-[999] flex flex-col items-end gap-4">
+        <div className="fixed bottom-6 right-6 z-[999] flex flex-col items-end gap-3">
+            {/* Menu Items */}
             {isOpen && (
-                <div className="mb-2 mr-1 perf-scale-in">
-                    <button
-                        onClick={suggestion.action}
-                        className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 shadow-xl border border-emerald-100 dark:border-emerald-900/30 text-emerald-800 dark:text-emerald-100 hover:scale-105 transition-transform"
-                    >
-                        <span className="font-semibold text-sm">{suggestion.label}</span>
-                        <span className="bg-emerald-100 dark:bg-emerald-900/50 p-2 rounded-full text-emerald-600 dark:text-emerald-400">
-                            {suggestion.icon}
-                        </span>
-                    </button>
+                <div className="flex flex-col items-end gap-3 mb-2">
+                    {menuItems.map((item, index) => (
+                        <button
+                            key={index}
+                            onClick={() => {
+                                item.action();
+                                setIsOpen(false);
+                            }}
+                            className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-800 shadow-2xl border border-emerald-100 dark:border-white/5 text-slate-700 dark:text-slate-100 hover:scale-105 transition-all duration-300 animate-in slide-in-from-bottom-2 fade-in"
+                            style={{ animationDelay: `${index * 50}ms` }}
+                        >
+                            <span className="font-bold text-xs whitespace-nowrap">{item.label}</span>
+                            <span className={`p-2 rounded-xl ${item.color}`}>
+                                {item.icon}
+                            </span>
+                        </button>
+                    ))}
                 </div>
             )}
 
+            {/* Main Toggle Button */}
             <button
                 onClick={toggleOpen}
-                className={`relative flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 perf-hover-scale ${isOpen
-                    ? "bg-slate-800 text-white rotate-45"
-                    : "bg-gradient-to-br from-emerald-400 to-teal-600 text-white"
+                className={`relative flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-500 transform ${isOpen
+                    ? "bg-slate-900 text-white rotate-[135deg] scale-90"
+                    : "bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 text-white hover:scale-110 active:scale-95"
                     }`}
+                aria-label="EcoActions"
             >
                 {isOpen ? (
-                    <Plus size={28} />
+                    <X size={28} />
                 ) : (
                     <Compass size={28} className="animate-pulse-slow" />
                 )}
 
-                {/* Ping animation when closed */}
+                {/* Glow & Ping Effects */}
                 {!isOpen && (
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20 animate-ping"></span>
+                    <>
+                        <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-20 animate-ping"></span>
+                        <div className="absolute inset-[-4px] rounded-full border-2 border-emerald-400/20 animate-pulse"></div>
+                    </>
                 )}
             </button>
         </div>
