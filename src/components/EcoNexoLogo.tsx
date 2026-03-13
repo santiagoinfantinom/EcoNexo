@@ -1,6 +1,6 @@
-"use client";
 import React from 'react';
 import Image from 'next/image';
+import logoImg from '../../public/logo-econexo.png';
 
 interface EcoNexoLogoProps {
   className?: string;
@@ -11,7 +11,7 @@ export default function EcoNexoLogo({ className = "", size = 60 }: EcoNexoLogoPr
   return (
     <div className={`flex items-center gap-4 ${className}`}>
       <Image
-        src="/logo-econexo.png"
+        src={logoImg}
         alt="EcoNexo Logo"
         width={size}
         height={size}

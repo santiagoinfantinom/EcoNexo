@@ -24,7 +24,7 @@ export function generateMetadata(locale: string = "en"): Metadata {
   return {
     title,
     description,
-    manifest: "/api/manifest?locale=" + locale,
+    manifest: (process.env.GITHUB_PAGES === "true" ? "/EcoNexo" : "") + "/manifest.json",
     appleWebApp: {
       capable: true,
       statusBarStyle: "black-translucent",
@@ -32,7 +32,7 @@ export function generateMetadata(locale: string = "en"): Metadata {
     },
     icons: {
       apple: [
-        { url: "/logo-econexo.png", sizes: "180x180", type: "image/png" },
+        { url: (process.env.GITHUB_PAGES === "true" ? "/EcoNexo" : "") + "/logo-econexo.png", sizes: "180x180", type: "image/png" },
       ],
     },
     openGraph: {
