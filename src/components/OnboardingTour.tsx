@@ -154,7 +154,7 @@ export default function OnboardingTour() {
                 // If we don't have IP or it's been > 24h, refresh identification
                 if (!visitorInfo || !visitorInfo.ip || (Date.now() - new Date(visitorInfo.lastVisit).getTime() > 86400000)) {
                     try {
-                        const res = await fetch('/api/identify');
+                        const res = await fetch('https://api.ipify.org?format=json');
                         if (res.ok) {
                             const data = await res.json();
                             visitorInfo = {
@@ -164,10 +164,10 @@ export default function OnboardingTour() {
                                 firstVisit: visitorInfo?.firstVisit || new Date().toISOString()
                             };
                             localStorage.setItem("econexo_visitor_info", JSON.stringify(visitorInfo));
-                            console.log("Visitor identified:", visitorInfo.ip);
+                            console.log("Visitor identified via client-side service:", visitorInfo.ip);
                         }
                     } catch (e) {
-                        console.error("Failed to identify visitor via API", e);
+                        console.warn("Failed to identify visitor via public API, continuing...", e);
                     }
                 }
             } catch (err) {

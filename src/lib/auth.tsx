@@ -262,11 +262,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const supabase = getSupabase();
 
       // Handle GitHub Pages subpath dynamic redirection
+      const isGH = typeof window !== "undefined" && window.location.hostname.includes("github.io");
       const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
-      let redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(currentPath)}` : undefined;
 
-      if (typeof window !== "undefined" && window.location.hostname.includes("github.io")) {
-        redirectTo = `${window.location.origin}/EcoNexo/auth/callback/?next=${encodeURIComponent(currentPath)}`;
+      // If we are on GH Pages, strip the basePath from currentPath for the 'next' param
+      // because router.push adds it back automatically.
+      const relativePath = isGH && currentPath.startsWith('/EcoNexo')
+        ? currentPath.replace('/EcoNexo', '') || '/'
+        : currentPath;
+
+      let redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(relativePath)}` : undefined;
+
+      if (isGH) {
+        redirectTo = `${window.location.origin}/EcoNexo/auth/callback/?next=${encodeURIComponent(relativePath)}`;
       }
 
       // Configure OAuth options

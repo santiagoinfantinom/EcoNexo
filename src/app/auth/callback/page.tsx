@@ -97,19 +97,26 @@ function AuthCallbackContent() {
                     .single();
 
                 // If profile is new or missing key info, redirect to profile
-                // We also check if the user is coming from the profile page already to avoid loops
                 const isProfileIncomplete = !profile || !profile.first_name || (!profile.bio && !profile.phone);
 
-                if (isProfileIncomplete && !nextPath.includes('/perfil')) {
+                // Determine final path (Next.js router handles basePath automatically)
+                let finalPath = nextPath;
+
+                // If finalPath already includes /EcoNexo, strip it because router.push adds it back
+                if (finalPath.startsWith('/EcoNexo')) {
+                    finalPath = finalPath.replace('/EcoNexo', '') || '/';
+                }
+
+                if (isProfileIncomplete && !finalPath.includes('/perfil')) {
                     console.log("Redirecting to profile for completion");
-                    router.push(`/perfil?next=${encodeURIComponent(nextPath)}`);
+                    router.push(`/perfil?next=${encodeURIComponent(finalPath)}`);
                 } else {
-                    console.log("Redirecting to intended destination:", nextPath);
-                    router.push(nextPath);
+                    console.log("Redirecting to intended destination:", finalPath);
+                    router.push(finalPath);
                 }
             } catch (err) {
                 console.error("Error during post-login redirect:", err);
-                router.push(nextPath);
+                router.push(nextPath.startsWith('/EcoNexo') ? nextPath.replace('/EcoNexo', '') || '/' : nextPath);
             }
         };
 
