@@ -89,22 +89,23 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // In a real app we'd need a proxy to the MCP server stats, 
-        // For now assuming we have a Next.js API route that proxies to /stats or we call direct if same origin
-        // Since the current architecture has a proxy at /api/agents/matching, we might need to add a stats route.
-        // For simplicity in this demo, I'll assume we can hit a new endpoint we'll create or mock it.
-        // Let's create a quick client-side mock if the endpoint isn't wired up in Next.js yet,
-        // BUT ideally we should hit the backend.
-        // Let's assume /api/agents/matching/stats exists (we need to create it).
-
-        // For this specific turn, I will assume I'll create the Next.js route next.
         const res = await fetch('/api/agents/matching/stats/');
         if (res.ok) {
           const data = await res.json();
           setStats(data);
+        } else {
+          throw new Error('Stats API unreachable');
         }
       } catch (e) {
-        console.error("Failed to fetch agent stats", e);
+        // Mock stats for static deployment
+        setStats({
+          status: 'online',
+          active_threads: 0,
+          saturation_index: 0.1,
+          rate_limits: {
+            remaining_requests: 1000
+          }
+        });
       }
     };
 
@@ -133,26 +134,78 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
     setError(null);
 
     try {
-      const response = await fetch('/api/agents/matching/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: user.id || user.email || 'anonymous',
-          query: input.trim(),
-          filters: {
-            ...filters,
-            skills: filters.skills.split(',').map(s => s.trim()).filter(Boolean)
+      let data;
+      try {
+        const response = await fetch('/api/agents/matching/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user.id || user.email || 'anonymous',
+            query: input.trim(),
+            filters: {
+              ...filters,
+              skills: filters.skills.split(',').map(s => s.trim()).filter(Boolean)
+            }
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('API Unavailable');
+        }
+        data = await response.json();
+      } catch (apiErr) {
+        console.warn('API call failed, falling back to client-side matching:', apiErr);
+        // Client-side fallback for static export (GitHub Pages)
+        const { PROJECTS } = await import('@/data/projects');
+        const query = input.toLowerCase();
+
+        // Simple matching algorithm
+        const rankedMatches = PROJECTS.map(p => {
+          let score = 0;
+          const text = `${p.name} ${p.description} ${p.category} ${p.tags?.join(' ')}`.toLowerCase();
+
+          // Keyword matching
+          const keywords = query.split(/\s+/).filter(k => k.length > 3);
+          keywords.forEach(k => {
+            if (text.includes(k)) score += 10;
+          });
+
+          // Category priority
+          if (query.includes('social') && p.category === 'Comunidad') score += 20;
+          if (query.includes('programar') && p.category === 'Tecnología') score += 20;
+          if (query.includes('educación') && p.category === 'Educación') score += 20;
+          if (query.includes('clima') && p.category === 'Medio ambiente') score += 20;
+          if (query.includes('mar') && p.category === 'Océanos') score += 20;
+
+          // Location filtering
+          if (filters.location && p.city.toLowerCase().includes(filters.location.toLowerCase())) {
+            score += 30;
           }
-        }),
-      });
 
-      if (!response.ok) {
-        throw new Error('Failed to get matches');
+          return { ...p, score };
+        })
+          .filter(p => p.score > 0)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 3);
+
+        data = {
+          matches: rankedMatches,
+          explanations: rankedMatches.reduce((acc, p) => ({
+            ...acc,
+            [p.id]: `Este proyecto es relevante porque coincide con tu interés en ${p.category.toLowerCase()}.`
+          }), {
+            general: rankedMatches.length > 0
+              ? `He encontrado ${rankedMatches.length} proyectos que encajan con tu perfil. ¡Echa un vistazo!`
+              : "No he encontrado coincidencias exactas, pero aquí tienes algunos proyectos destacados que podrían interesarte."
+          }),
+          suggestions: rankedMatches.length === 0 ? ["Intenta buscar por 'clima', 'social' o 'tecnología'", "Prueba especificando una ciudad"] : []
+        };
+
+        // Use a small delay for "thinking" feel
+        await new Promise(r => setTimeout(r, 1500));
       }
-
-      const data = await response.json();
 
       // Format explanation
       const explanation = data.explanations?.general ||
