@@ -75,7 +75,7 @@ export default function AuthButton({
           )}
         </div>
         <span className="hidden sm:inline">
-          {user.profile?.full_name || user.profile?.first_name || user.email?.split("@")[0] || t("myAccount")}
+          {user.profile?.full_name || user.profile?.first_name || t("myAccount")}
         </span>
       </Link>
     );

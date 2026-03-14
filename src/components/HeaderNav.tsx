@@ -36,7 +36,7 @@ export default function HeaderNav() {
       const welcomed = sessionStorage.getItem('econexo_welcomed');
       if (!welcomed) {
         sessionStorage.setItem('econexo_welcomed', 'true');
-        const name = user.profile?.first_name || user.profile?.full_name || user.email?.split('@')[0] || '';
+        const name = user.profile?.first_name || user.profile?.full_name || '';
         showToast(locale === 'es' ? `¡Bienvenido/a de nuevo, ${name}!` : `Welcome back, ${name}!`, "success");
       }
     }
