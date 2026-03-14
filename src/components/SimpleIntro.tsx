@@ -25,13 +25,13 @@ export default function SimpleIntro() {
     title: t('welcomeIntroLanguageTitle'),
     description: t('welcomeIntroLanguageDescription'),
     buttons: [
-      { label: '🇪🇸 Español', locale: 'es' as const },
       { label: '🇬🇧 English', locale: 'en' as const },
       { label: '🇩🇪 Deutsch', locale: 'de' as const },
+      { label: '🇪🇸 Español', locale: 'es' as const },
     ]
   };
 
-  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de' | 'fr') => {
+  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
     setLocale(selectedLocale);
 
     // Mark intro as shown and close

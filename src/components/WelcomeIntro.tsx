@@ -64,7 +64,7 @@ export default function WelcomeIntro() {
     }
   ], [t]);
 
-  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de' | 'fr') => {
+  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
     setLocale(selectedLocale);
   };
 
@@ -120,12 +120,6 @@ export default function WelcomeIntro() {
               {/* Language buttons on top */}
               <div className="flex justify-center gap-4 mb-8">
                 <button
-                  onClick={() => handleLanguageSelect('es')}
-                  className={`px-6 py-3 rounded-xl font-medium transition-colors ${locale === 'es' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} flex items-center justify-center gap-2`}
-                >
-                  🇪🇸 Español
-                </button>
-                <button
                   onClick={() => handleLanguageSelect('en')}
                   className={`px-6 py-3 rounded-xl font-medium transition-colors ${locale === 'en' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} flex items-center justify-center gap-2`}
                 >
@@ -138,10 +132,10 @@ export default function WelcomeIntro() {
                   🇩🇪 Deutsch
                 </button>
                 <button
-                  onClick={() => handleLanguageSelect('fr')}
-                  className={`px-6 py-3 rounded-xl font-medium transition-colors ${locale === 'fr' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} flex items-center justify-center gap-2`}
+                  onClick={() => handleLanguageSelect('es')}
+                  className={`px-6 py-3 rounded-xl font-medium transition-colors ${locale === 'es' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} flex items-center justify-center gap-2`}
                 >
-
+                  🇪🇸 Español
                 </button>
               </div>
 

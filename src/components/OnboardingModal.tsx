@@ -56,7 +56,7 @@ export function OnboardingModal() {
     }
   }, []);
 
-  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de' | 'fr') => {
+  const handleLanguageSelect = (selectedLocale: 'es' | 'en' | 'de') => {
     setLocale(selectedLocale);
     localStorage.setItem('econexo-language-set', 'true');
     localStorage.setItem('econexo-preferred-language', selectedLocale);
@@ -194,12 +194,6 @@ export function OnboardingModal() {
 
             <div className="space-y-3">
               <button
-                onClick={() => handleLanguageSelect('es')}
-                className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
-              >
-                🇪🇸 Español
-              </button>
-              <button
                 onClick={() => handleLanguageSelect('en')}
                 className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
@@ -212,10 +206,10 @@ export function OnboardingModal() {
                 🇩🇪 Deutsch
               </button>
               <button
-                onClick={() => handleLanguageSelect('fr')}
+                onClick={() => handleLanguageSelect('es')}
                 className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
-
+                🇪🇸 Español
               </button>
             </div>
           </div>
