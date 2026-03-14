@@ -4,6 +4,7 @@ import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
 import { ensureEventImage } from '@/lib/eventImages';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { PROJECTS } from '@/data/projects';
 
 interface Match {
   id: string;
@@ -158,7 +159,6 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
       } catch (apiErr) {
         console.warn('API call failed, falling back to client-side matching:', apiErr);
         // Client-side fallback for static export (GitHub Pages)
-        const { PROJECTS } = await import('@/data/projects');
         const query = input.toLowerCase();
 
         // Simple matching algorithm
@@ -257,7 +257,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
     return match.description || '';
   };
 
-  /* if (!user) {
+  if (!user) {
     return (
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 text-center">
         <p className="text-gray-600 dark:text-gray-400">
@@ -265,7 +265,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
         </p>
       </div>
     );
-  } */
+  }
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg flex flex-col h-[600px]">
