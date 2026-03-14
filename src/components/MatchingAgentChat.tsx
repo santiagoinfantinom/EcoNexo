@@ -257,7 +257,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
     return match.description || '';
   };
 
-  if (!user) {
+  /* if (!user) {
     return (
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 text-center">
         <p className="text-gray-600 dark:text-gray-400">
@@ -265,7 +265,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
         </p>
       </div>
     );
-  }
+  } */
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg flex flex-col h-[600px]">
