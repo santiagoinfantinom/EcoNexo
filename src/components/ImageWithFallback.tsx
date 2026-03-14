@@ -29,22 +29,24 @@ export default function ImageWithFallback({
         // Stage 1: Try category fallback if available
         if (retryStage === 0 && category) {
             const normalizedCategory = category.toLowerCase().trim();
+            const isGH = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
+            const prefix = isGH ? '/EcoNexo' : '';
             let categoryImage = "";
 
             if (normalizedCategory.includes('medio ambiente') || normalizedCategory.includes('environment') || normalizedCategory.includes('umwelt')) {
-                categoryImage = "/assets/categories/environment.jpg";
+                categoryImage = `${prefix}/assets/categories/environment.jpg`;
             } else if (normalizedCategory.includes('educación') || normalizedCategory.includes('education') || normalizedCategory.includes('bildung')) {
-                categoryImage = "/assets/categories/education.jpg";
+                categoryImage = `${prefix}/assets/categories/education.jpg`;
             } else if (normalizedCategory.includes('salud') || normalizedCategory.includes('health') || normalizedCategory.includes('gesundheit')) {
-                categoryImage = "/assets/categories/health.jpg";
+                categoryImage = `${prefix}/assets/categories/health.jpg`;
             } else if (normalizedCategory.includes('océanos') || normalizedCategory.includes('oceans') || normalizedCategory.includes('ozeane')) {
-                categoryImage = "/assets/categories/oceans.jpg";
+                categoryImage = `${prefix}/assets/categories/oceans.jpg`;
             } else if (normalizedCategory.includes('alimentación') || normalizedCategory.includes('food') || normalizedCategory.includes('ernährung')) {
-                categoryImage = "/assets/categories/food.jpg";
+                categoryImage = `${prefix}/assets/categories/food.jpg`;
             } else if (normalizedCategory.includes('comunidad') || normalizedCategory.includes('community') || normalizedCategory.includes('gemeinschaft')) {
-                categoryImage = "/assets/categories/community.jpg";
+                categoryImage = `${prefix}/assets/categories/community.jpg`;
             } else if (normalizedCategory.includes('tecnología') || normalizedCategory.includes('technology') || normalizedCategory.includes('technologie')) {
-                categoryImage = "/assets/categories/technology.jpg";
+                categoryImage = `${prefix}/assets/categories/technology.jpg`;
             }
 
             if (categoryImage) {
