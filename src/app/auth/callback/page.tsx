@@ -13,6 +13,7 @@ function AuthCallbackContent() {
     useEffect(() => {
         const handleAuthCallback = async () => {
             const code = searchParams.get("code");
+            const next = searchParams.get("next") || "/";
             const errorParam = searchParams.get("error");
             const errorDescription = searchParams.get("error_description");
 
@@ -25,7 +26,7 @@ function AuthCallbackContent() {
 
             const supabase = getSupabase();
 
-            // Strategy 1: PKCE code exchange (most common with Supabase OAuth)
+            // Strategy 1: PKCE code exchange
             if (code) {
                 setStatus("Exchanging authorization code...");
                 try {
@@ -33,12 +34,9 @@ function AuthCallbackContent() {
 
                     if (sessionError) {
                         console.error("Session exchange error:", sessionError);
-                        // If code exchange fails, try getting session directly
-                        // (Supabase may have already processed it via the onAuthStateChange listener)
                         const { data: sessionData } = await supabase.auth.getSession();
                         if (sessionData.session) {
-                            console.log("✅ Session found via getSession fallback");
-                            router.push("/");
+                            await handlePostLoginRedirect(sessionData.session.user, next);
                             return;
                         }
                         setError(`Authentication failed: ${sessionError.message}`);
@@ -47,34 +45,29 @@ function AuthCallbackContent() {
                     }
 
                     if (data.session) {
-                        console.log("✅ Successfully authenticated via code exchange");
-                        router.push("/");
+                        await handlePostLoginRedirect(data.session.user, next);
                         return;
                     }
                 } catch (err) {
                     console.error("Unexpected error during code exchange:", err);
-                    // Fall through to session check
                 }
             }
 
             // Strategy 2: Hash fragment (implicit flow)
             if (typeof window !== "undefined" && window.location.hash.includes("access_token")) {
                 setStatus("Processing authentication token...");
-                // Supabase client automatically parses the hash
-                const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+                const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
                     if (event === "SIGNED_IN" && session) {
-                        console.log("✅ Successfully authenticated via implicit flow");
                         subscription.unsubscribe();
-                        router.push("/");
+                        await handlePostLoginRedirect(session.user, next);
                     }
                 });
 
-                // Timeout fallback
                 setTimeout(async () => {
                     subscription.unsubscribe();
                     const { data: sessionData } = await supabase.auth.getSession();
                     if (sessionData.session) {
-                        router.push("/");
+                        await handlePostLoginRedirect(sessionData.session.user, next);
                     } else {
                         setError("Authentication timed out. Please try again.");
                         setTimeout(() => router.push("/"), 3000);
@@ -83,15 +76,40 @@ function AuthCallbackContent() {
                 return;
             }
 
-            // Strategy 3: Check for existing session (edge case)
+            // Strategy 3: Check for existing session
             setStatus("Checking session...");
             const { data: sessionData } = await supabase.auth.getSession();
             if (sessionData.session) {
-                console.log("✅ Existing session found");
-                router.push("/");
+                await handlePostLoginRedirect(sessionData.session.user, next);
             } else {
-                // No auth method worked, redirect home
                 router.push("/");
+            }
+        };
+
+        const handlePostLoginRedirect = async (user: any, nextPath: string) => {
+            try {
+                const supabase = getSupabase();
+                // Check if profile is complete
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('first_name, country, bio, phone')
+                    .eq('id', user.id)
+                    .single();
+
+                // If profile is new or missing key info, redirect to profile
+                // We also check if the user is coming from the profile page already to avoid loops
+                const isProfileIncomplete = !profile || !profile.first_name || (!profile.bio && !profile.phone);
+
+                if (isProfileIncomplete && !nextPath.includes('/perfil')) {
+                    console.log("Redirecting to profile for completion");
+                    router.push(`/perfil?next=${encodeURIComponent(nextPath)}`);
+                } else {
+                    console.log("Redirecting to intended destination:", nextPath);
+                    router.push(nextPath);
+                }
+            } catch (err) {
+                console.error("Error during post-login redirect:", err);
+                router.push(nextPath);
             }
         };
 

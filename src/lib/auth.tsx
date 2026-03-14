@@ -262,19 +262,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const supabase = getSupabase();
 
       // Handle GitHub Pages subpath dynamic redirection
-      let redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
+      const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
+      let redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(currentPath)}` : undefined;
+
       if (typeof window !== "undefined" && window.location.hostname.includes("github.io")) {
-        redirectTo = `${window.location.origin}/EcoNexo/auth/callback/`;
+        redirectTo = `${window.location.origin}/EcoNexo/auth/callback/?next=${encodeURIComponent(currentPath)}`;
       }
 
       // Configure OAuth options
       const options: any = { redirectTo };
 
       if (provider === "google") {
+        options.scopes = 'openid email profile https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.gender.read';
         options.queryParams = {
           access_type: 'offline',
           prompt: 'consent',
         };
+      }
+
+      if (provider === "azure") {
+        options.scopes = 'openid profile email User.Read';
       }
 
       const { error } = await supabase.auth.signInWithOAuth({ provider, options });

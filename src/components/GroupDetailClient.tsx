@@ -67,7 +67,7 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
 
     const handleJoin = async () => {
         if (!user) {
-            router.push('/perfil');
+            router.push(`/perfil?next=${encodeURIComponent(window.location.pathname)}`);
             return;
         }
 

@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import Link from "next/link";
 import AuthButton from "./AuthButton";
+import AuthModal from "./AuthModal";
 import { useRouter } from "next/navigation";
 import EcoBuddiesList from "./EcoBuddiesList";
 
@@ -35,6 +36,7 @@ export default function ChatComponent() {
   const [selectedTopic, setSelectedTopic] = useState<string>("general");
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [onlineUsersCount, setOnlineUsersCount] = useState(0);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Topics configuration
@@ -378,9 +380,7 @@ export default function ChatComponent() {
 
   const handleSendMessage = () => {
     if (!user) {
-      // Show alert to sign in
-      const key = locale === 'es' ? 'pleaseSignInFirstEs' : locale === 'de' ? 'pleaseSignInFirstDe' : 'pleaseSignInFirstEn';
-      alert(t(key));
+      setIsAuthModalOpen(true);
       return;
     }
 
@@ -402,8 +402,7 @@ export default function ChatComponent() {
 
   const handleSuggestedClick = (text: string) => {
     if (!user) {
-      const key = locale === 'es' ? 'pleaseSignInFirstEs' : locale === 'de' ? 'pleaseSignInFirstDe' : 'pleaseSignInFirstEn';
-      alert(t(key));
+      setIsAuthModalOpen(true);
       return;
     }
 
@@ -900,6 +899,11 @@ export default function ChatComponent() {
           </div>
         )}
       </div>
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        mode="login"
+      />
     </div>
   );
 }

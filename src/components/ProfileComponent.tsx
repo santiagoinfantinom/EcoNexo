@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
@@ -71,6 +72,10 @@ interface ProfileData {
 export default function ProfileComponent() {
   const { t, locale } = useI18n();
   const { user, loading: authLoading, signOut } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextPath = searchParams.get("next");
+
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -325,7 +330,15 @@ export default function ProfileComponent() {
 
       setIsEditing(false);
       setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+
+      if (nextPath) {
+        setSuccessMessage(t("profileUpdated") + ". " + (locale === 'es' ? 'Redirigiendo...' : locale === 'de' ? 'Weiterleitung...' : 'Redirecting...'));
+        setTimeout(() => {
+          router.push(nextPath);
+        }, 2000);
+      } else {
+        setTimeout(() => setShowSuccess(false), 3000);
+      }
     } catch (error) {
       console.error('Error saving profile:', error);
       setError('Error guardando perfil');
@@ -419,7 +432,7 @@ export default function ProfileComponent() {
             <p className="text-slate-600 dark:text-slate-300 mb-6">
               {t("signInToManageProfile")}
             </p>
-            <AuthButton size="lg" />
+            <AuthButton size="lg" className={nextPath ? `next-path-${encodeURIComponent(nextPath)}` : ""} />
           </div>
           <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
             <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
