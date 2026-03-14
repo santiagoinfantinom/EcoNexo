@@ -256,11 +256,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const supabase = getSupabase();
-      const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
 
-      // Configure OAuth options — only request basic profile scopes
-      // Restricted scopes (gmail.readonly, calendar.readonly) require Google app verification
-      // and cause "Unable to exchange external code" errors without it
+      // Handle GitHub Pages subpath dynamic redirection
+      let redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
+      if (typeof window !== "undefined" && window.location.hostname.includes("github.io")) {
+        redirectTo = `${window.location.origin}/EcoNexo/auth/callback/`;
+      }
+
+      // Configure OAuth options
       const options: any = { redirectTo };
 
       if (provider === "google") {
