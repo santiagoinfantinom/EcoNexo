@@ -62,7 +62,9 @@ export function getDefaultEventImage(category: string): string {
   }
 
   // Default fallback image (local asset)
-  return '/assets/default-event.png';
+  const isGH = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
+  const prefix = isGH ? '/EcoNexo' : '';
+  return `${prefix}/assets/default-event.png`;
 }
 
 /**

@@ -21,7 +21,17 @@ export default function ImageWithFallback({
     const [retryStage, setRetryStage] = useState(0);
 
     useEffect(() => {
-        setImgSrc(src || fallbackSrc);
+        const isGH = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
+        const prefix = isGH ? '/EcoNexo' : '';
+
+        // If it's a local path starting with / and doesn't already have the prefix
+        let finalSrc = src;
+        if (src && src.startsWith('/') && !src.startsWith('http') && !src.startsWith(prefix + '/')) {
+            // Special treatment for assets that should be in the root of public
+            finalSrc = `${prefix}${src}`;
+        }
+
+        setImgSrc(finalSrc || fallbackSrc);
         setRetryStage(0);
     }, [src, fallbackSrc]);
 

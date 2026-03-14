@@ -1,6 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+
 export function getSupabase() {
+  if (supabaseInstance) return supabaseInstance;
+
   // 1. Core Config (Environment Variables)
   const envUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
   const envKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
@@ -20,10 +24,12 @@ export function getSupabase() {
   }
 
   if (!url || !key || url.includes("your_supabase_url_here") || key.includes("your_supabase_anon_key_here")) {
-    return createClient("https://mock.supabase.co", "mock-key");
+    supabaseInstance = createClient("https://mock.supabase.co", "mock-key");
+  } else {
+    supabaseInstance = createClient(url, key);
   }
 
-  return createClient(url, key);
+  return supabaseInstance;
 }
 
 export function isSupabaseConfigured(): boolean {

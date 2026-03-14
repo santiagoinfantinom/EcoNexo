@@ -236,6 +236,8 @@ export default function ProfileComponent() {
       } catch (err) {
         console.error('Error loading profile:', err);
         setError('Error cargando perfil');
+      } finally {
+        setIsLoading(false);
       }
     };
 
