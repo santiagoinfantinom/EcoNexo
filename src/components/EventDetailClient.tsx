@@ -188,44 +188,37 @@ async function getLocalizedEventData(eventId: string, locale: string) {
 
     let baseEvent = EVENT_DETAILS[eventId];
 
-    // If event not found in mock data and ID starts with "real_2026", try fetching from API
-    if (!baseEvent && eventId.startsWith('real_2026')) {
+    // If event not found in mock data, try fetching from API
+    if (!baseEvent) {
       console.log(`🔍 Event ${eventId} not in mock data, fetching from API...`);
       try {
-        const response = await fetch('/api/events');
+        const response = await fetch(`/api/events?id=${encodeURIComponent(eventId)}`);
         if (response.ok) {
-          const events = await response.json();
-          const apiEvent = events.find((e: any) => e.id === eventId);
-          if (apiEvent) {
+          const apiEvent = await response.json();
+          if (apiEvent && !apiEvent.error) {
             console.log(`✅ Found event ${eventId} in API`);
             // Convert API event to EventDetails format
             baseEvent = {
               id: apiEvent.id,
-              title: apiEvent.title || apiEvent.title_es,
-              title_en: apiEvent.title_en,
-              title_de: apiEvent.title_de,
-              description: apiEvent.description || apiEvent.description_es,
-              description_en: apiEvent.description_en,
-              description_de: apiEvent.description_de,
-              date: apiEvent.date,
+              title: apiEvent.title || apiEvent.title_es || `Evento ${eventId}`,
+              title_en: apiEvent.title_en || apiEvent.title,
+              title_de: apiEvent.title_de || apiEvent.title,
+              description: apiEvent.description || apiEvent.description_es || '',
+              description_en: apiEvent.description_en || apiEvent.description,
+              description_de: apiEvent.description_de || apiEvent.description,
+              date: apiEvent.date || new Date().toISOString().split('T')[0],
               time: apiEvent.start_time || '09:00',
               duration: apiEvent.duration || 2,
-              location: apiEvent.city ? `${apiEvent.city}, ${apiEvent.country}` : apiEvent.address || 'TBD',
-              location_en: apiEvent.city ? `${apiEvent.city}, ${apiEvent.country}` : apiEvent.address || 'TBD',
-              location_de: apiEvent.city ? `${apiEvent.city}, ${apiEvent.country}` : apiEvent.address || 'TBD',
-              organizer: apiEvent.organizer || 'EcoNexo',
-              organizer_en: apiEvent.organizer || 'EcoNexo',
-              organizer_de: apiEvent.organizer || 'EcoNexo',
-              category: apiEvent.category || 'environment',
-              maxVolunteers: apiEvent.capacity || 50,
-              currentVolunteers: 0,
-              requirements: ['Registro previo', 'Ropa cómoda', 'Agua para hidratación'],
-              requirements_en: ['Prior registration', 'Comfortable clothing', 'Water for hydration'],
-              requirements_de: ['Vorherige Anmeldung', 'Bequeme Kleidung', 'Wasser zur Hydratation'],
-              benefits: apiEvent.benefits || [],
-              contact: apiEvent.contact || 'info@surfrider.org',
-              website: apiEvent.website,
-              image_url: apiEvent.image_url
+              location: apiEvent.location || (apiEvent.city && apiEvent.country ? `${apiEvent.city}, ${apiEvent.country}` : (apiEvent.city || apiEvent.address || 'TBD')),
+              organizer: apiEvent.organizer || 'EcoNexo Community',
+              category: (apiEvent.category || 'environment').toLowerCase(),
+              image_url: apiEvent.image_url,
+              currentVolunteers: apiEvent.current_volunteers || 0,
+              maxVolunteers: apiEvent.max_volunteers || apiEvent.capacity || 50,
+              requirements: Array.isArray(apiEvent.requirements) ? apiEvent.requirements : [],
+              benefits: Array.isArray(apiEvent.benefits) ? apiEvent.benefits : [],
+              contact: apiEvent.contact || 'info@econexo.app',
+              website: apiEvent.website
             };
           }
         }
@@ -587,14 +580,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
           const res = await fetch(`/api/events?id=${encodeURIComponent(eventId)}`);
           if (res.ok) {
             const data = await res.json();
-            // Only use API data if it's valid and has essential fields
-            // Check if data has a valid title (not generic) and location (not TBD)
-            const hasValidTitle = data && data.title && data.title !== `Evento ${eventId}` && !data.title.startsWith('Evento ');
-            // Be more lenient with location, but check if it's populated
-            const hasValidLocation = data && (data.location || data.city || data.address) &&
-              data.location !== 'TBD';
-
-            if (data && !data.error && hasValidTitle && hasValidLocation) {
+            if (data && !data.error) {
               setApiEvent(data);
 
               // Base event coming from API (language‑agnostic)
@@ -663,8 +649,6 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
               return;
             } else {
               console.warn(`[EventDetailClient] API returned invalid data for ${eventId}, falling back to mock data.`, {
-                hasValidTitle,
-                hasValidLocation,
                 title: data?.title,
                 location: data?.location || (data?.city && data?.country ? `${data.city}, ${data.country}` : null)
               });

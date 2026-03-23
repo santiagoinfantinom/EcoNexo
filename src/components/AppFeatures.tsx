@@ -75,6 +75,98 @@ export default function AppFeatures() {
                    'Organize your environmental events calendar',
       link: '/calendario',
       color: 'bg-teal-500'
+    },
+    {
+      id: 'carbon-footprint',
+      icon: '🌱',
+      title: locale === 'es' ? 'Huella de Carbono' :
+             locale === 'de' ? 'CO₂-Fußabdruck' :
+             'Carbon Footprint',
+      description: locale === 'es' ? 'Calcula tu huella de carbono personal y descubre cómo reducir tu impacto ambiental' :
+                   locale === 'de' ? 'Berechne deinen persönlichen CO₂-Fußabdruck und entdecke, wie du deinen Einfluss reduzieren kannst' :
+                   'Calculate your personal carbon footprint and discover how to reduce your environmental impact',
+      link: '/huella-carbono',
+      color: 'bg-emerald-600'
+    },
+    {
+      id: 'green-swap',
+      icon: '♻️',
+      title: locale === 'es' ? 'Trueque Verde' :
+             locale === 'de' ? 'Grüner Tausch' :
+             'Green Swap',
+      description: locale === 'es' ? 'Intercambia, dona y comparte objetos con la comunidad — economía circular real' :
+                   locale === 'de' ? 'Tausche, spende und teile Gegenstände mit der Community — echte Kreislaufwirtschaft' :
+                   'Swap, donate and share items with the community — real circular economy',
+      link: '/trueque',
+      color: 'bg-lime-600'
+    },
+    {
+      id: 'report-incident',
+      icon: '🚨',
+      title: locale === 'es' ? 'Reportar Incidencia' :
+             locale === 'de' ? 'Vorfall melden' :
+             'Report Incident',
+      description: locale === 'es' ? 'Reporta problemas ambientales geolocalizados: vertidos, contaminación, tala ilegal' :
+                   locale === 'de' ? 'Melde geolokalisierte Umweltprobleme: Abfälle, Verschmutzung, illegale Abholzung' :
+                   'Report geolocated environmental issues: dumping, pollution, illegal logging',
+      link: '/reportar',
+      color: 'bg-red-500'
+    },
+    {
+      id: 'green-library',
+      icon: '📚',
+      title: locale === 'es' ? 'Biblioteca Verde' :
+             locale === 'de' ? 'Grüne Bibliothek' :
+             'Green Library',
+      description: locale === 'es' ? 'Guías, documentales, artículos y recursos educativos sobre sostenibilidad' :
+                   locale === 'de' ? 'Leitfäden, Dokumentarfilme, Artikel und Bildungsressourcen zur Nachhaltigkeit' :
+                   'Guides, documentaries, articles and educational resources on sustainability',
+      link: '/biblioteca',
+      color: 'bg-amber-600'
+    },
+    {
+      id: 'monthly-challenges',
+      icon: '🏅',
+      title: locale === 'es' ? 'Retos Mensuales' :
+             locale === 'de' ? 'Monatliche Challenges' :
+             'Monthly Challenges',
+      description: locale === 'es' ? 'Desafíos gamificados mensuales: compite, registra tu progreso y gana insignias' :
+                   locale === 'de' ? 'Monatliche gamifizierte Challenges: tritt an, verfolge deinen Fortschritt und verdiene Abzeichen' :
+                   'Monthly gamified challenges: compete, track your progress and earn badges',
+      link: '/retos',
+      color: 'bg-indigo-600'
+    },
+    {
+      id: 'matching',
+      icon: '🤖',
+      title: t('featureMatchingTitle'),
+      description: t('featureMatchingDesc'),
+      link: '/matching',
+      color: 'bg-blue-600'
+    },
+    {
+      id: 'social-hub',
+      icon: '🏘️',
+      title: t('featureSocialHubTitle'),
+      description: t('featureSocialHubDesc'),
+      link: '/community',
+      color: 'bg-green-600'
+    },
+    {
+      id: 'impact-badges',
+      icon: '🎖️',
+      title: t('featureImpactBadgesTitle'),
+      description: t('featureImpactBadgesDesc'),
+      link: '/perfil/insignias',
+      color: 'bg-yellow-500'
+    },
+    {
+      id: 'eco-workshops',
+      icon: '🎓',
+      title: t('featureEcoWorkshopsTitle'),
+      description: t('featureEcoWorkshopsDesc'),
+      link: '/talleres',
+      color: 'bg-cyan-600'
     }
   ];
 
@@ -116,9 +208,9 @@ export default function AppFeatures() {
               </div>
               
               <div className="mt-4 flex items-center text-green-600 text-sm font-medium group-hover:text-green-700">
-                {locale === 'es' ? 'Explorar' :
-                 locale === 'de' ? 'Erkunden' :
-                 'Explore'}
+                {locale === 'es' ? 'Ver en Mapa' :
+                 locale === 'de' ? 'Auf Karte ansehen' :
+                 'View on Map'}
                 <svg className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>

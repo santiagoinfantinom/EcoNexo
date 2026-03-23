@@ -272,6 +272,33 @@ header .btn-gls-primary:hover {
   /* Chrome, Safari and Opera */
 }
 
+/* Global Button & Element Standardization for Firefox/Chrome Consistency */
+button,
+.btn,
+[class*="btn-"] {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  letter-spacing: normal;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure backdrop-filter works consistently in Firefox */
+.backdrop-blur-md,
+.backdrop-blur-lg,
+.backdrop-blur-sm {
+  /* No special prefix needed for modern Firefox, but ensure it doesn't break */
+  position: relative;
+}
+
+/* Prevent layout shift caused by scrollbars */
+html {
+  scrollbar-gutter: stable;
+}
+
 /* Ocultar errores de reCAPTCHA que aparecen directamente del widget */
 iframe[src*="recaptcha"],
 div[data-sitekey],

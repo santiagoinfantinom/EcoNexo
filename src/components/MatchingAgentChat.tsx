@@ -22,6 +22,10 @@ interface Match {
   spots?: number;
   image_url?: string;
   info_url?: string;
+  apply_url?: string; // For jobs
+  company?: string;   // For jobs
+  salary?: string;    // For jobs
+  type?: 'project' | 'job'; // Unified type
   startsAt?: string;
   endsAt?: string;
   isPermanent?: boolean;
@@ -160,6 +164,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
         console.warn('API call failed, falling back to client-side matching:', apiErr);
         // Client-side fallback for static export (GitHub Pages)
         const query = input.toLowerCase();
+        const isJobSearch = query.includes('trabajo') || query.includes('empleo') || query.includes('sueldo') || query.includes('salario') || query.includes('pago');
 
         // Simple matching algorithm
         const rankedMatches = PROJECTS.map(p => {
@@ -184,7 +189,10 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
             score += 30;
           }
 
-          return { ...p, score };
+          // Penalize projects if user specifically asked for jobs
+          if (isJobSearch) score -= 15;
+
+          return { ...p, score, type: 'project' as const };
         })
           .filter(p => p.score > 0)
           .sort((a, b) => b.score - a.score)
@@ -197,7 +205,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
             [p.id]: `Este proyecto es relevante porque coincide con tu interés en ${p.category.toLowerCase()}.`
           }), {
             general: rankedMatches.length > 0
-              ? `He encontrado ${rankedMatches.length} proyectos que encajan con tu perfil. ¡Echa un vistazo!`
+              ? `He encontrado ${rankedMatches.length} opciones que encajan con tu perfil. ¡Echa un vistazo!`
               : "No he encontrado coincidencias exactas, pero aquí tienes algunos proyectos destacados que podrían interesarte."
           }),
           suggestions: rankedMatches.length === 0 ? ["Intenta buscar por 'clima', 'social' o 'tecnología'", "Prueba especificando una ciudad"] : []
@@ -429,26 +437,50 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
                             className="w-16 h-16 object-cover rounded"
                           />
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-semibold text-sm truncate">
-                              {getProjectName(match)}
-                            </h4>
+                            <div className="flex items-center justify-between gap-2">
+                              <h4 className="font-semibold text-sm truncate">
+                                {getProjectName(match)}
+                              </h4>
+                              {match.type === 'job' && (
+                                <span className="flex-shrink-0 text-[10px] bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                                  {locale === 'es' ? 'Empleo' : locale === 'de' ? 'Job' : 'Job'}
+                                </span>
+                              )}
+                            </div>
+
+                            {match.company && (
+                              <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 -mt-0.5">
+                                {match.company}
+                              </p>
+                            )}
+
                             <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
                               {getProjectDescription(match).substring(0, 100)}...
                             </p>
+
                             {explanation && (
                               <p className="text-xs text-green-600 dark:text-green-400 mt-1">
                                 {explanation}
                               </p>
                             )}
-                            <div className="flex items-center gap-2 mt-2">
-                              <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
+
+                            <div className="flex flex-wrap items-center gap-2 mt-2">
+                              <span className="text-xs bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200 px-2 py-0.5 rounded">
                                 {score}% match
                               </span>
+
+                              {match.salary && (
+                                <span className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-medium">
+                                  💰 {match.salary}
+                                </span>
+                              )}
+
                               {match.is_external && (
-                                <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
+                                <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 px-2 py-0.5 rounded">
                                   🌐 External
                                 </span>
                               )}
+
                               <span className="text-xs text-gray-500">
                                 📍 {match.city}, {match.country}
                               </span>

@@ -1,3 +1,23 @@
+export type LocalizedString = {
+  en: string;
+  es: string;
+  de: string;
+  fr: string;
+  it: string;
+  pl: string;
+  nl: string;
+};
+
+export type LocalizedArray = {
+  en: string[];
+  es: string[];
+  de: string[];
+  fr: string[];
+  it: string[];
+  pl: string[];
+  nl: string[];
+};
+
 export type Category =
   | "Medio ambiente"
   | "Educación"

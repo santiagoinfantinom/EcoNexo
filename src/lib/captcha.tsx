@@ -79,11 +79,11 @@ export function CaptchaComponent({
     <div className={`flex justify-center ${className}`} style={{ position: 'relative' }}>
       <ReCAPTCHA
         sitekey={siteKey}
-        onChange={onVerify}
-        onErrored={(error) => {
+        onChange={(token) => onVerify(token || '')}
+        onErrored={() => {
           // Silently handle errors - don't show them to users
           // The component should not render if site key is invalid anyway
-          console.warn('reCAPTCHA error (silent):', error);
+          console.warn('reCAPTCHA error (silent)');
           // Don't call onError to prevent error messages from showing
         }}
         onExpired={onExpire}
@@ -172,8 +172,8 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
   const [userAnswer, setUserAnswer] = useState('');
   const [isVerified, setIsVerified] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault();
     const isValid = parseInt(userAnswer) === captcha.answer;
     setIsVerified(isValid);
     onVerify(isValid);
@@ -182,6 +182,13 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
       // Generate new captcha on wrong answer
       setCaptcha(generateMathCaptcha(locale));
       setUserAnswer('');
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit();
     }
   };
 
@@ -198,7 +205,7 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
 
   return (
     <div className={`p-4 bg-gray-50 border border-gray-200 rounded-lg ${className}`}>
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <div className="space-y-3">
         <div className="text-sm text-gray-700">
           <p className="font-medium mb-2">{t("securityVerification")}</p>
           <p className="text-lg font-mono bg-white p-2 rounded border">
@@ -211,18 +218,20 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
             type="number"
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={t("yourAnswer")}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
           <button
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             {t("verify")}
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

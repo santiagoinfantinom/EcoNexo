@@ -34,11 +34,6 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
 
   const values = [
     {
-      icon: <EcoNexoLogo size={32} />,
-      title: t('sustainabilityTitle'),
-      description: t('sustainabilityDescription')
-    },
-    {
       icon: "🤝",
       title: t('communityTitle'),
       description: t('communityDescription')
@@ -52,6 +47,31 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
       icon: "💡",
       title: t('innovationTitle'),
       description: t('innovationDescription')
+    },
+    {
+      icon: "🤖",
+      title: t('featureMatchingTitle'),
+      description: t('featureMatchingDesc')
+    },
+    {
+      icon: "🏘️",
+      title: t('featureSocialHubTitle'),
+      description: t('featureSocialHubDesc')
+    },
+    {
+      icon: "🗺️",
+      title: t('featureDigitalMapTitle'),
+      description: t('featureDigitalMapDesc')
+    },
+    {
+      icon: "🎖️",
+      title: t('featureImpactBadgesTitle'),
+      description: t('featureImpactBadgesDesc')
+    },
+    {
+      icon: "🎓",
+      title: t('featureEcoWorkshopsTitle'),
+      description: t('featureEcoWorkshopsDesc')
     }
   ];
 
@@ -65,7 +85,7 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
       />
 
       {/* Modal Content */}
-      <div className={`relative bg-gls-primary rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
+      <div className={`relative bg-gls-primary rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-y-auto transform transition-all duration-300 ${isVisible ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
         }`}>
         {/* Header */}
         <div className="bg-gls-secondary p-8 rounded-t-2xl">
@@ -93,19 +113,19 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
 
         {/* Content */}
         <div className="p-8">
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {values.map((value, index) => (
-              <div key={index} className="card-ecosia">
-                <div className="flex items-start gap-4">
-                  <span className="text-3xl flex items-center justify-center min-w-[40px]">{value.icon}</span>
-                  <div>
-                    <h3 className="text-xl font-bold text-gls-primary mb-2">
-                      {value.title}
-                    </h3>
-                    <p className="text-gls-primary opacity-90 leading-relaxed">
-                      {value.description}
-                    </p>
-                  </div>
+              <div key={index} className="card-ecosia p-4 h-full flex flex-col items-center text-center transition-all hover:scale-[1.02] cursor-default">
+                <div className="text-4xl mb-3 h-12 flex items-center justify-center">
+                  {value.icon}
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gls-primary mb-2 line-clamp-1">
+                    {value.title}
+                  </h3>
+                  <p className="text-sm text-gls-primary opacity-80 leading-relaxed line-clamp-3">
+                    {value.description}
+                  </p>
                 </div>
               </div>
             ))}

@@ -23,8 +23,8 @@ export async function GET(
     }
 
     // 1. Get administrator IDs
-    const { data: adminLinks, error: linkError } = await supabase
-      .from("event_administrators")
+    const { data: adminLinks, error: linkError } = await (supabase
+      .from("event_administrators") as any)
       .select("user_id")
       .eq("event_id", eventId);
 
@@ -37,11 +37,11 @@ export async function GET(
       return NextResponse.json([]);
     }
 
-    const userIds = adminLinks.map(link => link.user_id);
+    const userIds = (adminLinks as any[]).map(link => link.user_id);
 
     // 2. Get profiles for these users
-    const { data: profiles, error: profileError } = await supabase
-      .from("profiles")
+    const { data: profiles, error: profileError } = await (supabase
+      .from("profiles") as any)
       .select("*")
       .in("id", userIds);
 
@@ -57,8 +57,8 @@ export async function GET(
     // Checking previous code: .select("*, profiles!user_id(*)")
     // This would return [{ ...adminLink, profiles: { ...profile } }]
 
-    const result = adminLinks.map(link => {
-      const profile = profiles?.find(p => p.id === link.user_id);
+    const result = (adminLinks as any[]).map(link => {
+      const profile = (profiles as any[])?.find(p => p.id === link.user_id);
       return {
         ...link,
         profiles: profile || null
@@ -89,11 +89,18 @@ export async function POST(
       );
     }
 
+    // Verify if eventId is a valid UUID
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(eventId);
+    if (!isUuid) {
+      console.log(`[administrators API] POST: Skipping DB for mock/invalid event ID: ${eventId}`);
+      return NextResponse.json({ error: "Cannot add admins to mock events" }, { status: 400 });
+    }
+
     const supabase = getSupabase();
 
     // Add administrator
-    const { data, error } = await supabase
-      .from("event_administrators")
+    const { data, error } = await (supabase
+      .from("event_administrators") as any)
       .insert({
         event_id: eventId,
         user_id
@@ -126,11 +133,18 @@ export async function DELETE(
       );
     }
 
+    // Verify if eventId is a valid UUID
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(eventId);
+    if (!isUuid) {
+      console.log(`[administrators API] DELETE: Skipping DB for mock/invalid event ID: ${eventId}`);
+      return NextResponse.json({ error: "Cannot delete admins from mock events" }, { status: 400 });
+    }
+
     const supabase = getSupabase();
 
     // Remove administrator
-    const { error } = await supabase
-      .from("event_administrators")
+    const { error } = await (supabase
+      .from("event_administrators") as any)
       .delete()
       .eq("event_id", eventId)
       .eq("user_id", userId);

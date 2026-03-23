@@ -43,10 +43,9 @@ type Job = {
   curatorLog?: string[]; // New field for agent logs
 };
 
-// Función para traducir tags técnicos
 const translateTag = (tag: string, t: (key: string) => string): string => {
-  // Convertir a minúsculas y sin espacios para buscar en las traducciones
-  const normalizedTag = tag.toLowerCase().replace(/\s+/g, '');
+  // Convertir a minúsculas y sin espacios ni puntos para buscar en las traducciones
+  const normalizedTag = tag.toLowerCase().replace(/[\s\.]+/g, '');
   return t(normalizedTag) || tag;
 };
 
@@ -1984,7 +1983,7 @@ export default function JobsPage() {
   };
 
   const getKnowledgeArea = (area: string) => {
-    const areaKey = area.toLowerCase().replace(/\s+/g, '');
+    const areaKey = area.toLowerCase().replace(/[\s\.]+/g, '');
     const translated = t(areaKey);
     return translated === areaKey ? area : translated;
   };
@@ -2440,7 +2439,7 @@ export default function JobsPage() {
                 </div>
                 <div className="text-right">
                   <div className="text-green-700 font-bold">{fmtCurrency(job.salaryMinEur)}–{fmtCurrency(job.salaryMaxEur)}</div>
-                  <div className="text-xs text-gray-600">{t(job.level === 'junior' ? 'levelJunior' : job.level === 'mid' ? 'levelMid' : job.level === 'senior' ? 'levelSenior' : 'levelLead')} • {job.contract}{job.remote ? " · Remote" : ""}</div>
+                  <div className="text-xs text-gray-600">{t(job.level === 'junior' ? 'levelJunior' : job.level === 'mid' ? 'levelMid' : job.level === 'senior' ? 'levelSenior' : 'levelLead')} • {t(job.contract)}{job.remote ? ` · ${t("remoteLabel")}` : ""}</div>
                 </div>
               </div>
               <div className="mt-3 text-gray-800">{getJobDescription(job)}</div>

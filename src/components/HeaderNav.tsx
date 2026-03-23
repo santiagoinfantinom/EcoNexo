@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { useToast } from "./ToastNotification";
 import AuthButton from "./AuthButton";
 import EcoNexoLogo from "./EcoNexoLogo";
+import LanguageSwitcher from "./LanguageSwitcher";
 import {
   Menu,
   Map as MapIcon,
@@ -51,20 +52,22 @@ export default function HeaderNav() {
   return (
     <>
       <OnboardingTour />
-      <header className="bg-gls-primary text-white stitch-border-b relative shadow-2xl z-30">
-        <div className="w-full px-4 sm:px-8 lg:px-12 py-6 flex flex-col lg:flex-row items-center justify-between gap-8">
+      <header className="bg-[#0b2b26] text-white border-b border-white/10 relative shadow-2xl z-30">
+        <div className="max-w-[1600px] mx-auto px-6 py-8 flex flex-col lg:flex-row items-center justify-between gap-10">
 
-          {/* Left: Logo & Title Cluster - Large & Prominent */}
+          {/* Left: Brand Identity */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center gap-8 group transition-all hover:scale-[1.02]">
-              <EcoNexoLogo size={180} className="sm:w-[200px] sm:h-[200px] lg:w-[220px] lg:h-[220px]" />
+            <Link href="/" className="flex items-center gap-6 group transition-all">
+              <div className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] flex items-center justify-center flex-shrink-0">
+                <EcoNexoLogo size={140} className="w-full h-full" />
+              </div>
               <div className="flex flex-col">
-                <h1 className="text-6xl sm:text-7xl lg:text-9xl text-white font-black tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] leading-tight">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tighter leading-none">
                   EcoNexo
                 </h1>
-                <div className="flex items-center gap-2 mt-[-8px]">
-                  <div className="h-px w-8 bg-green-400"></div>
-                  <span className="text-base sm:text-lg lg:text-xl text-green-300 font-bold tracking-[0.2em] uppercase">
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="h-[2px] w-12 bg-green-400"></div>
+                  <span className="text-[10px] sm:text-sm text-green-300 font-bold tracking-[0.3em] uppercase">
                     Sustainability Network
                   </span>
                 </div>
@@ -72,59 +75,15 @@ export default function HeaderNav() {
             </Link>
           </div>
 
-          {/* Right Section: Nav + Auth */}
-          <div className="flex-1 flex flex-col items-center lg:items-end gap-6 w-full">
-            {/* Upper row: Auth & Settings - positioned at top of navigation cluster */}
-            <div className="flex items-center gap-6 absolute top-4 right-4 lg:relative lg:top-auto lg:right-auto">
-              <AuthButton variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-6 py-2 rounded-xl font-bold transition-all hover:border-green-400/50" />
+          {/* Right: Actions & Nav Grid */}
+          <div className="flex flex-col items-center lg:items-end gap-6 w-full lg:w-auto">
+            {/* Top row: User Identity */}
+            <div className="flex items-center justify-end w-full lg:w-auto px-2">
+              <AuthButton variant="outline" size="sm" className="bg-white/5 border-white/10 text-white hover:bg-green-500/20 px-6 py-2 rounded-xl text-base font-bold transition-all" />
             </div>
 
-            {/* Main Navigation - Desktop (Two Rows) */}
-            <nav className="hidden xl:flex flex-col items-center lg:items-end gap-3 w-full">
-              {/* Row 1: Tools & Core Features */}
-              <div className="flex items-center gap-2 bg-white/5 p-1.5 rounded-2xl backdrop-blur-md border border-white/10 shadow-inner">
-                {[
-                  { href: "/", label: t("map"), icon: MapIcon },
-                  { href: "/noticias", label: t("news") || "Noticias", icon: Newspaper },
-                  { href: "/calendario", label: t("calendar"), icon: Calendar },
-                  { href: "/trabajos", label: t("jobs"), icon: Briefcase },
-                  { href: "/chat", label: t("chat"), icon: MessageCircle },
-                  { href: "/matching", label: "Matching", icon: Target },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    id={`nav-${item.href.replace(/^\//, "") || "map"}`}
-                    href={item.href}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/10 transition-all group relative overflow-hidden"
-                  >
-                    <item.icon className="w-5 h-5 text-green-400 group-hover:text-green-300 group-hover:scale-110 transition-all duration-300" />
-                    <span className="font-bold text-xs tracking-wide text-white/90 group-hover:text-white transition-colors">{item.label}</span>
-                  </Link>
-                ))}
-              </div>
-
-              {/* Row 2: Social & Info */}
-              <div className="flex items-center gap-2 bg-white/5 p-1.5 rounded-2xl backdrop-blur-sm border border-white/5 shadow-sm">
-                {[
-                  { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
-                  { href: "/perfil", label: t("profile"), icon: User },
-                  { href: "/about", label: t("aboutUs"), icon: Info },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    id={`nav-social-${item.href.replace(/^\//, "")}`}
-                    href={item.href}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all group"
-                  >
-                    <item.icon className="w-4 h-4 text-green-300/70 group-hover:text-green-200" />
-                    <span className="font-semibold text-[10px] uppercase tracking-widest text-white/70 group-hover:text-white transition-colors">{item.label}</span>
-                  </Link>
-                ))}
-              </div>
-            </nav>
-
-            {/* Medium screen Nav (md-xl) */}
-            <nav className="hidden md:flex xl:hidden flex-wrap justify-center lg:justify-end gap-3">
+            {/* Navigation Grid - 2 columns style the user likes */}
+            <nav className="hidden md:grid grid-cols-2 gap-2">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/noticias", label: t("news") || "Noticias", icon: Newspaper },
@@ -134,38 +93,42 @@ export default function HeaderNav() {
                 { href: "/matching", label: "Matching", icon: Target },
                 { href: "/comunidad", label: locale === 'es' ? 'Comunidad' : 'Community', icon: Users },
                 { href: "/perfil", label: t("profile"), icon: User },
-                { href: "/about", label: t("aboutUs"), icon: Info },
               ].map((item) => (
                 <Link
                   key={item.href}
-                  id={`nav-md-${item.href.replace(/^\//, "") || "map"}`}
                   href={item.href}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
+                  className="flex items-center gap-3 px-6 py-2.5 rounded-xl bg-white/5 hover:bg-green-500/20 border border-white/5 transition-all group min-w-[150px]"
                 >
-                  <item.icon className="w-5 h-5 text-green-400 group-hover:text-green-300" />
-                  <span className="font-bold text-xs text-white/90">{item.label}</span>
+                  <item.icon className="w-4 h-4 text-green-400 group-hover:text-green-300" />
+                  <span className="font-bold text-xs text-white/80 group-hover:text-white uppercase tracking-wider">{item.label}</span>
                 </Link>
               ))}
+              <Link
+                href="/about"
+                className="col-span-2 flex items-center justify-center gap-3 px-6 py-2 rounded-xl bg-white/5 hover:bg-green-500/20 border border-white/5 transition-all group"
+              >
+                <Info className="w-4 h-4 text-green-300" />
+                <span className="font-bold text-[10px] text-white/50 group-hover:text-white uppercase tracking-widest">{t("aboutUs")}</span>
+              </Link>
             </nav>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden w-full flex justify-end">
+            {/* Mobile Menu Trigger */}
+            <div className="md:hidden w-full flex justify-center mt-4">
               <button
-                id="mobile-menu-button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 rounded-3xl text-white transition-all shadow-2xl backdrop-blur-md border border-white/20 group"
+                className="flex items-center gap-3 px-10 py-3 bg-white/5 border border-white/10 rounded-2xl text-white font-bold"
               >
-                <Menu className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
-                <span className="font-extrabold text-xl tracking-tight">{t("menu") || "Menú"}</span>
+                <Menu className="w-6 h-6" />
+                {t("menu") || "Menú"}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Menu Dropdown */}
+        {/* Mobile Dropdown */}
         {mobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 mx-4 bg-slate-900/98 backdrop-blur-2xl rounded-3xl overflow-hidden border border-white/20 shadow-2xl z-50 p-6 animate-in slide-in-from-top-4 fade-in duration-300">
-            <nav className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="absolute top-full left-0 right-0 mt-2 mx-4 bg-slate-900/95 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 shadow-2xl z-50 p-4">
+            <nav className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/noticias", label: t("news") || "Noticias", icon: Newspaper },
@@ -181,11 +144,9 @@ export default function HeaderNav() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-6 py-4 text-white font-bold text-lg hover:bg-white/10 rounded-2xl transition-all flex items-center gap-4 group"
+                  className="px-5 py-3 text-white font-bold text-sm hover:bg-white/5 rounded-xl flex items-center gap-3 transition-colors"
                 >
-                  <div className="p-2 bg-white/5 rounded-lg group-hover:bg-green-400/20 transition-colors">
-                    <item.icon className="w-6 h-6 text-green-400 transition-transform group-hover:scale-110" />
-                  </div>
+                  <item.icon className="w-5 h-5 text-green-400" />
                   {item.label}
                 </Link>
               ))}
@@ -201,10 +162,10 @@ export default function HeaderNav() {
         className="fixed bottom-6 left-6 z-50 group"
         aria-label={t("supportUs")}
       >
-        <div className="absolute inset-0 bg-green-500 rounded-full blur opacity-40 group-hover:opacity-75 transition-opacity duration-300 animate-pulse"></div>
-        <div className="relative bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all duration-300 border border-green-400/30">
-          <Heart className="w-6 h-6 animate-pulse fill-white/20" />
-          <span className="hidden sm:inline shadow-black drop-shadow-md">{t("supportUs")}</span>
+        <div className="absolute inset-0 bg-green-500 rounded-full blur opacity-30"></div>
+        <div className="relative bg-gradient-to-r from-[#0b2b26] to-[#154a40] text-white font-bold px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 border border-green-400/20">
+          <Heart className="w-5 h-5 fill-red-500/20" />
+          <span className="hidden sm:inline text-sm">{t("supportUs")}</span>
         </div>
       </Link>
     </>

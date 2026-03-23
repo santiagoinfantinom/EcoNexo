@@ -8,7 +8,7 @@
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000)](https://vercel.com/)
 [![Capacitor](https://img.shields.io/badge/Capacitor-7.4.3-119EFF)](https://capacitorjs.com/)
 
-🌍 **EcoNexo is now in production:** https://econexo-web.vercel.app
+🌍 **EcoNexo is now in production:** [https://econexo.app](https://econexo.app)
 
 EcoNexo is a comprehensive platform that connects sustainable communities, facilitates participation in ecological events, and promotes green jobs. Our mission is to create a digital ecosystem that drives collective environmental action across Europe.
 
@@ -89,7 +89,7 @@ npm run deploy
 ./deploy.sh
 ```
 
-**Production URL:** https://econexo-web.vercel.app
+**Production URL:** [https://econexo.app](https://econexo.app)
 
 ### 📱 **Mobile Deploy**
 ```bash
@@ -231,7 +231,7 @@ npm run lint
 - **PWA** fully functional
 
 ### 🌐 **Production URLs**
-- **Web:** https://econexo-web.vercel.app
+- **Web:** [https://econexo.app](https://econexo.app)
 - **GitHub:** https://github.com/santiagoinfantinom/EcoNexo
 
 ## 📊 Quality Metrics
@@ -309,7 +309,7 @@ This project is under the MIT License. See the `LICENSE` file for more details.
 ## 📞 Contact
 
 - **Email:** contacto@econexo.app
-- **Website:** [EcoNexo](https://econexo-web.vercel.app)
+- **Website:** [EcoNexo](https://econexo.app)
 - **GitHub:** [github.com/santiagoinfantinom/EcoNexo](https://github.com/santiagoinfantinom/EcoNexo)
 
 ## 🙏 Acknowledgments
@@ -322,7 +322,18 @@ This project is under the MIT License. See the `LICENSE` file for more details.
 
 ---
 
+---
+
+## 📝 TODO: Próximos Pasos Sugeridos
+
+- [ ] **Auth:** Terminar de configurar la autenticación completa con Supabase.
+- [ ] **SEO:** Optimizaciones avanzadas de metadatos para mejorar el ranking.
+- [ ] **Testing:** Implementar los tests unitarios y E2E pendientes.
+
+---
+
 ## 🎉 **EcoNexo is ready to conquer Europe!**
+
 
 **Status:** ✅ **READY FOR DEPLOYMENT**  
 **Next step:** 🚀 **LAUNCH IN APP STORES**

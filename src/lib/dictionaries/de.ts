@@ -256,6 +256,17 @@ export default {
   globalImpactDescription: "Unsere Projekte und Initiativen schaffen messbar positive Auswirkungen für Umwelt und Gesellschaft auf globaler Ebene.",
   innovationTitle: "Innovation",
   innovationDescription: "Wir nutzen modernste Technologie und innovative Lösungen, um Umweltprobleme anzugehen und nachhaltige Zukunft zu schaffen.",
+  // New Features
+  featureMatchingTitle: "Intelligentes Matching",
+  featureMatchingDesc: "KI-gestützte Empfehlungen basierend auf Ihrem Profil",
+  featureSocialHubTitle: "Social Impact Hub",
+  featureSocialHubDesc: "Verbinden Sie sich mit anderen Aktivisten und teilen Sie Ihre Reise",
+  featureDigitalMapTitle: "Globale Projektkarte",
+  featureDigitalMapDesc: "Visualisieren Sie nachhaltige Initiativen in Ihrer Nähe und weltweit",
+  featureImpactBadgesTitle: "Einfluss-Abzeichen",
+  featureImpactBadgesDesc: "Erhalten Sie Anerkennung für Ihre Umweltbeiträge",
+  featureEcoWorkshopsTitle: "Öko-Workshops",
+  featureEcoWorkshopsDesc: "Lernen Sie praktische Nachhaltigkeitsfähigkeiten von Experten",
   // Local Groups
   localGroupsSubtitle: "Verbinde dich mit lokalen Gemeinschaften in deiner Stadt oder Region",
   becomeMentor: "Mentor werden",
@@ -1084,4 +1095,18 @@ export default {
   tickerTitle4: "Erneuerbare Energien: Die Zukunft ist jetzt",
   tickerTitle5: "Praktischer Leitfaden für einen Zero-Waste-Lifestyle",
   tickerTitle6: "Die Auswirkungen von Fast Fashion und wie man nachhaltige Mode wählt",
+  // News Header
+  ecoNewsTitle: "Öko-Nachrichten",
+  ecoNewsDescription: "Bleiben Sie auf dem Laufenden mit den neuesten Nachhaltigkeitsnachrichten und Umweltrichtlinien in Europa.",
+
+  // News Items
+  newsItem1Title: "EU verabschiedet neue Verpackungs- und Abfallverordnung für 2030",
+  newsItem1Category: "♻️ Kreislaufwirtschaft",
+  newsItem2Title: "Verzögerung der EU-Entwaldungsverordnung: Kernverpflichtungen verschieben sich auf Dezember 2026",
+  newsItem2Category: "📋 Politik",
+  newsItem3Title: "EU Green Week 2026: Fokus auf die naturpositive Wirtschaft",
+  newsItem3Category: "🌿 Umwelt",
+  newsItem4Title: "Neue Wasser- und Luftqualitätsgesetze fordern unternehmerische Verantwortung",
+  newsItem4Category: "💧 Nachhaltigkeit",
+  readMore: "Mehr lesen",
 };

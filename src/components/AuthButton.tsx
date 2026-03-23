@@ -74,8 +74,8 @@ export default function AuthButton({
             </span>
           )}
         </div>
-        <span className="hidden sm:inline">
-          {user.profile?.full_name || user.profile?.first_name || t("myAccount")}
+        <span className="hidden sm:inline whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">
+          {user.profile?.full_name || user.profile?.first_name || user.email?.split('@')[0] || t("myAccount")}
         </span>
       </Link>
     );

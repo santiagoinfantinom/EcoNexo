@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 // Fallback Client ID - usar el valor real de Google Cloud Console
-const FALLBACK_GOOGLE_CLIENT_ID = '1059183045627-qjmnmcghdbl5duk25vgvd5olomqgs8vb.apps.googleusercontent.com';
+const FALLBACK_GOOGLE_CLIENT_ID = 'demo-client-id';
 
 export async function GET() {
   // Try to get from environment variable first

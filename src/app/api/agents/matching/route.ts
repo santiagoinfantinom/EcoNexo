@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PROJECTS } from '@/data/projects';
+import { JOBS } from '@/data/jobs';
 
 const MCP_SERVER_URL = process.env.MCP_SERVER_URL || 'http://localhost:8001';
 
@@ -12,111 +13,124 @@ interface MatchRequest {
 
 // Simple local matching logic as fallback
 function localMatching(query: string, filters: Record<string, any> | undefined | null) {
-  let scoredProjects = PROJECTS.map(p => ({ project: p, score: 0 }));
   const queryLower = query.toLowerCase();
 
   // Keyword extraction (ignoring common stop words)
-  const stopWords = ['quiero', 'un', 'una', 'en', 'de', 'para', 'con', 'el', 'la', 'los', 'las', 'trabajo', 'proyecto', 'busco', 'buscar'];
+  const stopWords = ['quiero', 'un', 'una', 'en', 'de', 'para', 'con', 'el', 'la', 'los', 'las', 'trabajo', 'proyecto', 'busco', 'buscar', 'empleo', 'vacante'];
   const words = queryLower.split(/[\s,.-]+/).filter(w => w.length > 2 && !stopWords.includes(w));
 
-  scoredProjects.forEach(item => {
-    const { project } = item;
-    const textToSearch = `${project.name} ${project.name_en || ''} ${project.description} ${project.description_en || ''} ${project.category} ${project.city} ${project.country} ${project.tags?.join(' ') || ''}`.toLowerCase();
+  // Determine if user is specifically looking for jobs
+  const isJobSearch = queryLower.includes('trabajo') || queryLower.includes('empleo') ||
+    queryLower.includes('vacante') || queryLower.includes('sueldo') ||
+    queryLower.includes('salario') || queryLower.includes('hire');
+
+  let scoredProjects = PROJECTS.map(p => ({ item: p, type: 'project', score: 0 }));
+  let scoredJobs = JOBS.map(j => ({ item: j, type: 'job', score: isJobSearch ? 10 : 0 }));
+
+  const allScored = [...scoredProjects, ...scoredJobs];
+
+  allScored.forEach(entry => {
+    const { item, type } = entry;
+
+    // Unified search text
+    let textToSearch = "";
+    if (type === 'project') {
+      const p = item as any;
+      textToSearch = `${p.name} ${p.name_en || ''} ${p.description} ${p.description_en || ''} ${p.category} ${p.city} ${p.country} ${p.tags?.join(' ') || ''}`.toLowerCase();
+    } else {
+      const j = item as any;
+      // Resolve localized strings for jobs
+      const title = typeof j.title === 'string' ? j.title : Object.values(j.title).join(' ');
+      const city = typeof j.city === 'string' ? j.city : Object.values(j.city).join(' ');
+      const country = typeof j.country === 'string' ? j.country : Object.values(j.country).join(' ');
+      const description = typeof j.description === 'string' ? j.description : Object.values(j.description).join(' ');
+      const tags = Array.isArray(j.knowledgeAreas) ? j.knowledgeAreas.join(' ') : Object.values(j.knowledgeAreas).flat().join(' ');
+
+      textToSearch = `${title} ${j.company} ${city} ${country} ${description} ${tags}`.toLowerCase();
+    }
 
     // 1. Scoring based on search query words
-    let wordMatches = 0;
     words.forEach(word => {
       if (textToSearch.includes(word)) {
-        item.score += 20; // boost score for each matching keyword
-        wordMatches++;
-        // Extra boost for exact category or city matches
-        if (project.category.toLowerCase().includes(word)) item.score += 15;
-        if (project.city.toLowerCase().includes(word)) item.score += 25;
+        entry.score += 20; // boost score for each matching keyword
+
+        // Extra boost for exact category/title matches
+        if (type === 'project') {
+          if ((item as any).category.toLowerCase().includes(word)) entry.score += 15;
+        } else {
+          const title = typeof (item as any).title === 'string' ? (item as any).title : Object.values((item as any).title).join(' ');
+          if (title.toLowerCase().includes(word)) entry.score += 25;
+        }
+
+        // Boost for location
+        const city = typeof (item as any).city === 'string' ? (item as any).city : Object.values((item as any).city).join(' ');
+        if (city.toLowerCase().includes(word)) entry.score += 25;
       }
     });
 
     // 2. Scoring/Filtering by Explicit Filters
     if (filters?.location) {
       const locLower = filters.location.toLowerCase();
-      if (project.city.toLowerCase().includes(locLower) || project.country.toLowerCase().includes(locLower)) {
-        item.score += 30;
-      } else if (filters.location.trim() !== '') {
-        item.score -= 50; // Penalize if location doesn't match
-      }
-    }
+      const city = typeof (item as any).city === 'string' ? (item as any).city : Object.values((item as any).city).join(' ');
+      const country = typeof (item as any).country === 'string' ? (item as any).country : Object.values((item as any).country).join(' ');
 
-    if (filters?.skills && Array.isArray(filters.skills) && filters.skills.length > 0) {
-      let skillMatch = false;
-      filters.skills.forEach((s: string) => {
-        if (s.trim().length > 0 && textToSearch.includes(s.toLowerCase())) {
-          item.score += 20;
-          skillMatch = true;
-        }
-      });
-      // Optionally penalize if they specified skills and none matched
-      if (!skillMatch && filters.skills.some((s: string) => s.trim().length > 0)) {
-        item.score -= 10;
+      if (city.toLowerCase().includes(locLower) || country.toLowerCase().includes(locLower)) {
+        entry.score += 30;
+      } else if (filters.location.trim() !== '') {
+        entry.score -= 50; // Penalize if location doesn't match
       }
     }
   });
 
-  // Filter out projects with negative or 0 score if we have active criteria
-  const hasActiveCriteria = words.length > 0 || (filters?.location && filters.location.trim() !== '') || (filters?.skills && filters.skills.length > 0);
+  // Filter out items with negative or 0 score if we have active criteria
+  const hasActiveCriteria = words.length > 0 || (filters?.location && filters.location.trim() !== '');
 
+  let filteredResults = allScored;
   if (hasActiveCriteria) {
-    scoredProjects = scoredProjects.filter(item => item.score > 0);
+    filteredResults = allScored.filter(entry => entry.score > 0);
   }
 
   // Sort by score descending
-  scoredProjects.sort((a, b) => b.score - a.score);
+  filteredResults.sort((a, b) => b.score - a.score);
 
-  // Take top 3 or just first matched ones
-  const noMatches = scoredProjects.length === 0;
-  if (noMatches) {
-    // If nothing matches, just return random so it's not totally empty but indicate it in explanation
-    scoredProjects = [...PROJECTS].sort(() => 0.5 - Math.random()).map(p => ({ project: p, score: 70 }));
-  }
-
-  const matches = scoredProjects.slice(0, 3).map(item => ({
-    ...item.project,
-    // Calculate a matching percentage (capping at 98 for realism)
-    score: Math.min(98, Math.max(65, item.score > 50 ? 85 + Math.floor(Math.random() * 13) : item.score + 50))
+  // Take top 5
+  const results = filteredResults.slice(0, 5).map(entry => ({
+    ...entry.item,
+    type: entry.type,
+    // Calculate a matching percentage
+    match_score: Math.min(98, Math.max(65, entry.score > 50 ? 85 + Math.floor(Math.random() * 13) : entry.score + 50))
   }));
 
   const explanations: Record<string, string> = {
-    general: !noMatches && hasActiveCriteria
-      ? "¡He encontrado estos proyectos basándome exactamente en tu búsqueda y filtros!"
-      : "No encontré coincidencias exactas para tu búsqueda, pero aquí tienes algunos proyectos populares que podrían interesarte:"
+    general: results.length > 0 && hasActiveCriteria
+      ? "¡He encontrado estas opciones basándome en tu búsqueda!"
+      : "No encontré coincidencias exactas, pero aquí tienes algunas oportunidades interesantes:"
   };
 
   const score_summary: Record<string, number> = {};
 
-  matches.forEach((m, index) => {
-    // Generate context-aware explanation
-    let reason = "Sus características coinciden con tus intereses.";
-    if (filters?.location && (m.city.toLowerCase().includes(filters.location.toLowerCase()) || m.country.toLowerCase().includes(filters.location.toLowerCase()))) {
-      reason = `Se encuentra en la ubicación solicitada (${m.city}).`;
-    }
-    const matchWords = words.filter(w => (`${m.name} ${m.description} ${m.category}`).toLowerCase().includes(w));
-    if (matchWords.length > 0) {
-      reason += ` Además, está relacionado con tus términos clave: ${matchWords.join(', ')}.`;
+  results.forEach((m: any) => {
+    let reason = "Coincide con tus intereses.";
+    if (m.type === 'job') {
+      reason = `Oferta de empleo en ${m.company} que encaja con tu perfil.`;
     }
 
-    explanations[m.id] = `Match del ${m.score}%: ${reason}`;
-    score_summary[m.id] = m.score;
+    explanations[m.id] = `Match del ${m.match_score}%: ${reason}`;
+    score_summary[m.id] = m.match_score;
   });
 
   return {
-    matches,
+    matches: results,
     explanations,
     suggestions: [
-      "Prueba ser más específico con la categoría o habilidades.",
-      "Considera otras ciudades cercanas.",
-      "Revisa la página principal para ver el mapa de eventos."
+      "Prueba buscar por cargo específico (ej: 'Ingeniero', 'Manager').",
+      "Filtra por ciudad para ver empleos locales.",
+      "Explora la sección de proyectos si buscas voluntariado."
     ],
     score_summary
   };
 }
+
 
 export async function POST(req: NextRequest) {
   try {

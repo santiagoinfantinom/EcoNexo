@@ -9,17 +9,15 @@ interface EcoNexoLogoProps {
 
 export default function EcoNexoLogo({ className = "", size = 60 }: EcoNexoLogoProps) {
   return (
-    <div className={`flex items-center gap-4 ${className}`}>
+    <div className={`flex items-center justify-center relative ${className}`}>
       <Image
         src={logoImg}
         alt="EcoNexo Logo"
         width={size}
         height={size}
-        className="drop-shadow-md transition-transform hover:scale-105 duration-300"
+        className="drop-shadow-md transition-transform hover:scale-105 duration-300 w-auto h-auto max-w-full max-h-full"
         priority
       />
-      {/* Vertical Separator Pipe - only for header context */}
-      <div className="h-10 w-px bg-white/30 hidden sm:block mx-1"></div>
     </div>
   );
 }

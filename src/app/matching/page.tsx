@@ -10,6 +10,10 @@ export default function MatchingPage() {
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
 
   const handleMatchClick = (match: any) => {
+    if (match.type === 'job' && match.apply_url) {
+      window.open(match.apply_url, '_blank');
+      return;
+    }
     // Navigate to project detail page
     router.push(`/projects/${match.id}`);
   };
@@ -23,15 +27,15 @@ export default function MatchingPage() {
             {locale === 'es'
               ? 'Asistente de Matching Inteligente'
               : locale === 'de'
-              ? 'Intelligenter Matching-Assistent'
-              : 'Intelligent Matching Assistant'}
+                ? 'Intelligenter Matching-Assistent'
+                : 'Intelligent Matching Assistant'}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
             {locale === 'es'
               ? 'Encuentra proyectos que se ajusten perfectamente a tus intereses y preferencias'
               : locale === 'de'
-              ? 'Finde Projekte, die perfekt zu deinen Interessen und Präferenzen passen'
-              : 'Find projects that perfectly match your interests and preferences'}
+                ? 'Finde Projekte, die perfekt zu deinen Interessen und Präferenzen passen'
+                : 'Find projects that perfectly match your interests and preferences'}
           </p>
         </div>
 
@@ -50,8 +54,8 @@ export default function MatchingPage() {
                 {locale === 'es'
                   ? 'Cómo funciona'
                   : locale === 'de'
-                  ? 'Wie es funktioniert'
-                  : 'How it works'}
+                    ? 'Wie es funktioniert'
+                    : 'How it works'}
               </h2>
               <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
                 <li className="flex items-start gap-2">
@@ -60,8 +64,8 @@ export default function MatchingPage() {
                     {locale === 'es'
                       ? 'Describe qué tipo de proyectos te interesan'
                       : locale === 'de'
-                      ? 'Beschreibe, welche Art von Projekten dich interessieren'
-                      : 'Describe what type of projects interest you'}
+                        ? 'Beschreibe, welche Art von Projekten dich interessieren'
+                        : 'Describe what type of projects interest you'}
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
@@ -70,8 +74,8 @@ export default function MatchingPage() {
                     {locale === 'es'
                       ? 'El asistente analiza tu perfil y preferencias'
                       : locale === 'de'
-                      ? 'Der Assistent analysiert dein Profil und deine Präferenzen'
-                      : 'The assistant analyzes your profile and preferences'}
+                        ? 'Der Assistent analysiert dein Profil und deine Präferenzen'
+                        : 'The assistant analyzes your profile and preferences'}
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
@@ -80,8 +84,8 @@ export default function MatchingPage() {
                     {locale === 'es'
                       ? 'Recibe recomendaciones personalizadas con explicaciones'
                       : locale === 'de'
-                      ? 'Erhalte personalisierte Empfehlungen mit Erklärungen'
-                      : 'Receive personalized recommendations with explanations'}
+                        ? 'Erhalte personalisierte Empfehlungen mit Erklärungen'
+                        : 'Receive personalized recommendations with explanations'}
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
@@ -90,8 +94,8 @@ export default function MatchingPage() {
                     {locale === 'es'
                       ? 'Refina tu búsqueda basándote en feedback'
                       : locale === 'de'
-                      ? 'Verfeinere deine Suche basierend auf Feedback'
-                      : 'Refine your search based on feedback'}
+                        ? 'Verfeinere deine Suche basierend auf Feedback'
+                        : 'Refine your search based on feedback'}
                   </span>
                 </li>
               </ul>
@@ -107,22 +111,22 @@ export default function MatchingPage() {
                   {locale === 'es'
                     ? '• Sé específico sobre ubicación y categorías'
                     : locale === 'de'
-                    ? '• Sei spezifisch bezüglich Standort und Kategorien'
-                    : '• Be specific about location and categories'}
+                      ? '• Sei spezifisch bezüglich Standort und Kategorien'
+                      : '• Be specific about location and categories'}
                 </li>
                 <li>
                   {locale === 'es'
                     ? '• Menciona tus habilidades o experiencia'
                     : locale === 'de'
-                    ? '• Erwähne deine Fähigkeiten oder Erfahrung'
-                    : '• Mention your skills or experience'}
+                      ? '• Erwähne deine Fähigkeiten oder Erfahrung'
+                      : '• Mention your skills or experience'}
                 </li>
                 <li>
                   {locale === 'es'
                     ? '• Proporciona feedback para mejorar resultados'
                     : locale === 'de'
-                    ? '• Gib Feedback, um Ergebnisse zu verbessern'
-                    : '• Provide feedback to improve results'}
+                      ? '• Gib Feedback, um Ergebnisse zu verbessern'
+                      : '• Provide feedback to improve results'}
                 </li>
               </ul>
             </div>

@@ -29,25 +29,25 @@ export default function GreenCompass() {
         },
         {
             icon: <Heart size={20} />,
-            label: "Apoyar Iniciativas",
+            label: t("supportInitiatives") || "Apoyar Iniciativas",
             action: () => router.push("/impact"),
             color: "text-rose-500 bg-rose-100 dark:bg-rose-900/30"
         },
         {
             icon: <Rocket size={20} />,
-            label: "Proponer Proyecto",
+            label: t("proposeProject") || "Proponer Proyecto",
             action: () => router.push("/proyectos/nuevo"),
             color: "text-amber-500 bg-amber-100 dark:bg-amber-900/30"
         },
         {
             icon: <Users size={20} />,
-            label: "Buscar Voluntariado",
+            label: t("searchVolunteering") || "Buscar Voluntariado",
             action: () => router.push("/trabajos?type=volunteering"),
             color: "text-emerald-500 bg-emerald-100 dark:bg-emerald-900/30"
         },
         {
             icon: <AlertTriangle size={20} />,
-            label: "Reportar Problema",
+            label: t("reportProblem") || "Reportar Problema",
             action: () => router.push("/chat?report=true"),
             color: "text-orange-500 bg-orange-100 dark:bg-orange-900/30"
         }

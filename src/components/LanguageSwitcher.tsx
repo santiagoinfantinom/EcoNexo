@@ -9,7 +9,11 @@ const FLAGS: Record<Locale, string> = {
   de: "🇩🇪",
 };
 
-export default function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  className?: string;
+}
+
+export default function LanguageSwitcher({ className = "" }: LanguageSwitcherProps) {
   const { locale, setLocale } = useI18n();
   const [mounted, setMounted] = useState(false);
   const order: Locale[] = ["en", "de", "es"];
@@ -20,13 +24,11 @@ export default function LanguageSwitcher() {
   }, []);
 
   if (!mounted) {
-    // Render a generic placeholder during SSR to avoid hydration mismatch
-    // The globe icon is neutral and wont mismatch regardless of default locale
     return (
-      <div className="fixed left-4 top-4 z-[100] flex flex-col gap-2">
+      <div className={`${className}`}>
         <button
           aria-label="Change language"
-          className="h-12 w-12 rounded-full bg-white/95 backdrop-blur border-2 border-green-500 shadow-lg flex items-center justify-center text-xl"
+          className="h-8 w-8 rounded-full bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center text-sm"
         >
           🌐
         </button>
@@ -39,7 +41,7 @@ export default function LanguageSwitcher() {
       <button
         aria-label="Change language"
         onClick={() => { setLocale(next); try { trackEvent('language_change', { to: next }); } catch { } }}
-        className="h-12 w-12 rounded-full bg-white/95 backdrop-blur border-2 border-green-500 shadow-lg flex items-center justify-center text-xl hover:scale-110 transition-transform"
+        className="h-10 w-10 rounded-full bg-white/95 backdrop-blur border-2 border-green-500 shadow-lg flex items-center justify-center text-lg hover:scale-110 transition-transform"
         title={next.toUpperCase()}
       >
         {FLAGS[locale]}

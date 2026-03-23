@@ -10,29 +10,29 @@ export default function NoticiasPage() {
 
     const newsItems = [
         {
-            title: "EU Adopts New Packaging and Waste Regulation for 2030",
-            category: "♻️ Circular Economy",
+            title: t('newsItem1Title'),
+            category: t('newsItem1Category'),
             date: "Mar 5, 2026",
             link: "https://environment.ec.europa.eu/strategy/circular-economy-action-plan_en",
             image: "https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?q=80&w=800&auto=format&fit=crop"
         },
         {
-            title: "EU Deforestation Regulation Delay: Core Obligations Shift to December 2026",
-            category: "📋 Policy",
+            title: t('newsItem2Title'),
+            category: t('newsItem2Category'),
             date: "Feb 28, 2026",
             link: "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal_en",
             image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=800&auto=format&fit=crop"
         },
         {
-            title: "EU Green Week 2026: Focus on the Nature-Positive Economy",
-            category: "🌿 Environment",
+            title: t('newsItem3Title'),
+            category: t('newsItem3Category'),
             date: "Feb 20, 2026",
             link: "https://www.eea.europa.eu/en",
             image: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=800&auto=format&fit=crop"
         },
         {
-            title: "New Water and Air Quality Laws Mandate Corporate Responsibility",
-            category: "💧 Sustainability",
+            title: t('newsItem4Title'),
+            category: t('newsItem4Category'),
             date: "Feb 10, 2026",
             link: "https://www.unep.org/regions/europe",
             image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop"
@@ -51,10 +51,10 @@ export default function NoticiasPage() {
                         <Newspaper className="w-12 h-12 text-white" />
                     </div>
                     <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">
-                        Eco News
+                        {t('ecoNewsTitle')}
                     </h1>
                     <p className="text-xl text-green-50 max-w-2xl font-light">
-                        {t('ecoTipsDescription') || 'Stay up to date with the latest sustainability news and environmental policies across Europe.'}
+                        {t('ecoNewsDescription')}
                     </p>
                 </div>
             </section>
@@ -91,7 +91,7 @@ export default function NoticiasPage() {
                                         {news.title}
                                     </h3>
                                     <div className="mt-4 flex items-center text-green-600 dark:text-green-400 font-semibold group-hover:translate-x-2 transition-transform">
-                                        {t('viewAll') || 'Read more'} <ArrowRight className="w-4 h-4 ml-1" />
+                                        {t('readMore')} <ArrowRight className="w-4 h-4 ml-1" />
                                     </div>
                                 </div>
                             </div>

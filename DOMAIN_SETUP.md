@@ -13,16 +13,21 @@ vercel domains add econexo.app
 vercel domains verify econexo.app
 ```
 
-### 3. **Configuración DNS Records**
+### 3. **Configuración DNS Records (Recomendado: Vercel)**
+Utiliza estos valores en tu registrador de dominio (Namecheap, GoDaddy, etc.):
+
 ```
 Type: A
 Name: @
-Value: 76.76.19.61
+Value: 76.76.21.21
 
 Type: CNAME  
 Name: www
 Value: cname.vercel-dns.com
 ```
+
+> [!IMPORTANT]
+> Si anteriormente configuraste IPs de GitHub Pages (185.199.x.x), por favor **elimínalas** y usa las de Vercel arriba mencionadas.
 
 ### 4. **Variables de Entorno Actualizadas**
 ```bash

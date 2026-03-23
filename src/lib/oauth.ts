@@ -638,7 +638,7 @@ export class OAuthService {
  * Create OAuth service instance
  */
 // Fallback Client ID - usar el valor real de Google Cloud Console
-const FALLBACK_GOOGLE_CLIENT_ID = '1059183045627-qjmnmcghdbl5duk25vgvd5olomqgs8vb.apps.googleusercontent.com';
+const FALLBACK_GOOGLE_CLIENT_ID = 'demo-client-id';
 
 // Cache for OAuth config to avoid multiple API calls
 let cachedConfig: OAuthConfig | null = null;
