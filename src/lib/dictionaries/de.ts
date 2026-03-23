@@ -267,6 +267,11 @@ export default {
   featureImpactBadgesDesc: "Erhalten Sie Anerkennung für Ihre Umweltbeiträge",
   featureEcoWorkshopsTitle: "Öko-Workshops",
   featureEcoWorkshopsDesc: "Lernen Sie praktische Nachhaltigkeitsfähigkeiten von Experten",
+  // EcoActions
+  supportInitiatives: "Initiativen unterstützen",
+  proposeProject: "Projekt vorschlagen",
+  searchVolunteering: "Freiwilligenarbeit suchen",
+  reportProblem: "Problem melden",
   // Local Groups
   localGroupsSubtitle: "Verbinde dich mit lokalen Gemeinschaften in deiner Stadt oder Region",
   becomeMentor: "Mentor werden",
