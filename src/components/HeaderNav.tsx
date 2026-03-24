@@ -97,6 +97,7 @@ export default function HeaderNav() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  id={`nav-${item.href === '/' ? 'map' : item.href.substring(1)}`}
                   className="flex items-center gap-3 px-6 py-2.5 rounded-xl bg-white/5 hover:bg-green-500/20 border border-white/5 transition-all group min-w-[150px]"
                 >
                   <item.icon className="w-4 h-4 text-green-400 group-hover:text-green-300" />
@@ -105,6 +106,7 @@ export default function HeaderNav() {
               ))}
               <Link
                 href="/about"
+                id="nav-about"
                 className="col-span-2 flex items-center justify-center gap-3 px-6 py-2 rounded-xl bg-white/5 hover:bg-green-500/20 border border-white/5 transition-all group"
               >
                 <Info className="w-4 h-4 text-green-300" />
@@ -115,6 +117,7 @@ export default function HeaderNav() {
             {/* Mobile Menu Trigger */}
             <div className="md:hidden w-full flex justify-center mt-4">
               <button
+                id="mobile-menu-button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="flex items-center gap-3 px-10 py-3 bg-white/5 border border-white/10 rounded-2xl text-white font-bold"
               >
@@ -143,6 +146,7 @@ export default function HeaderNav() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  id={`nav-md-${item.href === '/' ? 'map' : item.href.substring(1)}`}
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-5 py-3 text-white font-bold text-sm hover:bg-white/5 rounded-xl flex items-center gap-3 transition-colors"
                 >

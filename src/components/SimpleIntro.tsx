@@ -43,14 +43,6 @@ export default function SimpleIntro() {
     setShowIntro(false);
   };
 
-  const handleClose = () => {
-    // If closed without selection, we still mark as seen to avoid pestering? 
-    // Or maybe strictly require selection? 
-    // User request said "only the first time", so let's mark as seen if they manually close it too.
-    localStorage.setItem('econexo-intro-shown', 'true');
-    window.dispatchEvent(new Event('intro-completed'));
-    setShowIntro(false);
-  };
 
   if (!showIntro) return null;
 
@@ -63,7 +55,7 @@ export default function SimpleIntro() {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        backgroundColor: '#064e3b', /* Emerald 900 solid background */
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -88,24 +80,6 @@ export default function SimpleIntro() {
           position: 'relative'
         }}
       >
-        {/* Close button */}
-        <button
-          onClick={handleClose}
-          style={{
-            position: 'absolute',
-            top: '16px',
-            right: '16px',
-            background: 'none',
-            border: 'none',
-            fontSize: '24px',
-            cursor: 'pointer',
-            color: '#666'
-          }}
-          aria-label="Close"
-        >
-          ×
-        </button>
-
         {/* Content */}
         <div style={{ fontSize: '80px', marginBottom: '24px' }}>
           {languageStep.icon}

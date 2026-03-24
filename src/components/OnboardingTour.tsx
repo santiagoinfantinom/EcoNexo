@@ -177,34 +177,34 @@ export default function OnboardingTour() {
 
         trackVisitor();
 
-        // CHECK: Has user completed onboarding (preferences)?
-        const isOnboarded = localStorage.getItem("econexo_onboarded");
+        // CHECK: Has user completed intro?
         const introShown = localStorage.getItem("econexo-intro-shown");
 
-        // BLOCKING GUARD: If Intro hasn't been shown AND user isn't onboarded, 
-        // the SimpleIntro modal is definitely visible. Do not start tour.
-        if (!introShown && !isOnboarded) {
-            return;
+        const handleIntroComplete = () => {
+            startTour();
+            window.removeEventListener('intro-completed', handleIntroComplete);
+        };
+
+        // BLOCKING GUARD: If Intro hasn't been shown, 
+        // the SimpleIntro modal is definitely visible. Wait for it.
+        if (!introShown) {
+            window.addEventListener('intro-completed', handleIntroComplete);
+            return () => {
+                window.removeEventListener('intro-completed', handleIntroComplete);
+            };
         }
 
         // FAIL-SAFE: Check if Intro Modal is currently visible in DOM to prevent overlap
         // This handles race conditions where localStorage might be "true" but modal is still mounting/closing
         const isIntroVisible = document.querySelector('[data-intro-modal="true"]');
 
-        if (isOnboarded && !isIntroVisible) {
+        if (!isIntroVisible) {
             // If already onboarded and intro is NOT visible, start tour check immediately
             startTour();
         } else {
-            // ... match existing else block ...
-            const handleOnboardingComplete = () => {
-                startTour();
-                window.removeEventListener('onboarding-completed', handleOnboardingComplete);
-            };
-
-            window.addEventListener('onboarding-completed', handleOnboardingComplete);
-
+            window.addEventListener('intro-completed', handleIntroComplete);
             return () => {
-                window.removeEventListener('onboarding-completed', handleOnboardingComplete);
+                window.removeEventListener('intro-completed', handleIntroComplete);
             };
         }
     }, [t]);
