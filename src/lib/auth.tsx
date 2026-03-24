@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
             if (parsedUser && parsedUser.id) {
-              setUser({ id: parsedUser.id, email: parsedUser.email || null });
+              setUser({ id: parsedUser.id, email: parsedUser.email || null, profile: parsedUser.profile || null });
             } else {
               setUser(null);
             }
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               const parsedUser = JSON.parse(storedUser);
               if (parsedUser && parsedUser.id) {
                 console.log('✅ Found user in localStorage:', parsedUser.email);
-                setUser({ id: parsedUser.id, email: parsedUser.email || null });
+                setUser({ id: parsedUser.id, email: parsedUser.email || null, profile: parsedUser.profile || null });
               }
             }
           } catch (e) {
@@ -91,6 +91,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const sessionUser = session?.user ?? null;
 
       if (!sessionUser) {
+        // Prevent clearing dummy user
+        if (typeof window !== 'undefined' && localStorage.getItem('econexo_user')) {
+          return;
+        }
         setUser(null);
         return;
       }
@@ -236,74 +240,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signInWithMagicLink = useCallback(async (email: string) => {
-    if (!isSupabaseConfigured()) {
-      // In development mode without Supabase, simulate login with localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem('econexo_user', JSON.stringify({
-          id: 'demo-' + Math.random().toString(36).substring(7),
-          email: email,
-        }));
-        localStorage.setItem('econexo_auth_provider', 'email');
-        // Simulate session
-        window.location.reload();
-      }
-      return {};
+    // FORCE DUMMY LOGIN
+    if (typeof window !== "undefined") {
+      localStorage.setItem('econexo_user', JSON.stringify({
+        id: 'dummy-' + Math.random().toString(36).substring(7),
+        email: email,
+        profile: {
+          full_name: 'Eco User',
+          first_name: 'Eco',
+          last_name: 'User',
+          avatar_url: 'https://i.pravatar.cc/150?u=a042581f4e29026704e',
+        }
+      }));
+      localStorage.setItem('econexo_auth_provider', 'email');
+      window.location.reload();
     }
-    const supabase = getSupabase();
-    const emailRedirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined;
-    const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo } });
-    return { error: error?.message };
+    return {};
   }, []);
 
   const signInWithOAuth = useCallback(async (provider: "google" | "github" | "gitlab" | "bitbucket" | "azure") => {
-    if (!isSupabaseConfigured()) return { error: "Supabase not configured" };
-
-    try {
-      const supabase = getSupabase();
-
-      // Handle GitHub Pages subpath dynamic redirection
-      const isGH = typeof window !== "undefined" && window.location.hostname.includes("github.io");
-      const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
-
-      // If we are on GH Pages, strip the basePath from currentPath for the 'next' param
-      // because router.push adds it back automatically.
-      const relativePath = isGH && currentPath.startsWith('/EcoNexo')
-        ? currentPath.replace('/EcoNexo', '') || '/'
-        : currentPath;
-
-      let redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(relativePath)}` : undefined;
-
-      if (isGH) {
-        redirectTo = `${window.location.origin}/EcoNexo/auth/callback/?next=${encodeURIComponent(relativePath)}`;
-      }
-
-      // Configure OAuth options
-      const options: any = { redirectTo };
-
-      if (provider === "google") {
-        options.scopes = 'openid email profile https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.gender.read';
-        options.queryParams = {
-          access_type: 'offline',
-          prompt: 'consent',
-        };
-      }
-
-      if (provider === "azure") {
-        options.scopes = 'openid profile email User.Read';
-      }
-
-      const { error } = await supabase.auth.signInWithOAuth({ provider, options });
-
-      if (error) {
-        console.error("OAuth error:", error);
-        return { error: error.message };
-      }
-
-      return {};
-    } catch (error) {
-      console.error("OAuth error:", error);
-      return { error: "Error de autenticación. Intenta de nuevo." };
+    // FORCE DUMMY LOGIN
+    if (typeof window !== "undefined") {
+      localStorage.setItem('econexo_user', JSON.stringify({
+        id: 'dummy-' + Math.random().toString(36).substring(7),
+        email: `tester-${provider}@econexo.eu`,
+        profile: {
+          full_name: 'Eco Tester',
+          first_name: 'Eco',
+          last_name: 'Tester',
+          avatar_url: 'https://i.pravatar.cc/150?img=12',
+        }
+      }));
+      localStorage.setItem('econexo_auth_provider', provider);
+      window.location.reload();
     }
+    return {};
   }, []);
 
   const signOut = useCallback(async () => {
