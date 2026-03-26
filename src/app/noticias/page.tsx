@@ -1,14 +1,15 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Newspaper } from "lucide-react";
+import { ArrowRight, Newspaper, RefreshCw } from "lucide-react";
 
 export default function NoticiasPage() {
     const { t } = useI18n();
 
-    const newsItems = [
+    const allNewsItems = [
         {
             title: t('newsItem1Title'),
             category: t('newsItem1Category'),
@@ -37,7 +38,67 @@ export default function NoticiasPage() {
             link: "https://www.unep.org/regions/europe",
             image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop"
         },
+        {
+            title: t('newsItem5Title'),
+            category: t('newsItem5Category'),
+            date: "Mar 15, 2026",
+            link: "https://www.unep.org/explore-topics/energy",
+            image: "https://images.unsplash.com/photo-1509391366311-4569024c084f?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+            title: t('newsItem6Title'),
+            category: t('newsItem6Category'),
+            date: "Mar 12, 2026",
+            link: "https://www.unep.org/explore-topics/oceans-seas",
+            image: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+            title: t('newsItem7Title'),
+            category: t('newsItem7Category'),
+            date: "Mar 8, 2026",
+            link: "https://environment.ec.europa.eu/topics/urban-environment_en",
+            image: "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+            title: t('newsItem8Title'),
+            category: t('newsItem8Category'),
+            date: "Mar 1, 2026",
+            link: "https://www.irena.org/Solar",
+            image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+            title: t('newsItem9Title'),
+            category: t('newsItem9Category'),
+            date: "Feb 25, 2026",
+            link: "https://www.unep.org/explore-topics/forests",
+            image: "https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+            title: t('newsItem10Title'),
+            category: t('newsItem10Category'),
+            date: "Feb 15, 2026",
+            link: "https://www.eea.europa.eu/en/topics/in-depth/transport-and-mobility",
+            image: "https://images.unsplash.com/photo-1538592116845-11ee0b8015df?q=80&w=800&auto=format&fit=crop"
+        }
     ];
+
+    const [displayedNews, setDisplayedNews] = useState(allNewsItems.slice(0, 4));
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const loadRandomNews = () => {
+        setIsRefreshing(true);
+        // Shuffle and pick 4
+        const shuffled = [...allNewsItems].sort(() => 0.5 - Math.random());
+        setDisplayedNews(shuffled.slice(0, 4));
+        
+        setTimeout(() => setIsRefreshing(false), 500);
+    };
+
+    // Load random news on mount (which corresponds to "recarga la página" or "cliquea ahí")
+    useEffect(() => {
+        loadRandomNews();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className="min-h-screen bg-modern pb-20">
@@ -61,8 +122,17 @@ export default function NoticiasPage() {
 
             {/* News List */}
             <main className="max-w-5xl mx-auto px-4">
-                <div className="grid gap-6 md:gap-8">
-                    {newsItems.map((news, idx) => (
+                <div className="flex justify-end mb-6">
+                    <button 
+                        onClick={loadRandomNews}
+                        className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/40 shadow-sm border border-white/40 dark:border-white/10 dark:bg-slate-800/50 dark:hover:bg-slate-700/50 rounded-full transition-all text-gray-800 dark:text-gray-200"
+                    >
+                        <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                        <span>{t('refresh') || 'Refresh'}</span>
+                    </button>
+                </div>
+                <div className={`grid gap-6 md:gap-8 transition-opacity duration-300 ${isRefreshing ? 'opacity-50' : 'opacity-100'}`}>
+                    {displayedNews.map((news, idx) => (
                         <a
                             key={idx}
                             href={news.link}

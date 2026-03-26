@@ -39,68 +39,74 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
   const availableCountries = Array.from(new Set(allProjects.map(p => p.country))).filter(Boolean);
   const availableCities = Array.from(new Set(allProjects.map(p => p.city))).filter(Boolean);
 
-  // Apply filters whenever filters change
+  // Apply filters whenever filters change (debounced)
   useEffect(() => {
-    let filtered = [...allProjects];
+    const timer = setTimeout(() => {
+      let filtered = [...allProjects];
 
-    // Category filter
-    if (filters.categories.length > 0) {
-      filtered = filtered.filter(p => filters.categories.includes(p.category));
-    }
+      // Category filter
+      if (filters.categories.length > 0) {
+        filtered = filtered.filter(p => filters.categories.includes(p.category));
+      }
 
-    // Search query filter
-    if (filters.searchQuery) {
-      const query = filters.searchQuery.toLowerCase();
-      filtered = filtered.filter(p => 
-        p.name.toLowerCase().includes(query) ||
-        p.city.toLowerCase().includes(query) ||
-        p.country.toLowerCase().includes(query) ||
-        (p.description && p.description.toLowerCase().includes(query))
-      );
-    }
+      // Search query filter
+      if (filters.searchQuery) {
+        const query = filters.searchQuery.toLowerCase();
+        filtered = filtered.filter(p => 
+          p.name.toLowerCase().includes(query) ||
+          p.city.toLowerCase().includes(query) ||
+          p.country.toLowerCase().includes(query) ||
+          ((p as any).description && (p as any).description.toLowerCase().includes(query))
+        );
+      }
 
-    // Country filter
-    if (filters.country) {
-      filtered = filtered.filter(p => (p.country || '').toLowerCase() === filters.country!.toLowerCase());
-    }
+      // Country filter
+      if (filters.country) {
+        filtered = filtered.filter(p => (p.country || '').toLowerCase() === filters.country!.toLowerCase());
+      }
 
-    // City filter
-    if (filters.city) {
-      filtered = filtered.filter(p => (p.city || '').toLowerCase() === filters.city!.toLowerCase());
-    }
+      // City filter
+      if (filters.city) {
+        filtered = filtered.filter(p => (p.city || '').toLowerCase() === filters.city!.toLowerCase());
+      }
 
-    // Type filter
-    if (filters.type === 'event') {
-      filtered = filtered.filter(p => !!p.startsAt && !p.isPermanent);
-    } else if (filters.type === 'permanent') {
-      filtered = filtered.filter(p => !!p.isPermanent);
-    }
+      // Type filter
+      if (filters.type === 'event') {
+        filtered = filtered.filter(p => !!p.startsAt && !p.isPermanent);
+      } else if (filters.type === 'permanent') {
+        filtered = filtered.filter(p => !!p.isPermanent);
+      }
 
-    // Date range filter (uses startsAt if present)
-    if (filters.dateRange) {
-      const start = new Date(filters.dateRange.start).getTime();
-      const end = new Date(filters.dateRange.end).getTime();
-      filtered = filtered.filter(p => {
-        if (!p.startsAt) return false;
-        const ts = new Date(p.startsAt).getTime();
-        return ts >= start && ts <= end;
-      });
-    }
+      // Date range filter
+      if (filters.dateRange) {
+        const start = new Date(filters.dateRange.start).getTime();
+        const end = new Date(filters.dateRange.end).getTime();
+        filtered = filtered.filter(p => {
+          if (!p.startsAt) return false;
+          const ts = new Date(p.startsAt).getTime();
+          return ts >= start && ts <= end;
+        });
+      }
 
-    // Available spots filter
-    if (filters.showOnlyAvailable) {
-      filtered = filtered.filter(p => p.spots && p.spots > 0);
-    }
+      // Available spots filter
+      if (filters.showOnlyAvailable) {
+        filtered = filtered.filter(p => p.spots && p.spots > 0);
+      }
 
-    onFilterChange(filtered);
-    try {
-      trackEvent('map_filter', {
-        categories: filters.categories.join(','),
-        query: filters.searchQuery || '',
-        available: filters.showOnlyAvailable ? 1 : 0,
-        distance: filters.distance || 0,
-      });
-    } catch {}
+      onFilterChange(filtered);
+      
+      // Track only if meaningful changes happened
+      if (filters.categories.length > 0 || filters.searchQuery.length > 2) {
+        try {
+          trackEvent('map_filter_applied', {
+            categories: filters.categories.join(','),
+            query: filters.searchQuery || '',
+          });
+        } catch {}
+      }
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(timer);
   }, [filters, allProjects, onFilterChange]);
 
   const toggleCategory = (category: string) => {
@@ -135,12 +141,12 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
     (filters.type !== 'all' ? 1 : 0);
 
   return (
-    <div className="bg-white/95 backdrop-blur rounded-lg shadow-lg border">
+    <div className="bg-transparent border-none">
       {/* Filter Toggle Button */}
       <div className="flex items-center gap-2 p-2">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm"
+          className="flex items-center gap-2 px-4 py-2.5 bg-green-500/80 backdrop-blur-md text-white rounded-full hover:bg-green-500 transition-all text-sm font-semibold shadow-lg shadow-green-900/20 border border-white/10"
         >
           <span>🔍</span>
           <span>{t("filters")}</span>
@@ -153,7 +159,7 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
         
         <button
           onClick={onCenterOnLocation}
-          className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm flex items-center gap-2 font-medium"
+          className="px-4 py-2.5 bg-blue-500/80 backdrop-blur-md text-white rounded-full hover:bg-blue-500 transition-all text-sm flex items-center gap-2 font-semibold shadow-lg shadow-blue-900/20 border border-white/10"
           title={t("centerOnLocation")}
         >
           <span>📍</span>
@@ -163,10 +169,10 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
 
       {/* Filter Panel */}
       {isOpen && (
-        <div className="p-3 border-t min-w-[280px] max-w-[350px]">
+        <div className="absolute top-full left-0 mt-3 p-5 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl min-w-[320px] max-w-[400px] text-white">
           {/* Search */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 italic">
               {t("search")}
             </label>
             <input
@@ -174,19 +180,20 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
               value={filters.searchQuery}
               onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
               placeholder={t("searchProjects")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400/50 text-white placeholder:text-white/30 text-sm"
             />
           </div>
 
           {/* Country */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 italic">
               {t("country")}
             </label>
             <select
               value={filters.country || ""}
               onChange={(e) => setFilters(prev => ({ ...prev, country: e.target.value || null }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400/50 text-white appearance-none cursor-pointer text-sm"
+              style={{ colorScheme: 'dark' }}
             >
               <option value="">{t("any")}</option>
               {availableCountries.map(c => (
@@ -197,13 +204,14 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
 
           {/* City */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 italic">
               {t("city")}
             </label>
             <select
               value={filters.city || ""}
               onChange={(e) => setFilters(prev => ({ ...prev, city: e.target.value || null }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400/50 text-white appearance-none cursor-pointer text-sm"
+              style={{ colorScheme: 'dark' }}
             >
               <option value="">{t("any")}</option>
               {availableCities.map(c => (
@@ -214,7 +222,7 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
 
           {/* Categories */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 italic">
               {t("categories")}
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -224,8 +232,8 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
                   onClick={() => toggleCategory(category)}
                   className={`px-3 py-2 text-sm rounded-md border transition-colors ${
                     filters.categories.includes(category)
-                      ? 'bg-green-600 text-white border-green-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      ? 'bg-green-500 text-white border-green-400/50 shadow-lg shadow-green-900/40'
+                      : 'bg-white/5 hover:bg-white/15 text-white/80 border-white/10'
                   }`}
                 >
                   {categoryLabel(category, locale)}
@@ -236,13 +244,14 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
 
           {/* Type Filter */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 italic">
               {t("type")}
             </label>
             <select
               value={filters.type}
               onChange={(e) => setFilters(prev => ({ ...prev, type: (e.target.value as 'all' | 'event' | 'permanent') }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400/50 text-white appearance-none cursor-pointer text-sm"
+              style={{ colorScheme: 'dark' }}
             >
               <option value="all">{t("all")}</option>
               <option value="event">{t("events")}</option>
@@ -252,7 +261,7 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
 
           {/* Date Range */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 italic">
               {t("dateRange")}
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -260,17 +269,18 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
                 type="date"
                 value={filters.dateRange?.start || ""}
                 onChange={(e) => setFilters(prev => ({ ...prev, dateRange: { start: e.target.value, end: prev.dateRange?.end || e.target.value } }))}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400/50 text-white text-sm"
+                style={{ colorScheme: 'dark' } as any}
               />
               <input
                 type="date"
                 value={filters.dateRange?.end || ""}
                 onChange={(e) => setFilters(prev => ({ ...prev, dateRange: { start: prev.dateRange?.start || e.target.value, end: e.target.value } }))}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400/50 text-white text-sm"
+                style={{ colorScheme: 'dark' } as any}
               />
             </div>
           </div>
-
           {/* Available Spots */}
           <div className="mb-4">
             <label className="flex items-center gap-2">
@@ -280,7 +290,7 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
                 onChange={(e) => setFilters(prev => ({ ...prev, showOnlyAvailable: e.target.checked }))}
                 className="rounded border-gray-300 text-green-600 focus:ring-green-500"
               />
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-white/90">
                 {t("onlyAvailableSpots")}
               </span>
             </label>
@@ -288,7 +298,7 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
 
           {/* Distance Filter */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 italic">
               {t("maxDistance")} (km)
             </label>
             <select
@@ -312,13 +322,13 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
           <div className="flex gap-2">
             <button
               onClick={clearFilters}
-              className="flex-1 px-3 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+              className="flex-1 px-4 py-3 bg-white/10 text-white font-semibold rounded-2xl hover:bg-white/20 transition-all border border-white/10"
             >
               {t("clearFilters")}
             </button>
             <button
               onClick={() => setIsOpen(false)}
-              className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+              className="flex-1 px-4 py-3 bg-green-500 text-white font-bold rounded-2xl hover:bg-green-400 transition-all shadow-lg shadow-green-900/30 border border-white/20"
             >
               {t("apply")}
             </button>

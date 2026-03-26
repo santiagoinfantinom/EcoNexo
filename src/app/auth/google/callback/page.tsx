@@ -1,22 +1,23 @@
 "use client";
 import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { createOAuthService } from '@/lib/oauth';
-import { verifyCaptchaToken } from '@/lib/captcha';
+import { useRouter } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
+import { createOAuthService } from '@/lib/oauth';
 
 function GoogleCallbackContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { locale } = useI18n();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     const handleCallback = async () => {
-      const code = searchParams.get('code');
-      const state = searchParams.get('state');
-      const error = searchParams.get('error');
+      // Implicit flow: Google returns access_token in URL fragment (#access_token=...)
+      const hash = window.location.hash.substring(1); // remove leading #
+      const params = new URLSearchParams(hash);
+
+      const accessToken = params.get('access_token');
+      const error = params.get('error');
 
       if (error) {
         setStatus('error');
@@ -28,68 +29,36 @@ function GoogleCallbackContent() {
         return;
       }
 
-      if (!code || !state) {
+      if (!accessToken) {
+        // Also check query params (in case Google used query string instead of hash)
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryError = urlParams.get('error');
+        if (queryError) {
+          setStatus('error');
+          setMessage(
+            (locale === 'en' ? 'Authentication error: ' :
+              locale === 'de' ? 'Authentifizierungsfehler: ' :
+                'Error de autenticación: ') + queryError
+          );
+          return;
+        }
+
         setStatus('error');
         setMessage(
-          locale === 'en' ? 'You cannot access this page directly. Please sign in from the main page.' :
-            locale === 'de' ? 'Sie können nicht direkt auf diese Seite zugreifen. Bitte melden Sie sich von der Hauptseite an.' :
-              'No puedes acceder directamente a esta página. Por favor, inicia sesión desde la página principal.'
+          locale === 'en' ? 'No access token received. Please sign in from the main page.' :
+            locale === 'de' ? 'Kein Zugriffstoken erhalten. Bitte melden Sie sich von der Hauptseite an.' :
+              'No se recibió token de acceso. Por favor, inicia sesión desde la página principal.'
         );
-
-        // Automatically redirect to home after 3 seconds
-        setTimeout(() => {
-          router.push('/');
-        }, 3000);
+        setTimeout(() => router.push('/'), 3000);
         return;
       }
 
       try {
-        // Call the API to exchange code for user info
-        const response = await fetch(`/api/auth/google/callback?code=${code}&state=${state}`);
-        const result = await response.json();
+        // Use OAuthService to handle the token
+        const oauthService = await createOAuthService();
+        const result = await oauthService.handleGoogleTokenCallback(accessToken);
 
         if (result.success && result.user) {
-          // Store user data in localStorage
-          const user = result.user;
-
-          localStorage.setItem('econexo_user', JSON.stringify({
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            picture: user.picture,
-            provider: user.provider,
-          }));
-
-          localStorage.setItem('econexo_auth_provider', 'google');
-
-          // Store OAuth data
-          localStorage.setItem('oauth_data', JSON.stringify({
-            name: user.name,
-            email: user.email,
-            picture: user.picture,
-            provider: 'google',
-            locale: user.locale || 'en',
-            verified_email: user.verified_email || true,
-            birthdate: user.birthdate,
-            gender: user.gender,
-            pronouns: user.pronouns,
-          }));
-
-          // Store profile data with all available fields
-          localStorage.setItem('econexo:profile', JSON.stringify({
-            full_name: user.name || '',
-            first_name: user.given_name || '',
-            last_name: user.family_name || '',
-            email: user.email,
-            avatar_url: user.picture || '/logo-econexo.png',
-            preferred_language: user.locale || 'en',
-            oauth_provider: 'google',
-            oauth_imported: true,
-            birthdate: user.birthdate || '',
-            gender: user.gender || '',
-            pronouns: user.pronouns || '',
-          }));
-
           setStatus('success');
           setMessage(
             locale === 'en' ? 'Authentication successful! Redirecting...' :
@@ -97,31 +66,25 @@ function GoogleCallbackContent() {
                 '¡Autenticación exitosa! Redirigiendo...'
           );
 
-          // Redirect to dashboard after 2 seconds
-          setTimeout(() => {
-            router.push('/perfil');
-          }, 2000);
+          localStorage.setItem('econexo_auth_provider', 'google');
+          setTimeout(() => router.push('/perfil'), 2000);
         } else {
-          setStatus('error');
-          setMessage(result.error || (
-            locale === 'en' ? 'Authentication error' :
-              locale === 'de' ? 'Authentifizierungsfehler' :
-                'Error de autenticación'
-          ));
+          throw new Error(result.error || 'Authentication failed');
         }
-      } catch (error) {
-        console.error('Callback error:', error);
+
+      } catch (err: any) {
+        console.error('Google callback error:', err);
         setStatus('error');
         setMessage(
-          locale === 'en' ? 'Internal server error' :
-            locale === 'de' ? 'Interner Serverfehler' :
-              'Error interno del servidor'
+          (locale === 'en' ? 'Error processing authentication: ' :
+            locale === 'de' ? 'Fehler bei der Authentifizierung: ' :
+              'Error al procesar la autenticación: ') + (err.message || '')
         );
       }
     };
 
     handleCallback();
-  }, [searchParams, router]);
+  }, [router, locale]);
 
   return (
     <div className="min-h-screen bg-gls-primary flex items-center justify-center p-4">
@@ -180,7 +143,6 @@ export default function GoogleCallbackPage() {
             <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-            {/* This will use the parent's locale context */}
             Cargando...
           </h2>
         </div>

@@ -1,0 +1,162 @@
+/* EcoNexo Premium Map Styles */
+
+/* Glassmorphism containers */
+.map-glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  border-radius: 16px;
+}
+
+.dark .map-glass-panel {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Premium Toolbar */
+.map-premium-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.map-premium-toolbar:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+/* Project Popup Card */
+.project-popup-card {
+  width: 280px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: popup-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.project-popup-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.project-popup-content {
+  padding: 16px;
+}
+
+.project-popup-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.project-popup-description {
+  font-size: 0.875rem;
+  color: #475569;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.project-popup-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.project-popup-tag {
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 20px;
+  color: #334155;
+}
+
+/* Category Chips */
+.category-chip {
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  white-space: nowrap;
+  will-change: transform, background-color;
+  transform: translateZ(0);
+  animation: chip-entry 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.category-chip:active {
+  transform: scale(0.95) translateZ(0);
+}
+
+.category-chip-active {
+  background: white;
+  color: #0f172a;
+  box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.2);
+}
+
+/* Staggered delays for chips */
+.category-chip:nth-child(1) { animation-delay: 0.05s; }
+.category-chip:nth-child(2) { animation-delay: 0.1s; }
+.category-chip:nth-child(3) { animation-delay: 0.15s; }
+.category-chip:nth-child(4) { animation-delay: 0.2s; }
+.category-chip:nth-child(5) { animation-delay: 0.25s; }
+.category-chip:nth-child(6) { animation-delay: 0.3s; }
+.category-chip:nth-child(7) { animation-delay: 0.35s; }
+.category-chip:nth-child(8) { animation-delay: 0.4s; }
+
+.category-chip-inactive {
+  background: #f8fafc;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
+.category-chip-inactive:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+/* Custom Leaflet overrides */
+.leaflet-popup-content-wrapper {
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: 12px !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  width: 300px !important;
+}
+
+.leaflet-popup-tip {
+  background: white !important;
+}

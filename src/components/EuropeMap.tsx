@@ -4,6 +4,7 @@ import L, { Map as LeafletMap } from "leaflet";
 import Link from "next/link";
 import { useI18n, categoryLabel, projectNameLabel, locationLabel } from "@/lib/i18n";
 import "leaflet/dist/leaflet.css";
+import "@/styles/map-premium.css";
 import { useEffect, useRef, useState } from "react";
 import MapFilters from "./MapFilters";
 import MapSearch from "./MapSearch";
@@ -15,6 +16,11 @@ type Project = {
   name: string;
   name_en?: string;
   name_de?: string;
+  description?: string;
+  description_en?: string;
+  description_de?: string;
+  image_url?: string;
+  info_url?: string;
   category: string;
   lat: number;
   lng: number;
@@ -29,7 +35,6 @@ type Project = {
 };
 
 // Fix default marker icons in Leaflet when used with bundlers
-// Only initialize on client side - moved inside component to avoid SSR issues
 function initializeLeafletIcons() {
   if (typeof window === "undefined" || !L) return;
   try {
@@ -47,37 +52,29 @@ function initializeLeafletIcons() {
   }
 }
 
-/**
- * Map region presets for common geographic areas
- * 
- * Usage examples:
- * - <InteractiveMap projects={projects} region="europe" />
- * - <InteractiveMap projects={projects} region="americas" />
- * - <InteractiveMap projects={projects} center={[39.8283, -98.5795]} zoom={4} />
- */
 export const MAP_REGIONS = {
   europe: {
-    center: [50.1109, 8.6821] as [number, number], // Frankfurt, Germany
+    center: [50.1109, 8.6821] as [number, number],
     zoom: 4,
   },
   americas: {
-    center: [20.0, -80.0] as [number, number], // Center of Americas
+    center: [20.0, -80.0] as [number, number],
     zoom: 3,
   },
   northAmerica: {
-    center: [39.8283, -98.5795] as [number, number], // Center of USA
+    center: [39.8283, -98.5795] as [number, number],
     zoom: 4,
   },
   southAmerica: {
-    center: [-15.0, -60.0] as [number, number], // Center of South America
+    center: [-15.0, -60.0] as [number, number],
     zoom: 4,
   },
   asia: {
-    center: [35.0, 105.0] as [number, number], // Center of Asia
+    center: [35.0, 105.0] as [number, number],
     zoom: 3,
   },
   africa: {
-    center: [0.0, 20.0] as [number, number], // Center of Africa
+    center: [0.0, 20.0] as [number, number],
     zoom: 3,
   },
 } as const;
@@ -85,13 +82,9 @@ export const MAP_REGIONS = {
 export type MapRegion = keyof typeof MAP_REGIONS;
 
 interface InteractiveMapProps {
-  /** Array of projects to display on the map */
   projects: Project[];
-  /** Predefined region preset (europe, americas, northAmerica, southAmerica, asia, africa) */
   region?: MapRegion;
-  /** Custom center coordinates [latitude, longitude]. Overrides region preset if provided */
   center?: [number, number];
-  /** Custom zoom level. Overrides region preset if provided */
   zoom?: number;
 }
 
@@ -101,9 +94,6 @@ export default function InteractiveMap({
   center,
   zoom
 }: InteractiveMapProps) {
-  // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
-  // This is required by React's Rules of Hooks
-  const [isMounted, setIsMounted] = useState(false);
   const mapRef = useRef<LeafletMap | null>(null);
   const { t, locale } = useI18n();
   const [baseFilteredProjects, setBaseFilteredProjects] = useState<Project[]>(projects);
@@ -111,23 +101,21 @@ export default function InteractiveMap({
   const [filterMode, setFilterMode] = useState<'all' | 'today' | 'permanent'>('all');
   const [heatOn, setHeatOn] = useState<boolean>(false);
   const heatLayerRef = useRef<any | null>(null);
-  // Calendar overlay removed; calendar lives on its own page now
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [frequencyFilters, setFrequencyFilters] = useState<{ once: boolean; regular: boolean; permanent: boolean }>({ once: true, regular: true, permanent: true });
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  
+  // Cache for icons to avoid recreation
+  const iconCache = useRef<Record<string, L.DivIcon>>({});
 
-  // ALL useEffect hooks MUST be called before any conditional returns
   useEffect(() => {
-    setIsMounted(true);
-    // Initialize Leaflet icons only on client side
     if (typeof window !== 'undefined') {
       initializeLeafletIcons();
     }
   }, []);
 
-  // Listen to external center events from the page-level search bar
   useEffect(() => {
     if (typeof window === 'undefined') return;
     function onCenter(e: Event) {
@@ -146,7 +134,6 @@ export default function InteractiveMap({
     const handle = () => {
       if (mapRef.current) mapRef.current.invalidateSize();
     };
-    // Invalidate after mount and on resize to avoid "thin line" rendering
     const id = setTimeout(handle, 0);
     window.addEventListener("resize", handle);
     return () => {
@@ -164,7 +151,6 @@ export default function InteractiveMap({
     return () => ro.disconnect();
   }, []);
 
-  // Recompute filtered list when base filters, frequency, category or mode change
   useEffect(() => {
     const now = new Date();
     const isToday = (p: Project) => {
@@ -178,23 +164,18 @@ export default function InteractiveMap({
     };
     const isPermanent = (p: Project) => Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
 
-    // Start with base filtered list
     let next = baseFilteredProjects.filter((p) => {
       if (filterMode === 'all') return true;
       if (filterMode === 'today') return isToday(p);
       return isPermanent(p);
     });
-    // Quick category chips filter (optional)
     if (selectedCategories.length > 0) {
       next = next.filter((p) => selectedCategories.includes(p.category));
     }
-
-    // Apply frequency filters
     next = next.filter((p) => frequencyFilters[getFrequency(p)]);
     setFilteredProjects(next);
   }, [baseFilteredProjects, filterMode, frequencyFilters, selectedCategories]);
 
-  // Heatmap toggle effect
   useEffect(() => {
     if (!mapRef.current || typeof window === 'undefined') return;
     if (!heatOn) {
@@ -206,7 +187,6 @@ export default function InteractiveMap({
     }
     let cancelled = false;
     (async () => {
-      // Load leaflet.heat dynamically from CDN to keep bundle small
       if (!(L as any).heatLayer) {
         await new Promise<void>((resolve, reject) => {
           const s = document.createElement('script');
@@ -228,27 +208,13 @@ export default function InteractiveMap({
     };
   }, [heatOn, filteredProjects]);
 
-  // Determine center and zoom from props or region preset
   const mapCenter = center || MAP_REGIONS[region].center;
   const mapZoom = zoom ?? MAP_REGIONS[region].zoom;
 
-  // NOW we can do conditional rendering AFTER all hooks are called
-  if (!isMounted || typeof window === 'undefined') {
-    return (
-      <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Cargando mapa...</p>
-        </div>
-      </div>
-    );
-  }
 
   const handleCenterOnLocation = () => {
     if (!("geolocation" in navigator)) {
-      setGeoError(locale === 'es' ? "Geolocation no está disponible en este dispositivo." :
-        locale === 'de' ? "Geolocation ist auf diesem Gerät nicht verfügbar." :
-          "Geolocation is not available on this device.");
+      setGeoError(locale === 'es' ? "Geolocation no disponible." : locale === 'de' ? "Geolocation nicht verfügbar." : "Geolocation not available.");
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -256,373 +222,274 @@ export default function InteractiveMap({
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
         mapRef.current?.setView([lat, lon], 13, { animate: true });
-        const circle = L.circle([lat, lon], { radius: 300, color: "#16a34a" }).addTo(mapRef.current!);
+        const circle = L.circle([lat, lon], { radius: 300, color: "#16a34a", fillOpacity: 0.15 }).addTo(mapRef.current!);
         setTimeout(() => circle.remove(), 2500);
         setGeoError(null);
       },
       (err) => {
-        if (err.code === err.PERMISSION_DENIED) {
-          setGeoError(locale === 'es' ? "Para centrar en tu ubicación, concede permiso de localización al navegador." :
-            locale === 'de' ? "Um auf deinen Standort zu zentrieren, gewähre dem Browser Standortberechtigung." :
-              "To center on your location, grant location permission to the browser.");
-        } else {
-          setGeoError(locale === 'es' ? "No se pudo obtener tu ubicación." :
-            locale === 'de' ? "Dein Standort konnte nicht ermittelt werden." :
-              "Could not get your location.");
-        }
+        setGeoError(locale === 'es' ? "Error al obtener ubicación." : locale === 'de' ? "Standortfehler." : "Location error.");
       },
       { enableHighAccuracy: true, timeout: 8000 }
     );
   };
 
-  const handleProjectSelect = (project: Project | null) => {
-    setSelectedProject(project);
-    if (project) {
-      mapRef.current?.setView([project.lat, project.lng], 13, { animate: true });
-    }
-  };
-
-  // Frequency helpers
   function getFrequency(p: Project): 'once' | 'regular' | 'permanent' {
-    // permanent if flagged or lacks dates
     const isPermanent = Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
     if (isPermanent) return 'permanent';
-    // consider long range (> 7 days) as regular
     if (p.startsAt && p.endsAt) {
       const diffMs = new Date(p.endsAt).getTime() - new Date(p.startsAt).getTime();
       if (diffMs > 7 * 24 * 60 * 60 * 1000) return 'regular';
     }
-    // heuristic: description mentions weekly/every/cada
     const text = ((p as any).description || '').toString().toLowerCase();
     if (/\b(cada|semanal|weekly|every|mensual|monthly)\b/.test(text)) return 'regular';
     return 'once';
   }
 
-  function colorForFrequency(freq: 'once' | 'regular' | 'permanent'): string {
-    if (freq === 'once') return '#ef4444'; // red
-    if (freq === 'regular') return '#3b82f6'; // blue
-    return '#16a34a'; // green
+  function gradientForFrequency(freq: 'once' | 'regular' | 'permanent'): string {
+    if (freq === 'once') return 'linear-gradient(135deg, #f97316 0%, #ef4444 100%)';
+    if (freq === 'regular') return 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)';
+    return 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)';
   }
 
-  function gradientForFrequency(freq: 'once' | 'regular' | 'permanent'): string {
-    // Modern, vibrant gradients per frequency
-    if (freq === 'once') return 'linear-gradient(135deg, #f97316 0%, #ef4444 100%)'; // orange → red
-    if (freq === 'regular') return 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)'; // cyan → blue
-    return 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)'; // green → emerald
-  }
 
   function createGradientIcon(freq: 'once' | 'regular' | 'permanent'): L.DivIcon {
-    const size = 18;
+    if (iconCache.current[freq]) return iconCache.current[freq];
+
+    const size = 20;
     const gradient = gradientForFrequency(freq);
-    const isToday = freq === 'once'; // Treat 'once' as active/today for demo purposes
-    // Soft glow using box-shadow; inner ring for contrast
+    const isActive = freq === 'once';
     const html = `
-      <span style="
-        display:inline-block; width:${size}px; height:${size}px;
-        border-radius:9999px; background:${gradient};
-        box-shadow: 0 0 0 2px rgba(255,255,255,0.9), 0 8px 14px rgba(0,0,0,0.18);
-        position: relative;
-        ${isToday ? 'animation: econexo-pulse 1.5s infinite;' : ''}
-      ">
-        <span style="
-          position:absolute; inset:2px; border-radius:9999px;
-          background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.45), rgba(255,255,255,0) 60%);
-        "></span>
-      </span>`;
-    return L.divIcon({
+      <div class="relative group">
+        <div style="
+          width:${size}px; height:${size}px;
+          border-radius:50%; background:${gradient};
+          border: 2px solid white;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+          ${isActive ? 'animation: econexo-pulse 1.5s infinite;' : ''}
+        "></div>
+      </div>`;
+    
+    const icon = L.divIcon({
       html,
-      className: "econexo-gradient-pin",
+      className: "econexo-premium-pin",
       iconSize: [size, size],
       iconAnchor: [size / 2, size / 2],
       popupAnchor: [0, -size / 2],
     });
+
+    iconCache.current[freq] = icon;
+    return icon;
   }
 
   return (
-    <>
-      <div ref={containerRef} className="relative" style={{ height: "100%", width: "100%" }}>
-        <MapContainer
-          center={mapCenter}
-          zoom={mapZoom}
-          scrollWheelZoom={true}
-          zoomControl={false}
-          style={{ height: "100%", width: "100%", display: "block", position: "relative" }}
-          whenReady={() => {
-            // fuerza el render correcto dentro del contenedor circular
-            setTimeout(() => mapRef.current?.invalidateSize(), 50);
-            setTimeout(() => mapRef.current?.invalidateSize(), 300);
-            setTimeout(() => mapRef.current?.invalidateSize(), 1000);
-          }}
-        >
-          {/* Bridge to capture map instance safely */}
-          {/** @ts-ignore */}
-          <SetMapRef onReady={(m: LeafletMap) => (mapRef.current = m)} />
+    <div ref={containerRef} className="relative w-full h-full overflow-hidden">
+      <MapContainer
+        center={mapCenter}
+        zoom={mapZoom}
+        scrollWheelZoom={true}
+        zoomControl={false}
+        className="w-full h-full z-0"
+        preferCanvas={true}
+        whenReady={() => {
+          setTimeout(() => mapRef.current?.invalidateSize(), 100);
+        }}
+      >
+        {/** @ts-ignore */}
+        <SetMapRef onReady={(m: LeafletMap) => (mapRef.current = m)} />
+        <MapLayers />
 
-          {/* Map Layers */}
-          <MapLayers />
-
-          {/* Individual markers */}
-          {filteredProjects.map((p) => {
-            const freq = getFrequency(p);
-            const icon = createGradientIcon(freq);
-            return (
-              <Marker key={p.id} position={[p.lat, p.lng]} icon={icon}>
-                <Popup>
-                  <div className="grid gap-1">
-                    {p && (p as any).image_url && (
+        {/* Optimized Marker rendering with clustering would go here, 
+            but we'll start with memoized list for performance */}
+        {filteredProjects.map((p) => {
+          const freq = getFrequency(p);
+          const name = (locale === 'en' && p.name_en) ? p.name_en : (locale === 'de' && p.name_de) ? p.name_de : projectNameLabel(p.id, p.name, locale as any);
+          
+          return (
+            <Marker 
+              key={`${p.id}-${locale}`} 
+              position={[p.lat, p.lng]} 
+              icon={createGradientIcon(freq)}
+              // Use preferCanvas if possible at MapContainer level, 
+              // but markers themselves can have simplified events
+            >
+              <Popup closeButton={false} className="premium-map-popup" keepInView={false}>
+                <div className="project-popup-card">
+                  {p.image_url ? (
+                    <div className="relative">
                       <ImageWithFallback
-                        src={(p as any).image_url || '/assets/default-event.png'}
-                        alt="Project"
+                        src={p.image_url}
+                        alt={p.name}
                         category={p.category}
-                        className="mb-2 rounded w-full max-w-[220px] h-auto"
+                        width={300}
+                        height={160}
+                        className="project-popup-image"
+                        loading="lazy"
                       />
-                    )}
-                    <div className="font-medium">{(locale === 'en' && (p as any).name_en) ? (p as any).name_en : (locale === 'de' && (p as any).name_de) ? (p as any).name_de : projectNameLabel(p.id, p.name, locale as any)}</div>
-                    <div className="text-xs text-gray-600">{locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}</div>
-                    {p.address && (
-                      <div className="text-xs text-gray-600">{p.address}</div>
-                    )}
-                    {(p.participants !== undefined || p.spots !== undefined) && (
-                      <div className="text-xs">
-                        {p.participants !== undefined && (<span className="mr-2">👥 {p.participants}</span>)}
-                        {p.spots !== undefined && (<span>🪑 {p.spots}</span>)}
+                      <div 
+                        className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-wider shadow-sm z-10" 
+                        style={{ background: gradientForFrequency(freq) }}
+                      >
+                        {t(freq)}
                       </div>
-                    )}
-                    <div className="text-xs">{t("category")}: {categoryLabel(p.category as any, locale as any)}</div>
-                    <div className="text-xs">
-                      {t("frequency")}: {freq === 'once' ? t("once") : freq === 'regular' ? t("regular") : t("permanent")}
                     </div>
-                    {p.spots !== undefined && (
-                      <div className="text-xs">{t("availableSpots")}: {p.spots}</div>
-                    )}
-                    <div className="flex gap-2 mt-1">
-                      <Link href={`/projects/${p.id}`} className="text-green-700 underline text-sm font-medium">
-                        {t("viewDetails")}
-                      </Link>
+                  ) : (
+                    <div className="h-4 w-full" style={{ background: gradientForFrequency(freq) }}></div>
+                  )}
+                  
+                  <div className="project-popup-content">
+                    <h3 className="project-popup-title">{name}</h3>
+                    
+                    <div className="flex items-center text-[11px] text-slate-500 mb-2">
+                      <span className="mr-1.5 opacity-70">📍</span>
+                      {locationLabel(p.city, locale as any)}, {locationLabel(p.country, locale as any)}
                     </div>
+                    
+                    <p className="project-popup-description">
+                      {(locale === 'en' && p.description_en) ? p.description_en : (locale === 'de' && p.description_de) ? p.description_de : p.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2 py-3 border-t border-slate-100 mt-2">
+                      <span className="project-popup-tag">
+                        {categoryLabel(p.category as any, locale as any)}
+                      </span>
+                      {p.spots !== undefined && (
+                        <span className="text-[10px] text-green-700 bg-green-50 px-2.5 py-1 rounded-full border border-green-100 font-bold">
+                          🪑 {p.spots} {t("availableSpots")}
+                        </span>
+                      )}
+                    </div>
+                    
+                    <Link 
+                      href={`/projects/${p.id}`} 
+                      className="flex items-center justify-center w-full py-2.5 mt-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-[0.98]"
+                    >
+                      {t("viewDetails")}
+                      <span className="ml-1.5 text-xs opacity-60">→</span>
+                    </Link>
                   </div>
-                </Popup>
-              </Marker>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
+      </MapContainer>
+
+      {/* Unified Premium Toolbar */}
+      <div className="absolute top-6 left-6 right-6 z-[1000] flex flex-col sm:flex-row items-center justify-between gap-4 pointer-events-none">
+        <div className="pointer-events-auto map-premium-toolbar w-full sm:w-auto">
+          <MapSearch allProjects={projects} onResults={setBaseFilteredProjects} />
+          <div className="h-6 w-[1px] bg-slate-200 mx-1 hidden sm:block"></div>
+          <MapFilters
+            allProjects={projects}
+            onFilterChange={setBaseFilteredProjects}
+            onCenterOnLocation={handleCenterOnLocation}
+          />
+        </div>
+
+        <div className="pointer-events-auto map-premium-toolbar overflow-x-auto no-scrollbar max-w-full">
+           {([
+              { key: 'once', labelEs: 'Evento', labelEn: 'Event', labelDe: 'Event' },
+              { key: 'regular', labelEs: 'Regular', labelEn: 'Regular', labelDe: 'Regelmäßig' },
+              { key: 'permanent', labelEs: 'Permanente', labelEn: 'Permanent', labelDe: 'Dauerhaft' },
+            ] as const).map((opt) => (
+              <button
+                key={opt.key}
+                onClick={() => setFrequencyFilters((prev) => ({ ...prev, [opt.key]: !prev[opt.key] }))}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${
+                  frequencyFilters[opt.key] 
+                  ? 'bg-slate-900 text-white shadow-md' 
+                  : 'bg-transparent text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <span className="w-2 h-2 rounded-full" style={{ background: gradientForFrequency(opt.key) }}></span>
+                {locale === 'es' ? opt.labelEs : locale === 'de' ? opt.labelDe : opt.labelEn}
+              </button>
+            ))}
+            <div className="h-5 w-[1px] bg-slate-200 mx-1"></div>
+            <button 
+              onClick={() => setHeatOn(!heatOn)}
+              className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${
+                heatOn ? 'bg-orange-500 text-white shadow-md' : 'bg-transparent text-slate-600 hover:bg-slate-50'
+              }`}
+            >
+              <span className="mr-1">🔥</span> Heatmap
+            </button>
+        </div>
+      </div>
+
+      {/* Floating Category Navigator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none w-full px-4 max-w-4xl">
+        <div className="pointer-events-auto flex items-center gap-2 p-2 map-glass-panel rounded-full overflow-x-auto no-scrollbar overflow-y-hidden">
+          <button
+            onClick={() => setSelectedCategories([])}
+            className={`category-chip ${
+              selectedCategories.length === 0 ? 'category-chip-active' : 'category-chip-inactive'
+            }`}
+          >
+            🌟 {locale === 'es' ? 'Todos' : locale === 'de' ? 'Alle' : 'All'}
+          </button>
+          {Array.from(new Set(projects.map((p) => p.category))).map((cat) => {
+            const active = selectedCategories.includes(cat);
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategories((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat])}
+                className={`category-chip ${
+                  active ? 'category-chip-active' : 'category-chip-inactive'
+                }`}
+              >
+                {categoryLabel(cat as any, locale as any)}
+              </button>
             );
           })}
-        </MapContainer>
-
-        {/* Controles superpuestos - VISIBLES */}
-        {/* Top Controls Bar */}
-        <div className="absolute top-4 left-4 right-4 z-[5000] flex justify-between items-start pointer-events-none">
-          {/* Map Filters */}
-          <div className="pointer-events-auto flex items-center gap-2">
-            <MapSearch allProjects={projects} onResults={setBaseFilteredProjects} />
-            <MapFilters
-              allProjects={projects}
-              onFilterChange={setBaseFilteredProjects}
-              onCenterOnLocation={handleCenterOnLocation}
-            />
-            {/* Quick Category chips (moved to bottom overlay) */}
-            {/* Frequency legend & filter */}
-            <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
-              {([
-                { key: 'once', labelEs: 'Una vez', labelEn: 'One-time', labelDe: 'Einmalig', color: '#ef4444' },
-                { key: 'regular', labelEs: 'Regular', labelEn: 'Regular', labelDe: 'Regelmäßig', color: '#3b82f6' },
-                { key: 'permanent', labelEs: 'Permanente', labelEn: 'Permanent', labelDe: 'Dauerhaft', color: '#16a34a' },
-              ] as const).map((opt) => (
-                <button
-                  key={opt.key}
-                  className={`px-2 py-1 rounded text-xs border flex items-center gap-1 ${frequencyFilters[opt.key] ? 'bg-black text-white border-black' : 'text-black border-black'}`}
-                  onClick={() => setFrequencyFilters((prev) => ({ ...prev, [opt.key]: !prev[opt.key] }))}
-                  title={locale === 'es' ? opt.labelEs : locale === 'de' ? opt.labelDe : opt.labelEn}
-                >
-                  <span className="inline-block w-3 h-3 rounded-full" style={{ background: opt.key === 'once' ? 'linear-gradient(135deg, #f97316, #ef4444)' : opt.key === 'regular' ? 'linear-gradient(135deg, #06b6d4, #3b82f6)' : 'linear-gradient(135deg, #22c55e, #10b981)' }} />
-                  <span>{locale === 'es' ? opt.labelEs : locale === 'de' ? opt.labelDe : opt.labelEn}</span>
-                </button>
-              ))}
-            </div>
-            {/* Events toggle */}
-            <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1">
-              <button className={`px-2 py-1 rounded text-xs border ${filterMode === 'all' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('all')}>
-                {locale === 'de' ? 'Alle' : locale === 'en' ? 'All' : 'Todos'}
-              </button>
-              <button className={`px-2 py-1 rounded text-xs border ${filterMode === 'today' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('today')}>
-                {locale === 'de' ? 'Heute' : locale === 'en' ? 'Today' : 'Hoy'}
-              </button>
-              <button className={`px-2 py-1 rounded text-xs border ${filterMode === 'permanent' ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setFilterMode('permanent')}>
-                {locale === 'de' ? 'Dauerhaft' : locale === 'en' ? 'Permanent' : 'Permanentes'}
-              </button>
-            </div>
-            {/* Heatmap toggle */}
-            <div className="flex items-center gap-1 bg-white/80 rounded px-1 py-1 ml-2">
-              <button className={`px-2 py-1 rounded text-xs border ${heatOn ? 'bg-black text-white border-black' : 'text-black border-black'}`} onClick={() => setHeatOn((v) => !v)}>
-                {heatOn ? (locale === 'de' ? 'Heatmap an' : 'Heatmap On') : (locale === 'de' ? 'Heatmap aus' : 'Heatmap Off')}
-              </button>
-            </div>
-          </div>
-          {/* Right Controls (calendar button removed) */}
-          <div className="flex gap-2 pointer-events-auto" />
         </div>
+      </div>
 
-        {/* Botón de ubicación (esquina inferior derecha) - Mejorado y más visible */}
-        <div className={`pointer-events-auto absolute bottom-20 right-4 transition-all duration-300 z-[1500] opacity-100`}>
-          <button
-            onClick={handleCenterOnLocation}
-            className="px-4 py-2 rounded-full bg-blue-600 text-white shadow-lg flex items-center gap-2 text-sm font-semibold hover:bg-blue-700 hover:shadow-xl hover:scale-105 transition-all duration-200 border-2 border-white"
-            title={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
-            aria-label={locale === 'de' ? 'Auf meinen Standort zentrieren' : locale === 'es' ? 'Centrar en mi ubicación' : t("centerOnMyLocation")}
-          >
-            <span className="text-lg">📍</span>
-            <span className="hidden sm:inline">{locale === 'de' ? 'Standort' : locale === 'es' ? 'Ubicación' : 'Location'}</span>
-          </button>
-          {geoError && (
-            <div className="absolute top-full mt-2 left-0 p-3 bg-red-500 text-white text-sm rounded-lg shadow-xl max-w-xs whitespace-normal z-[1600]">
-              {geoError}
-            </div>
-          )}
-        </div>
-
-        {/* Bottom Category Chips */}
-        <div className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-4 z-[2500]">
-          <div className="flex items-center gap-1 bg-white/90 rounded-full px-2 py-2 shadow-md max-w-[88vw] overflow-x-auto">
-            {Array.from(new Set(projects.map((p) => p.category))).map((cat) => {
-              const active = selectedCategories.includes(cat);
-              return (
-                <button
-                  key={cat}
-                  className={`px-3 py-1.5 rounded-full text-xs border whitespace-nowrap ${active ? 'bg-black text-white border-black' : 'text-black border-black'}`}
-                  onClick={() => setSelectedCategories((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat])}
-                  title={categoryLabel(cat as any, locale as any)}
-                >
-                  {categoryLabel(cat as any, locale as any)}
-                </button>
-              );
-            })}
-            {selectedCategories.length > 0 && (
-              <button
-                className="ml-1 px-3 py-1.5 rounded-full text-xs border text-black border-black"
-                onClick={() => setSelectedCategories([])}
-                title={locale === 'es' ? 'Limpiar' : locale === 'de' ? 'Zurücksetzen' : 'Clear'}
-              >
-                {locale === 'es' ? 'Limpiar' : locale === 'de' ? 'Zurücksetzen' : 'Clear'}
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Pan Controls */}
-        <div className={`pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-2 transition-all duration-300 z-[3000] opacity-100`}>
-          <button
-            className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-            onClick={() => mapRef.current?.panBy([0, -100], { animate: true })}
-            title={locale === 'es' ? "Arriba" :
-              locale === 'de' ? "Nach oben" :
-                "Up"}
-            aria-label={locale === 'es' ? "Arriba" :
-              locale === 'de' ? "Nach oben" :
-                "Up"}
-          >
-            ↑
-          </button>
-          <div className="flex gap-2">
-            <button
-              className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-              onClick={() => mapRef.current?.panBy([-100, 0], { animate: true })}
-              title={locale === 'es' ? "Izquierda" :
-                locale === 'de' ? "Nach links" :
-                  "Left"}
-              aria-label={locale === 'es' ? "Izquierda" :
-                locale === 'de' ? "Nach links" :
-                  "Left"}
-            >
-              ←
-            </button>
-            <button
-              className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-              onClick={() => mapRef.current?.panBy([100, 0], { animate: true })}
-              title={locale === 'es' ? "Derecha" :
-                locale === 'de' ? "Nach rechts" :
-                  "Right"}
-              aria-label={locale === 'es' ? "Derecha" :
-                locale === 'de' ? "Nach rechts" :
-                  "Right"}
-            >
-              →
-            </button>
-          </div>
-          <button
-            className="h-10 w-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold hover:bg-blue-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-            onClick={() => mapRef.current?.panBy([0, 100], { animate: true })}
-            title={locale === 'es' ? "Abajo" :
-              locale === 'de' ? "Nach unten" :
-                "Down"}
-            aria-label={locale === 'es' ? "Abajo" :
-              locale === 'de' ? "Nach unten" :
-                "Down"}
-          >
-            ↓
-          </button>
-        </div>
-
-        {/* Zoom Controls */}
-        <div className={`pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-3 transition-all duration-300 z-[3000] opacity-100`}>
-          <button
-            className="h-12 w-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-green-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-            onClick={() => mapRef.current?.zoomIn()}
-            title={locale === 'es' ? "Acercar" :
-              locale === 'de' ? "Hineinzoomen" :
-                "Zoom in"}
-            aria-label={locale === 'es' ? "Acercar" :
-              locale === 'de' ? "Hineinzoomen" :
-                "Zoom in"}
+      {/* Side Controls */}
+      <div className="absolute right-6 top-1/2 -translate-y-1/2 z-[1000] flex flex-col gap-4">
+        <div className="flex flex-col gap-2 p-1.5 map-glass-panel">
+          <button 
+            onClick={() => mapRef.current?.zoomIn()} 
+            className="h-10 w-10 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-900 shadow-sm border border-slate-100 font-bold transition-all hover:scale-105"
           >
             +
           </button>
-          <button
-            className="h-12 w-12 rounded-full bg-red-600 text-white shadow-lg flex items-center justify-center text-xl font-bold hover:bg-red-700 hover:shadow-xl hover:scale-110 transition-all duration-200 border-2 border-white"
-            onClick={() => mapRef.current?.zoomOut()}
-            title={locale === 'es' ? "Alejar" :
-              locale === 'de' ? "Herauszoomen" :
-                "Zoom out"}
-            aria-label={locale === 'es' ? "Alejar" :
-              locale === 'de' ? "Herauszoomen" :
-                "Zoom out"}
+          <button 
+            onClick={() => mapRef.current?.zoomOut()} 
+            className="h-10 w-10 flex items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-900 shadow-sm border border-slate-100 font-bold transition-all hover:scale-105"
           >
             −
           </button>
         </div>
+        <button 
+          onClick={handleCenterOnLocation}
+          className="h-12 w-12 flex items-center justify-center rounded-2xl bg-slate-900 hover:bg-black text-white shadow-lg transition-all hover:scale-110 active:scale-95 group"
+        >
+          <span className="text-xl group-hover:rotate-12 transition-transform">📍</span>
+        </button>
+      </div>
 
+      {geoError && (
+        <div className="absolute bottom-24 right-6 z-[2000] animate-premium-fade bg-red-500 text-white px-4 py-2 rounded-xl shadow-xl text-xs font-medium">
+          {geoError}
+        </div>
+      )}
 
-        {/* Asegurar que popups estén por encima de controles y estilos de animación */}
-        <style jsx>{`
-      :global(.leaflet-popup) { z-index: 4000 !important; }
-      :global(.leaflet-popup-content-wrapper) { z-index: 4000 !important; }
-      :global(.leaflet-popup-tip) { z-index: 4000 !important; }
-
-      @keyframes econexo-pulse {
-        0% {
-          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7), 0 0 0 2px rgba(255,255,255,0.9);
-          transform: scale(0.95);
+      <style jsx global>{`
+        .leaflet-container { background: #f8fafc !important; }
+        .econexo-premium-pin { border: none !important; background: none !important; }
+        @keyframes econexo-pulse {
+          0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); transform: scale(0.95); }
+          70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); transform: scale(1.1); }
+          100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); transform: scale(0.95); }
         }
-        70% {
-          box-shadow: 0 0 0 10px rgba(239, 68, 68, 0), 0 0 0 2px rgba(255,255,255,0.9);
-          transform: scale(1.1);
-        }
-        100% {
-          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0), 0 0 0 2px rgba(255,255,255,0.9);
-          transform: scale(0.95);
-        }
-      }
-    `}</style>
-      </div >
-
-      {/* Calendar Modal removed */}
-    </>
+      `}</style>
+    </div>
   );
 }
 
 function SetMapRef({ onReady }: { onReady: (m: LeafletMap) => void }) {
-  // Using a nested component to access the react-leaflet map instance
-  // without changing parent signatures.
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const map = useMap();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     onReady(map as unknown as LeafletMap);
   }, [map, onReady]);

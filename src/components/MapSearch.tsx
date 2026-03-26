@@ -81,13 +81,14 @@ export default function MapSearch({
 
     const countryNames = new Set<string>();
     COUNTRIES.forEach((c) => {
+      const loc = locale as string;
       const n =
-        locale === "en" ? c.name_en :
-          locale === "de" ? c.name_de :
-            locale === "fr" ? (c as any).name_fr :
-              locale === "it" ? c.name_it :
-                locale === "pl" ? c.name_pl :
-                  locale === "nl" ? c.name_nl :
+        loc === "en" ? c.name_en :
+          loc === "de" ? c.name_de :
+            loc === "fr" ? (c as any).name_fr :
+              loc === "it" ? (c as any).name_it :
+                loc === "pl" ? (c as any).name_pl :
+                  loc === "nl" ? (c as any).name_nl :
                     c.name_es || c.name;
       if (n) countryNames.add(n);
     });
@@ -255,13 +256,13 @@ export default function MapSearch({
         }}
         onFocus={() => setOpen(true)}
         placeholder={t('mapSearchPlaceholderGlobal')}
-        className="w-64 md:w-80 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900 placeholder:text-gray-500"
+        className="w-64 md:w-80 px-4 py-2.5 text-sm border border-white/30 rounded-full focus:outline-none focus:ring-2 focus:ring-green-400/50 bg-white/20 backdrop-blur-md text-black placeholder:text-black/60 transition-all hover:bg-white/30 shadow-inner"
       />
       {open && filtered.length > 0 && (
-        <div className="absolute z-[6000] mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-64 overflow-auto text-gray-900">
+        <div className="absolute z-[6000] mt-3 w-full bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl max-h-80 overflow-auto text-white p-2">
           {isSearchingGlobal && (
-            <div className="px-3 py-2 text-xs text-gray-500 italic border-b flex items-center gap-2">
-              <div className="animate-spin h-3 w-3 border-b-2 border-green-600 rounded-full"></div>
+            <div className="px-4 py-3 text-xs text-white/50 italic border-b border-white/10 flex items-center gap-2">
+              <div className="animate-spin h-3.5 w-3.5 border-2 border-green-400 border-t-transparent rounded-full"></div>
               {t('searchingGlobally')}
             </div>
           )}
@@ -270,10 +271,10 @@ export default function MapSearch({
               key={i}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => onSelect(s)}
-              className="w-full text-left px-3 py-2 hover:bg-gray-100 text-sm flex items-center gap-2 text-gray-800"
+              className="w-full text-left px-4 py-3 hover:bg-white/10 rounded-xl text-sm flex items-center gap-3 text-white transition-colors group"
             >
-              <span>{s.type === "project" ? "📌" : s.type === "city" ? "🏙️" : s.type === "country" ? "🏳️" : s.type === "category" ? "🏷️" : "#"}</span>
-              <span>{s.label}</span>
+              <span className="text-lg opacity-80 group-hover:opacity-100 transition-opacity">{s.type === "project" ? "📌" : s.type === "city" ? "🏙️" : s.type === "country" ? "🏳️" : s.type === "category" ? "🏷️" : "#"}</span>
+              <span className="font-medium">{s.label}</span>
             </button>
           ))}
         </div>

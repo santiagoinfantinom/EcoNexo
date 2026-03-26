@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { getSupabase, isSupabaseConfigured } from "./supabaseClient";
+import { createOAuthService } from "./oauth";
 
 type AuthUser = {
   id: string;
@@ -259,7 +260,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signInWithOAuth = useCallback(async (provider: "google" | "github" | "gitlab" | "bitbucket" | "azure") => {
-    // FORCE DUMMY LOGIN
+    // Real implementation for Google
+    if (provider === 'google') {
+      try {
+        const oauthService = await createOAuthService();
+        const result = await oauthService.authenticateWithGoogle();
+        if (!result.success && result.error) {
+          return { error: result.error };
+        }
+        return {}; // Redirection is happening
+      } catch (error) {
+        console.error('Error initiating Google OAuth:', error);
+        return { error: 'Error al iniciar sesión con Google' };
+      }
+    }
+
+    // FORCE DUMMY LOGIN for others
     if (typeof window !== "undefined") {
       localStorage.setItem('econexo_user', JSON.stringify({
         id: 'dummy-' + Math.random().toString(36).substring(7),

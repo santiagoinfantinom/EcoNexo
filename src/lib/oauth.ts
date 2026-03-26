@@ -101,22 +101,9 @@ export class GoogleOAuthService {
       authUrl.searchParams.set('client_id', this.clientId);
       authUrl.searchParams.set('redirect_uri', finalRedirectUri);
       console.log('📍 URL creada, redirect_uri configurado:', finalRedirectUri);
-      authUrl.searchParams.set('response_type', 'code');
-      authUrl.searchParams.set('scope', [
-        'openid',
-        'email',
-        'profile',
-        // Basic userinfo
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email',
-        // Google People API granular scopes for extended profile
-        'https://www.googleapis.com/auth/user.birthday.read',
-        'https://www.googleapis.com/auth/user.gender.read',
-        'https://www.googleapis.com/auth/user.emails.read',
-        'https://www.googleapis.com/auth/user.addresses.read',
-        'https://www.googleapis.com/auth/user.phonenumbers.read'
-      ].join(' '));
-      authUrl.searchParams.set('access_type', 'offline');
+      // Use implicit token flow - no client_secret required for SPAs
+      authUrl.searchParams.set('response_type', 'token');
+      authUrl.searchParams.set('scope', 'openid email profile');
       authUrl.searchParams.set('prompt', 'consent');
 
       // Generate state parameter for security
@@ -260,6 +247,85 @@ export class GoogleOAuthService {
       success: true,
       user: mockUser,
     };
+  }
+
+    /**
+   * Handle implicit flow callback: receives access_token directly from URL hash.
+   * No client_secret or server-side code exchange required.
+   */
+  async handleTokenCallback(accessToken: string): Promise<OAuthResult> {
+    try {
+      console.log('🔐 Handling implicit token callback...');
+
+      if (this.clientId === 'demo-client-id') {
+        return await this.authenticateDemo();
+      }
+
+      // Use the access token to fetch user info
+      const userResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const userInfo = await userResponse.json();
+
+      if (userInfo.error) {
+        console.error('Error fetching user info with access token:', userInfo.error);
+        return {
+          success: false,
+          error: userInfo.error_description || 'Error al obtener información del usuario',
+        };
+      }
+
+      // Store user data in localStorage for profile
+      if (typeof window !== 'undefined') {
+        const googleUser = {
+          id: userInfo.id,
+          email: userInfo.email,
+          name: userInfo.name,
+          picture: userInfo.picture,
+          provider: 'google' as const,
+        };
+
+        localStorage.setItem('econexo_user', JSON.stringify(googleUser));
+        localStorage.setItem('oauth_data', JSON.stringify({
+          name: userInfo.name,
+          email: userInfo.email,
+          picture: userInfo.picture,
+          provider: 'google',
+          locale: userInfo.locale || 'en',
+          verified_email: userInfo.verified_email || true,
+        }));
+
+        // Also store profile data directly
+        localStorage.setItem('econexo:profile', JSON.stringify({
+          full_name: userInfo.name,
+          email: userInfo.email,
+          avatar_url: userInfo.picture,
+          preferred_language: userInfo.locale || 'en',
+          oauth_provider: 'google',
+          oauth_imported: true,
+        }));
+      }
+
+      return {
+        success: true,
+        user: {
+          id: userInfo.id,
+          email: userInfo.email,
+          name: userInfo.name,
+          picture: userInfo.picture,
+          provider: 'google',
+        },
+      };
+    } catch (error) {
+      console.error('Google OAuth token callback error:', error);
+      return {
+        success: false,
+        error: 'Error al procesar autenticación con Google (implicit flow)',
+      };
+    }
   }
 
   async handleCallback(code: string, state: string): Promise<OAuthResult> {
@@ -627,6 +693,10 @@ export class OAuthService {
 
   async handleGoogleCallback(code: string, state: string): Promise<OAuthResult> {
     return this.googleService.handleCallback(code, state);
+  }
+
+  async handleGoogleTokenCallback(accessToken: string): Promise<OAuthResult> {
+    return this.googleService.handleTokenCallback(accessToken);
   }
 
   async handleOutlookRedirect(): Promise<OAuthResult> {
