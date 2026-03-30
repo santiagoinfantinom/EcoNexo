@@ -2,7 +2,7 @@
 
 ## ❌ Problema Actual
 
-Google está redirigiendo a `econexo.app/auth/google/callback`, pero ese dominio no existe porque no lo has comprado. Por eso ves el error "We can't connect to the server at econexo.app".
+Google está redirigiendo a `econexo-europe.vercel.app/auth/google/callback`, pero ese dominio no existe porque no lo has comprado. Por eso ves el error "We can't connect to the server at econexo-europe.vercel.app".
 
 ## ✅ Solución: Agregar Redirect URI de Vercel
 
@@ -42,17 +42,17 @@ Google está redirigiendo a `econexo.app/auth/google/callback`, pero ese dominio
    - No debe tener espacios al inicio o al final
    - Usa el dominio exacto que copiaste en el Paso 1
 
-### Paso 5: (Opcional) Elimina o Mantén el Redirect URI de econexo.app
+### Paso 5: (Opcional) Elimina o Mantén el Redirect URI de econexo-europe.vercel.app
 
 Tienes dos opciones:
 
-**Opción A: Eliminar el redirect URI de econexo.app (Recomendado)**
-- Si ves `https://econexo.app/auth/google/callback` en la lista, haz clic en el ícono de **papelera** 🗑️ junto a él para eliminarlo
+**Opción A: Eliminar el redirect URI de econexo-europe.vercel.app (Recomendado)**
+- Si ves `https://econexo-europe.vercel.app/auth/google/callback` en la lista, haz clic en el ícono de **papelera** 🗑️ junto a él para eliminarlo
 - Esto evita confusión y errores
 
 **Opción B: Mantener ambos**
 - Puedes tener múltiples redirect URIs
-- Cuando compres el dominio `econexo.app`, funcionará automáticamente
+- Cuando compres el dominio `econexo-europe.vercel.app`, funcionará automáticamente
 
 ### Paso 6: Guardar Cambios
 
@@ -66,7 +66,7 @@ Tienes dos opciones:
 2. Haz clic en **"Iniciar sesión"** o **"Login"**
 3. Selecciona **"Continuar con Google"**
 4. Completa el login en Google
-5. **Ahora debería redirigirte correctamente** a tu app de Vercel (no a econexo.app)
+5. **Ahora debería redirigirte correctamente** a tu app de Vercel (no a econexo-europe.vercel.app)
 
 ## 🔍 Verificación
 
@@ -81,7 +81,7 @@ Si quieres verificar qué redirect URI está usando tu código:
    ✅ OAuth Config loaded from API
    📍 Redirect URI: https://TU-DOMINIO-VERCEL/auth/google/callback
    ```
-6. Verifica que el redirect URI mostrado sea el de Vercel (no econexo.app)
+6. Verifica que el redirect URI mostrado sea el de Vercel (no econexo-europe.vercel.app)
 
 ## ⚠️ Si Sigue Sin Funcionar
 

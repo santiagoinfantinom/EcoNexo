@@ -2,7 +2,7 @@
 
 ## 🌐 Dominio Actualizado
 - **Nuevo dominio**: `econexo.app`
-- **URL de producción**: https://econexo.app
+- **URL de producción**: https://econexo-europe.vercel.app
 - **Configuración**: Actualizada en todos los archivos
 
 ## 🔐 Sistema de Autenticación Implementado
@@ -63,14 +63,14 @@ NEXT_PUBLIC_EMAIL_VERIFICATION_ENABLED=true
 3. Habilitar Google+ API
 4. Crear credenciales OAuth 2.0
 5. Configurar URIs de redirección:
-   - `https://econexo.app/auth/google/callback`
+   - `https://econexo-europe.vercel.app/auth/google/callback`
 6. Copiar Client ID a `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
 
 ### Microsoft OAuth Setup
 1. Ir a [Azure Portal](https://portal.azure.com/)
 2. Registrar nueva aplicación
 3. Configurar URIs de redirección:
-   - `https://econexo.app/auth/outlook/callback`
+   - `https://econexo-europe.vercel.app/auth/outlook/callback`
 4. Copiar Application ID a `NEXT_PUBLIC_OUTLOOK_CLIENT_ID`
 
 ## 🛡️ Configuración de Seguridad
@@ -84,7 +84,7 @@ NEXT_PUBLIC_EMAIL_VERIFICATION_ENABLED=true
 ### Variables de Entorno Completas
 ```env
 # Dominio
-NEXT_PUBLIC_SITE_URL=https://econexo.app
+NEXT_PUBLIC_SITE_URL=https://econexo-europe.vercel.app
 NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.app
 
 # OAuth

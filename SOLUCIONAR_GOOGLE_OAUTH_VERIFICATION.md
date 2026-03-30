@@ -34,7 +34,7 @@ Completa los siguientes campos:
 - **App logo:** (Opcional) Puedes subir el logo de EcoNexo
 
 **App domain:**
-- **Application home page:** `https://econexo.app`
+- **Application home page:** `https://econexo-europe.vercel.app`
 - **Authorized domains:** Agrega `econexo.app` y `vercel.app`
 
 **Developer contact information:**
@@ -126,7 +126,7 @@ Si quieres que cualquier usuario pueda iniciar sesión:
 - [ ] Seleccionar "External"
 - [ ] Completar App name: "EcoNexo"
 - [ ] Completar User support email
-- [ ] Agregar Application home page: `https://econexo.app`
+- [ ] Agregar Application home page: `https://econexo-europe.vercel.app`
 - [ ] Agregar Authorized domains: `econexo.app`, `vercel.app`
 - [ ] Agregar scopes necesarios
 - [ ] Agregar tu email en "Test users"
@@ -147,7 +147,7 @@ En la sección **"Authorized redirect URIs"**, agrega:
 
 **Si `econexo.app` está funcionando:**
 ```
-https://econexo.app/auth/google/callback
+https://econexo-europe.vercel.app/auth/google/callback
 ```
 
 **Si `econexo.app` NO está funcionando aún (usa el dominio de Vercel):**

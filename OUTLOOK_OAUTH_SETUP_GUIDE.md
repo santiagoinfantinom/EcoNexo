@@ -49,7 +49,7 @@ Después de crear la aplicación:
 
 ```
 http://localhost:3000/auth/outlook/callback
-https://econexo.app/auth/outlook/callback
+https://econexo-europe.vercel.app/auth/outlook/callback
 ```
 
 5. Marca estas opciones:
@@ -104,7 +104,7 @@ Cuando estés listo para deployar:
 
 1. Agrega la URI de producción en Azure:
    ```
-   https://econexo.app/auth/outlook/callback
+   https://econexo-europe.vercel.app/auth/outlook/callback
    ```
 
 2. Actualiza las variables de entorno en tu plataforma de deployment (Vercel, etc.)

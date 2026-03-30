@@ -8,7 +8,7 @@ Para que los enlaces de login funcionen correctamente, necesitas configurar las 
 - `http://localhost:3000/auth/callback`
 
 ### URLs de Producción
-- `https://econexo.org/auth/callback`
+- `https://econexo-europe.vercel.app/auth/callback`
 
 ## Configuración de Proveedores OAuth
 
@@ -21,7 +21,7 @@ Para que los enlaces de login funcionen correctamente, necesitas configurar las 
 4. Crea una credencial OAuth 2.0 Client ID
 5. Configura las URLs de redirección autorizadas:
    - `http://localhost:3000/auth/callback` (desarrollo)
-   - `https://econexo.org/auth/callback` (producción)
+   - `https://econexo-europe.vercel.app/auth/callback` (producción)
 
 #### En Supabase Dashboard:
 1. Ve a Authentication > Settings > Auth Providers
@@ -29,7 +29,7 @@ Para que los enlaces de login funcionen correctamente, necesitas configurar las 
 3. Ingresa tu Client ID y Client Secret de Google
 4. Configura las URLs de redirección:
    - `http://localhost:3000/auth/callback`
-   - `https://econexo.org/auth/callback`
+   - `https://econexo-europe.vercel.app/auth/callback`
 
 ### 2. GitHub OAuth
 
@@ -37,8 +37,8 @@ Para que los enlaces de login funcionen correctamente, necesitas configurar las 
 1. Ve a Settings > Developer settings > OAuth Apps
 2. Crea una nueva OAuth App
 3. Configura las URLs:
-   - **Homepage URL**: `https://econexo.org`
-   - **Authorization callback URL**: `https://econexo.org/auth/callback`
+   - **Homepage URL**: `https://econexo-europe.vercel.app`
+   - **Authorization callback URL**: `https://econexo-europe.vercel.app/auth/callback`
 
 #### En Supabase Dashboard:
 1. Ve a Authentication > Settings > Auth Providers
@@ -46,7 +46,7 @@ Para que los enlaces de login funcionen correctamente, necesitas configurar las 
 3. Ingresa tu Client ID y Client Secret de GitHub
 4. Configura las URLs de redirección:
    - `http://localhost:3000/auth/callback`
-   - `https://econexo.org/auth/callback`
+   - `https://econexo-europe.vercel.app/auth/callback`
 
 ### 3. Microsoft/Azure OAuth
 
@@ -55,7 +55,7 @@ Para que los enlaces de login funcionen correctamente, necesitas configurar las 
 2. Crea una nueva aplicación
 3. Configura las URLs de redirección:
    - `http://localhost:3000/auth/callback`
-   - `https://econexo.org/auth/callback`
+   - `https://econexo-europe.vercel.app/auth/callback`
 
 #### En Supabase Dashboard:
 1. Ve a Authentication > Settings > Auth Providers
@@ -63,7 +63,7 @@ Para que los enlaces de login funcionen correctamente, necesitas configurar las 
 3. Ingresa tu Client ID y Client Secret de Azure
 4. Configura las URLs de redirección:
    - `http://localhost:3000/auth/callback`
-   - `https://econexo.org/auth/callback`
+   - `https://econexo-europe.vercel.app/auth/callback`
 
 ## Verificación de Configuración
 
@@ -72,7 +72,7 @@ En tu dashboard de Supabase, ve a:
 - Authentication > Settings > Auth Providers
 - Para cada proveedor habilitado, verifica que las URLs de redirección incluyan:
   - `http://localhost:3000/auth/callback`
-  - `https://econexo.org/auth/callback`
+  - `https://econexo-europe.vercel.app/auth/callback`
 
 ### 2. Verificar Variables de Entorno
 Asegúrate de que tu archivo `.env.local` contenga:

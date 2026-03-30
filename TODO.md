@@ -6,7 +6,7 @@
 - [ ] Crear cuenta en https://plausible.io
 - [ ] Añadir dominio `econexo-dev.local` en Plausible
 - [ ] Verificar que los eventos se trackean correctamente
-- [ ] Para producción: cambiar dominio a `econexo.org`
+- [ ] Para producción: cambiar dominio a `econexo-europe.vercel.app`
 
 ### 2. Supabase (Opcional - para autenticación)
 - [ ] Crear proyecto en https://supabase.com
@@ -24,7 +24,7 @@
 - [ ] Probar notificaciones en diferentes navegadores
 
 ### 4. Dominio y Hosting
-- [ ] Configurar dominio `econexo.org`
+- [ ] Configurar dominio `econexo-europe.vercel.app`
 - [ ] Configurar DNS para GitHub Pages o Vercel
 - [ ] Actualizar `NEXT_PUBLIC_SITE_URL` en producción
 

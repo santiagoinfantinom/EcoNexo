@@ -272,7 +272,7 @@ async def search_online_events(
                 "time": time_str,
                 "spots": random.randint(15, 50),
                 "image_url": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&auto=format&fit=crop",
-                "website": "https://econexo.app",
+                "website": "https://econexo-europe.vercel.app",
                 "is_external": True,
                 "verified": False,
                 "organizer": f"EcoNexo {location} Chapter"

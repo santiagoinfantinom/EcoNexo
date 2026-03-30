@@ -20,10 +20,10 @@ Los botones de Google y Outlook OAuth están mostrando errores porque no están 
    - **Nombre:** EcoNexo Web App
    - **Authorized JavaScript origins:**
      - `http://localhost:3000` (desarrollo)
-     - `https://econexo.app` (producción)
+     - `https://econexo-europe.vercel.app` (producción)
    - **Authorized redirect URIs:**
      - `http://localhost:3000/auth/google/callback`
-     - `https://econexo.app/auth/google/callback`
+     - `https://econexo-europe.vercel.app/auth/google/callback`
 
 4. **Copiar el Client ID** que te proporciona Google
 
@@ -41,7 +41,7 @@ Los botones de Google y Outlook OAuth están mostrando errores porque no están 
 
 3. **Configurar autenticación:**
    - Ve a "Authentication"
-   - Agrega redirect URI: `https://econexo.app/auth/outlook/callback`
+   - Agrega redirect URI: `https://econexo-europe.vercel.app/auth/outlook/callback`
    - Habilita "ID tokens" y "Access tokens"
 
 4. **Copiar el Application (client) ID**
@@ -60,7 +60,7 @@ NEXT_PUBLIC_OUTLOOK_CLIENT_ID=TU_OUTLOOK_CLIENT_ID_AQUI
 
 # Email Verification
 NEXT_PUBLIC_EMAIL_VERIFICATION_ENABLED=true
-NEXT_PUBLIC_EMAIL_FROM=noreply@econexo.app
+NEXT_PUBLIC_EMAIL_FROM=noreply@econexo-europe.vercel.app
 
 # Captcha Configuration (Opcional)
 NEXT_PUBLIC_RECAPTCHA_SITE_KEY=tu_recaptcha_site_key_aqui

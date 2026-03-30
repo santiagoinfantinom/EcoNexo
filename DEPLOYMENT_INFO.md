@@ -6,9 +6,8 @@ La aplicación ha sido desplegada exitosamente en Vercel con la configuración d
 ## 🔗 Enlaces Principales
 
 ### 🌍 Aplicación en Vivo (Producción)
-*   **URL de Producción (Sugerida):** [https://econexo-web.vercel.app](https://econexo-web.vercel.app)
-*   **URL de Vercel:** [https://econexo-web.vercel.app](https://econexo-web.vercel.app) (Sugerida) o [https://econexo.vercel.app](https://econexo.vercel.app)
-*   _Nota: Asegúrate de añadir el dominio `econexo.io` en Settings > Domains en Vercel._
+*   **URL de Producción Oficial:** [https://econexo-europe.vercel.app](https://econexo-europe.vercel.app)
+*   **Redirect URI para Google/Outlook:** `https://econexo-europe.vercel.app/auth/google/callback`
 
 ### 🛠️ Tableros de Control
 *   **Vercel Dashboard:** [Ver Proyecto en Vercel](https://vercel.com/santiagoinfantinoms-projects/econexo) (Gestión de dominios, logs, deployments)
@@ -21,5 +20,6 @@ La aplicación ha sido desplegada exitosamente en Vercel con la configuración d
 *   **Autenticación:** Las variables de entorno de Supabase fueron cargadas en Vercel.
 
 ## 📝 Próximos Pasos Recomendados
-1.  **Verificar Dominios:** Entra al Dashboard de Vercel > Settings > Domains y asegúrate de que `econexo.app` (si lo usas) tenga los checks en verde.
-2.  **Configurar OAuth en Producción:** Asegúrate de agregar la URL de producción (`https://....vercel.app/auth/callback` o `https://econexo.app/auth/callback`) en Google Cloud Console y el Dashboard de Supabase para que el login social funcione en la versión publicada.
+1.  **Configurar OAuth en Producción:** Asegúrate de agregar la URL de producción (`https://econexo-europe.vercel.app/auth/google/callback`) en Google Cloud Console para que el login social funcione.
+2.  **Verificar Dominios:** Si decides usar un dominio personalizado (ej. `econexo.app`), añádelo en Settings > Domains en Vercel.
+

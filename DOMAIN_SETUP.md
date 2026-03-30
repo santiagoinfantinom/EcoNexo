@@ -32,7 +32,7 @@ Value: cname.vercel-dns.com
 ### 4. **Variables de Entorno Actualizadas**
 ```bash
 # .env.local
-NEXT_PUBLIC_SITE_URL=https://econexo.app
+NEXT_PUBLIC_SITE_URL=https://econexo-europe.vercel.app
 NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.app
 ```
 

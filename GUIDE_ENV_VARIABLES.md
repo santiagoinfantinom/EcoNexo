@@ -65,7 +65,7 @@ Las **variables de entorno** son valores secretos o configurables que tu aplicac
 ### `NEXT_PUBLIC_SITE_URL`
 - **Qué es:** La URL de tu sitio web
 - **Ejemplo desarrollo:** `http://localhost:3000`
-- **Ejemplo producción:** `https://econexo.app`
+- **Ejemplo producción:** `https://econexo-europe.vercel.app`
 - **¿Para qué?** Para generar links de verificación correctos
 
 ### `NEXT_PUBLIC_EMAIL_FROM`

@@ -53,7 +53,7 @@ Si prefieres hacerlo manualmente, el script también te muestra los pasos exacto
 Cuando configures el proyecto en Vercel, asegúrate de agregar:
 
 ```
-NEXT_PUBLIC_SITE_URL=https://econexo.app
+NEXT_PUBLIC_SITE_URL=https://econexo-europe.vercel.app
 NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.app
 NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key_de_supabase

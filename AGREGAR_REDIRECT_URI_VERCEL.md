@@ -27,7 +27,7 @@
    - ✅ Copia y pega exactamente como está arriba
 
 ### 4️⃣ (Opcional) Elimina el Redirect URI de econexo.app
-Si ves `https://econexo.app/auth/google/callback` en la lista:
+Si ves `https://econexo-europe.vercel.app/auth/google/callback` en la lista:
 - Haz clic en el ícono de **papelera** 🗑️ junto a él para eliminarlo
 - Esto evita confusión y errores
 

@@ -3,7 +3,7 @@
 ## ✅ **Tareas Completadas**
 
 ### 1. **Configuración de Dominio y Hosting**
-- ✅ **Vercel configurado** con dominio `econexo.org`
+- ✅ **Vercel configurado** con dominio `econexo-europe.vercel.app`
 - ✅ **Variables de entorno** actualizadas
 - ✅ **SSL automático** y HTTPS redirect
 - ✅ **CDN global** y optimizaciones de performance
@@ -71,8 +71,8 @@
 
 ### **Variables de Entorno Actualizadas:**
 ```bash
-NEXT_PUBLIC_SITE_URL=https://econexo.org
-NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.org
+NEXT_PUBLIC_SITE_URL=https://econexo-europe.vercel.app
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo-europe.vercel.app
 NEXT_PUBLIC_VAPID_PUBLIC_KEY=BHNlanVqzifD8JkkYn-Bqcp0uZsQvKYh6vT_Bw4pvWAv9SdvidhdagZBTAFDCGUIS3hnUErOrkMOdbO8iylLSqQ
 VAPID_PRIVATE_KEY=ndJfz8BTKa-6d4Qokh5o6-akDE6eeizc6spz9w1lPho
 ```

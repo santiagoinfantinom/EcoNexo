@@ -1,6 +1,6 @@
-# 🌐 Configuración DNS para econexo.app
+# 🌐 Configuración DNS para econexo-europe.vercel.app
 
-Esta guía te ayudará a configurar el DNS de `econexo.app` para que funcione con Vercel.
+Esta guía te ayudará a configurar el DNS de `econexo-europe.vercel.app` para que funcione con Vercel.
 
 ## 📋 Paso 1: Agregar el Dominio en Vercel
 
@@ -14,7 +14,7 @@ Esta guía te ayudará a configurar el DNS de `econexo.app` para que funcione co
 
 3. **Agregar el dominio:**
    - Haz clic en el botón **"Add"** o **"Add Domain"**
-   - Escribe: `econexo.app`
+   - Escribe: `econexo-europe.vercel.app`
    - Haz clic en **"Add"** o **"Continue"**
 
 4. **Vercel te mostrará los registros DNS necesarios:**
@@ -25,7 +25,7 @@ Esta guía te ayudará a configurar el DNS de `econexo.app` para que funcione co
 
 ## 📋 Paso 2: Configurar DNS en tu Proveedor de Dominio
 
-Necesitas saber dónde compraste el dominio `econexo.app`. Los proveedores más comunes son:
+Necesitas saber dónde compraste el dominio `econexo-europe.vercel.app`. Los proveedores más comunes son:
 - **Namecheap**
 - **GoDaddy**
 - **Google Domains**
@@ -38,7 +38,7 @@ Necesitas saber dónde compraste el dominio `econexo.app`. Los proveedores más 
 1. **Ve al panel de DNS de tu proveedor de dominio**
 2. **Agrega un registro A:**
    - **Tipo:** `A`
-   - **Nombre/Host:** `@` o `econexo.app` (depende del proveedor)
+   - **Nombre/Host:** `@` o `econexo-europe.vercel.app` (depende del proveedor)
    - **Valor/IP:** El valor que Vercel te dio (ejemplo: `76.76.21.21`)
    - **TTL:** `3600` o "Automático"
 
@@ -53,7 +53,7 @@ Necesitas saber dónde compraste el dominio `econexo.app`. Los proveedores más 
 1. **Ve al panel de DNS de tu proveedor de dominio**
 2. **Agrega un registro CNAME:**
    - **Tipo:** `CNAME`
-   - **Nombre/Host:** `@` o `econexo.app`
+   - **Nombre/Host:** `@` o `econexo-europe.vercel.app`
    - **Valor:** El valor que Vercel te dio (ejemplo: `cname.vercel-dns.com`)
    - **TTL:** `3600` o "Automático"
 
@@ -68,7 +68,7 @@ Necesitas saber dónde compraste el dominio `econexo.app`. Los proveedores más 
 
 ### Namecheap
 
-1. Ve a **Domain List** → Haz clic en **"Manage"** junto a `econexo.app`
+1. Ve a **Domain List** → Haz clic en **"Manage"** junto a `econexo-europe.vercel.app`
 2. Ve a la pestaña **"Advanced DNS"**
 3. En **"Host Records"**, agrega:
    - **Type:** `A Record`
@@ -84,7 +84,7 @@ Necesitas saber dónde compraste el dominio `econexo.app`. Los proveedores más 
 
 ### GoDaddy
 
-1. Ve a **My Products** → Haz clic en **"DNS"** junto a `econexo.app`
+1. Ve a **My Products** → Haz clic en **"DNS"** junto a `econexo-europe.vercel.app`
 2. En la sección **"Records"**, haz clic en **"Add"**
 3. Agrega:
    - **Type:** `A`
@@ -96,12 +96,12 @@ Necesitas saber dónde compraste el dominio `econexo.app`. Los proveedores más 
 
 ### Cloudflare
 
-1. Ve a tu dominio `econexo.app` en Cloudflare
+1. Ve a tu dominio `econexo-europe.vercel.app` en Cloudflare
 2. Ve a la pestaña **"DNS"**
 3. Haz clic en **"Add record"**
 4. Agrega:
    - **Type:** `A`
-   - **Name:** `@` o `econexo.app`
+   - **Name:** `@` o `econexo-europe.vercel.app`
    - **IPv4 address:** `76.76.21.21` (o el valor que Vercel te dio)
    - **Proxy status:** Puedes activar el proxy (nube naranja) o desactivarlo (nube gris)
    - **TTL:** `Auto`
@@ -109,7 +109,7 @@ Necesitas saber dónde compraste el dominio `econexo.app`. Los proveedores más 
 
 ### Google Domains
 
-1. Ve a **My domains** → Haz clic en `econexo.app`
+1. Ve a **My domains** → Haz clic en `econexo-europe.vercel.app`
 2. Ve a **DNS** → **Custom name servers** o **Synthetic records**
 3. Agrega los registros que Vercel te proporcionó
 
@@ -134,9 +134,9 @@ Después de agregar los registros DNS:
 3. **Verificar manualmente:**
    ```bash
    # En tu terminal, ejecuta:
-   nslookup econexo.app
+   nslookup econexo-europe.vercel.app
    # O
-   dig econexo.app
+   dig econexo-europe.vercel.app
    ```
 
 ---
@@ -150,7 +150,7 @@ Después de agregar los registros DNS:
    - El dominio debería mostrar estado **"Valid"** con un checkmark verde
 
 3. **Abre en tu navegador:**
-   - Ve a: `https://econexo.app`
+   - Ve a: `https://econexo-europe.vercel.app`
    - Deberías ver tu aplicación funcionando
 
 4. **Verifica el SSL:**
@@ -166,8 +166,8 @@ Asegúrate de que las variables de entorno estén configuradas:
 1. Ve a **Settings → Environment Variables**
 2. Verifica que tengas:
    ```
-   NEXT_PUBLIC_SITE_URL=https://econexo.app
-   NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.app
+   NEXT_PUBLIC_SITE_URL=https://econexo-europe.vercel.app
+   NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo-europe.vercel.app
    ```
 3. Si no están, agrégalas y marca todas las opciones (Production, Preview, Development)
 4. Haz clic en **"Save"**
@@ -181,7 +181,7 @@ Asegúrate de que las variables de entorno estén configuradas:
 
 1. **Verifica los registros DNS:**
    - Usa https://dnschecker.org
-   - Busca `econexo.app`
+   - Busca `econexo-europe.vercel.app`
    - Verifica que los registros A apunten al IP correcto
 
 2. **Verifica en Vercel:**
@@ -207,7 +207,7 @@ Asegúrate de que las variables de entorno estén configuradas:
 
 1. **Verifica que el dominio esté asignado al proyecto correcto:**
    - Ve a **Settings → Domains** en Vercel
-   - Verifica que `econexo.app` esté asignado a tu proyecto "EcoNexo"
+   - Verifica que `econexo-europe.vercel.app` esté asignado a tu proyecto "EcoNexo"
 
 2. **Haz un redeploy:**
    - Ve a **Deployments**

@@ -6,7 +6,7 @@ El proyecto en Vercel está conectado a un repositorio incorrecto:
 - **Actual (incorrecto)**: `santiagoinfantinoms-projects/econexo`
 - **Correcto**: `santiagoinfantinom/EcoNexo`
 
-Esto explica por qué `econexo.app` muestra una página diferente.
+Esto explica por qué `econexo-europe.vercel.app` muestra una página diferente.
 
 ## Solución: Conectar el Repositorio Correcto
 
@@ -36,15 +36,15 @@ Esto explica por qué `econexo.app` muestra una página diferente.
    - Ve a Settings → Environment Variables
    - Agrega las siguientes variables:
      ```
-     NEXT_PUBLIC_SITE_URL=https://econexo.app
+     NEXT_PUBLIC_SITE_URL=https://econexo-europe.vercel.app
      NEXT_PUBLIC_SUPABASE_URL=tu_supabase_url
      NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
-     NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo.app
+     NEXT_PUBLIC_PLAUSIBLE_DOMAIN=econexo-europe.vercel.app
      ```
 
 6. **Configurar dominios:**
    - Ve a Settings → Domains
-   - Agrega `econexo.app` si no está
+   - Agrega `econexo-europe.vercel.app` si no está
    - Agrega `econexo.ai` si no está
    - Verifica que ambos apunten a este proyecto
 
@@ -73,7 +73,7 @@ Esto explica por qué `econexo.app` muestra una página diferente.
    - Agrega las variables de entorno necesarias (ver arriba)
 
 5. **Configurar dominios:**
-   - Agrega `econexo.app` y `econexo.ai`
+   - Agrega `econexo-europe.vercel.app` y `econexo.ai`
    - Si los dominios ya están en uso en el otro proyecto, primero:
      - Ve al proyecto antiguo
      - Settings → Domains
@@ -92,7 +92,7 @@ Después de conectar el repositorio correcto:
    - El deployment debería estar basado en el commit correcto
 
 2. **Verifica los dominios:**
-   - https://econexo.app debería mostrar la página correcta
+   - https://econexo-europe.vercel.app debería mostrar la página correcta
    - https://econexo.ai debería funcionar (después de configurar DNS)
 
 3. **Verifica el contenido:**
@@ -109,7 +109,7 @@ Después de conectar el repositorio correcto:
 
 ## Si los Dominios Están en Uso
 
-Si `econexo.app` o `econexo.ai` ya están asignados al proyecto incorrecto:
+Si `econexo-europe.vercel.app` o `econexo.ai` ya están asignados al proyecto incorrecto:
 
 1. Ve al proyecto antiguo en Vercel
 2. Settings → Domains

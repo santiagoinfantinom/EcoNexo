@@ -68,8 +68,8 @@ jobs:
 
 ### 🌐 **URLs After Deployment:**
 
-- **GitHub Pages**: https://econexo.app/EcoNexo/
-- **Custom Domain**: https://econexo.app (when DNS is configured)
+- **GitHub Pages**: https://econexo-europe.vercel.app/EcoNexo/
+- **Custom Domain**: https://econexo-europe.vercel.app (when DNS is configured)
 
 ### 🔧 **Custom Domain Setup:**
 
