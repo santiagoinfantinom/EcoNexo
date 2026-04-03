@@ -82,8 +82,8 @@ export default function HeaderNav() {
               <AuthButton variant="outline" size="sm" className="bg-white/5 border-white/10 text-white hover:bg-green-500/20 px-6 py-2 rounded-xl text-base font-bold transition-all" />
             </div>
 
-            {/* Navigation Grid - 2 columns style the user likes */}
-            <nav className="hidden md:grid grid-cols-2 gap-2">
+            {/* Navigation Grid - Distributed horizontally from right to left, wrapping down */}
+            <nav className="hidden md:flex flex-row-reverse flex-wrap justify-end gap-2 max-w-[900px]">
               {[
                 { href: "/", label: t("map"), icon: MapIcon },
                 { href: "/noticias", label: t("news") || "Noticias", icon: Newspaper },
@@ -107,7 +107,7 @@ export default function HeaderNav() {
               <Link
                 href="/about"
                 id="nav-about"
-                className="col-span-2 flex items-center justify-center gap-3 px-6 py-2 rounded-xl bg-white/5 hover:bg-green-500/20 border border-white/5 transition-all group"
+                className="w-full flex items-center justify-center gap-3 px-6 py-2 rounded-xl bg-white/5 hover:bg-green-500/20 border border-white/5 transition-all group"
               >
                 <Info className="w-4 h-4 text-green-300" />
                 <span className="font-bold text-[10px] text-white/50 group-hover:text-white uppercase tracking-widest">{t("aboutUs")}</span>

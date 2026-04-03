@@ -232,8 +232,7 @@ npm run lint
 
 ### 🌐 **Produktions-URLs**
 - **Web:** [https://econexo-europe.vercel.app](https://econexo-europe.vercel.app)
-- **GitHub:** https://github.com/santiagoinfantinom/EcoNexo
-- **Vercel Dashboard:** https://vercel.com/santiagoinfantinoms-projects/eco-nexo
+- **Vercel Dashboard:** https://vercel.com/santiagoinfantinom/econexo
 
 ## 📊 Qualitätsmetriken
 
@@ -311,7 +310,7 @@ Dieses Projekt steht unter der MIT-Lizenz. Siehe die `LICENSE`-Datei für weiter
 
 - **Email:** contacto@econexo.app
 - **Website:** [EcoNexo](https://econexo-europe.vercel.app)
-- **GitHub:** [github.com/santiagoinfantinom/EcoNexo](https://github.com/santiagoinfantinom/EcoNexo)
+- **Vercel:** [Dashboard](https://vercel.com/santiagoinfantinom/econexo)
 
 ## 🙏 Danksagungen
 

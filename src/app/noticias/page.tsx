@@ -9,83 +9,29 @@ import { ArrowRight, Newspaper, RefreshCw } from "lucide-react";
 export default function NoticiasPage() {
     const { t } = useI18n();
 
-    const allNewsItems = [
-        {
-            title: t('newsItem1Title'),
-            category: t('newsItem1Category'),
-            date: "Mar 5, 2026",
-            link: "https://environment.ec.europa.eu/strategy/circular-economy-action-plan_en",
-            image: "https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-            title: t('newsItem2Title'),
-            category: t('newsItem2Category'),
-            date: "Feb 28, 2026",
-            link: "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal_en",
-            image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-            title: t('newsItem3Title'),
-            category: t('newsItem3Category'),
-            date: "Feb 20, 2026",
-            link: "https://www.eea.europa.eu/en",
-            image: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-            title: t('newsItem4Title'),
-            category: t('newsItem4Category'),
-            date: "Feb 10, 2026",
-            link: "https://www.unep.org/regions/europe",
-            image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-            title: t('newsItem5Title'),
-            category: t('newsItem5Category'),
-            date: "Mar 15, 2026",
-            link: "https://www.unep.org/explore-topics/energy",
-            image: "https://images.unsplash.com/photo-1509391366311-4569024c084f?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-            title: t('newsItem6Title'),
-            category: t('newsItem6Category'),
-            date: "Mar 12, 2026",
-            link: "https://www.unep.org/explore-topics/oceans-seas",
-            image: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-            title: t('newsItem7Title'),
-            category: t('newsItem7Category'),
-            date: "Mar 8, 2026",
-            link: "https://environment.ec.europa.eu/topics/urban-environment_en",
-            image: "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-            title: t('newsItem8Title'),
-            category: t('newsItem8Category'),
-            date: "Mar 1, 2026",
-            link: "https://www.irena.org/Solar",
-            image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-            title: t('newsItem9Title'),
-            category: t('newsItem9Category'),
-            date: "Feb 25, 2026",
-            link: "https://www.unep.org/explore-topics/forests",
-            image: "https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=800&auto=format&fit=crop"
-        },
-        {
-            title: t('newsItem10Title'),
-            category: t('newsItem10Category'),
-            date: "Feb 15, 2026",
-            link: "https://www.eea.europa.eu/en/topics/in-depth/transport-and-mobility",
-            image: "https://images.unsplash.com/photo-1538592116845-11ee0b8015df?q=80&w=800&auto=format&fit=crop"
-        }
-    ];
-
-    const [displayedNews, setDisplayedNews] = useState(allNewsItems.slice(0, 4));
+    const [allNewsItems, setAllNewsItems] = useState<any[]>([]);
+    const [displayedNews, setDisplayedNews] = useState<any[]>([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchNews = async () => {
+        setIsLoading(true);
+        try {
+            const res = await fetch('/api/news');
+            const data = await res.json();
+            if (data && data.news) {
+                setAllNewsItems(data.news);
+                setDisplayedNews(data.news.slice(0, 4));
+            }
+        } catch (error) {
+            console.error("Failed to fetch news:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const loadRandomNews = () => {
+        if (allNewsItems.length === 0) return;
         setIsRefreshing(true);
         // Shuffle and pick 4
         const shuffled = [...allNewsItems].sort(() => 0.5 - Math.random());
@@ -94,9 +40,8 @@ export default function NoticiasPage() {
         setTimeout(() => setIsRefreshing(false), 500);
     };
 
-    // Load random news on mount (which corresponds to "recarga la página" or "cliquea ahí")
     useEffect(() => {
-        loadRandomNews();
+        fetchNews();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
