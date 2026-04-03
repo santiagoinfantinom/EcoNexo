@@ -509,6 +509,10 @@ export default {
   typeSearchPh: "Escribe tu búsqueda...",
   searchEventsPh: "Buscar eventos en tu ciudad...",
   searchEventsTitlePh: "Título, ubicación, organizador...",
+  searchEventsPlaceholder: "Buscar eventos (título, ciudad...)",
+  webSearch: "Búsqueda Web",
+  uploadImage: "Subir Imagen",
+  exampleWebsitePh: "https://ejemplo.com",
   loadingCalendar: "Cargando calendario...",
   loadingEventsIndicator: "Cargando eventos...",
   showFiltersLabel: "Mostrar Filtros",
@@ -1139,4 +1143,7 @@ export default {
   newsItem10Title: "Las ventas de vehículos eléctricos superan a las de gasolina en Europa",
   newsItem10Category: "🚗 Transporte",
   readMore: "Leer más",
+  eventCreatedMessage: "fue creado exitosamente para el",
+  noResultsFound: "No se encontraron resultados",
+  refresh: "Refrescar",
 };

@@ -10,9 +10,10 @@ import { useAuth } from "@/lib/auth";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import { trackEvent } from "@/lib/analytics";
 import { ensureEventImage } from "@/lib/eventImages";
-import { EVENT_DETAILS, EventDetails } from "@/data/eventDetails";
+import type { EventDetails } from "@/data/eventDetails";
 import { useSmartContext, QuestStep } from "@/context/SmartContext";
 import { CalendarPlus, Download, ExternalLink } from "lucide-react";
+import ImageWithFallback from "@/components/ImageWithFallback";
 import { generateGoogleCalendarLink, generateOutlookCalendarLink, downloadICSFile } from "@/lib/calendarUtils";
 
 // Localized overrides for event strings (progressive coverage)
@@ -180,6 +181,7 @@ function autoTranslateEvent(base: EventDetails, locale: string): Partial<EventDe
 // Function to get localized event data
 async function getLocalizedEventData(eventId: string, locale: string) {
   try {
+    const { EVENT_DETAILS } = await import("@/data/eventDetails");
     // Debug: Check if eventId exists in EVENT_DETAILS
     const availableKeys = Object.keys(EVENT_DETAILS);
     console.log(`[getLocalizedEventData] Looking for event: ${eventId}`);
@@ -1042,15 +1044,14 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
         {/* Event Header */}
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 mb-6">
           {/* Event Image - Always show (ensureEventImage always returns an image) */}
-          <div className="mb-6">
-            <img
+          <div className="mb-6 relative w-full h-64 rounded-lg overflow-hidden">
+            <ImageWithFallback
               src={headerImageSrc}
               alt={event.title}
-              className="w-full h-64 object-cover rounded-lg"
-              loading="lazy"
+              className="object-cover"
               referrerPolicy="no-referrer"
-              decoding="async"
-              crossOrigin="anonymous"
+              fill
+              unoptimized
             />
           </div>
 

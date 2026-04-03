@@ -9,6 +9,8 @@ import { AuthProvider } from "@/lib/auth";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import GreenCompass from "@/components/GreenCompass";
 import HeaderNav from "@/components/HeaderNav";
+import MobileBottomTabBar from "@/components/MobileBottomTabBar";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import SimpleIntro from "@/components/SimpleIntro";
 import PlausibleProvider from "next-plausible";
@@ -59,9 +61,11 @@ export default function RootLayout({
                       <ServiceWorkerRegistration />
                       <DynamicManifest />
                       <SimpleIntro />
+                      <PWAInstallPrompt />
                       <LanguageSwitcher />
                       <HeaderNav />
-                      <main className="min-h-screen">{children}</main>
+                      <main className="min-h-screen pb-[calc(70px+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
+                      <MobileBottomTabBar />
                       <GreenCompass />
                     </ErrorBoundary>
                   </SmartProvider>

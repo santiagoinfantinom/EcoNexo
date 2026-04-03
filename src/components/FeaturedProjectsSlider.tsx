@@ -237,22 +237,6 @@ export default function FeaturedProjectsSlider() {
         </>
       )}
 
-      {/* Dots Indicator */}
-      {totalSlides > 1 && (
-        <div className="flex justify-center gap-2 mt-6">
-          {Array.from({ length: totalSlides }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${index === currentIndex
-                ? 'w-8 bg-green-600'
-                : 'w-2 bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500'
-                }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
 
       {/* Project Counter */}
       <div className="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">

@@ -517,7 +517,9 @@ div[class*="recaptcha-error"] {
 
 /* Microinteracciones mejoradas */
 .hover-lift {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hover-lift:hover {
@@ -526,6 +528,8 @@ div[class*="recaptcha-error"] {
 }
 
 .hover-scale {
+  will-change: transform;
+  backface-visibility: hidden;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -554,6 +558,8 @@ div[class*="recaptcha-error"] {
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 16px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -644,6 +650,18 @@ div[class*="recaptcha-error"] {
   .touch-target {
     padding: 0.75rem 1rem;
     min-height: 44px;
+  }
+
+  /* Native App Feel */
+  body, html {
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  a, button, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   /* Reduce header padding on mobile */

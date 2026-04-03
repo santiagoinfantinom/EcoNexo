@@ -4,9 +4,6 @@ import { useI18n, categoryLabel } from "@/lib/i18n";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import WelcomeMessage from "@/components/WelcomeMessage";
-import AuthModal from "@/components/AuthModal";
-import { PROJECTS } from "@/data/projects";
 import { useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import dynamic from "next/dynamic";
@@ -24,6 +21,8 @@ import {
 } from "lucide-react";
 
 // Dynamic Import Heavy Components
+const AuthModal = dynamic(() => import("@/components/AuthModal"), { ssr: false });
+const WelcomeMessage = dynamic(() => import("@/components/WelcomeMessage"), { ssr: false });
 const GamificationHub = dynamic(() => import("@/components/GamificationHub"), { ssr: false });
 const PreferencesModal = dynamic(() => import("@/components/PreferencesModal"), { ssr: false });
 const RecommendedProjects = dynamic(() => import("@/components/RecommendedProjects"), { ssr: false });
@@ -32,6 +31,7 @@ const FeaturedProjectsSlider = dynamic(() => import("@/components/FeaturedProjec
 const SocialMediaFeed = dynamic(() => import("@/components/SocialMediaFeed"));
 const EcoTips = dynamic(() => import("@/components/EcoTips"));
 const EcoTipsBulletPoints = dynamic(() => import("@/components/EcoTipsBulletPoints"));
+const StreakBanner = dynamic(() => import("@/components/StreakBanner"), { ssr: false });
 
 // Dynamic import to avoid SSR issues with Leaflet
 const InteractiveMap = dynamic(
@@ -80,6 +80,16 @@ export default function Home() {
 
   // Lazy loading observer for map
   const { ref: mapRef, inView: mapInView } = useInView({ triggerOnce: true, rootMargin: "200px 0px" });
+
+  const [mapProjects, setMapProjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (mapInView && mapProjects.length === 0) {
+      import('@/data/projects').then(mod => {
+        setMapProjects(mod.PROJECTS);
+      });
+    }
+  }, [mapInView, mapProjects.length]);
 
   // Context Hook
   const { showOnboarding, completeOnboarding } = useSmartContext();
@@ -164,6 +174,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Streak Banner */}
+      <StreakBanner />
+
       {/* Recommended Projects (Smart Matching) */}
       <RecommendedProjects />
 
@@ -182,8 +195,8 @@ export default function Home() {
             </div>
             <div className="rounded-xl overflow-hidden h-[400px] md:h-[500px] shadow-inner bg-gray-100 dark:bg-gray-800 flex justify-center items-center">
               {showMap && isClient && typeof window !== 'undefined' ? (
-                mapInView ? (
-                  <InteractiveMap projects={PROJECTS} region="europe" />
+                mapInView && mapProjects.length > 0 ? (
+                  <InteractiveMap projects={mapProjects} region="europe" />
                 ) : (
                   <div className="animate-pulse flex flex-col items-center">
                     <div className="rounded-full h-12 w-12 border-b-2 border-green-600 mb-4"></div>

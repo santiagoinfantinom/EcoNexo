@@ -2,8 +2,11 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
-interface ImageWithFallbackProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+import { ImageProps } from "next/image";
+
+interface ImageWithFallbackProps extends Omit<ImageProps, "src" | "alt"> {
     src?: string;
+    alt?: string;
     fallbackSrc?: string;
     category?: string;
 }
@@ -80,7 +83,6 @@ export default function ImageWithFallback({
             onError={handleError}
             className={className}
             referrerPolicy={referrerPolicy as any}
-            unoptimized={true}
             fill={!props.width && !props.height}
             {...(props as any)}
         />

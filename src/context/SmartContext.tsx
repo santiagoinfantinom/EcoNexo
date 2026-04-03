@@ -173,24 +173,39 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                 if (diffDays <= 1.5) { // Consecutive day
                     newStreak += 1;
                 } else {
-                    newStreak = 1;
+                    newStreak = 1; // Reset streak
                 }
+
+                // Scale daily login XP with streak tier
+                const dailyXP = newStreak >= 30 ? 50 : newStreak >= 7 ? 35 : newStreak >= 3 ? 25 : 20;
 
                 const updated = {
                     ...prev,
                     lastLogin: today,
                     streak: newStreak,
-                    points: prev.points + 20,
-                    history: [...prev.history, `${t('dailyLogin')} (+20 XP)`]
+                    points: prev.points + dailyXP,
+                    history: [...prev.history, `${t('dailyLogin')} (+${dailyXP} XP) 🔥${newStreak}`]
                 };
 
-                // Bonus for weekly streak
-                if (newStreak === 7) {
+                // Streak milestone badges
+                if (newStreak === 3 && !updated.badges.includes('streak-3')) {
+                    setTimeout(() => unlockBadge('streak-3', t('badgeStreak3') || 'Racha de 3 Dias', '🔥'), 500);
+                }
+                if (newStreak === 7 && !updated.badges.includes('daily-streak-7')) {
                     updated.points += 50;
                     updated.history.push(`${t('weeklyStreak')} (+50 XP)`);
-                    if (!updated.badges.includes('daily-streak-7')) {
-                        setTimeout(() => unlockBadge('daily-streak-7', t('badgeDailyStreak7'), '🔥'), 0);
-                    }
+                    setTimeout(() => unlockBadge('daily-streak-7', t('badgeDailyStreak7') || 'Semana en Llamas', '🔥🔥'), 500);
+                }
+                if (newStreak === 14 && !updated.badges.includes('streak-14')) {
+                    updated.points += 100;
+                    updated.history.push('Racha 14 dias (+100 XP)');
+                    setTimeout(() => unlockBadge('streak-14', t('badgeStreak14') || '2 Semanas Imparables', '⚡'), 500);
+                }
+                if (newStreak === 30 && !updated.badges.includes('streak-30')) {
+                    updated.points += 200;
+                    updated.karma = (updated.karma || 0) + 50;
+                    updated.history.push('Racha 30 dias (+200 XP, +50 Karma)');
+                    setTimeout(() => unlockBadge('streak-30', t('badgeStreak30') || 'Leyenda del Mes', '🔥🔥🔥'), 500);
                 }
 
                 saveGamification(updated);
@@ -266,7 +281,10 @@ export function SmartProvider({ children }: { children: ReactNode }) {
 
     const addPoints = (amount: number, reason: string, explicitKarma?: number) => {
         setGamification(prev => {
-            const newPoints = prev.points + amount;
+            // Apply streak multiplier
+            const streakMultiplier = (prev.streak || 0) >= 30 ? 2.0 : (prev.streak || 0) >= 7 ? 1.5 : (prev.streak || 0) >= 3 ? 1.2 : 1.0;
+            const boostedAmount = Math.round(amount * streakMultiplier);
+            const newPoints = prev.points + boostedAmount;
             const newLevel = Math.floor(newPoints / 1000) + 1;
 
             let newShareCount = prev.shareCount || 0;
@@ -324,7 +342,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
                 joinedProjectCount: newJoinedProjectCount,
                 calendarSyncCount: prev.calendarSyncCount,
                 karma: (prev.karma || 0) + karmaEarned,
-                history: [...prev.history, `${reason} (+${amount} XP${karmaEarned > 0 ? `, +${karmaEarned} Karma` : ''})`]
+                history: [...prev.history, `${reason} (+${boostedAmount} XP${streakMultiplier > 1 ? ` [${streakMultiplier}x]` : ''}${karmaEarned > 0 ? `, +${karmaEarned} Karma` : ''})`]
             };
             saveGamification(updated);
             return updated;

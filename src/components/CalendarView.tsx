@@ -190,9 +190,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
           ? (apiEvent.title || apiEvent.title_en || 'Untitled Event')
           : locale === 'de'
             ? (apiEvent.title_de || apiEvent.title || apiEvent.title_en || 'Untitled Event')
-            : locale === 'fr'
-              ? (apiEvent.title_fr || apiEvent.title || apiEvent.title_en || 'Untitled Event')
-              : (apiEvent.title_en || apiEvent.title || 'Untitled Event');
+            : (apiEvent.title_en || apiEvent.title || 'Untitled Event');
 
         return {
           id: apiEvent.id || `event_${Date.now()}_${Math.random()}`,
@@ -417,12 +415,12 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
       {/* Header */}
       <div className="flex flex-col items-center mb-4 w-full px-4">
 
-        {/* External Search Bar */}
+        {/* Global Search Bar */}
         <div className="w-full max-w-xl mb-6 bg-white/5 backdrop-blur-sm p-3 rounded-xl border border-white/10 shadow-sm">
           <div className="flex gap-2">
             <input
               type="text"
-              placeholder={t('searchEventsPh')}
+              placeholder={t('searchEventsPlaceholder')}
               value={searchCity}
               onChange={(e) => {
                 const val = e.target.value;
@@ -440,15 +438,15 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
             <BaseButton
               onClick={handleExternalSearch}
               disabled={isSearchingExternal || !searchCity.trim()}
-              variant="primary"
-              className="px-6"
+              variant="outline"
+              className="px-4"
             >
               {isSearchingExternal ? (
                 <span className="animate-spin">↻</span>
               ) : (
-                <span>🔍</span>
+                <span>🌐</span>
               )}
-              <span className="ml-2">{t('search')}</span>
+              <span className="ml-2 hidden sm:inline">{t('webSearch')}</span>
             </BaseButton>
           </div>
           {externalEvents.length > 0 && (

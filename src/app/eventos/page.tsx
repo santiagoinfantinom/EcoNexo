@@ -269,7 +269,7 @@ export default function EventosPage() {
         <div className="w-full max-w-md relative mx-auto group">
           <input
             type="text"
-            placeholder="Buscar eventos, ciudad o país..."
+            placeholder={locale === 'es' ? 'Buscar eventos, ciudad o país...' : locale === 'de' ? 'Ereignisse suchen (Titel, Stadt...)' : 'Search events, city or country...'}
             className="w-full px-5 py-3 pl-12 border border-foreground/10 dark:border-white/10 rounded-2xl bg-background/50 backdrop-blur-sm dark:bg-slate-900/50 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all text-base shadow-sm group-hover:shadow-md"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -481,7 +481,7 @@ export default function EventosPage() {
                 <div className="flex gap-2">
                   <label className="cursor-pointer bg-background dark:bg-slate-900 hover:bg-foreground/5 dark:hover:bg-white/5 border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 text-foreground dark:text-white text-sm font-bold transition-all flex items-center justify-center gap-2 flex-1 shadow-sm hover:shadow-md">
                     <Upload size={18} className="text-primary" />
-                    {locale === 'es' ? 'Subir Imagen' : locale === 'de' ? 'Bild hochladen' : 'Upload Image'}
+                    {t('uploadImage')}
                     <input
                       type="file"
                       accept="image/*"
@@ -552,7 +552,7 @@ export default function EventosPage() {
                 className="border border-foreground/10 dark:border-white/10 rounded-2xl px-5 py-3 bg-background dark:bg-slate-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary font-bold transition-all placeholder:text-foreground/20"
                 value={form.website ?? ""}
                 onChange={(e) => update("website", e.target.value)}
-                placeholder="https://ejemplo.com"
+                placeholder={t('exampleWebsitePh')}
               />
             </div>
 

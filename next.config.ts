@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 // Check if we're building for GitHub Pages
 const isGitHubPages = process.env.GITHUB_PAGES === 'true';
 const basePath = isGitHubPages ? '/EcoNexo' : '';
@@ -40,4 +44,4 @@ const nextConfig: NextConfig = {
   }),
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

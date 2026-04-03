@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Twitter, Instagram, MessageSquare, Heart, Share2 } from "lucide-react";
+import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 
 interface SocialPost {
@@ -107,7 +108,9 @@ export default function SocialMediaFeed() {
                             className={`glass-card p-6 flex flex-col h-full hover:shadow-xl transition-shadow border border-white/40 dark:border-slate-700/40 ${CARD_DELAY_CLASSES[index] || ''}`}
                         >
                             <div className="flex items-center gap-3 mb-4">
-                                <img src={post.avatar} alt={post.author} className="w-10 h-10 rounded-full ring-2 ring-green-600/20" />
+                                <div className="relative w-10 h-10">
+                                    <Image src={post.avatar} alt={post.author} fill sizes="40px" className="rounded-full ring-2 ring-green-600/20 object-cover" />
+                                </div>
                                 <div className="flex-1 min-w-0">
                                     <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{post.author}</h4>
                                     <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{post.handle}</p>

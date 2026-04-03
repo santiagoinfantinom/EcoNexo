@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import Link from "next/link";
+import Image from "next/image";
 import { UserProfile, FollowStatus } from "@/lib/social-types";
 
 interface PublicProfileProps {
@@ -102,11 +103,14 @@ export default function PublicProfile({ userId }: PublicProfileProps) {
       <div className="px-6 pb-6 -mt-16">
         <div className="flex items-end justify-between">
           <div className="flex items-end gap-4">
-            <img
-              src={profile.avatar_url || '/logo-econexo.png'}
-              alt={profile.full_name}
-              className="w-24 h-24 rounded-full border-4 border-white dark:border-slate-800"
-            />
+            <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shrink-0">
+              <Image
+                src={profile.avatar_url || '/logo-econexo.png'}
+                alt={profile.full_name}
+                fill
+                className="object-cover"
+              />
+            </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{profile.full_name}</h1>
               {profile.city && profile.country && (

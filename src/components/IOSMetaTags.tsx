@@ -27,8 +27,17 @@ export default function IOSMetaTags() {
     if (!appleIcon) {
       appleIcon = document.createElement("link");
       appleIcon.setAttribute("rel", "apple-touch-icon");
-      appleIcon.setAttribute("href", "/logo-econexo.png");
+      appleIcon.setAttribute("href", "/logo-new.png");
       document.head.appendChild(appleIcon);
+    }
+
+    // Agregar apple-touch-startup-image (Splash Screen) si no existe
+    let splashScreen = document.querySelector('link[rel="apple-touch-startup-image"]');
+    if (!splashScreen) {
+      splashScreen = document.createElement("link");
+      splashScreen.setAttribute("rel", "apple-touch-startup-image");
+      splashScreen.setAttribute("href", "/logo-new.png");
+      document.head.appendChild(splashScreen);
     }
   }, []);
 
