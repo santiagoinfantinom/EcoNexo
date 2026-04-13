@@ -638,6 +638,22 @@ export class OutlookOAuthService {
         };
       }
 
+      // In some browser flows handleRedirectPromise() can return null even after
+      // successful login. Fallback to cached MSAL accounts.
+      const accounts = this.msalInstance.getAllAccounts();
+      if (accounts.length > 0) {
+        const account = accounts[0];
+        return {
+          success: true,
+          user: {
+            id: account.homeAccountId,
+            email: account.username,
+            name: account.name || account.username,
+            provider: 'outlook',
+          },
+        };
+      }
+
       return {
         success: false,
         error: 'No se pudo procesar la autenticación',
