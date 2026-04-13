@@ -65,26 +65,37 @@ export default function AuthButton({
       user.email?.split('@')[0] ||
       t("myAccount");
     const avatarUrl = user.profile?.avatar_url;
+    const signOutLabel = locale === "es" ? "Salir" : locale === "de" ? "Abmelden" : "Sign out";
 
     return (
-      <Link
-        href="/perfil"
-        className={`${getButtonClasses()} flex items-center gap-2`}
-        title={t("myProfile")}
-      >
-        <div className="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center overflow-hidden">
-          {avatarUrl ? (
-            <img src={avatarUrl} alt="User Avatar" className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-green-600 dark:text-green-400 text-xs font-bold uppercase">
-              {displayName.charAt(0) || "U"}
-            </span>
-          )}
-        </div>
-        <span className="hidden sm:inline whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">
-          {displayName}
-        </span>
-      </Link>
+      <div className="flex items-center gap-2">
+        <Link
+          href="/perfil"
+          className={`${getButtonClasses()} flex items-center gap-2`}
+          title={t("myProfile")}
+        >
+          <div className="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center overflow-hidden">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="User Avatar" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-green-600 dark:text-green-400 text-xs font-bold uppercase">
+                {displayName.charAt(0) || "U"}
+              </span>
+            )}
+          </div>
+          <span className="hidden sm:inline whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">
+            {displayName}
+          </span>
+        </Link>
+        <button
+          type="button"
+          onClick={handleSignOut}
+          className="text-xs sm:text-sm font-semibold px-3 py-2 rounded-lg border border-white/20 text-white/90 hover:bg-white/10 transition-colors"
+          title={signOutLabel}
+        >
+          {signOutLabel}
+        </button>
+      </div>
     );
   }
 
