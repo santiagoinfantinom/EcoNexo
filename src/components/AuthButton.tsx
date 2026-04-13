@@ -59,6 +59,13 @@ export default function AuthButton({
   };
 
   if (user) {
+    const displayName =
+      user.profile?.full_name ||
+      user.profile?.first_name ||
+      user.email?.split('@')[0] ||
+      t("myAccount");
+    const avatarUrl = user.profile?.avatar_url;
+
     return (
       <Link
         href="/perfil"
@@ -66,16 +73,16 @@ export default function AuthButton({
         title={t("myProfile")}
       >
         <div className="w-6 h-6 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center overflow-hidden">
-          {user.profile?.avatar_url ? (
-            <img src={user.profile.avatar_url} alt="User Avatar" className="w-full h-full object-cover" />
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="User Avatar" className="w-full h-full object-cover" />
           ) : (
             <span className="text-green-600 dark:text-green-400 text-xs font-bold uppercase">
-              {user.profile?.full_name?.charAt(0) || user.profile?.first_name?.charAt(0) || user.email?.charAt(0) || "U"}
+              {displayName.charAt(0) || "U"}
             </span>
           )}
         </div>
         <span className="hidden sm:inline whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">
-          {user.profile?.full_name || user.profile?.first_name || user.email?.split('@')[0] || t("myAccount")}
+          {displayName}
         </span>
       </Link>
     );

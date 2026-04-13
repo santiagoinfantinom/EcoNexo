@@ -33,7 +33,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
             if (parsedUser && parsedUser.id) {
-              setUser({ id: parsedUser.id, email: parsedUser.email || null, profile: parsedUser.profile || null });
+              const fallbackProfile = parsedUser.profile || {
+                full_name: parsedUser.name || undefined,
+                first_name: parsedUser.given_name || parsedUser.first_name || undefined,
+                avatar_url: parsedUser.picture || parsedUser.avatar_url || undefined,
+              };
+              setUser({ id: parsedUser.id, email: parsedUser.email || null, profile: fallbackProfile });
             } else {
               setUser(null);
             }
@@ -77,7 +82,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               const parsedUser = JSON.parse(storedUser);
               if (parsedUser && parsedUser.id) {
                 console.log('✅ Found user in localStorage:', parsedUser.email);
-                setUser({ id: parsedUser.id, email: parsedUser.email || null, profile: parsedUser.profile || null });
+                const fallbackProfile = parsedUser.profile || {
+                  full_name: parsedUser.name || undefined,
+                  first_name: parsedUser.given_name || parsedUser.first_name || undefined,
+                  avatar_url: parsedUser.picture || parsedUser.avatar_url || undefined,
+                };
+                setUser({ id: parsedUser.id, email: parsedUser.email || null, profile: fallbackProfile });
               }
             }
           } catch (e) {
