@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
@@ -22,11 +22,23 @@ export default function AuthButton({
   const { user, signOut, loading } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
-  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const popupRef = useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const onClickOutside = (event: MouseEvent) => {
+      if (!popupRef.current) return;
+      if (!popupRef.current.contains(event.target as Node)) {
+        setShowAuthPopup(false);
+      }
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
   if (!mounted || loading) {
@@ -55,7 +67,7 @@ export default function AuthButton({
 
   const handleSignOut = async () => {
     await signOut();
-    setShowUserDropdown(false);
+    setShowAuthPopup(false);
   };
 
   if (user) {
@@ -107,32 +119,63 @@ export default function AuthButton({
 
   return (
     <>
-      <div className="flex gap-2">
+      <div className={`${isAuthModalOpen ? "opacity-0 pointer-events-none" : ""}`}>
         {isHeaderButton ? (
-          <>
+          <div className="relative" ref={popupRef}>
             <button
               type="button"
-              onClick={() => {
-                setAuthMode("login");
-                setIsAuthModalOpen(true);
-              }}
+              onClick={() => setShowAuthPopup((v) => !v)}
               className={headerButtonClasses}
             >
               {t("signIn")}
             </button>
-            <button
-              type="button"
-              onClick={() => {
-                setAuthMode("register");
-                setIsAuthModalOpen(true);
-              }}
-              className={headerButtonClasses}
-            >
-              {t("signUp")}
-            </button>
-          </>
+            {showAuthPopup && (
+              <div
+                className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) setShowAuthPopup(false);
+                }}
+              >
+                <div className="w-full max-w-xs rounded-2xl border border-white/15 bg-[#0f2f2a] shadow-2xl p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-white text-sm font-bold">{t("signIn")}</span>
+                    <button
+                      type="button"
+                      onClick={() => setShowAuthPopup(false)}
+                      className="text-white/70 hover:text-white text-lg leading-none px-2"
+                      aria-label="Close"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode("login");
+                      setIsAuthModalOpen(true);
+                      setShowAuthPopup(false);
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-lg text-white/95 hover:bg-white/10 text-sm font-semibold"
+                  >
+                    {t("signIn")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode("register");
+                      setIsAuthModalOpen(true);
+                      setShowAuthPopup(false);
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-lg text-white/95 hover:bg-white/10 text-sm font-semibold"
+                  >
+                    {t("signUp")}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         ) : (
-          <>
+          <div className="flex gap-2">
             <button
               onClick={() => {
                 setAuthMode("login");
@@ -151,7 +194,7 @@ export default function AuthButton({
             >
               {t("signUp")}
             </button>
-          </>
+          </div>
         )}
       </div>
 

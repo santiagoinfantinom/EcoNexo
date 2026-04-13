@@ -133,7 +133,11 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                                 className="px-6 pb-24 pt-4"
                             >
                                 <p className="text-gray-600 dark:text-gray-400 mb-6 font-medium">
-                                    {locale === 'es' ? 'Selecciona los temas que más te apasionan. Te recomendaremos proyectos de este tipo.' : 'Select the topics you care about most. We will recommend you projects like these.'}
+                                    {locale === 'es'
+                                        ? 'Selecciona los temas que más te apasionan. Te recomendaremos proyectos de este tipo.'
+                                        : locale === 'de'
+                                            ? 'Wähle die Themen, die dich am meisten interessieren. Wir empfehlen dir passende Projekte.'
+                                            : 'Select the topics you care about most. We will recommend projects like these.'}
                                 </p>
                                 <div className="grid grid-cols-2 gap-4">
                                     {(Object.keys(CATEGORY_MAP) as Category[]).map((cat) => {

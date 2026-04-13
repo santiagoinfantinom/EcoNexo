@@ -19,8 +19,21 @@ export default function OutlookCallbackPage() {
         if (result.success && result.user) {
           // Store user data in localStorage
           const user = result.user;
+          const profile = {
+            full_name: user.name || '',
+            first_name: user.given_name || '',
+            last_name: user.family_name || '',
+            email: user.email,
+            avatar_url: user.picture || '/logo-econexo.svg',
+            preferred_language: user.locale || 'en',
+            oauth_provider: 'outlook',
+            oauth_imported: true,
+          };
 
-          localStorage.setItem('econexo_user', JSON.stringify(user));
+          localStorage.setItem('econexo_user', JSON.stringify({
+            ...user,
+            profile,
+          }));
           localStorage.setItem('econexo_auth_provider', 'outlook');
 
           // Store OAuth data
@@ -46,14 +59,9 @@ export default function OutlookCallbackPage() {
 
           // Store profile data with all available fields
           localStorage.setItem('econexo:profile', JSON.stringify({
-            full_name: user.name || '',
-            first_name: firstName,
-            last_name: lastName,
-            email: user.email,
-            avatar_url: user.picture || '/logo-econexo.svg',
-            preferred_language: user.locale || 'en',
-            oauth_provider: 'outlook',
-            oauth_imported: true,
+            ...profile,
+            first_name: firstName || profile.first_name,
+            last_name: lastName || profile.last_name,
           }));
 
           setStatus('success');

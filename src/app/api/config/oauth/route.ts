@@ -7,6 +7,7 @@ export async function GET() {
   // Try to get from environment variable first
   let googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   let githubClientId: string | null = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || null;
+  let outlookClientId: string | null = process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID || null;
   
   // If not available, use fallback
   if (!googleClientId || googleClientId === 'demo-client-id' || googleClientId === 'your_google_client_id_here') {
@@ -16,6 +17,9 @@ export async function GET() {
   if (!githubClientId || githubClientId === 'demo-client-id' || githubClientId === 'your_github_client_id_here') {
     githubClientId = null;
   }
+  if (!outlookClientId || outlookClientId === 'demo-client-id' || outlookClientId === 'your_outlook_client_id_here') {
+    outlookClientId = null;
+  }
   
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://econexo.app';
   
@@ -24,12 +28,14 @@ export async function GET() {
     googleClientIdSource: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ? 'ENV_VAR' : 'FALLBACK',
     googleClientIdValue: googleClientId ? `${googleClientId.substring(0, 30)}...` : 'null',
     githubClientId: githubClientId ? 'CONFIGURED' : 'NOT CONFIGURED',
+    outlookClientId: outlookClientId ? 'CONFIGURED' : 'NOT CONFIGURED',
     siteUrl,
   });
   
   return NextResponse.json({
     googleClientId: googleClientId || null,
     githubClientId: githubClientId || null,
+    outlookClientId: outlookClientId || null,
     siteUrl,
     configured: !!googleClientId,
   });

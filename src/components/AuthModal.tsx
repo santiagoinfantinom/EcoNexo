@@ -262,21 +262,21 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[99999] p-4 text-left">
-      <div className="bg-background dark:bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-foreground/10 dark:border-white/10">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[99999] p-2.5 text-left">
+      <div className="bg-background dark:bg-slate-900 rounded-2xl shadow-2xl max-w-[350px] w-full max-h-[78vh] overflow-y-auto border border-foreground/10 dark:border-white/10">
         {/* Header */}
-        <div className="bg-gradient-to-br from-primary via-secondary to-cta px-8 py-10 text-white rounded-t-2xl relative overflow-hidden">
+        <div className="bg-gradient-to-br from-primary via-secondary to-cta px-3.5 py-3.5 text-white rounded-t-2xl relative overflow-hidden">
           <div className="absolute inset-0 bg-white/5 backdrop-blur-[2px]"></div>
           <div className="relative flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <div className="flex items-center justify-center p-1">
-                <EcoNexoLogo size={65} className="!gap-0" />
+                <EcoNexoLogo size={30} className="!gap-0" />
               </div>
               <div className="font-sans">
-                <h2 className="text-2xl font-bold tracking-tight">
+                <h2 className="text-base sm:text-lg font-bold tracking-tight">
                   {mode === "login" ? t("welcomeBack") : t("joinEcoNexo")}
                 </h2>
-                <p className="text-white/80 text-xs mt-1 font-mono uppercase tracking-wider">
+                <p className="text-white/80 text-[9px] mt-0.5 font-mono uppercase tracking-wider">
                   {mode === "login"
                     ? t("signInToContinue")
                     : t("createAccountToStart")
@@ -286,14 +286,14 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             </div>
             <button
               onClick={onClose}
-              className="text-white/60 hover:text-white hover:bg-white/10 transition-all duration-200 p-2 rounded-full cursor-pointer"
+              className="text-white/60 hover:text-white hover:bg-white/10 transition-all duration-200 p-1 rounded-full cursor-pointer"
             >
-              <X size={24} />
+              <X size={18} />
             </button>
           </div>
         </div>
 
-        <div className="p-8">
+        <div className="p-3.5 sm:p-4">
           {/* Success Message */}
           {success && (
             <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
@@ -324,17 +324,17 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           )}
 
           {/* OAuth Buttons */}
-          <div className="mb-8">
-            <p className="text-sm text-gray-600 dark:text-white mb-6 text-center font-bold tracking-wide">
+          <div className="mb-3.5">
+            <p className="text-[11px] text-gray-600 dark:text-white mb-3 text-center font-bold tracking-wide">
               {mode === "login" ? t("orContinueWith") : t("registerWith")}
             </p>
 
-            <div className="space-y-3">
+            <div className="space-y-1.5">
               {/* Google Button */}
               <button
                 onClick={handleGoogleAuth}
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-background dark:bg-slate-800 border border-foreground/10 dark:border-white/10 rounded-2xl hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 shadow-sm hover:shadow-xl hover-lift group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 px-3.5 py-2 bg-background dark:bg-slate-800 border border-foreground/10 dark:border-white/10 rounded-lg hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 shadow-sm hover:shadow-xl hover-lift group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -342,33 +342,33 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                 </svg>
-                <span className="font-bold text-foreground dark:text-white md:text-base text-sm font-sans tracking-tight">Google</span>
+                <span className="font-bold text-foreground dark:text-white text-sm font-sans tracking-tight">Google</span>
               </button>
               {/* GitHub Button */}
               <button
                 onClick={handleGithubAuth}
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-background dark:bg-slate-800 border border-foreground/10 dark:border-white/10 rounded-2xl hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 shadow-sm hover:shadow-xl hover-lift group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 px-3.5 py-2 bg-background dark:bg-slate-800 border border-foreground/10 dark:border-white/10 rounded-lg hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 shadow-sm hover:shadow-xl hover-lift group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5 group-hover:scale-110 transition-transform dark:fill-white fill-slate-900" viewBox="0 0 24 24">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
                 </svg>
-                <span className="font-bold text-foreground dark:text-white md:text-base text-sm font-sans tracking-tight">GitHub</span>
+                <span className="font-bold text-foreground dark:text-white text-sm font-sans tracking-tight">GitHub</span>
               </button>
               {/* Outlook Button */}
               <button
                 onClick={handleOutlookAuth}
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-background dark:bg-slate-800 border border-foreground/10 dark:border-white/10 rounded-2xl hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 shadow-sm hover:shadow-xl hover-lift group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 px-3.5 py-2 bg-background dark:bg-slate-800 border border-foreground/10 dark:border-white/10 rounded-lg hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 shadow-sm hover:shadow-xl hover-lift group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Mail className="w-5 h-5 text-[#0078D4] group-hover:scale-110 transition-transform" />
-                <span className="font-bold text-foreground dark:text-white md:text-base text-sm font-sans tracking-tight">Microsoft Outlook</span>
+                <span className="font-bold text-foreground dark:text-white text-sm font-sans tracking-tight">Microsoft Outlook</span>
               </button>
             </div>
           </div>
 
           {/* Divider */}
-          <div className="relative mb-6">
+          <div className="relative mb-3">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300 dark:border-white/20"></div>
             </div>
@@ -377,9 +377,9 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2.5">
             <div>
-              <label htmlFor="email" className="block text-sm font-bold text-gray-700 dark:text-white mb-2">
+              <label htmlFor="email" className="block text-xs font-bold text-gray-700 dark:text-white mb-1.5">
                 {t("email")}
               </label>
               <input
@@ -391,7 +391,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
                   if (e.key === 'Enter') handleEmailAuth(e);
                 }}
                 placeholder={t("emailPlaceholder")}
-                className="w-full px-4 py-3 border border-foreground/10 dark:border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-foreground/5 dark:bg-slate-800 text-foreground dark:text-white placeholder:text-foreground/40 dark:placeholder:text-white/50 font-bold transition-all"
+                className="w-full px-3 py-2 border border-foreground/10 dark:border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-foreground/5 dark:bg-slate-800 text-foreground dark:text-white placeholder:text-foreground/40 dark:placeholder:text-white/50 font-bold transition-all"
                 required
               />
             </div>
@@ -445,7 +445,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
               type="button"
               onClick={handleEmailAuth}
               disabled={isLoading || (mode === "register" && !captchaVerified) || !email}
-              className="w-full bg-primary text-white py-4 px-4 rounded-xl font-bold hover:shadow-xl transition-all hover-lift cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-primary text-white py-2.5 px-4 rounded-lg font-bold hover:shadow-xl transition-all hover-lift cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
@@ -462,8 +462,8 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           </div>
 
           {/* Additional Info */}
-          <div className="mt-6 text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-300">
+          <div className="mt-4 text-center">
+            <p className="text-[11px] text-gray-500 dark:text-gray-300 leading-relaxed">
               {mode === "login" ? t("bySigningIn") : t("byRegistering")}{" "}
               <a href="/terms" className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300">
                 {t("termsOfService")}

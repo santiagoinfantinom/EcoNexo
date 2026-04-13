@@ -583,6 +583,12 @@ export class OutlookOAuthService {
         };
       }
 
+      // Always align redirect URI with the current runtime origin to avoid
+      // stale env/cached domain mismatches.
+      if (typeof window !== 'undefined') {
+        this.redirectUri = `${window.location.origin}/auth/outlook/callback`;
+      }
+
       // Use redirect flow for Outlook (more reliable than popup)
       console.log('🔐 Redirecting to Microsoft OAuth');
       console.log('📍 Client ID:', this.clientId);
