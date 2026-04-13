@@ -67,7 +67,10 @@ function GoogleCallbackContent() {
           );
 
           localStorage.setItem('econexo_auth_provider', 'google');
-          setTimeout(() => router.push('/perfil'), 2000);
+          // Force a full reload so AuthProvider re-initializes from localStorage/Supabase state.
+          setTimeout(() => {
+            window.location.href = '/perfil';
+          }, 1200);
         } else {
           throw new Error(result.error || 'Authentication failed');
         }
