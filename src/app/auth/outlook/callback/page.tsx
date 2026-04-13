@@ -63,10 +63,10 @@ export default function OutlookCallbackPage() {
                 '¡Autenticación exitosa! Redirigiendo...'
           );
 
-          // Redirect to dashboard after 2 seconds
+          // Force full reload so auth state is hydrated from localStorage/Supabase.
           setTimeout(() => {
-            router.push('/perfil');
-          }, 2000);
+            window.location.href = '/perfil';
+          }, 1200);
         } else {
           setStatus('error');
           setMessage(result.error || (

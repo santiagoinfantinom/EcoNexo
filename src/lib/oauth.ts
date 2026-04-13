@@ -576,65 +576,10 @@ export class OutlookOAuthService {
 
   async authenticate(): Promise<OAuthResult> {
     try {
-      // For development, simulate successful authentication
-      // TODO: Remove this once a valid Outlook Client ID is configured
       if (this.clientId === 'demo-client-id' || !this.clientId || this.clientId === 'your_outlook_client_id_here') {
-        console.log('Using demo mode for Outlook OAuth');
-
-        // Simulate user data
-        const mockUser = {
-          id: 'demo-user-' + Date.now(),
-          email: 'demo.outlook@econexo.app',
-          name: 'Demo User (Outlook)',
-          given_name: 'Demo',
-          family_name: 'User',
-          picture: '/logo-econexo.png',
-          provider: 'outlook' as const,
-        };
-
-
-        // Store user data in localStorage for profile
-        if (typeof window !== 'undefined') {
-          // Store demo user temporarily for callback
-          sessionStorage.setItem('outlook_demo_user', JSON.stringify(mockUser));
-
-          localStorage.setItem('econexo_user', JSON.stringify(mockUser));
-          localStorage.setItem('oauth_data', JSON.stringify({
-            name: mockUser.name,
-            email: mockUser.email,
-            picture: '/logo-econexo.png',
-            provider: mockUser.provider,
-            locale: 'es',
-            verified_email: true,
-          }));
-
-          // Also store profile data directly
-          localStorage.setItem('econexo:profile', JSON.stringify({
-            full_name: mockUser.name,
-            first_name: mockUser.given_name,
-            last_name: mockUser.family_name,
-            email: mockUser.email,
-            avatar_url: '/logo-econexo.png',
-            preferred_language: 'es',
-            oauth_provider: 'outlook',
-            oauth_imported: true,
-            city: 'Barcelona',
-            country: 'Spain',
-            about_me: 'Usuario demo conectado con Microsoft Outlook',
-            bio: 'Desarrollador de software con enfoque en sostenibilidad',
-            interests: 'Tecnología, desarrollo web, sostenibilidad',
-            skills: 'C#, .NET, Azure, TypeScript, Angular'
-          }));
-
-          // Redirect to callback page
-          setTimeout(() => {
-            window.location.href = '/auth/outlook/callback';
-          }, 100);
-        }
-
         return {
-          success: true,
-          user: mockUser,
+          success: false,
+          error: 'Outlook OAuth is not configured. Missing NEXT_PUBLIC_OUTLOOK_CLIENT_ID.',
         };
       }
 
@@ -669,37 +614,10 @@ export class OutlookOAuthService {
 
   async handleRedirect(): Promise<OAuthResult> {
     try {
-      // Check if we have a demo user in sessionStorage first
-      if (typeof window !== 'undefined') {
-        const demoUser = sessionStorage.getItem('outlook_demo_user');
-        if (demoUser) {
-          sessionStorage.removeItem('outlook_demo_user');
-          const mockUser = JSON.parse(demoUser);
-          return {
-            success: true,
-            user: mockUser,
-          };
-        }
-      }
-
-      // Check if we're in demo mode first
       if (this.clientId === 'demo-client-id' || !this.clientId || this.clientId === 'your_outlook_client_id_here') {
-        console.log('Using demo mode for Outlook OAuth callback');
-
-        // Simulate user data
-        const mockUser = {
-          id: 'demo-user-' + Date.now(),
-          email: 'demo.outlook@econexo.app',
-          name: 'Demo User (Outlook)',
-          given_name: 'Demo',
-          family_name: 'User',
-          picture: '/logo-econexo.png',
-          provider: 'outlook' as const,
-        };
-
         return {
-          success: true,
-          user: mockUser,
+          success: false,
+          error: 'Outlook OAuth is not configured. Missing NEXT_PUBLIC_OUTLOOK_CLIENT_ID.',
         };
       }
 
