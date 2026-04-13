@@ -6,6 +6,10 @@ export interface OAuthConfig {
     clientId: string;
     redirectUri: string;
   };
+  github: {
+    clientId: string;
+    redirectUri: string;
+  };
   outlook: {
     clientId: string;
     redirectUri: string;
@@ -19,7 +23,7 @@ export interface OAuthResult {
     email: string;
     name: string;
     picture?: string;
-    provider: 'google' | 'outlook';
+    provider: 'google' | 'github' | 'outlook';
     given_name?: string;
     family_name?: string;
     locale?: string;
@@ -474,6 +478,70 @@ export class GoogleOAuthService {
   }
 }
 
+export class GitHubOAuthService {
+  private clientId: string;
+  private redirectUri: string;
+
+  constructor(config: OAuthConfig['github']) {
+    this.clientId = config.clientId;
+    this.redirectUri = config.redirectUri;
+  }
+
+  async authenticate(): Promise<OAuthResult> {
+    if (!this.clientId || this.clientId === 'demo-client-id' || this.clientId === 'your_github_client_id_here') {
+      return {
+        success: false,
+        error: 'GitHub OAuth is not configured. Missing NEXT_PUBLIC_GITHUB_CLIENT_ID.',
+      };
+    }
+
+    if (typeof window === 'undefined') {
+      return {
+        success: false,
+        error: 'GitHub OAuth can only start from a browser.',
+      };
+    }
+
+    const currentOrigin = window.location.origin;
+    const redirectUri = `${currentOrigin}/auth/github/callback`;
+    this.redirectUri = redirectUri;
+    const state = Math.random().toString(36).slice(2, 15);
+    sessionStorage.setItem('github_oauth_state', state);
+
+    const authUrl = new URL('https://github.com/login/oauth/authorize');
+    authUrl.searchParams.set('client_id', this.clientId);
+    authUrl.searchParams.set('redirect_uri', redirectUri);
+    authUrl.searchParams.set('scope', 'read:user user:email');
+    authUrl.searchParams.set('state', state);
+    authUrl.searchParams.set('allow_signup', 'true');
+
+    window.location.href = authUrl.toString();
+    return { success: true };
+  }
+
+  async handleCallback(code: string, state: string): Promise<OAuthResult> {
+    if (typeof window !== 'undefined') {
+      const storedState = sessionStorage.getItem('github_oauth_state');
+      sessionStorage.removeItem('github_oauth_state');
+      if (storedState && storedState !== state) {
+        return { success: false, error: 'GitHub OAuth state mismatch.' };
+      }
+    }
+
+    const response = await fetch(`/api/auth/github/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      return { success: false, error: data.error || 'GitHub authentication failed.' };
+    }
+
+    return {
+      success: true,
+      user: data.user,
+    };
+  }
+}
+
 /**
  * Outlook/Microsoft OAuth implementation
  */
@@ -671,10 +739,12 @@ export class OutlookOAuthService {
  */
 export class OAuthService {
   private googleService: GoogleOAuthService;
+  private githubService: GitHubOAuthService;
   private outlookService: OutlookOAuthService;
 
   constructor(config: OAuthConfig) {
     this.googleService = new GoogleOAuthService(config.google);
+    this.githubService = new GitHubOAuthService(config.github);
     this.outlookService = new OutlookOAuthService(config.outlook);
   }
 
@@ -691,6 +761,10 @@ export class OAuthService {
     return this.outlookService.authenticate();
   }
 
+  async authenticateWithGithub(): Promise<OAuthResult> {
+    return this.githubService.authenticate();
+  }
+
   async handleGoogleCallback(code: string, state: string): Promise<OAuthResult> {
     return this.googleService.handleCallback(code, state);
   }
@@ -701,6 +775,10 @@ export class OAuthService {
 
   async handleOutlookRedirect(): Promise<OAuthResult> {
     return this.outlookService.handleRedirect();
+  }
+
+  async handleGithubCallback(code: string, state: string): Promise<OAuthResult> {
+    return this.githubService.handleCallback(code, state);
   }
 }
 
@@ -725,6 +803,10 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
         clientId: cachedConfig.google.clientId,
         redirectUri: `${currentOrigin}/auth/google/callback`,
       },
+        github: {
+          clientId: cachedConfig.github.clientId,
+          redirectUri: `${currentOrigin}/auth/github/callback`,
+        },
       outlook: {
         clientId: cachedConfig.outlook.clientId,
         redirectUri: `${currentOrigin}/auth/outlook/callback`,
@@ -762,6 +844,10 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
             clientId: googleClientId,
             redirectUri: `${siteUrl}/auth/google/callback`,
           },
+          github: {
+            clientId: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || 'demo-client-id',
+            redirectUri: `${siteUrl}/auth/github/callback`,
+          },
           outlook: {
             clientId: process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID || 'demo-client-id',
             redirectUri: `${siteUrl}/auth/outlook/callback`,
@@ -793,6 +879,10 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
       google: {
         clientId: googleClientId,
         redirectUri: `${siteUrl}/auth/google/callback`,
+      },
+      github: {
+        clientId: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || 'demo-client-id',
+        redirectUri: `${siteUrl}/auth/github/callback`,
       },
       outlook: {
         clientId: process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID || 'demo-client-id',
@@ -831,6 +921,10 @@ export function createOAuthServiceSync(): OAuthService {
     google: {
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || 'demo-client-id',
       redirectUri: `${siteUrl}/auth/google/callback`,
+    },
+    github: {
+      clientId: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || 'demo-client-id',
+      redirectUri: `${siteUrl}/auth/github/callback`,
     },
     outlook: {
       clientId: process.env.NEXT_PUBLIC_OUTLOOK_CLIENT_ID || 'demo-client-id',

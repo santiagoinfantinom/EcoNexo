@@ -17,7 +17,7 @@ interface AuthModalProps {
 
 export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   const { t, locale } = useI18n();
-  const { signInWithMagicLink, signInWithOAuth } = useAuth();
+  const { signInWithMagicLink } = useAuth();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -213,16 +213,13 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
     setError("");
 
     try {
-      if (isSupabaseReady) {
-        const result = await signInWithOAuth("github");
-        if (result.error) {
-          setError(result.error);
-          setIsLoading(false);
-        }
-      } else {
-        setError("GitHub login requires Supabase configuration.");
+      const oauthService = await createOAuthService();
+      const result = await oauthService.authenticateWithGithub();
+      if (!result.success && result.error) {
+        setError(result.error);
         setIsLoading(false);
       }
+      // Redirect is handled by the OAuth service
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(t("unexpectedError") + ": " + errorMessage);

@@ -270,7 +270,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signInWithOAuth = useCallback(async (provider: "google" | "github" | "gitlab" | "bitbucket" | "azure") => {
-    // Real implementation for Google
+    // Real implementation for Google and GitHub
     if (provider === 'google') {
       try {
         const oauthService = await createOAuthService();
@@ -282,6 +282,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {
         console.error('Error initiating Google OAuth:', error);
         return { error: 'Error al iniciar sesión con Google' };
+      }
+    }
+    if (provider === 'github') {
+      try {
+        const oauthService = await createOAuthService();
+        const result = await oauthService.authenticateWithGithub();
+        if (!result.success && result.error) {
+          return { error: result.error };
+        }
+        return {};
+      } catch (error) {
+        console.error('Error initiating GitHub OAuth:', error);
+        return { error: 'Error al iniciar sesión con GitHub' };
       }
     }
 
