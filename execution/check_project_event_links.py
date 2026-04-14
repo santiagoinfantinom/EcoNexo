@@ -16,17 +16,19 @@ import os
 import re
 import ssl
 import sys
+from pathlib import Path
 import urllib.error
 import urllib.request
 from collections import defaultdict
 
-PROJECTS_FILE = "/Users/santiago/Documents/Projects/EcoNexo/src/data/projects.ts"
-EVENTS_REAL_FILE = "/Users/santiago/Documents/Projects/EcoNexo/src/data/events-2026-real.ts"
-OUTPUT_PATH = "/Users/santiago/Documents/Projects/EcoNexo/.tmp/project_event_links_check_results.json"
+ROOT_DIR = Path(__file__).resolve().parent.parent
+PROJECTS_FILE = ROOT_DIR / "src/data/projects.ts"
+EVENTS_REAL_FILE = ROOT_DIR / "src/data/events-2026-real.ts"
+OUTPUT_PATH = ROOT_DIR / ".tmp/project_event_links_check_results.json"
 TIMEOUT_SECONDS = 15
 
 
-def read_file(path: str) -> str:
+def read_file(path: Path) -> str:
     with open(path, "r", encoding="utf-8") as file:
         return file.read()
 
@@ -183,7 +185,7 @@ def main() -> int:
             print(f"     status: {row.get('status', 'N/A')} | error: {row.get('error', 'N/A')}")
             print(f"     sample ids: {samples}")
 
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    os.makedirs(os.path.dirname(str(OUTPUT_PATH)), exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as file:
         json.dump(
             {
