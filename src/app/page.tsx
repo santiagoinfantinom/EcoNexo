@@ -17,7 +17,12 @@ import {
   Apple,
   Map as MapIcon,
   Search,
-  ArrowRight
+  ArrowRight,
+  Flame,
+  Sparkles,
+  TrendingUp,
+  ShieldCheck,
+  Handshake
 } from "lucide-react";
 
 // Dynamic Import Heavy Components
@@ -77,9 +82,28 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("register");
+  const [heroPulseIndex, setHeroPulseIndex] = useState(0);
+  const [liveImpact, setLiveImpact] = useState({
+    co2: 12840,
+    trees: 3210,
+    volunteers: 2500,
+  });
+  const investorCopy = {
+    badge: locale === "es" ? "Plataforma lista para escalar" : locale === "de" ? "Skalierbare Plattform" : "Platform ready to scale",
+    title: locale === "es" ? "Activamos comunidades para acelerar impacto climático medible" : locale === "de" ? "Wir aktivieren Communities für messbare Klimawirkung" : "We activate communities to scale measurable climate impact",
+    subtitle: locale === "es"
+      ? "EcoNexo conecta ciudadanía, proyectos y organizaciones en una experiencia social con gamificación, datos locales y rutas claras de acción."
+      : locale === "de"
+        ? "EcoNexo verbindet Bürger*innen, Projekte und Organisationen in einer sozialen Erfahrung mit Gamification, lokalen Daten und klaren Handlungswegen."
+        : "EcoNexo connects citizens, projects, and organizations in one social experience with gamification, local data, and clear action paths.",
+  };
 
-  // Lazy loading observer for map
+  // Lazy loading observers for different sections
   const { ref: mapRef, inView: mapInView } = useInView({ triggerOnce: true, rootMargin: "200px 0px" });
+  const { ref: featuredRef, inView: featuredInView } = useInView({ triggerOnce: true, rootMargin: "200px 0px" });
+  const { ref: leaderboardRef, inView: leaderboardInView } = useInView({ triggerOnce: true, rootMargin: "200px 0px" });
+  const { ref: socialRef, inView: socialInView } = useInView({ triggerOnce: true, rootMargin: "200px 0px" });
+  const { ref: tipsRef, inView: tipsInView } = useInView({ triggerOnce: true, rootMargin: "200px 0px" });
 
   const [mapProjects, setMapProjects] = useState<any[]>([]);
 
@@ -96,6 +120,18 @@ export default function Home() {
 
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    const pulseTimer = setInterval(() => {
+      setHeroPulseIndex((prev) => (prev + 1) % 3);
+      setLiveImpact((prev) => ({
+        co2: prev.co2 + 3,
+        trees: prev.trees + (prev.co2 % 2 === 0 ? 1 : 0),
+        volunteers: prev.volunteers + (prev.co2 % 6 === 0 ? 1 : 0),
+      }));
+    }, 3500);
+    return () => clearInterval(pulseTimer);
   }, []);
 
   return (
@@ -115,16 +151,37 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative py-20 sm:py-24 md:py-32 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero opacity-95 transform -skew-y-3 origin-top-left scale-110"></div>
+        <div className="absolute top-10 right-10 h-48 w-48 rounded-full bg-emerald-300/20 blur-3xl" />
+        <div className="absolute bottom-8 left-8 h-52 w-52 rounded-full bg-cyan-300/20 blur-3xl" />
 
         <div className="relative max-w-7xl mx-auto text-center z-10">
           <div
           >
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-white backdrop-blur">
+              <Sparkles className="h-4 w-4 text-yellow-300" />
+              {investorCopy.badge}
+            </div>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-sm">
-              {t('welcomeMessageTitle')}
+              {investorCopy.title}
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-10 font-light leading-relaxed">
-              {t('welcomeMessageDescription')}
+              {investorCopy.subtitle}
             </p>
+            <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-sm">
+              {[
+                locale === "es" ? "Cada accion cuenta" : locale === "de" ? "Jede Aktion zahlt" : "Every action counts",
+                locale === "es" ? "Conecta con proyectos reales" : locale === "de" ? "Verbinde dich mit echten Projekten" : "Connect with real projects",
+                locale === "es" ? "Convierte motivacion en impacto" : locale === "de" ? "Mach Motivation zu Wirkung" : "Turn motivation into impact",
+              ].map((item, idx) => (
+                <span
+                  key={item}
+                  className={`rounded-full border border-white/35 px-3 py-1.5 text-white/95 transition-all ${heroPulseIndex === idx ? "bg-white/30 scale-105" : "bg-white/10"
+                    }`}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
               <button
@@ -140,7 +197,7 @@ export default function Home() {
                 className="bg-white/10 backdrop-blur-md border border-white/30 text-white text-lg px-8 py-4 rounded-xl hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
               >
                 <Search className="w-5 h-5" />
-                {t('exploreEvents')}
+                {locale === "es" ? "Ver pipeline de eventos" : locale === "de" ? "Event-Pipeline ansehen" : "View event pipeline"}
               </Link>
 
               <Link
@@ -148,9 +205,20 @@ export default function Home() {
                 className="bg-white/10 backdrop-blur-md border border-white/30 text-white text-lg px-8 py-4 rounded-xl hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
               >
                 <ArrowRight className="w-5 h-5" />
-                {t('findJobs')}
+                {locale === "es" ? "Talento y oportunidades" : locale === "de" ? "Talente und Chancen" : "Talent and opportunities"}
               </Link>
 
+            </div>
+            <div className="mb-14 flex flex-wrap justify-center gap-2 text-xs">
+              <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-white/90">
+                {locale === "es" ? "B2C + B2B2G readiness" : locale === "de" ? "B2C + B2B2G readiness" : "B2C + B2B2G readiness"}
+              </span>
+              <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-white/90">
+                {locale === "es" ? "Comunidad, datos y ejecución" : locale === "de" ? "Community, Daten und Umsetzung" : "Community, data, and execution"}
+              </span>
+              <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-white/90">
+                {locale === "es" ? "Escalable por ciudad" : locale === "de" ? "Pro Stadt skalierbar" : "Scalable city by city"}
+              </span>
             </div>
           </div>
 
@@ -158,17 +226,59 @@ export default function Home() {
           <div
             className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto"
           >
-            <div className="glass-card p-6 text-center transform hover:scale-105 transition-transform duration-300">
-              <div className="text-4xl font-bold text-green-600 mb-2">500+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">{t('activeProjects')}</div>
+            <div className="glass-card p-6 text-center transform hover:scale-105 hover:-translate-y-1 transition-transform duration-300">
+              <div className="text-4xl font-bold text-green-600 mb-2">{liveImpact.trees.toLocaleString()}</div>
+              <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">
+                {locale === "es" ? "Iniciativas activas" : locale === "de" ? "Aktive Initiativen" : "Active initiatives"}
+              </div>
             </div>
-            <div className="glass-card p-6 text-center transform hover:scale-105 transition-transform duration-300">
-              <div className="text-4xl font-bold text-blue-600 mb-2">2,500+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">{t('volunteers')}</div>
+            <div className="glass-card p-6 text-center transform hover:scale-105 hover:-translate-y-1 transition-transform duration-300">
+              <div className="text-4xl font-bold text-blue-600 mb-2">{liveImpact.volunteers.toLocaleString()}+</div>
+              <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">
+                {locale === "es" ? "Personas movilizadas" : locale === "de" ? "Aktive Personen" : "People mobilized"}
+              </div>
             </div>
-            <div className="glass-card p-6 text-center transform hover:scale-105 transition-transform duration-300">
-              <div className="text-4xl font-bold text-purple-600 mb-2">50+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">{t('cities')}</div>
+            <div className="glass-card p-6 text-center transform hover:scale-105 hover:-translate-y-1 transition-transform duration-300">
+              <div className="text-4xl font-bold text-purple-600 mb-2">{liveImpact.co2.toLocaleString()}</div>
+              <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">
+                {locale === "es" ? "Kg CO2 evitados" : locale === "de" ? "Kg CO2 eingespart" : "Kg CO2 avoided"}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-3 max-w-5xl mx-auto text-left">
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
+              <div className="mb-2 flex items-center gap-2 text-emerald-200">
+                <TrendingUp className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-wider">
+                  {locale === "es" ? "Tracción" : locale === "de" ? "Traction" : "Traction"}
+                </span>
+              </div>
+              <p className="text-sm text-white/90">
+                {locale === "es" ? "Actividad diaria y crecimiento orgánico de comunidad." : locale === "de" ? "Tägliche Aktivität und organisches Community-Wachstum." : "Daily activity and organic community growth."}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
+              <div className="mb-2 flex items-center gap-2 text-cyan-200">
+                <ShieldCheck className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-wider">
+                  {locale === "es" ? "Confianza" : locale === "de" ? "Vertrauen" : "Trust"}
+                </span>
+              </div>
+              <p className="text-sm text-white/90">
+                {locale === "es" ? "Arquitectura preparada para datos reales y alianzas institucionales." : locale === "de" ? "Architektur bereit für Realdaten und institutionelle Partnerschaften." : "Architecture ready for real-world data and institutional partnerships."}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
+              <div className="mb-2 flex items-center gap-2 text-amber-200">
+                <Handshake className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-wider">
+                  {locale === "es" ? "Escalabilidad" : locale === "de" ? "Skalierbarkeit" : "Scalability"}
+                </span>
+              </div>
+              <p className="text-sm text-white/90">
+                {locale === "es" ? "Modelo replicable por ciudad para expansión internacional." : locale === "de" ? "Replizierbares Modell pro Stadt für internationale Expansion." : "City-by-city replicable model for international expansion."}
+              </p>
             </div>
           </div>
         </div>
@@ -177,23 +287,40 @@ export default function Home() {
       {/* Streak Banner */}
       <StreakBanner />
 
-      {/* Recommended Projects (Smart Matching) */}
-      <RecommendedProjects />
-
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           {/* Interactive Map Section */}
           <section
             ref={mapRef}
-            className="glass-card p-2 overflow-hidden"
+            className="glass-card p-2 overflow-hidden border-2 border-emerald-200/40 dark:border-emerald-900/30"
           >
-            <div className="flex items-center gap-2 px-4 py-3 mb-2">
-              <MapIcon className="w-6 h-6 text-green-600" />
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white">
-                {t('interactiveMap')}
-              </h2>
+            <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 mb-2">
+              <div className="flex items-center gap-2">
+                <MapIcon className="w-6 h-6 text-green-600" />
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+                  {t('interactiveMap')}
+                </h2>
+              </div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                <Flame className="h-3.5 w-3.5" />
+                {locale === "es" ? "Experiencia central" : locale === "de" ? "Kern-Erlebnis" : "Core experience"}
+              </span>
             </div>
-            <div className="rounded-xl overflow-hidden h-[400px] md:h-[500px] shadow-inner bg-gray-100 dark:bg-gray-800 flex justify-center items-center">
+            <p className="px-4 pb-3 text-sm text-gray-600 dark:text-gray-300">
+              {locale === "es" ? "Descubre iniciativas en tiempo real, filtra por impacto y entra directo a colaborar." : locale === "de" ? "Entdecke Initiativen in Echtzeit, filtere nach Wirkung und mach direkt mit." : "Discover initiatives in real time, filter by impact, and jump in to collaborate."}
+            </p>
+            <div className="flex flex-wrap gap-2 px-4 pb-3">
+              <Link href="/eventos/disponibles" className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200">
+                {locale === "es" ? "Eventos cercanos" : locale === "de" ? "Nahe Events" : "Nearby events"}
+              </Link>
+              <Link href="/proyectos-comunitarios" className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200">
+                {locale === "es" ? "Proyectos comunitarios" : locale === "de" ? "Community Projekte" : "Community projects"}
+              </Link>
+              <Link href="/explore" className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200">
+                {locale === "es" ? "Ver tendencias" : locale === "de" ? "Trends ansehen" : "See trends"}
+              </Link>
+            </div>
+            <div className="rounded-xl overflow-hidden h-[460px] md:h-[620px] shadow-inner bg-gray-100 dark:bg-gray-800 flex justify-center items-center">
               {showMap && isClient && typeof window !== 'undefined' ? (
                 mapInView && mapProjects.length > 0 ? (
                   <InteractiveMap projects={mapProjects} region="europe" />
@@ -207,8 +334,10 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Featured Projects */}
-          <section className="glass-card p-6 sm:p-8">
+          {/* Recommended Projects (Smart Matching) */}
+          <RecommendedProjects />
+
+          <section ref={featuredRef} className="glass-card p-6 sm:p-8">
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100 dark:border-gray-700">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
                 <span className="text-yellow-500">✨</span> {t('featuredProjects')}
@@ -221,13 +350,12 @@ export default function Home() {
                 Demo Slider
               </Link>
             </div>
-            <FeaturedProjectsSlider />
+            {featuredInView ? <FeaturedProjectsSlider /> : <div className="h-64 animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl" />}
           </section>
         </div>
 
-        {/* Sidebar Column: Leaderboard & Categories */}
-        <div className="space-y-8">
-          <CityLeaderboard />
+        <div ref={leaderboardRef} className="space-y-8">
+          {leaderboardInView ? <CityLeaderboard /> : <div className="h-64 animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl" />}
 
           {/* Categories Mini-Grid */}
           <div className="glass-card p-6">
@@ -367,18 +495,25 @@ export default function Home() {
         </div>
       </section>
 
-      <SocialMediaFeed />
+      <section ref={socialRef}>
+        {socialInView ? <SocialMediaFeed /> : <div className="h-96 animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl m-4" />}
+      </section>
 
-      {/* Eco Tips */}
-      <section className="py-20 px-4 bg-green-50/50 dark:bg-slate-800/30">
+      <section ref={tipsRef} className="py-20 px-4 bg-green-50/50 dark:bg-slate-800/30">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white text-center mb-12">
             {t('ecoTipsTitle')}
           </h2>
-          <EcoTips />
-          <div className="mt-12">
-            <EcoTipsBulletPoints />
-          </div>
+          {tipsInView ? (
+            <>
+              <EcoTips />
+              <div className="mt-12">
+                <EcoTipsBulletPoints />
+              </div>
+            </>
+          ) : (
+            <div className="h-96 animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl" />
+          )}
         </div>
       </section>
 
@@ -386,6 +521,9 @@ export default function Home() {
       <section className="py-24 px-4 bg-gradient-hero relative overflow-hidden">
         <div className="absolute inset-0 bg-white/5 pattern-dots opacity-20"></div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
+          <span className="mb-4 inline-flex items-center rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white/90">
+            {locale === "es" ? "Siguiente fase de crecimiento" : locale === "de" ? "Nächste Wachstumsphase" : "Next growth phase"}
+          </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white tracking-tight">
             {t('readyToMakeDifference')}
           </h2>
@@ -413,6 +551,13 @@ export default function Home() {
               {t('joinCommunity')}
             </Link>
           </div>
+          <p className="mt-6 text-sm text-white/80">
+            {locale === "es"
+              ? "Demo preparada para partners, instituciones y personas inversoras."
+              : locale === "de"
+                ? "Demo bereit für Partner, Institutionen und Investor*innen."
+                : "Demo-ready for partners, institutions, and investors."}
+          </p>
         </div>
       </section>
 

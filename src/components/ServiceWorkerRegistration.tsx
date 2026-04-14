@@ -3,30 +3,29 @@ import { useEffect } from 'react';
 
 export default function ServiceWorkerRegistration() {
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => {
-        let hasUnregistered = false;
-        for (let registration of registrations) {
-          registration.unregister();
-          hasUnregistered = true;
-          console.log('Unregistered stale service worker.');
-        }
+    if (typeof window === "undefined") return;
+    if (!('serviceWorker' in navigator)) return;
 
-        // Let's clear the caches storage as well to be absolutely sure
-        if (hasUnregistered && 'caches' in window) {
-          caches.keys().then((names) => {
-            for (let name of names) {
-              caches.delete(name);
-            }
-          }).then(() => {
-            // Give it a tiny bit of time then window reload to show fresh content
-            setTimeout(() => {
-              window.location.reload();
-            }, 500);
-          });
-        }
-      });
-    }
+    const CLEANUP_FLAG = "econexo:sw-cleanup:v1";
+    const alreadyCleaned = sessionStorage.getItem(CLEANUP_FLAG) === "done";
+    if (alreadyCleaned) return;
+
+    navigator.serviceWorker.getRegistrations().then(async (registrations) => {
+      for (const registration of registrations) {
+        await registration.unregister();
+        console.log('Unregistered stale service worker.');
+      }
+
+      // Clear cache storage once per session, but do not force reload.
+      if ('caches' in window) {
+        const names = await caches.keys();
+        await Promise.all(names.map((name) => caches.delete(name)));
+      }
+
+      sessionStorage.setItem(CLEANUP_FLAG, "done");
+    }).catch((err) => {
+      console.warn('Service worker cleanup failed:', err);
+    });
   }, []);
 
   return null;

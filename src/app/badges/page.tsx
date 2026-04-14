@@ -30,7 +30,7 @@ const BADGES: Badge[] = [
         name_de: "Erster Schritt",
         description_es: "Da tu primer paso hacia un mundo más sostenible",
         description_en: "Take your first step towards a more sustainable world",
-        description_de: "Machen Sie Ihren ersten Schritt zu einer nachhaltigeren Welt",
+        description_de: "Den ersten Schritt in Richtung einer nachhaltigeren Welt machen",
         icon: "🌱",
         requirement: 1,
         category: "events",
@@ -39,12 +39,12 @@ const BADGES: Badge[] = [
     },
     {
         id: "eco-warrior",
-        name_es: "Guerrero Ecológico",
-        name_en: "Eco Warrior",
-        name_de: "Öko-Krieger",
+        name_es: "Activismo Ecológico",
+        name_en: "Eco Advocate",
+        name_de: "Öko-Engagierte",
         description_es: "Participa en 10 eventos ambientales",
         description_en: "Participate in 10 environmental events",
-        description_de: "Nehmen Sie an 10 Umweltevents teil",
+        description_de: "An 10 Umweltevents teilnehmen",
         icon: "🌍",
         requirement: 10,
         category: "events",
@@ -54,12 +54,12 @@ const BADGES: Badge[] = [
     // Community
     {
         id: "community-leader",
-        name_es: "Líder Comunitario",
-        name_en: "Community Leader",
-        name_de: "Community-Leader",
+        name_es: "Impulso Comunitario",
+        name_en: "Community Catalyst",
+        name_de: "Community-Impuls",
         description_es: "Crea y organiza 3 eventos comunitarios",
         description_en: "Create and organize 3 community events",
-        description_de: "Erstellen und organisieren Sie 3 Community-Events",
+        description_de: "3 Community-Events erstellen und organisieren",
         icon: "👥",
         requirement: 3,
         category: "community",
@@ -68,12 +68,12 @@ const BADGES: Badge[] = [
     },
     {
         id: "chat-master",
-        name_es: "Maestro del Chat",
-        name_en: "Chat Master",
-        name_de: "Chat-Meister",
+        name_es: "Dinamización del Chat",
+        name_en: "Chat Champion",
+        name_de: "Chat-Profi",
         description_es: "Participa activamente en 20 conversaciones",
         description_en: "Actively participate in 20 conversations",
-        description_de: "Nehmen Sie aktiv an 20 Gesprächen teil",
+        description_de: "Aktiv an 20 Gesprächen teilnehmen",
         icon: "💬",
         requirement: 20,
         category: "community",
@@ -88,7 +88,7 @@ const BADGES: Badge[] = [
         name_de: "Ethisches Bankwesen",
         description_es: "Cambia tu cuenta a un banco sostenible",
         description_en: "Switch your account to a sustainable bank",
-        description_de: "Wechseln Sie Ihr Konto zu einer nachhaltigen Bank",
+        description_de: "Das Konto zu einer nachhaltigen Bank wechseln",
         icon: "🏦",
         requirement: 1,
         category: "finance",
@@ -97,12 +97,12 @@ const BADGES: Badge[] = [
     },
     {
         id: "green-investor",
-        name_es: "Inversor Verde",
+        name_es: "Inversión Verde",
         name_en: "Green Investor",
-        name_de: "Grüner Investor",
+        name_de: "Nachhaltig investieren",
         description_es: "Invierte en 3 proyectos de impacto positivo",
         description_en: "Invest in 3 positive impact projects",
-        description_de: "Investieren Sie in 3 Projekte mit positiver Auswirkung",
+        description_de: "In 3 Projekte mit positiver Wirkung investieren",
         icon: "📈",
         requirement: 3,
         category: "finance",
@@ -112,12 +112,12 @@ const BADGES: Badge[] = [
     // Lifestyle (NEW)
     {
         id: "zero-waste-hero",
-        name_es: "Héroe Zero Waste",
-        name_en: "Zero Waste Hero",
-        name_de: "Zero Waste Held",
+        name_es: "Referente Zero Waste",
+        name_en: "Zero Waste Advocate",
+        name_de: "Zero Waste Vorbild",
         description_es: "Reduce tus residuos domésticos significativamente",
         description_en: "Reduce your household waste significantly",
-        description_de: "Reduzieren Sie Ihren Haushaltsabfall erheblich",
+        description_de: "Den Haushaltsabfall deutlich reduzieren",
         icon: "🗑️",
         requirement: 10,
         category: "lifestyle",
@@ -127,11 +127,11 @@ const BADGES: Badge[] = [
     {
         id: "green-commuter",
         name_es: "Viajero Verde",
-        name_en: "Green Commuter",
-        name_de: "Grüner Pendler",
+        name_en: "Sustainable Commuting",
+        name_de: "Nachhaltig unterwegs",
         description_es: "Usa transporte sostenible durante un mes",
         description_en: "Use sustainable transport for a month",
-        description_de: "Nutzen Sie einen Monat lang nachhaltige Verkehrsmittel",
+        description_de: "Einen Monat lang nachhaltige Verkehrsmittel nutzen",
         icon: "🚲",
         requirement: 30,
         category: "lifestyle",
@@ -142,11 +142,11 @@ const BADGES: Badge[] = [
     {
         id: "ocean-guardian",
         name_es: "Guardián del Océano",
-        name_en: "Ocean Guardian",
-        name_de: "Hüter des Ozeans",
+        name_en: "Ocean Care",
+        name_de: "Ozean-Schutz",
         description_es: "Participa en 5 limpiezas de playas o ríos",
         description_en: "Participate in 5 beach or river cleanups",
-        description_de: "Nehmen Sie an 5 Strand- oder Flussreinigungen teil",
+        description_de: "An 5 Strand- oder Flussreinigungen teilnehmen",
         icon: "🌊",
         requirement: 5,
         category: "impact",
@@ -156,11 +156,11 @@ const BADGES: Badge[] = [
     {
         id: "solar-pioneer",
         name_es: "Pionero Solar",
-        name_en: "Solar Pioneer",
-        name_de: "Solar-Pionier",
+        name_en: "Solar Action",
+        name_de: "Solar-Engagement",
         description_es: "Instala o apoya un proyecto de energía solar",
         description_en: "Install or support a solar energy project",
-        description_de: "Installieren oder unterstützen Sie un Solarprojekt",
+        description_de: "Ein Solarprojekt installieren oder unterstützen",
         icon: "☀️",
         requirement: 1,
         category: "impact",
@@ -171,10 +171,10 @@ const BADGES: Badge[] = [
         id: "eco-explorer",
         name_es: "Explorador Ecológico",
         name_en: "Eco Explorer",
-        name_de: "Öko-Entdecker",
+        name_de: "Öko-Entdeckung",
         description_es: "Visita y evalúa 15 proyectos sostenibles",
         description_en: "Visit and evaluate 15 sustainable projects",
-        description_de: "Besuchen und bewerten Sie 15 nachhaltige Projekte",
+        description_de: "15 nachhaltige Projekte besuchen und bewerten",
         icon: "🔍",
         requirement: 15,
         category: "impact",
@@ -188,7 +188,7 @@ const BADGES: Badge[] = [
         name_de: "CO2-neutral",
         description_es: "Compensa 100kg de CO2",
         description_en: "Offset 100kg of CO2",
-        description_de: "Kompensieren Sie 100kg CO2",
+        description_de: "100kg CO2 kompensieren",
         icon: "♻️",
         requirement: 100,
         category: "impact",
@@ -197,12 +197,12 @@ const BADGES: Badge[] = [
     },
     {
         id: "eco-educator",
-        name_es: "Edu-Héroe",
+        name_es: "Referente Ecoeducativo",
         name_en: "Eco-Educator",
-        name_de: "Öko-Lehrer",
+        name_de: "Öko-Bildung",
         description_es: "Organiza o imparte un taller ambiental",
         description_en: "Organize or teach an environmental workshop",
-        description_de: "Organisieren oder leiten Sie einen Umweltworkshop",
+        description_de: "Einen Umweltworkshop organisieren oder leiten",
         icon: "📖",
         requirement: 1,
         category: "community",
@@ -213,10 +213,10 @@ const BADGES: Badge[] = [
         id: "local-foodie",
         name_es: "Consumidor Local",
         name_en: "Local Supporter",
-        name_de: "Lokale Unterstützung",
+        name_de: "Lokal engagiert",
         description_es: "Compra exclusivamente productos locales por un mes",
         description_en: "Buy exclusively local products for a month",
-        description_de: "Kaufen Sie einen Monat lang ausschließlich lokale Produkte",
+        description_de: "Einen Monat lang ausschließlich lokale Produkte kaufen",
         icon: "🍎",
         requirement: 30,
         category: "lifestyle",
@@ -230,7 +230,7 @@ const BADGES: Badge[] = [
         name_de: "Pflanzliche Ernährung",
         description_es: "Adopta una dieta vegetariana o vegana. Reduce entre 500-1500kg de CO2 al año",
         description_en: "Adopt a vegetarian or vegan diet. Reduce 500-1500kg of CO2 per year",
-        description_de: "Ernähren Sie sich vegetarisch oder vegan. Reduzieren Sie 500-1500kg CO2 pro Jahr",
+        description_de: "Vegetarisch oder vegan essen und 500-1500kg CO2 pro Jahr sparen",
         icon: "🌿",
         requirement: 30,
         category: "lifestyle",
@@ -295,12 +295,12 @@ export default function BadgesPage() {
     };
 
     const categories: { id: BadgeCategory; label: string; icon: string }[] = [
-        { id: 'all', label: locale === 'es' ? 'Todos' : locale === 'de' ? 'Alle' : 'All', icon: '🌟' },
-        { id: 'events', label: locale === 'es' ? 'Eventos' : locale === 'de' ? 'Events' : 'Events', icon: '📅' },
-        { id: 'community', label: locale === 'es' ? 'Comunidad' : locale === 'de' ? 'Gemeinschaft' : 'Community', icon: '🤝' },
-        { id: 'lifestyle', label: locale === 'es' ? 'Estilo de Vida' : locale === 'de' ? 'Lebensstil' : 'Lifestyle', icon: '🌱' },
-        { id: 'finance', label: locale === 'es' ? 'Finanzas' : locale === 'de' ? 'Finanzen' : 'Finance', icon: '💰' },
-        { id: 'impact', label: locale === 'es' ? 'Impacto' : locale === 'de' ? 'Impact' : 'Impact', icon: '⚡' },
+        { id: 'all', label: t("allBadges"), icon: '🌟' },
+        { id: 'events', label: t("eventsBadges"), icon: '📅' },
+        { id: 'community', label: t("communityBadges"), icon: '🤝' },
+        { id: 'lifestyle', label: t("lifestyleBadges"), icon: '🌱' },
+        { id: 'finance', label: t("financeBadges"), icon: '💰' },
+        { id: 'impact', label: t("impactBadges"), icon: '⚡' },
     ];
 
     return (
@@ -310,15 +310,10 @@ export default function BadgesPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-ecosia-green/20 via-transparent to-blue-500/10 -z-10" />
                 <div className="max-w-7xl mx-auto text-center relative z-10">
                     <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
-                        {locale === 'es' ? 'Tus ' : locale === 'de' ? 'Deine ' : 'Your '}
-                        <span className="text-emerald-600">{locale === 'es' ? 'Insignias' : locale === 'de' ? 'Abzeichen' : 'Badges'}</span>
+                        {t("badgesSubtitle")} <span className="text-emerald-600">{t("badgesTitle")}</span>
                     </h1>
                     <p className="text-xl text-white/90 max-w-2xl mx-auto">
-                        {locale === 'es'
-                            ? 'Gana logros por cada acción positiva que realices. ¡Construyamos juntos un futuro más verde!'
-                            : locale === 'de'
-                                ? 'Verdiene Erfolge für jede positive Tat. Lassen Sie uns gemeinsam eine grünere Zukunft aufbauen!'
-                                : 'Earn achievements for every positive action you take. Let\'s build a greener future together!'}
+                        {t("badgesDesc")}
                     </p>
                 </div>
             </section>
@@ -349,17 +344,8 @@ export default function BadgesPage() {
                         const unlocked = isUnlocked(badge.id, badge.requirement);
                         const progress = getProgress(badge.id, badge.requirement);
 
-                        const Component = badge.target ? Link : "div";
-
-                        return (
-                            <Component
-                                key={badge.id}
-                                href={badge.target ? `/${badge.target}` : undefined}
-                                className={`group relative rounded-3xl p-6 border transition-all duration-300 flex flex-col h-full
-                                    ${unlocked
-                                        ? 'bg-white dark:bg-slate-800 border-emerald-100 dark:border-emerald-900/30 shadow-xl shadow-emerald-500/5 ' + (badge.target ? 'hover:scale-[1.02] hover:-translate-y-1 cursor-pointer' : '')
-                                        : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 opacity-80 ' + (badge.target ? 'hover:opacity-100 hover:bg-white dark:hover:bg-slate-800 cursor-pointer' : '')}`}
-                            >
+                        const cardContent = (
+                            <>
                                 {/* Badge Icon */}
                                 <div className="flex justify-center mb-6 relative">
                                     <div className={`w-28 h-28 rounded-full flex items-center justify-center text-6xl shadow-inner transition-transform duration-500 group-hover:rotate-12
@@ -389,7 +375,7 @@ export default function BadgesPage() {
                                 <div className="mt-auto">
                                     <div className="flex justify-between items-end mb-2">
                                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                                            {locale === 'es' ? 'Progreso' : locale === 'de' ? 'Fortschritt' : 'Progress'}
+                                            {t("progressLabel")}
                                         </span>
                                         <span className={`text-xs font-black ${unlocked ? 'text-emerald-600' : 'text-slate-500'}`}>
                                             {userProgress[badge.id] || 0} / {badge.requirement}
@@ -408,11 +394,30 @@ export default function BadgesPage() {
                                 {!unlocked && (
                                     <div className="absolute inset-x-0 bottom-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <span className="bg-slate-900/90 dark:bg-white/90 text-white dark:text-slate-900 text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur-sm">
-                                            {locale === 'es' ? '¡Sigue así!' : locale === 'de' ? 'Mach weiter so!' : 'Keep going!'}
+                                            {t("keepGoingLabel")}
                                         </span>
                                     </div>
                                 )}
-                            </Component>
+                            </>
+                        );
+
+                        const cardStyles = `group relative rounded-3xl p-6 border transition-all duration-300 flex flex-col h-full
+                            ${unlocked
+                                ? 'bg-white dark:bg-slate-800 border-emerald-100 dark:border-emerald-900/30 shadow-xl shadow-emerald-500/5 ' + (badge.target ? 'hover:scale-[1.02] hover:-translate-y-1 cursor-pointer' : '')
+                                : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 opacity-80 ' + (badge.target ? 'hover:opacity-100 hover:bg-white dark:hover:bg-slate-800 cursor-pointer' : '')}`;
+
+                        if (badge.target) {
+                            return (
+                                <Link key={badge.id} href={`/${badge.target}`} className={cardStyles}>
+                                    {cardContent}
+                                </Link>
+                            );
+                        }
+
+                        return (
+                            <div key={badge.id} className={cardStyles}>
+                                {cardContent}
+                            </div>
                         );
                     })}
                 </div>
@@ -423,10 +428,10 @@ export default function BadgesPage() {
                 <div className="text-center py-20">
                     <div className="text-6xl mb-4">🏜️</div>
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                        {locale === 'es' ? 'No hay insignias en esta categoría' : 'No badges in this category'}
+                        {t("noBadgesInCategory")}
                     </h3>
                     <button onClick={() => setSelectedCategory('all')} className="mt-4 text-emerald-600 font-bold hover:underline">
-                        {locale === 'es' ? 'Ver todas' : 'View all'}
+                        {t("viewAll")}
                     </button>
                 </div>
             )}

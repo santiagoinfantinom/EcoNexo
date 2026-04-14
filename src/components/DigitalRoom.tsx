@@ -2,11 +2,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
+import UserAvatar from '@/components/UserAvatar';
 
 interface RoomMessage {
   id: string;
   senderId: string;
   senderName: string;
+  senderAvatarUrl?: string;
   content: string;
   timestamp: number;
 }
@@ -40,11 +42,11 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
 
   // Format time remaining
   const formatTimeRemaining = (ms: number) => {
-    if (ms <= 0) return locale === 'es' ? 'Expirado' : locale === 'de' ? 'Abgelaufen' : 'Expired';
+    if (ms <= 0) return t("expired");
 
-    const minutes = Math.floor(ms / 60000);
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+    const minutesTotal = Math.floor(ms / 60000);
+    const hours = Math.floor(minutesTotal / 60);
+    const mins = minutesTotal % 60;
 
     if (hours > 0) {
       return `${hours}h ${mins}m`;
@@ -120,6 +122,7 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
           roomId: room.id,
           senderId,
           senderName,
+          senderAvatarUrl: user.profile?.avatar_url || user.profile?.picture || undefined,
           content: newMessage.trim(),
         }),
       });
@@ -224,21 +227,30 @@ export default function DigitalRoom({ room, onLeave }: DigitalRoomProps) {
                 key={message.id}
                 className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
               >
-                <div
-                  className={`max-w-[75%] rounded-lg p-3 ${isOwn
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white'
-                    }`}
-                >
-                  {!isOwn && (
-                    <div className="text-xs opacity-80 mb-1 font-semibold">
-                      {message.senderName}
+                <div className={`flex items-end gap-2 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}>
+                  <UserAvatar
+                    src={message.senderAvatarUrl}
+                    alt={message.senderName}
+                    name={message.senderName}
+                    sizeClassName="w-8 h-8"
+                    className="bg-gray-200 dark:bg-slate-600 text-slate-700 dark:text-slate-200"
+                  />
+                  <div
+                    className={`max-w-[75%] rounded-lg p-3 ${isOwn
+                        ? 'bg-green-600 text-white'
+                        : 'bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white'
+                      }`}
+                  >
+                    {!isOwn && (
+                      <div className="text-xs opacity-80 mb-1 font-semibold">
+                        {message.senderName}
+                      </div>
+                    )}
+                    <div className="whitespace-pre-wrap">{message.content}</div>
+                    <div className={`text-xs mt-1 ${isOwn ? 'text-green-100' : 'text-gray-500 dark:text-gray-400'
+                      }`}>
+                      {formatTime(message.timestamp)}
                     </div>
-                  )}
-                  <div className="whitespace-pre-wrap">{message.content}</div>
-                  <div className={`text-xs mt-1 ${isOwn ? 'text-green-100' : 'text-gray-500 dark:text-gray-400'
-                    }`}>
-                    {formatTime(message.timestamp)}
                   </div>
                 </div>
               </div>

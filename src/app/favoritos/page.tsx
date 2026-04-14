@@ -1,12 +1,13 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
+import { useI18n, categoryLabel, locationLabel } from "@/lib/i18n";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import ImageWithFallback from "@/components/ImageWithFallback";
-import { ensureEventImage } from "@/lib/eventImages";
 import { EVENT_DETAILS } from "@/data/eventDetails";
 import { PROJECTS } from "@/data/projects";
+import FavoriteButton from "@/components/FavoriteButton";
+import { JOBS } from "@/data/jobs";
 
 export default function FavoritesPage() {
     const { t, locale } = useI18n();
@@ -23,11 +24,8 @@ export default function FavoritesPage() {
                 // 1. Get explicitly saved items (future proofing)
                 const saved = JSON.parse(localStorage.getItem('econexo:saved') || '[]');
 
-                // 2. Get participated events (as they are technically 'saved'/interested)
-                const participated = JSON.parse(localStorage.getItem('econexo:participatedEvents') || '[]');
-
-                // Combine and deduplicate by ID
-                const rawCombined = [...saved, ...participated].reduce((acc, current) => {
+                // Deduplicate by type+id
+                const rawCombined = [...saved].reduce((acc, current) => {
                     const x = acc.find((item: any) => item.id === current.id);
                     if (!x) {
                         return acc.concat([current]);
@@ -65,6 +63,24 @@ export default function FavoritesPage() {
                             date: item.date || e.date
                         };
                     }
+                    // Try to find in JOBS
+                    const j = JOBS.find((job: any) => job.id === item.id);
+                    if (j) {
+                        const title = typeof j.title === 'string' ? j.title : (j.title?.[locale] || j.title?.es || j.title?.en);
+                        const city = typeof j.city === 'string' ? j.city : (j.city?.[locale] || j.city?.es || j.city?.en);
+                        const country = typeof j.country === 'string' ? j.country : (j.country?.[locale] || j.country?.es || j.country?.en);
+                        return {
+                            ...item,
+                            type: 'job',
+                            title: item.title || title,
+                            name: item.name || title,
+                            image_url: item.image_url || j.logo_url,
+                            category: item.category || 'Empleo',
+                            city: item.city || city,
+                            country: item.country || country,
+                            apply_url: item.apply_url || j.apply_url,
+                        };
+                    }
                     return item;
                 });
 
@@ -77,7 +93,7 @@ export default function FavoritesPage() {
         };
 
         loadFavorites();
-    }, []);
+    }, [locale]);
 
     if (loading) {
         return (
@@ -103,9 +119,11 @@ export default function FavoritesPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {savedItems.map((item) => (
                             <Link
-                                key={item.id}
-                                href={`/${item.type === 'project' ? 'projects' : 'eventos'}/${item.id}`}
+                                key={`${item.type || 'project'}-${item.id}`}
+                                href={item.type === 'job' ? (item.apply_url || '/trabajos') : `/${item.type === 'project' ? 'projects' : 'eventos'}/${item.id}`}
                                 className="group bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all"
+                                target={item.type === 'job' && typeof item.apply_url === 'string' && item.apply_url.startsWith('http') ? '_blank' : undefined}
+                                rel={item.type === 'job' ? 'noopener noreferrer' : undefined}
                             >
                                 <div className="h-48 relative overflow-hidden">
                                     <ImageWithFallback
@@ -115,15 +133,21 @@ export default function FavoritesPage() {
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
                                     <div className="absolute top-2 right-2 flex gap-2">
-                                        <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur w-8 h-8 flex items-center justify-center rounded-full shadow-sm text-yellow-500 text-sm">
-                                            ⭐
-                                        </span>
+                                        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur w-10 h-10 flex items-center justify-center rounded-full shadow-sm">
+                                            <FavoriteButton
+                                                type={item.type === 'job' ? 'job' : (item.type || 'project')}
+                                                id={item.id}
+                                                data={item}
+                                                className="w-8 h-8 flex items-center justify-center"
+                                                iconSize="text-xl"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="p-5">
                                     <div className="flex items-center gap-2 mb-2">
                                         <span className="px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 uppercase tracking-wide">
-                                            {item.category || "General"}
+                                            {categoryLabel(item.category || "Comunidad", locale)}
                                         </span>
                                     </div>
                                     <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-2 line-clamp-2">
@@ -131,7 +155,7 @@ export default function FavoritesPage() {
                                     </h3>
                                     <div className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-4">
                                         <span className="flex items-center gap-1">
-                                            📍 {item.city}
+                                            📍 {locationLabel(item.city || "", locale)}
                                         </span>
                                         {item.date && (
                                             <span className="flex items-center gap-1">
@@ -152,7 +176,9 @@ export default function FavoritesPage() {
                         <p className="text-slate-500 max-w-md mx-auto mb-8">
                             {locale === 'es'
                                 ? 'Guarda los eventos y proyectos que más te interesen para encontrarlos fácilmente aquí.'
-                                : 'Save events and projects you are interested in to easily find them here.'}
+                                : locale === 'de'
+                                    ? 'Speichere Projekte, Veranstaltungen und Jobs, die dich interessieren, um sie hier schnell wiederzufinden.'
+                                    : 'Save projects, events and jobs you are interested in to easily find them here.'}
                         </p>
                         <Link href="/explore" className="px-6 py-3 bg-emerald-600 text-white rounded-full font-bold hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-emerald-500/20">
                             {locale === 'es' ? 'Explorar EcoNexo' : 'Explore EcoNexo'}

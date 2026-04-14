@@ -27,11 +27,18 @@ export default function AdvancedFilters({
   onFiltersChange,
   initialFilters = {}
 }: AdvancedFiltersProps) {
+  const getDefaultDateRange = () => {
+    const start = new Date();
+    const end = new Date(start);
+    end.setDate(start.getDate() + 30);
+    return {
+      start: start.toISOString().split('T')[0],
+      end: end.toISOString().split('T')[0]
+    };
+  };
+
   const [filters, setFilters] = useState<FilterOptions>({
-    dateRange: {
-      start: new Date().toISOString().split('T')[0],
-      end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-    },
+    dateRange: getDefaultDateRange(),
     distance: 50,
     impactType: [],
     difficulty: [],
@@ -113,10 +120,7 @@ export default function AdvancedFilters({
 
   const resetFilters = () => {
     setFilters({
-      dateRange: {
-        start: new Date().toISOString().split('T')[0],
-        end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      },
+      dateRange: getDefaultDateRange(),
       distance: 50,
       impactType: [],
       difficulty: [],

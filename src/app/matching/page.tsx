@@ -1,21 +1,84 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useI18n } from '@/lib/i18n';
 import MatchingAgentChat from '@/components/MatchingAgentChat';
 import { useRouter } from 'next/navigation';
+import { useSmartContext } from '@/context/SmartContext';
+import { PROJECTS } from '@/data/projects';
+import { buildCandidateMatches, buildIntelligentProjectMatches, MatchCandidate } from '@/lib/matching';
+
+const MOCK_CANDIDATES: MatchCandidate[] = [
+  {
+    id: 'c1',
+    name: 'Laura Méndez',
+    city: 'Madrid',
+    role: 'Community Organizer',
+    skills: ['social', 'teaching', 'gardening'],
+    causes: ['Comunidad', 'Alimentación'],
+    availability: 'weekends',
+  },
+  {
+    id: 'c2',
+    name: 'Jonas Weber',
+    city: 'Berlín',
+    role: 'Climate Data Analyst',
+    skills: ['tech', 'manual'],
+    causes: ['Medio ambiente', 'Tecnología'],
+    availability: 'flexible',
+  },
+  {
+    id: 'c3',
+    name: 'Sofía Ríos',
+    city: 'Barcelona',
+    role: 'Education Facilitator',
+    skills: ['teaching', 'social', 'art'],
+    causes: ['Educación', 'Comunidad'],
+    availability: 'part-time',
+  },
+  {
+    id: 'c4',
+    name: 'Marco Costa',
+    city: 'Milán',
+    role: 'Ocean Action Volunteer',
+    skills: ['manual', 'social', 'gardening'],
+    causes: ['Océanos', 'Medio ambiente'],
+    availability: 'weekends',
+  },
+];
 
 export default function MatchingPage() {
-  const { t, locale } = useI18n();
+  const { locale } = useI18n();
   const router = useRouter();
-  const [selectedMatch, setSelectedMatch] = useState<any>(null);
+  const { preferences } = useSmartContext();
+  const intelligentProjectMatches = buildIntelligentProjectMatches(PROJECTS, preferences);
+  const peopleMatches = buildCandidateMatches(MOCK_CANDIDATES, preferences, 'Madrid');
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const FLAG = 'econexo:matching-refresh:v1';
+    if (sessionStorage.getItem(FLAG)) return;
+    sessionStorage.setItem(FLAG, 'done');
+    router.refresh();
+  }, [router]);
 
   const handleMatchClick = (match: any) => {
-    if (match.type === 'job' && match.apply_url) {
-      window.open(match.apply_url, '_blank');
+    const applyLink = match.links?.apply || match.apply_url;
+    const websiteLink = match.links?.website;
+    const targetLink = match.type === 'job' ? applyLink || websiteLink : websiteLink;
+
+    if (typeof targetLink === 'string' && targetLink.startsWith('http')) {
+      window.open(targetLink, '_blank', 'noopener,noreferrer');
       return;
     }
-    // Navigate to project detail page
-    router.push(`/projects/${match.id}`);
+
+    if (match.type === 'project') {
+      router.push(`/projects/${match.id}`);
+      return;
+    }
+
+    const fallbackQuery = encodeURIComponent(match?.name || match?.company || '');
+    const jobsRoute = fallbackQuery ? `/trabajos?q=${fallbackQuery}` : '/trabajos';
+    router.push(jobsRoute);
   };
 
   return (
@@ -129,6 +192,46 @@ export default function MatchingPage() {
                       : '• Provide feedback to improve results'}
                 </li>
               </ul>
+            </div>
+
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
+                {locale === 'es' ? '🚀 Matchmaking inteligente' : locale === 'de' ? '🚀 Intelligentes Matchmaking' : '🚀 Intelligent Matchmaking'}
+              </h3>
+
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                  {locale === 'es' ? 'Proyectos más compatibles' : locale === 'de' ? 'Am besten passende Projekte' : 'Most compatible projects'}
+                </p>
+                {intelligentProjectMatches.slice(0, 3).map((project) => (
+                  <button
+                    key={project.id}
+                    type="button"
+                    onClick={() => router.push(`/projects/${project.id}`)}
+                    className="w-full text-left rounded-lg border border-slate-200 dark:border-slate-700 p-3 hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors"
+                  >
+                    <p className="font-medium text-slate-900 dark:text-white">{project.name}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      {project.recommendationScore}% match · {project.city}
+                    </p>
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-5 space-y-3">
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                  {locale === 'es' ? 'Personas para colaborar' : locale === 'de' ? 'Personen zum Zusammenarbeiten' : 'People to collaborate with'}
+                </p>
+                {peopleMatches.map((person) => (
+                  <div key={person.id} className="rounded-lg border border-slate-200 dark:border-slate-700 p-3">
+                    <p className="font-medium text-slate-900 dark:text-white">{person.name}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{person.role} · {person.city}</p>
+                    <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                      {person.matchScore}% match · {person.sharedSkills.join(', ') || 'skills base'}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

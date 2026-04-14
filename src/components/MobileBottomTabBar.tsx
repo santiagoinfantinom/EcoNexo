@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
-import { Map, Calendar, Crosshair, User } from "lucide-react";
+import { Map, Calendar, Crosshair, User, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function MobileBottomTabBar() {
@@ -20,7 +20,8 @@ export default function MobileBottomTabBar() {
   const navItems = [
     { href: "/", label: t("map") || "Mapa", icon: Map, id: "tab-home" },
     { href: "/eventos", label: t("events") || "Eventos", icon: Calendar, id: "tab-events" },
-    { href: "/misiones", label: locale === 'es' ? 'Misiones' : locale === 'de' ? 'Missionen' : 'Missions', icon: Crosshair, id: "tab-missions" },
+    { href: "/proyectos-comunitarios", label: locale === "es" ? "Comunitarios" : "Community", icon: Users, id: "tab-community-projects" },
+    { href: "/misiones", label: t("missions"), icon: Crosshair, id: "tab-missions" },
     { href: "/perfil", label: t("profile") || "Perfil", icon: User, id: "tab-profile" },
   ];
 

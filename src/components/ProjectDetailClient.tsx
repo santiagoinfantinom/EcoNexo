@@ -27,7 +27,7 @@ type ProjectDetails = {
   description: string;
   description_en?: string;
   description_de?: string;
-  info_url?: string;
+  links?: { website?: string; careers?: string; linkedin?: string; instagram?: string; twitter?: string; github?: string; wikipedia?: string; apply?: string };
   address?: string;
 };
 
@@ -145,7 +145,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
       setIsSponsoring(false);
       addPoints(100, `Sponsored Project: ${details.name}`);
       unlockBadge('sponsor', '🌟 Sponsor', '🌟');
-      alert(`🎉 ${locale === 'en' ? 'Thank you for sponsoring!' : locale === 'de' ? 'Danke für das Sponsoring!' : '¡Gracias por patrocinar este proyecto!'} 🎉`);
+      alert(`🎉 ${t("thanksSponsoring")} 🎉`);
     }, 1500);
   };
 
@@ -170,7 +170,14 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
       <div className="grid lg:grid-cols-[2fr,3fr] gap-4 sm:gap-6 items-start">
         {/* Imagen - Mejorada para móvil */}
         <div className="border rounded-lg overflow-hidden bg-white shadow-sm">
-          <ProjectImage src={details.image} alt={details.name} fallbackSrc="/window.svg" className="w-full h-48 sm:h-64 md:h-72 object-cover bg-gray-100" />
+          <ProjectImage
+            src={details.image}
+            alt={details.name}
+            category={details.category}
+            projectId={details.id}
+            fallbackSrc="/window.svg"
+            className="w-full h-48 sm:h-64 md:h-72 object-cover bg-gray-100"
+          />
         </div>
 
         {/* Contenido principal */}
@@ -233,7 +240,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
               disabled={isSponsoring}
               className={`bg-yellow-500 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-extrabold hover:bg-yellow-600 transition-colors shadow-md hover:shadow-lg text-center text-sm sm:text-base ${isSponsoring ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              {isSponsoring ? '⏳...' : '🌟 ' + (locale === 'en' ? 'Sponsor Project' : locale === 'de' ? 'Projekt sponsern' : 'Patrocinar Proyecto')}
+              {isSponsoring ? '⏳...' : '🌟 ' + t("sponsorProject")}
             </button>
             <a href={paypalLink} target="_blank" rel="noopener noreferrer" className="bg-blue-600 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg border-2 border-blue-700 text-center text-sm sm:text-base">{t("donatePaypal")}</a>
             <a href="https://www.klarna.com" target="_blank" rel="noopener noreferrer" className="bg-pink-500 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-pink-600 transition-colors shadow-md hover:shadow-lg border-2 border-pink-600 text-center text-sm sm:text-base">{t("donateKlarna")}</a>
@@ -242,7 +249,7 @@ export default function ProjectDetailClient({ id, details, impactTags, paypalLin
               {favorite ? '★ ' + t('saved') : '☆ ' + t('save')}
             </button>
             <button
-              onClick={details.info_url ? () => window.open(details.info_url, '_blank', 'noopener,noreferrer') : () => alert(t("infoNotAvailable"))}
+              onClick={details.links?.website ? () => window.open(details.links?.website, '_blank', 'noopener,noreferrer') : () => alert(t("infoNotAvailable"))}
               className="bg-gray-700 text-white rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-semibold hover:bg-gray-800 transition-colors shadow-md hover:shadow-lg border-2 border-gray-800 text-center text-sm sm:text-base cursor-pointer"
             >
               {t("moreInfo")}

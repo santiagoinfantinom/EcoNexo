@@ -5,6 +5,7 @@ interface RoomMessage {
   roomId: string;
   senderId: string;
   senderName: string;
+  senderAvatarUrl?: string;
   content: string;
   timestamp: number;
 }
@@ -18,7 +19,7 @@ const rooms = new Map();
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { roomId, senderId, senderName, content } = body;
+    const { roomId, senderId, senderName, senderAvatarUrl, content } = body;
 
     if (!roomId || !senderId || !senderName || !content) {
       return NextResponse.json(
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
       roomId,
       senderId,
       senderName,
+      senderAvatarUrl: senderAvatarUrl || undefined,
       content: content.trim(),
       timestamp: Date.now(),
     };

@@ -100,7 +100,7 @@ export default function OutlookCallbackPage() {
     };
 
     handleRedirect();
-  }, [router]);
+  }, [locale, router]);
 
   return (
     <div className="min-h-screen bg-gls-primary flex items-center justify-center p-4">

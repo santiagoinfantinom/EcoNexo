@@ -41,11 +41,7 @@ export default function AuthButton({
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
-  if (!mounted || loading) {
-    return (
-      <div className={`animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg ${size === "sm" ? "h-8 w-20" : size === "lg" ? "h-12 w-32" : "h-10 w-24"}`}></div>
-    );
-  }
+  if (!mounted) return null;
 
   const getButtonClasses = () => {
     const baseClasses = "font-medium transition-all focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2";
@@ -127,7 +123,7 @@ export default function AuthButton({
               onClick={() => setShowAuthPopup((v) => !v)}
               className={headerButtonClasses}
             >
-              {t("signIn")}
+              {t("signIn") || (locale === "de" ? "Anmelden" : locale === "es" ? "Iniciar sesión" : "Sign in")}
             </button>
             {showAuthPopup && (
               <div
@@ -138,7 +134,9 @@ export default function AuthButton({
               >
                 <div className="w-full max-w-xs rounded-2xl border border-white/15 bg-[#0f2f2a] shadow-2xl p-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-white text-sm font-bold">{t("signIn")}</span>
+                    <span className="text-white text-sm font-bold">
+                      {t("signIn") || (locale === "de" ? "Anmelden" : locale === "es" ? "Iniciar sesión" : "Sign in")}
+                    </span>
                     <button
                       type="button"
                       onClick={() => setShowAuthPopup(false)}
@@ -157,7 +155,7 @@ export default function AuthButton({
                     }}
                     className="w-full text-left px-3 py-2 rounded-lg text-white/95 hover:bg-white/10 text-sm font-semibold"
                   >
-                    {t("signIn")}
+                    {t("signIn") || (locale === "de" ? "Anmelden" : locale === "es" ? "Iniciar sesión" : "Sign in")}
                   </button>
                   <button
                     type="button"

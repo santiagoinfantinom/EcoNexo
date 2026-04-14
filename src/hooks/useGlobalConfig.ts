@@ -1,9 +1,12 @@
-import { COMPONENT_CONFIG, ContrastLevel, ButtonVariant, CardVariant, InputVariant, TitleLevel } from '@/lib/component-config';
+import { COMPONENT_CONFIG, ButtonVariant, CardVariant, InputVariant, TitleLevel } from '@/lib/component-config';
 
 export function useGlobalConfig() {
   // Función para obtener clases de contraste
-  const getContrastClasses = (element: 'text' | 'background' | 'border', level: ContrastLevel) => {
-    return COMPONENT_CONFIG.contrast[element][level];
+  const getContrastClasses = (
+    element: 'text' | 'background' | 'border',
+    level: string
+  ) => {
+    return (COMPONENT_CONFIG.contrast[element] as Record<string, string>)[level];
   };
   
   // Función para obtener clases de botones

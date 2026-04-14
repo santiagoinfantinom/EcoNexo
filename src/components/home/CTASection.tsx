@@ -9,8 +9,6 @@ import dynamic from "next/dynamic";
 
 const AuthModal = dynamic(() => import("@/components/AuthModal"), { ssr: false });
 
-interface CTASectionProps { }
-
 export default function CTASection() {
     const { t } = useI18n();
     const { user } = useAuth();

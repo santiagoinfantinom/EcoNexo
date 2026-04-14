@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSmartContext } from '@/context/SmartContext';
 import { useI18n } from '@/lib/i18n';
-import Link from 'next/link';
 
-interface Buddy {
+export interface Buddy {
     id: string;
     name: string;
     avatar: string;
@@ -47,9 +46,14 @@ const MOCK_BUDDIES: Buddy[] = [
     }
 ];
 
-export default function EcoBuddiesList() {
+interface EcoBuddiesListProps {
+    onSayHi?: (buddy: Buddy) => void;
+}
+
+export default function EcoBuddiesList({ onSayHi }: EcoBuddiesListProps) {
     const { preferences } = useSmartContext();
     const { t, locale } = useI18n();
+    const [selectedBuddy, setSelectedBuddy] = useState<Buddy | null>(null);
 
     // Calculate a dynamic score based on user skills (mock logic for demo)
     const buddies = useMemo(() => {
@@ -61,23 +65,33 @@ export default function EcoBuddiesList() {
         }).sort((a, b) => b.matchScore - a.matchScore);
     }, [preferences.selectedSkills]);
 
+    const formatInterest = (skill: string) => {
+        const skillKeyMap: Record<string, string> = {
+            gardening: "buddySkillGardening",
+            tech: "buddySkillTech",
+            manual: "buddySkillManual",
+            social: "buddySkillSocial",
+            teaching: "buddySkillTeaching",
+            art: "buddySkillArt",
+        };
+        const translated = t(skillKeyMap[skill] || skill);
+        if (translated && translated !== skill) return translated;
+        return skill.charAt(0).toUpperCase() + skill.slice(1);
+    };
+
     return (
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                    <span className="text-2xl">🌱</span> {locale === 'en' ? 'Eco-Buddies' : locale === 'de' ? 'Eco-Freunde' : 'Eco-Buddies'}
+                    <span className="text-2xl">🌱</span> {t("ecoBuddies")}
                 </h3>
                 <span className="text-sm bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400 px-3 py-1 rounded-full font-medium">
-                    {locale === 'en' ? 'Matches' : locale === 'de' ? 'Übereinstimmungen' : 'Coincidencias'}
+                    {t("matchesLabel")}
                 </span>
             </div>
 
             <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
-                {locale === 'en'
-                    ? 'Connect with volunteers who share your skills and interests.'
-                    : locale === 'de'
-                        ? 'Vernetze dich mit Freiwilligen, die deine Fähigkeiten und Interessen teilen.'
-                        : 'Conecta con voluntarios que comparten tus habilidades e intereses.'}
+                {t("ecoBuddiesDesc")}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -92,19 +106,77 @@ export default function EcoBuddiesList() {
                                 <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                                     <span>📍 {buddy.city}</span>
                                     <span>•</span>
-                                    <span className="text-green-600 dark:text-green-400 font-bold">{buddy.matchScore}% Match</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setSelectedBuddy(buddy)}
+                                        className="text-green-600 dark:text-green-400 font-bold underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded"
+                                        aria-label={`${buddy.matchScore}% ${t("match")} - ${locale === 'es' ? 'Ver intereses en común' : locale === 'de' ? 'Gemeinsame Interessen anzeigen' : 'View common interests'}`}
+                                    >
+                                        {buddy.matchScore}% {t("match")}
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         <button
                             className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-sm transition-colors font-medium cursor-pointer"
-                            onClick={() => alert('Feature coming soon: Direct messaging')}
+                            onClick={() => {
+                                if (onSayHi) {
+                                    onSayHi(buddy);
+                                    return;
+                                }
+                                alert(t("comingSoonMessaging"));
+                            }}
                         >
-                            {locale === 'en' ? 'Say Hi 👋' : locale === 'de' ? 'Sag Hallo 👋' : 'Saludar 👋'}
+                            {t("sayHi")}
                         </button>
                     </div>
                 ))}
             </div>
+
+            {selectedBuddy && (
+                <div
+                    className="fixed inset-0 z-[120] flex items-center justify-center bg-black/50 p-4"
+                    onClick={() => setSelectedBuddy(null)}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={locale === 'es' ? 'Intereses en común' : locale === 'de' ? 'Gemeinsame Interessen' : 'Common interests'}
+                >
+                    <div
+                        className="w-full max-w-sm rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-2xl p-5"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-start justify-between gap-4">
+                            <div>
+                                <h4 className="text-lg font-bold text-gray-900 dark:text-white">
+                                    {locale === 'es' ? 'Intereses en común' : locale === 'de' ? 'Gemeinsame Interessen' : 'Common interests'}
+                                </h4>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    {selectedBuddy.name}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setSelectedBuddy(null)}
+                                className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white font-bold"
+                                aria-label={locale === 'es' ? 'Cerrar' : locale === 'de' ? 'Schließen' : 'Close'}
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <div className="mt-4 flex flex-wrap gap-2">
+                            {selectedBuddy.matchedSkills.map((skill) => (
+                                <span
+                                    key={`${selectedBuddy.id}-${skill}`}
+                                    className="inline-flex items-center rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300 px-3 py-1 text-xs font-semibold"
+                                >
+                                    {formatInterest(skill)}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

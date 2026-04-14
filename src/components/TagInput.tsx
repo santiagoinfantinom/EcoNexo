@@ -1,5 +1,5 @@
 "use client";
-import { useState, KeyboardEvent, useEffect, useRef } from 'react';
+import { useState, KeyboardEvent, useEffect, useRef, useMemo } from 'react';
 
 interface TagInputProps {
     value: string;
@@ -26,7 +26,10 @@ export default function TagInput({
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Convert string to array of tags
-    const tags = value ? value.split(',').map(t => t.trim()).filter(t => t.length > 0) : [];
+    const tags = useMemo(
+        () => (value ? value.split(',').map(t => t.trim()).filter(t => t.length > 0) : []),
+        [value]
+    );
 
     useEffect(() => {
         if (inputValue.trim() && suggestions.length > 0) {

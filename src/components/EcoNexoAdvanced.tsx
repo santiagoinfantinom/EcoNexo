@@ -48,12 +48,19 @@ export default function EcoNexoAdvanced({
   userId = 'user123',
   onEventClick 
 }: EcoNexoAdvancedProps) {
+  const getDefaultDateRange = () => {
+    const start = new Date();
+    const end = new Date(start);
+    end.setDate(start.getDate() + 30);
+    return {
+      start: start.toISOString().split('T')[0],
+      end: end.toISOString().split('T')[0]
+    };
+  };
+
   const [activeFeature, setActiveFeature] = useState<string>('recommendations');
   const [filters, setFilters] = useState<FilterOptions>({
-    dateRange: {
-      start: new Date().toISOString().split('T')[0],
-      end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-    },
+    dateRange: getDefaultDateRange(),
     distance: 50,
     impactType: [],
     difficulty: [],
@@ -98,8 +105,8 @@ export default function EcoNexoAdvanced({
         return (
           <PersonalizedRecommendations
             userId={userId}
-            events={events}
-            onEventClick={handleEventSelect}
+            events={events as any}
+            onEventClick={handleEventSelect as any}
           />
         );
       
@@ -135,11 +142,11 @@ export default function EcoNexoAdvanced({
         return (
           <div className="h-96">
             <IntelligentClustering
-              events={events}
+              events={events as any}
               onClusterClick={(cluster) => {
                 console.log('Cluster clicked:', cluster);
               }}
-              onEventClick={handleEventSelect}
+              onEventClick={handleEventSelect as any}
             />
           </div>
         );
@@ -147,7 +154,7 @@ export default function EcoNexoAdvanced({
       case 'impact':
         return selectedEvent ? (
           <ImpactAnalysis
-            event={selectedEvent}
+            event={selectedEvent as any}
             onAnalysisComplete={(metrics) => {
               console.log('Impact analysis:', metrics);
             }}

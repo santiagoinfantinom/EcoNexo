@@ -11,9 +11,80 @@ interface MatchRequest {
   filters?: Record<string, any>;
 }
 
+type LocaleMap = Record<string, string>;
+
+const localePriority = ['es', 'en', 'de', 'fr', 'it', 'pl', 'nl'];
+
+function readLocalizedValue(value: string | LocaleMap | undefined): string {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  for (const locale of localePriority) {
+    if (value[locale]) return value[locale];
+  }
+  const first = Object.values(value)[0];
+  return typeof first === 'string' ? first : '';
+}
+
+function readLocalizedArray(value: string[] | Record<string, string[]> | undefined): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  const merged = Object.values(value).flat();
+  return merged.filter(Boolean);
+}
+
+function parseSalaryFilter(value: string | undefined): number {
+  if (!value || value === 'Any') return 0;
+  const numeric = Number(value.replace(/[^\d]/g, ''));
+  if (!Number.isFinite(numeric)) return 0;
+  return numeric * 1000;
+}
+
+function normalizeProject(project: any, score: number) {
+  return {
+    ...project,
+    type: 'project' as const,
+    match_score: Math.min(98, Math.max(55, score)),
+  };
+}
+
+function normalizeJob(job: any, score: number) {
+  const title = job.title || {};
+  const description = job.description || {};
+  const city = job.city || {};
+  const country = job.country || {};
+  const salary = job.salaryMinEur && job.salaryMaxEur
+    ? `EUR ${job.salaryMinEur.toLocaleString()} - ${job.salaryMaxEur.toLocaleString()}`
+    : undefined;
+
+  return {
+    id: job.id,
+    type: 'job' as const,
+    name: readLocalizedValue(title),
+    name_en: typeof title === 'object' ? title.en : undefined,
+    name_de: typeof title === 'object' ? title.de : undefined,
+    description: readLocalizedValue(description),
+    description_en: typeof description === 'object' ? description.en : undefined,
+    description_de: typeof description === 'object' ? description.de : undefined,
+    category: 'Empleo',
+    city: readLocalizedValue(city),
+    country: readLocalizedValue(country),
+    lat: 0,
+    lng: 0,
+    company: job.company,
+    salary,
+    is_external: true,
+    links: {
+      apply: job.apply_url,
+      website: job.apply_url,
+    },
+    match_score: Math.min(98, Math.max(55, score)),
+  };
+}
+
 // Simple local matching logic as fallback
 function localMatching(query: string, filters: Record<string, any> | undefined | null) {
   const queryLower = query.toLowerCase();
+  const isJuniorIntent = /(junior|entry|entry[- ]?level|becario|trainee|prácticas|intern)/i.test(queryLower);
 
   // Keyword extraction (ignoring common stop words)
   const stopWords = ['quiero', 'un', 'una', 'en', 'de', 'para', 'con', 'el', 'la', 'los', 'las', 'trabajo', 'proyecto', 'busco', 'buscar', 'empleo', 'vacante'];
@@ -24,8 +95,8 @@ function localMatching(query: string, filters: Record<string, any> | undefined |
     queryLower.includes('vacante') || queryLower.includes('sueldo') ||
     queryLower.includes('salario') || queryLower.includes('hire');
 
-  let scoredProjects = PROJECTS.map(p => ({ item: p, type: 'project', score: 0 }));
-  let scoredJobs = JOBS.map(j => ({ item: j, type: 'job', score: isJobSearch ? 10 : 0 }));
+  const scoredProjects = PROJECTS.map(p => ({ item: p, type: 'project', score: 0 }));
+  const scoredJobs = JOBS.map(j => ({ item: j, type: 'job', score: isJobSearch ? 10 : 0 }));
 
   const allScored = [...scoredProjects, ...scoredJobs];
 
@@ -80,6 +151,67 @@ function localMatching(query: string, filters: Record<string, any> | undefined |
         entry.score -= 50; // Penalize if location doesn't match
       }
     }
+
+    if (entry.type === 'job') {
+      const job = entry.item as any;
+      const level = String(job.level || '').toLowerCase();
+      if (filters?.isRemote && !job.remote) {
+        entry.score -= 25;
+      }
+      if (filters?.experience && Number.isFinite(filters.experience)) {
+        const experience = Number(filters.experience);
+        const gap = Math.max(0, (job.experienceYears || 0) - experience);
+
+        if (gap === 0) {
+          entry.score += 16;
+        } else if (gap === 1) {
+          entry.score += 8;
+        } else {
+          entry.score -= Math.min(30, gap * 6);
+        }
+
+        // Stronger bias for junior seekers so senior roles sink in ranking.
+        if (experience <= 1) {
+          if (level === 'junior') entry.score += 14;
+          if (level === 'mid') entry.score -= 6;
+          if (level === 'senior' || level === 'lead') entry.score -= 18;
+        }
+      }
+
+      if (isJuniorIntent) {
+        if (level === 'junior') entry.score += 18;
+        if (job.contract === 'internship') entry.score += 10;
+        if (level === 'mid') entry.score -= 10;
+        if (level === 'senior' || level === 'lead') entry.score -= 24;
+      }
+      const minSalary = parseSalaryFilter(filters?.salary);
+      if (minSalary > 0) {
+        if (job.salaryMaxEur >= minSalary) {
+          entry.score += 16;
+        } else {
+          entry.score -= 20;
+        }
+      }
+      const requiredSkills = Array.isArray(filters?.skills) ? filters.skills : [];
+      if (requiredSkills.length > 0) {
+        const normalizedSkills = requiredSkills.map((s: string) => s.toLowerCase());
+        const jobSkills = readLocalizedArray(job.knowledgeAreas).map(skill => skill.toLowerCase());
+        const matches = normalizedSkills.filter((skill: string) => jobSkills.some(js => js.includes(skill)));
+        if (matches.length > 0) {
+          entry.score += Math.min(25, matches.length * 8);
+        } else {
+          entry.score -= 10;
+        }
+      }
+    } else if (Array.isArray(filters?.skills) && filters.skills.length > 0) {
+      const project = entry.item as any;
+      const projectTags = Array.isArray(project.tags) ? project.tags.map((tag: string) => tag.toLowerCase()) : [];
+      const normalizedSkills = filters.skills.map((s: string) => s.toLowerCase());
+      const matches = normalizedSkills.filter((skill: string) => projectTags.some((tag: string) => tag.includes(skill)));
+      if (matches.length > 0) {
+        entry.score += Math.min(20, matches.length * 6);
+      }
+    }
   });
 
   // Filter out items with negative or 0 score if we have active criteria
@@ -94,12 +226,11 @@ function localMatching(query: string, filters: Record<string, any> | undefined |
   filteredResults.sort((a, b) => b.score - a.score);
 
   // Take top 5
-  const results = filteredResults.slice(0, 5).map(entry => ({
-    ...entry.item,
-    type: entry.type,
-    // Calculate a matching percentage
-    match_score: Math.min(98, Math.max(65, entry.score > 50 ? 85 + Math.floor(Math.random() * 13) : entry.score + 50))
-  }));
+  const results = filteredResults.slice(0, 5).map(entry => {
+    const baseScore = entry.score > 50 ? 85 + Math.floor(Math.random() * 13) : entry.score + 50;
+    if (entry.type === 'job') return normalizeJob(entry.item, baseScore);
+    return normalizeProject(entry.item, baseScore);
+  });
 
   const explanations: Record<string, string> = {
     general: results.length > 0 && hasActiveCriteria

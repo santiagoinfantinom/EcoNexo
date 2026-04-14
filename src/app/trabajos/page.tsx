@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useI18n, locationLabel } from "@/lib/i18n";
 import { useToast } from "@/components/ToastNotification";
 import { CardSkeleton } from "@/components/SkeletonLoader";
@@ -1957,36 +1957,36 @@ export default function JobsPage() {
   const { t, locale } = useI18n();
 
   // Helper functions to get translated job data with safe fallback
-  const getJobTitle = (job: Job) => {
+  const getJobTitle = useCallback((job: Job) => {
     if (typeof job.title === 'string') return job.title;
     return job.title[locale] || job.title['en'] || Object.values(job.title)[0] || '';
-  };
+  }, [locale]);
 
-  const getJobDescription = (job: Job) => {
+  const getJobDescription = useCallback((job: Job) => {
     if (typeof job.description === 'string') return job.description;
     return job.description[locale] || job.description['en'] || Object.values(job.description)[0] || '';
-  };
+  }, [locale]);
 
-  const getJobKnowledgeAreas = (job: Job): string[] => {
+  const getJobKnowledgeAreas = useCallback((job: Job): string[] => {
     if (Array.isArray(job.knowledgeAreas)) return job.knowledgeAreas;
     return job.knowledgeAreas[locale] || job.knowledgeAreas['en'] || Object.values(job.knowledgeAreas)[0] || [];
-  };
+  }, [locale]);
 
-  const getJobCity = (job: Job) => {
+  const getJobCity = useCallback((job: Job) => {
     if (typeof job.city === 'string') return job.city;
     return job.city[locale] || job.city['en'] || Object.values(job.city)[0] || '';
-  };
+  }, [locale]);
 
-  const getJobCountry = (job: Job) => {
+  const getJobCountry = useCallback((job: Job) => {
     if (typeof job.country === 'string') return job.country;
     return job.country[locale] || job.country['en'] || Object.values(job.country)[0] || '';
-  };
+  }, [locale]);
 
-  const getKnowledgeArea = (area: string) => {
+  const getKnowledgeArea = useCallback((area: string) => {
     const areaKey = area.toLowerCase().replace(/[\s\.]+/g, '');
     const translated = t(areaKey);
     return translated === areaKey ? area : translated;
-  };
+  }, [t]);
   const { showToast } = useToast();
   const currentLocale = String(locale);
   const [query, setQuery] = useState("");
@@ -2114,7 +2114,7 @@ export default function JobsPage() {
       .filter(j => contract === "all" ? true : j.contract === contract)
       .filter(j => levelFilter === 'all' ? true : j.level === levelFilter)
       .filter(j => remoteOnly ? j.remote : true);
-  }, [query, minSalary, minExperience, city, contract, levelFilter, remoteOnly, locale, curatedJobs, realJobs]);
+  }, [query, minSalary, minExperience, city, contract, levelFilter, remoteOnly, locale, curatedJobs, realJobs, getJobTitle, getJobDescription, getJobKnowledgeAreas, getKnowledgeArea, getJobCity, getJobCountry]);
 
   const fmtCurrency = (v: number) =>
     new Intl.NumberFormat(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-US' : 'es-ES', { style: 'currency', currency: 'EUR' }).format(v);

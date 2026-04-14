@@ -46,9 +46,10 @@ export default function NearbyEventsList() {
     }, []);
 
     const getEventTitle = (event: Event) => {
+        const language = locale as string;
         if (locale === 'en' && event.title_en) return event.title_en;
         if (locale === 'de' && event.title_de) return event.title_de;
-        if (locale === 'fr' && event.title_fr) return event.title_fr;
+        if (language === 'fr' && event.title_fr) return event.title_fr;
         return event.title;
     };
 

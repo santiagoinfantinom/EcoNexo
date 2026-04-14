@@ -1,17 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Zap from 'lucide-react/dist/esm/icons/zap';
-import Trophy from 'lucide-react/dist/esm/icons/trophy';
-import Users from 'lucide-react/dist/esm/icons/users';
-import Flame from 'lucide-react/dist/esm/icons/flame';
-import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
-import Star from 'lucide-react/dist/esm/icons/star';
-import ShieldCheck from 'lucide-react/dist/esm/icons/shield-check';
-import TrendingUp from 'lucide-react/dist/esm/icons/trending-up';
-import Award from 'lucide-react/dist/esm/icons/award';
-import CircleDot from 'lucide-react/dist/esm/icons/circle-dot';
-import X from 'lucide-react/dist/esm/icons/x';
+import { Zap, Trophy, Users, Flame, ChevronRight, Star, ShieldCheck, TrendingUp, Award, CircleDot, X } from 'lucide-react';
 import { useSmartContext, UserQuest } from '@/context/SmartContext';
 import { useI18n } from '@/lib/i18n';
 

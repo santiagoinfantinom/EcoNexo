@@ -20,7 +20,7 @@ type Project = {
   description_en?: string;
   description_de?: string;
   image_url?: string;
-  info_url?: string;
+  links?: { website?: string };
   category: string;
   lat: number;
   lng: number;
@@ -106,6 +106,7 @@ export default function InteractiveMap({
   const [frequencyFilters, setFrequencyFilters] = useState<{ once: boolean; regular: boolean; permanent: boolean }>({ once: true, regular: true, permanent: true });
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [isActivated, setIsActivated] = useState(false);
   
   // Cache for icons to avoid recreation
   const iconCache = useRef<Record<string, L.DivIcon>>({});
@@ -281,6 +282,63 @@ export default function InteractiveMap({
     return icon;
   }
 
+  if (!isActivated) {
+    return (
+      <div 
+        ref={containerRef} 
+        className="relative w-full h-[600px] overflow-hidden rounded-3xl group"
+      >
+        {/* Abstract Premium Background */}
+        <div className="absolute inset-0 bg-slate-900 overflow-hidden">
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-green-500 blur-[120px] animate-pulse"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+          </div>
+          
+          {/* Stylized Grid Overlay */}
+          <div className="absolute inset-0 opacity-10" style={{ 
+            backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)',
+            backgroundSize: '32px 32px'
+          }}></div>
+        </div>
+
+        {/* Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
+          <div className="mb-8 relative">
+            <div className="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center border border-white/20 shadow-2xl group-hover:scale-110 transition-transform duration-500">
+              <span className="text-4xl">🌍</span>
+            </div>
+            <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-4 border-slate-900">
+              <span className="text-[10px] text-white">✨</span>
+            </div>
+          </div>
+
+          <h2 className="text-3xl font-extrabold text-white mb-4 tracking-tight">
+            {t("mapPlaceholderTitle")}
+          </h2>
+          <p className="text-slate-400 max-w-md mb-10 leading-relaxed text-lg">
+            {t("activateMapDescription")}
+          </p>
+
+          <button
+            onClick={() => setIsActivated(true)}
+            className="group/btn relative px-8 py-4 bg-white hover:bg-green-50 text-slate-900 rounded-2xl font-bold text-lg transition-all duration-300 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.3)] active:scale-95 flex items-center gap-3 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
+            <span className="relative">{t("activateMap")}</span>
+            <span className="relative text-xl group-hover/btn:translate-x-1 transition-transform">→</span>
+          </button>
+          
+          <div className="mt-8 flex items-center gap-4 text-xs font-semibold text-slate-500 uppercase tracking-widest">
+            <div className="h-[1px] w-8 bg-slate-800"></div>
+            <span>{projects.length} {t("activeProjects")}</span>
+            <div className="h-[1px] w-8 bg-slate-800"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-hidden">
       <MapContainer
@@ -294,7 +352,6 @@ export default function InteractiveMap({
           setTimeout(() => mapRef.current?.invalidateSize(), 100);
         }}
       >
-        {/** @ts-ignore */}
         <SetMapRef onReady={(m: LeafletMap) => (mapRef.current = m)} />
         <MapLayers />
 

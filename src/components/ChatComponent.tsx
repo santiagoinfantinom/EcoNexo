@@ -1,12 +1,12 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
-import Link from "next/link";
 import AuthButton from "./AuthButton";
 import AuthModal from "./AuthModal";
 import { useRouter } from "next/navigation";
-import EcoBuddiesList from "./EcoBuddiesList";
+import EcoBuddiesList, { type Buddy } from "./EcoBuddiesList";
+import UserAvatar from "./UserAvatar";
 
 interface Message {
   id: string;
@@ -14,6 +14,7 @@ interface Message {
   sender: string;
   timestamp: Date;
   avatar?: string;
+  avatarUrl?: string;
   topic?: string;
 }
 
@@ -37,6 +38,8 @@ export default function ChatComponent() {
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [onlineUsersCount, setOnlineUsersCount] = useState(0);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [activeBuddyChat, setActiveBuddyChat] = useState<Buddy | null>(null);
+  const [directMessages, setDirectMessages] = useState<Record<string, Message[]>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Topics configuration
@@ -99,10 +102,40 @@ export default function ChatComponent() {
     }
   ];
 
-  // Helper function to get translated messages
-  const getTranslatedMessage = (messageKey: string) => {
-    return t(messageKey as keyof typeof t) || messageKey;
-  };
+  // Helper function with hard fallback to avoid raw i18n keys in UI.
+  const getTranslatedMessage = useCallback((messageKey: string) => {
+    const translated = t(messageKey as keyof typeof t);
+    if (translated && translated !== messageKey) return translated;
+
+    const fallbackByKey: Record<string, { es: string; en: string; de: string }> = {
+      chatMessage1: {
+        es: "¡Excelente iniciativa! ¿Cómo puedo participar?",
+        en: "Great initiative! How can I get involved?",
+        de: "Großartige Initiative! Wie kann ich mich beteiligen?",
+      },
+      chatMessage2: {
+        es: "He estado trabajando en proyectos similares en mi área.",
+        en: "I've been working on similar projects in my area.",
+        de: "Ich arbeite an ähnlichen Projekten in meiner Gegend.",
+      },
+      chatMessage3: {
+        es: "¡Esto es exactamente lo que necesitamos más!",
+        en: "This is exactly what we need more of!",
+        de: "Das ist genau das, was wir mehr brauchen!",
+      },
+      chatMessage4: {
+        es: "¿Alguien ha probado este enfoque antes?",
+        en: "Has anyone tried this approach before?",
+        de: "Hat jemand diesen Ansatz schon einmal ausprobiert?",
+      },
+    };
+
+    const pack = fallbackByKey[messageKey];
+    if (!pack) return "";
+    if (locale === "de") return pack.de;
+    if (locale === "en") return pack.en;
+    return pack.es;
+  }, [locale, t]);
 
   // Mock messages for demonstration
   useEffect(() => {
@@ -368,7 +401,7 @@ export default function ChatComponent() {
 
     // Set online users count after component mounts to avoid hydration mismatch
     setOnlineUsersCount(Math.floor(Math.random() * 20) + 5);
-  }, [locale]);
+  }, [getTranslatedMessage, locale]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -388,12 +421,20 @@ export default function ChatComponent() {
       const message: Message = {
         id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         text: newMessage,
-        sender: user.email?.split("@")[0] || "Tú",
+        sender: user.email?.split("@")[0] || t("youLabel"),
         timestamp: new Date(),
         avatar: "👤",
+        avatarUrl: user.profile?.avatar_url || user.profile?.picture || undefined,
         topic: selectedTopic
       };
-      setMessages([...messages, message]);
+      if (activeBuddyChat) {
+        setDirectMessages((prev) => ({
+          ...prev,
+          [activeBuddyChat.id]: [...(prev[activeBuddyChat.id] || []), message],
+        }));
+      } else {
+        setMessages([...messages, message]);
+      }
       setNewMessage("");
     }
   };
@@ -409,9 +450,10 @@ export default function ChatComponent() {
     const message: Message = {
       id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       text: text,
-      sender: user.email?.split("@")[0] || "Tú",
+      sender: user.email?.split("@")[0] || t("youLabel"),
       timestamp: new Date(),
       avatar: "👤",
+      avatarUrl: user.profile?.avatar_url || user.profile?.picture || undefined,
       topic: selectedTopic
     };
     setMessages((prev) => [...prev, message]);
@@ -419,11 +461,7 @@ export default function ChatComponent() {
     // Simulate a quick AI response and redirect
     setTimeout(() => {
       const isGettingStarted = text.toLowerCase().includes("getting started") || text.toLowerCase().includes("primeros pasos") || text.toLowerCase().includes("erste schritte");
-      const botResponse = locale === "en"
-        ? (isGettingStarted ? "Redirecting you to the map..." : "Let me redirect you to the relevant section...")
-        : locale === "de"
-          ? (isGettingStarted ? "Weiterleitung zur Karte..." : "Ich leite dich zur entsprechenden Seite weiter...")
-          : (isGettingStarted ? "Redirigiéndote al mapa interactivo..." : "Déjame redirigirte a la sección relevante...");
+      const botResponse = isGettingStarted ? t("redirectingToMap") : t("redirectingToSection");
 
       const botMsg: Message = {
         id: `msg_bot_${Date.now()}`,
@@ -466,6 +504,52 @@ export default function ChatComponent() {
 
   const filteredMessages = messages.filter(msg => msg.topic === selectedTopic);
   const currentTopic = topics.find(topic => topic.id === selectedTopic);
+  const activeMessages = activeBuddyChat
+    ? (directMessages[activeBuddyChat.id] || [])
+    : filteredMessages;
+
+  const handleBackToForum = () => {
+    const latestPublicMessage = messages.reduce<Message | null>((latest, current) => {
+      if (!current.topic) return latest;
+      if (!latest) return current;
+      return current.timestamp > latest.timestamp ? current : latest;
+    }, null);
+
+    if (latestPublicMessage?.topic) {
+      setSelectedTopic(latestPublicMessage.topic);
+    }
+
+    setActiveBuddyChat(null);
+  };
+
+  const handleStartDirectChat = (buddy: Buddy) => {
+    if (!user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    setActiveBuddyChat(buddy);
+    setDirectMessages((prev) => {
+      if (prev[buddy.id]) return prev;
+
+      const welcomeMessage: Message = {
+        id: `dm_${buddy.id}_welcome`,
+        text: locale === "en"
+          ? "Hi! Great to connect with you here."
+          : locale === "de"
+            ? "Hallo! Schön, dass wir uns hier vernetzen."
+            : "¡Hola! Genial conectar contigo por aquí.",
+        sender: buddy.name,
+        timestamp: new Date(),
+        avatar: buddy.avatar,
+      };
+
+      return {
+        ...prev,
+        [buddy.id]: [welcomeMessage],
+      };
+    });
+  };
 
   return (
     <div className="max-w-6xl mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
@@ -543,12 +627,27 @@ export default function ChatComponent() {
               <span className="text-2xl">{currentTopic?.icon}</span>
               <div>
                 <h3 className="font-semibold text-slate-900 dark:text-white">
-                  {currentTopic?.name}
+                  {activeBuddyChat ? `${t("sayHi")} • ${activeBuddyChat.name}` : currentTopic?.name}
                 </h3>
                 <p className="text-sm text-slate-700 dark:text-slate-200">
-                  {currentTopic?.description}
+                  {activeBuddyChat
+                    ? (locale === "en"
+                      ? "Private chat opened from Eco-Buddies."
+                      : locale === "de"
+                        ? "Privater Chat aus Eco-Buddies geoffnet."
+                        : "Chat privado abierto desde Eco-Buddies.")
+                    : currentTopic?.description}
                 </p>
               </div>
+              {activeBuddyChat && (
+                <button
+                  type="button"
+                  onClick={handleBackToForum}
+                  className="ml-auto px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-500 text-slate-700 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+                >
+                  {locale === "en" ? "Back to forum" : locale === "de" ? "Zuruck zum Forum" : "Volver al foro"}
+                </button>
+              )}
             </div>
           </div>
 
@@ -556,10 +655,10 @@ export default function ChatComponent() {
           <div className="flex-1 p-6 overflow-y-auto bg-white dark:bg-slate-800">
 
             {/* Eco-Buddies Suggestions */}
-            <EcoBuddiesList />
+            <EcoBuddiesList onSayHi={handleStartDirectChat} />
 
             {/* Suggested Topics */}
-            {filteredMessages.length > 0 && (
+            {!activeBuddyChat && filteredMessages.length > 0 && (
               <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg border border-green-200 dark:border-green-800">
                 <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
                   <span>💡</span>
@@ -724,34 +823,47 @@ export default function ChatComponent() {
               </div>
             )}
 
-            {filteredMessages.length === 0 ? (
+            {activeMessages.length === 0 ? (
               <div className="text-center text-slate-500 dark:text-slate-400 py-8">
-                <div className="text-4xl mb-4">{currentTopic?.icon}</div>
+                <div className="text-4xl mb-4">{activeBuddyChat?.avatar || currentTopic?.icon}</div>
                 <p className="text-lg font-medium">
-                  {locale === 'de' ? `Willkommen im ${currentTopic?.name} Forum!` :
-                    locale === 'en' ? `Welcome to the ${currentTopic?.name} forum!` :
-                      `¡Bienvenido al foro de ${currentTopic?.name}!`}
+                  {activeBuddyChat
+                    ? (locale === "en"
+                      ? `Say hi to ${activeBuddyChat.name} to start the conversation.`
+                      : locale === "de"
+                        ? `Sag ${activeBuddyChat.name} hallo, um das Gesprach zu starten.`
+                        : `Saluda a ${activeBuddyChat.name} para iniciar la conversacion.`)
+                    : t("welcomeToForum", { topic: currentTopic?.name })}
                 </p>
                 <p className="text-sm mt-2">
-                  {locale === 'de' ? "Starte eine Diskussion oder beantworte Fragen." :
-                    locale === 'en' ? "Start a discussion or answer questions." :
-                      "Inicia una discusión o responde preguntas."}
+                  {activeBuddyChat
+                    ? (locale === "en"
+                      ? "Send your first direct message below."
+                      : locale === "de"
+                        ? "Sende unten deine erste Direktnachricht."
+                        : "Envia abajo tu primer mensaje directo.")
+                    : t("startDiscussionMsg")}
                 </p>
               </div>
             ) : (
               <div className="space-y-4">
-                {filteredMessages.map((message: Message) => (
+                {activeMessages.map((message: Message) => (
                   <div
                     key={message.id}
                     className={`flex ${message.sender === "Tú" ? "justify-end" : "justify-start"}`}
                   >
                     <div className={`flex max-w-[80%] ${message.sender === "Tú" ? "flex-row-reverse" : "flex-row"}`}>
-                      <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-lg ${message.sender === "Tú"
-                        ? "bg-green-600 text-white ml-3 shadow-sm"
-                        : "bg-slate-300 dark:bg-slate-600 text-slate-800 dark:text-slate-200 mr-3 shadow-sm"
-                        }`}>
-                        {message.avatar}
-                      </div>
+                      <UserAvatar
+                        src={message.avatarUrl}
+                        alt={message.sender}
+                        name={message.sender}
+                        fallbackText={message.avatar}
+                        sizeClassName="w-10 h-10"
+                        className={`flex-shrink-0 text-lg ${message.sender === "Tú"
+                          ? "bg-green-600 text-white ml-3 shadow-sm"
+                          : "bg-slate-300 dark:bg-slate-600 text-slate-800 dark:text-slate-200 mr-3 shadow-sm"
+                          }`}
+                      />
                       <div className={`flex flex-col ${message.sender === "Tú" ? "items-end" : "items-start"}`}>
                         <div className={`px-4 py-2 rounded-2xl ${message.sender === "Tú"
                           ? "bg-green-600 text-white shadow-md rounded-tr-none"
@@ -778,11 +890,7 @@ export default function ChatComponent() {
             {!user ? (
               <div className="text-center py-4">
                 <p className="text-slate-700 dark:text-slate-200 mb-4 font-semibold">
-                  {locale === 'es'
-                    ? 'Debes iniciar sesión para participar en el chat'
-                    : locale === 'de'
-                      ? 'Sie müssen sich anmelden, um am Chat teilzunehmen'
-                      : 'You must sign in to participate in the chat'}
+                  {t("mustSignInToChat")}
                 </p>
                 <div className="flex justify-center">
                   <AuthButton variant="primary" size="md" />
@@ -796,7 +904,13 @@ export default function ChatComponent() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder={t("typeMessage")}
+                    placeholder={activeBuddyChat
+                      ? (locale === "en"
+                        ? `Message ${activeBuddyChat.name}...`
+                        : locale === "de"
+                          ? `Nachricht an ${activeBuddyChat.name}...`
+                          : `Mensaje para ${activeBuddyChat.name}...`)
+                      : t("typeMessage")}
                     className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-slate-600 dark:text-white placeholder:text-slate-400"
                     disabled={!isConnected}
                   />
@@ -809,7 +923,13 @@ export default function ChatComponent() {
                   </button>
                 </div>
                 <div className="mt-2 text-[10px] text-slate-500 dark:text-slate-400 text-center font-bold uppercase tracking-widest">
-                  {t("onlineUsers")}: {onlineUsersCount} • {t("currentTopic")}: {currentTopic?.name}
+                  {activeBuddyChat
+                    ? (locale === "en"
+                      ? `PRIVATE CHAT • ${activeBuddyChat.name}`
+                      : locale === "de"
+                        ? `PRIVAT-CHAT • ${activeBuddyChat.name}`
+                        : `CHAT PRIVADO • ${activeBuddyChat.name}`)
+                    : `${t("onlineUsers")}: ${onlineUsersCount} • ${t("currentTopic")}: ${currentTopic?.name}`}
                 </div>
               </>
             )}

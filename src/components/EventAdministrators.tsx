@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
+import UserAvatar from "@/components/UserAvatar";
 
 interface Administrator {
   id: string;
@@ -29,11 +30,7 @@ export default function EventAdministrators({ eventId, isCreator }: EventAdminis
   const [email, setEmail] = useState("");
   const [adding, setAdding] = useState(false);
 
-  useEffect(() => {
-    fetchAdministrators();
-  }, [eventId]);
-
-  const fetchAdministrators = async () => {
+  const fetchAdministrators = useCallback(async () => {
     try {
       const res = await fetch(`/api/events/${eventId}/administrators`);
       if (res.ok) {
@@ -51,7 +48,11 @@ export default function EventAdministrators({ eventId, isCreator }: EventAdminis
     } finally {
       setLoading(false);
     }
-  };
+  }, [eventId]);
+
+  useEffect(() => {
+    fetchAdministrators();
+  }, [fetchAdministrators]);
 
   const handleAddAdministrator = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,13 +168,13 @@ export default function EventAdministrators({ eventId, isCreator }: EventAdminis
               className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
             >
               <div className="flex items-center gap-3">
-                {admin.profiles?.avatar_url && (
-                  <img
-                    src={admin.profiles.avatar_url}
-                    alt=""
-                    className="w-10 h-10 rounded-full"
-                  />
-                )}
+                <UserAvatar
+                  src={admin.profiles?.avatar_url}
+                  alt={admin.profiles?.full_name || admin.user_id}
+                  name={admin.profiles?.full_name || admin.user_id}
+                  sizeClassName="w-10 h-10"
+                  className="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-100"
+                />
                 <div>
                   <div className="font-medium">
                     {admin.profiles?.full_name || admin.user_id}

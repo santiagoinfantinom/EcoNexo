@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useI18n, categoryLabel } from '@/lib/i18n';
 
 interface SocialMediaProject {
@@ -53,7 +53,7 @@ export default function SocialMediaDetection({
   });
 
   // Mock detected projects (in real app, this would come from API)
-  const mockDetectedProjects: SocialMediaProject[] = [
+  const mockDetectedProjects: SocialMediaProject[] = useMemo(() => [
     {
       id: 'sm1',
       title: 'Limpieza de playas en Barcelona',
@@ -162,15 +162,9 @@ export default function SocialMediaDetection({
       imageUrl: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=400&q=80',
       postUrl: 'https://linkedin.com/posts/example4'
     }
-  ];
+  ], []);
 
-  useEffect(() => {
-    if (detectionEnabled) {
-      startDetection();
-    }
-  }, [detectionEnabled]);
-
-  const startDetection = async () => {
+  const startDetection = useCallback(async () => {
     setLoading(true);
     try {
       // Simulate API call to social media monitoring service
@@ -195,7 +189,13 @@ export default function SocialMediaDetection({
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, mockDetectedProjects, onProjectDetected]);
+
+  useEffect(() => {
+    if (detectionEnabled) {
+      startDetection();
+    }
+  }, [detectionEnabled, startDetection]);
 
   const approveProject = (project: SocialMediaProject) => {
     onProjectApproved?.(project);

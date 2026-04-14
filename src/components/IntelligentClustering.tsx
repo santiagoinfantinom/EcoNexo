@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from 'react-leaflet';
 import L from 'leaflet';
 import { ensureEventImage } from "@/lib/eventImages";
@@ -49,7 +49,7 @@ export default function IntelligentClustering({
   const [clusteringEnabled, setClusteringEnabled] = useState(true);
 
   // DBSCAN clustering algorithm
-  const performDBSCAN = (events: Event[], eps: number, minPts: number): Cluster[] => {
+  const performDBSCAN = useCallback((events: Event[], eps: number, minPts: number): Cluster[] => {
     const visited = new Set<string>();
     const clusters: Cluster[] = [];
     let clusterId = 0;
@@ -130,7 +130,7 @@ export default function IntelligentClustering({
     });
 
     return clusters;
-  };
+  }, []);
 
   const getClusterColor = (category: string): string => {
     switch (category) {
@@ -181,7 +181,7 @@ export default function IntelligentClustering({
 
     const newClusters = performDBSCAN(events, eps, minPts);
     setClusters(newClusters);
-  }, [events, zoomLevel, clusteringEnabled]);
+  }, [events, zoomLevel, clusteringEnabled, performDBSCAN]);
 
   // Separate clustered and unclustered events
   const clusteredEventIds = useMemo(() => {

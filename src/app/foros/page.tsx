@@ -2,6 +2,8 @@
 import React from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import UserAvatar from "@/components/UserAvatar";
 
 type ForumTopic = {
     id: string;
@@ -126,13 +128,42 @@ const FORUM_TOPICS: ForumTopic[] = [
 
 export default function ForosPage() {
     const { t, locale } = useI18n();
+    const { user } = useAuth();
     const [selectedCategory, setSelectedCategory] = React.useState<string>("all");
+    const [onlineNow, setOnlineNow] = React.useState(87);
+    const [liveTick, setLiveTick] = React.useState(0);
 
     const categories = ["all", "Medio ambiente", "Alimentación", "Tecnología", "Comunidad", "Océanos", "Educación"];
 
     const filteredTopics = selectedCategory === "all"
         ? FORUM_TOPICS
         : FORUM_TOPICS.filter(topic => topic.category === selectedCategory);
+
+    const categoryHeat = categories
+        .filter((c) => c !== "all")
+        .map((category) => {
+            const categoryTopics = FORUM_TOPICS.filter((topic) => topic.category === category);
+            const baseScore = categoryTopics.reduce((acc, topic) => acc + topic.posts + topic.participants, 0);
+            return {
+                category,
+                score: baseScore + (liveTick % 9),
+            };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3);
+    const ownAvatar = user?.profile?.avatar_url || user?.profile?.picture;
+    const ownName = user?.profile?.full_name || user?.email?.split('@')[0] || (locale === 'de' ? 'Du' : locale === 'en' ? 'You' : 'Tú');
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setLiveTick((prev) => prev + 1);
+            setOnlineNow((prev) => {
+                const delta = Math.random() > 0.5 ? 1 : -1;
+                return Math.max(60, prev + delta);
+            });
+        }, 4000);
+        return () => clearInterval(timer);
+    }, []);
 
     const getTitle = (topic: ForumTopic) => {
         if (locale === "en" && topic.title_en) return topic.title_en;
@@ -158,9 +189,30 @@ export default function ForosPage() {
                         {locale === "en"
                             ? "Join discussions about sustainability and environmental protection"
                             : locale === "de"
-                                ? "Nehmen Sie an Diskussionen über Nachhaltigkeit und Umweltschutz teil"
+                                ? "Diskussionen über Nachhaltigkeit und Umweltschutz beitreten"
                                 : "Únete a las discusiones sobre sostenibilidad y protección ambiental"}
                     </p>
+                </div>
+
+                <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="rounded-xl border border-emerald-300/30 bg-emerald-900/30 p-4 text-white">
+                        <div className="text-xs uppercase tracking-widest text-emerald-200 mb-1">
+                            {locale === "es" ? "En linea ahora" : locale === "de" ? "Jetzt online" : "Online now"}
+                        </div>
+                        <div className="text-3xl font-black">{onlineNow}</div>
+                    </div>
+                    <div className="rounded-xl border border-cyan-300/30 bg-cyan-900/30 p-4 text-white">
+                        <div className="text-xs uppercase tracking-widest text-cyan-200 mb-1">
+                            {locale === "es" ? "Temas activos" : locale === "de" ? "Aktive Themen" : "Active threads"}
+                        </div>
+                        <div className="text-3xl font-black">{FORUM_TOPICS.length}</div>
+                    </div>
+                    <div className="rounded-xl border border-purple-300/30 bg-purple-900/30 p-4 text-white">
+                        <div className="text-xs uppercase tracking-widest text-purple-200 mb-1">
+                            {locale === "es" ? "Publicaciones hoy" : locale === "de" ? "Beitrage heute" : "Posts today"}
+                        </div>
+                        <div className="text-3xl font-black">{162 + (liveTick % 7)}</div>
+                    </div>
                 </div>
 
                 {/* Suggested Topics - New Section */}
@@ -207,8 +259,53 @@ export default function ForosPage() {
                     ))}
                 </div>
 
+                <div className="mb-8 rounded-2xl border border-orange-300/25 bg-orange-900/25 p-4 text-white">
+                    <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-orange-200">
+                        {locale === "es" ? "Trending por categoria" : locale === "de" ? "Trend-Kategorien" : "Trending by category"}
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                        {categoryHeat.map((item, idx) => (
+                            <button
+                                key={item.category}
+                                onClick={() => setSelectedCategory(item.category)}
+                                className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold hover:bg-white/20 transition-colors"
+                            >
+                                <span>{idx === 0 ? "🔥" : idx === 1 ? "⚡" : "✨"}</span>
+                                <span>{item.category}</span>
+                                <span className="rounded-full bg-white/15 px-2 py-0.5">{item.score}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
                 {/* Topics Grid */}
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur p-5 text-white lg:row-span-2">
+                        <h3 className="text-lg font-bold mb-3">
+                            {locale === "es" ? "Actividad reciente" : locale === "de" ? "Letzte Aktivitat" : "Recent activity"}
+                        </h3>
+                        <div className="space-y-3 text-sm">
+                            {[
+                                { name: ownName, avatar: ownAvatar, text: locale === "es" ? "comentaste en Economia circular" : locale === "de" ? "hast in Kreislaufwirtschaft kommentiert" : "commented in Circular economy" },
+                                { name: "Luis", avatar: "", text: locale === "es" ? "creo un tema sobre huertos urbanos" : locale === "de" ? "erstellte ein Thema zu Stadtgarten" : "started a topic on urban gardens" },
+                                { name: "Ana", avatar: "", text: locale === "es" ? "compartio recurso de energia solar" : locale === "de" ? "teilte eine Ressource zu Solarenergie" : "shared a solar energy resource" },
+                                { name: "Sam", avatar: "", text: locale === "es" ? "respondio en movilidad sostenible" : locale === "de" ? "antwortete in nachhaltiger Mobilitat" : "replied in sustainable mobility" },
+                            ].map((item, idx) => (
+                                <div key={idx} className="flex items-center gap-2.5 rounded-lg bg-white/5 p-2.5">
+                                    <UserAvatar
+                                        src={item.avatar}
+                                        alt={item.name}
+                                        name={item.name}
+                                        sizeClassName="h-7 w-7"
+                                        className="bg-white/20"
+                                    />
+                                    <p className="text-white/90">
+                                        <span className="font-semibold">{item.name}</span> {item.text}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                     {filteredTopics.map((topic) => (
                         <Link
                             key={topic.id}
@@ -239,7 +336,7 @@ export default function ForosPage() {
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                     </svg>
-                                    {topic.participants} {locale === "en" ? "participants" : locale === "de" ? "Teilnehmer" : "participantes"}
+                                    {topic.participants} {locale === "en" ? "participants" : locale === "de" ? "Mitwirkende" : "personas participantes"}
                                 </span>
                             </div>
                         </Link>

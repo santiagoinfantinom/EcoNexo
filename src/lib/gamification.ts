@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { trackEvent } from '@/lib/analytics';
 
 export interface UserBadge {
@@ -27,11 +27,7 @@ export function useGamification() {
   const [totalPoints, setTotalPoints] = useState(0);
   const [level, setLevel] = useState(1);
 
-  useEffect(() => {
-    loadUserProgress();
-  }, []);
-
-  const loadUserProgress = () => {
+  const loadUserProgress = useCallback(() => {
     // Load from localStorage or API
     const savedBadges = localStorage.getItem('econexo-badges');
     const savedAchievements = localStorage.getItem('econexo-achievements');
@@ -44,7 +40,11 @@ export function useGamification() {
       setTotalPoints(points);
       setLevel(calculateLevel(points));
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadUserProgress();
+  }, [loadUserProgress]);
 
   const calculateLevel = (points: number): number => {
     return Math.floor(points / 100) + 1;
@@ -95,7 +95,7 @@ export function useGamification() {
     {
       id: 'first-event',
       name: t ? t('badgeFirstEvent') : 'badgeFirstEvent',
-      description: 'Participaste en tu primer evento ecológico',
+      description: 'Primera participación en un evento ecológico',
       icon: '🌱',
       color: 'green',
       maxProgress: 1
@@ -103,7 +103,7 @@ export function useGamification() {
     {
       id: 'eco-warrior',
       name: t ? t('badgeEcoWarrior') : 'badgeEcoWarrior',
-      description: 'Completaste 10 eventos ecológicos',
+      description: 'Participación completada en 10 eventos ecológicos',
       icon: '🛡️',
       color: 'blue',
       maxProgress: 10
@@ -111,7 +111,7 @@ export function useGamification() {
     {
       id: 'community-leader',
       name: t ? t('badgeCommunityLeader') : 'badgeCommunityLeader',
-      description: 'Organizaste tu primer proyecto',
+      description: 'Primera organización de un proyecto',
       icon: '👑',
       color: 'purple',
       maxProgress: 1
@@ -119,7 +119,7 @@ export function useGamification() {
     {
       id: 'green-job-hunter',
       name: t ? t('badgeGreenJobHunter') : 'badgeGreenJobHunter',
-      description: 'Aplicaste a 5 trabajos sostenibles',
+      description: 'Aplicación enviada a 5 trabajos sostenibles',
       icon: '💼',
       color: 'yellow',
       maxProgress: 5
@@ -127,7 +127,7 @@ export function useGamification() {
     {
       id: 'chat-master',
       name: t ? t('badgeChatMaster') : 'badgeChatMaster',
-      description: 'Participaste en 50 conversaciones',
+      description: 'Participación activa en 50 conversaciones',
       icon: '💬',
       color: 'pink',
       maxProgress: 50
@@ -138,14 +138,14 @@ export function useGamification() {
     {
       id: 'eco-explorer',
       title: t ? t('achievementEcoExplorer') : 'achievementEcoExplorer',
-      description: 'Descubriste todo el tipo de eventos disponibles',
+      description: 'Exploración de todos los tipos de eventos disponibles',
       points: 50,
       category: 'events'
     },
     {
       id: 'project-pioneer',
       title: t ? t('achievementProjectPioneer') : 'achievementProjectPioneer',
-      description: 'Creaste tu primer proyecto sostenible',
+      description: 'Primer proyecto sostenible creado',
       points: 100,
       category: 'projects'
     },

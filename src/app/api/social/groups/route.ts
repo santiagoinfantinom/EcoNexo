@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
           ...group,
           members_count: membersCount || 0,
           events_count: eventsCount || 0,
-          created_by_name: group.profiles?.full_name || "Unknown",
+          created_by_name: (group as any).profiles?.full_name || "Unknown",
         };
       })
     );

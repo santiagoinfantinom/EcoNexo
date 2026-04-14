@@ -30,7 +30,8 @@ export default function GeographicExpansion() {
   }, [selectedRegion, selectedLanguage, countries]);
 
   const getCountryName = (country: Country) => {
-    switch (locale) {
+    const language = locale as string;
+    switch (language) {
       case 'de': return country.name_de;
       case 'es': return country.name_es;
       case 'fr': return country.name_fr;

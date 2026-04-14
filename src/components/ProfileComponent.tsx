@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
+import { useSmartContext } from "@/context/SmartContext";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import EcoNexoLogo from "./EcoNexoLogo";
 import AuthButton from "./AuthButton";
 import TagInput from "./TagInput";
 import { LANGUAGES } from "@/data/languages";
+import UserAvatar from "./UserAvatar";
 
 interface ProfileData {
   // Basic Information
@@ -69,9 +71,44 @@ interface ProfileData {
   };
 }
 
+const normalizeDbProfile = (row: any): Partial<ProfileData> => ({
+  ...row,
+  full_name: row?.full_name ?? "",
+  first_name: row?.first_name ?? "",
+  last_name: row?.last_name ?? "",
+  email: row?.email ?? "",
+  phone: row?.phone ?? "",
+  birthdate: row?.birthdate ?? "",
+  birth_place: row?.birth_place ?? "",
+  pronouns: row?.pronouns ?? "",
+  gender: row?.gender ?? "",
+  city: row?.city ?? "",
+  country: row?.country ?? "",
+  timezone: row?.timezone ?? "",
+  about_me: row?.about_me ?? "",
+  bio: row?.bio ?? "",
+  avatar_url: row?.avatar_url ?? "/logo-econexo.png",
+  passions: row?.passions ?? "",
+  hobbies: row?.hobbies ?? "",
+  interests: row?.interests ?? "",
+  skills: row?.skills ?? "",
+  areas_of_expertise: row?.areas_of_expertise ?? "",
+  languages: row?.languages ?? "",
+  linkedin_url: row?.linkedin_url ?? "",
+  twitter_url: row?.twitter_url ?? "",
+  instagram_url: row?.instagram_url ?? "",
+  website_url: row?.website_url ?? "",
+  github_url: row?.github_url ?? "",
+  preferred_language: row?.preferred_language ?? "",
+  newsletter_subscribed: row?.newsletter_subscribed ?? false,
+  notifications_enabled: row?.notifications_enabled ?? true,
+  profile_visibility: row?.profile_visibility ?? "public",
+});
+
 export default function ProfileComponent() {
   const { t, locale } = useI18n();
   const { user, loading: authLoading, signOut } = useAuth();
+  const { gamification } = useSmartContext();
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = searchParams.get("next");
@@ -229,8 +266,7 @@ export default function ProfileComponent() {
         if (data) {
           setProfileData(prev => ({
             ...prev,
-            ...data,
-            avatar_url: data.avatar_url || "/logo-econexo.png"
+            ...normalizeDbProfile(data),
           }));
         }
       } catch (err) {
@@ -363,8 +399,7 @@ export default function ProfileComponent() {
         if (data) {
           setProfileData(prev => ({
             ...prev,
-            ...data,
-            avatar_url: data.avatar_url || "/logo-econexo.png"
+            ...normalizeDbProfile(data),
           }));
         }
       } catch (err) {
@@ -490,44 +525,15 @@ export default function ProfileComponent() {
             </p>
           </div>
           <div className="flex gap-3">
-            {isEditing ? (
-              <>
-                <button
-                  onClick={handleCancel}
-                  className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors text-sm font-medium"
-                >
-                  {t("cancel")}
-                </button>
-                <button
-                  onClick={handleSave}
-                  disabled={isLoading}
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors text-sm font-semibold disabled:opacity-50 shadow-md hover:shadow-lg border-2 border-green-700"
-                >
-                  {isLoading ?
-                    (t('saving' + locale.charAt(0).toUpperCase() + locale.slice(1))) :
-                    t("saveChanges")
-                  }
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="bg-white hover:bg-green-50 text-green-600 px-4 py-2 rounded-lg transition-colors text-sm font-medium shadow-sm"
-                >
-                  {t("editProfile")}
-                </button>
-                <button
-                  onClick={async () => {
-                    await signOut();
-                    window.location.href = '/';
-                  }}
-                  className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg transition-colors text-sm font-medium shadow-sm border border-red-200"
-                >
-                  {t("signOut")}
-                </button>
-              </>
-            )}
+            <button
+              onClick={async () => {
+                await signOut();
+                window.location.href = '/';
+              }}
+              className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg transition-colors text-sm font-medium shadow-sm border border-red-200"
+            >
+              {t("signOut")}
+            </button>
           </div>
         </div>
       </div>
@@ -557,21 +563,36 @@ export default function ProfileComponent() {
       )}
 
       <div className="p-6">
+        <div className="mb-6 rounded-xl border border-purple-200/70 dark:border-purple-800 bg-purple-50/80 dark:bg-purple-900/20 px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="text-lg" aria-hidden="true">⭐</span>
+            <p className="text-xs font-medium text-purple-700 dark:text-purple-300">
+              {locale === "es" ? "Karma total" : locale === "de" ? "Gesamtes Karma" : "Total karma"}
+            </p>
+          </div>
+          <p className="mt-1 text-2xl font-extrabold text-purple-900 dark:text-purple-100">
+            {gamification.karma ?? 0}
+          </p>
+          <p className="mt-1 text-xs text-purple-700/90 dark:text-purple-300/90">
+            {locale === "es"
+              ? "Sube al completar misiones y acciones con impacto positivo."
+              : locale === "de"
+                ? "Steigt durch Missionen und Aktionen mit positivem Impact."
+                : "Increases by completing missions and positive-impact actions."}
+          </p>
+        </div>
+
         {/* Profile Photo Section */}
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
-            {profileData.avatar_url && profileData.avatar_url !== "/logo-econexo.png" ? (
-              <img
-                src={profileData.avatar_url}
-                alt="Profile"
-                className="w-32 h-32 rounded-full object-cover border-4 border-green-200 dark:border-green-700"
-              />
-            ) : (
-              <EcoNexoLogo
-                className="w-32 h-32"
-                size={128}
-              />
-            )}
+            <UserAvatar
+              src={profileData.avatar_url || "/logo-econexo.png"}
+              alt={profileData.full_name || "Profile"}
+              name={profileData.full_name || profileData.email || "Profile"}
+              sizeClassName="w-32 h-32"
+              className="border-4 border-green-200 dark:border-green-700 bg-white dark:bg-slate-800"
+              imageClassName="object-cover"
+            />
             {isEditing && (
               <button
                 onClick={triggerFileInput}
@@ -1031,6 +1052,39 @@ export default function ProfileComponent() {
                 placeholder={t("websitePh")}
               />
             </div>
+          </div>
+        </div>
+
+        {/* Bottom actions */}
+        <div className="mt-10 border-t border-slate-200 dark:border-slate-700 pt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3">
+            {!isEditing ? (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors text-sm font-semibold shadow-md hover:shadow-lg"
+              >
+                {t("editProfile")}
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={handleCancel}
+                  disabled={isLoading}
+                  className="w-full sm:w-auto bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-100 px-5 py-3 rounded-lg transition-colors text-sm font-medium disabled:opacity-50"
+                >
+                  {t("cancel")}
+                </button>
+                <button
+                  onClick={handleSave}
+                  disabled={isLoading}
+                  className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors text-sm font-semibold disabled:opacity-50 shadow-md hover:shadow-lg"
+                >
+                  {isLoading
+                    ? (t('saving' + locale.charAt(0).toUpperCase() + locale.slice(1)))
+                    : t("saveChanges")}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import Link from "next/link";
 import { ActivityFeedItem } from "@/lib/social-types";
+import UserAvatar from "@/components/UserAvatar";
 
 export default function ComunidadPage() {
   const { t, locale } = useI18n();
@@ -42,9 +43,21 @@ export default function ComunidadPage() {
   return (
     <div className="min-h-screen bg-background dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="mb-4">
+          <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white/90">
+            {locale === "es" ? "Network de ejecución climática" : locale === "de" ? "Klima-Execution-Network" : "Climate execution network"}
+          </span>
+        </div>
         <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-8">
           {t('communityPageTitle')}
         </h1>
+        <p className="mb-8 max-w-3xl text-sm text-white/80">
+          {locale === "es"
+            ? "Conecta personas, grupos y mentorías para convertir intención en colaboración medible."
+            : locale === "de"
+              ? "Verbinde Menschen, Gruppen und Mentoring, um aus Intention messbare Zusammenarbeit zu machen."
+              : "Connect people, groups, and mentoring to turn intention into measurable collaboration."}
+        </p>
 
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b border-white/20">
@@ -87,21 +100,35 @@ export default function ComunidadPage() {
                     {feed.map((item) => (
                       <div key={item.id} className="border-b border-white/20 pb-4">
                         <div className="flex items-start gap-3">
-                          <img
-                            src={item.user_avatar || '/logo-econexo.png'}
-                            alt={item.user_name}
-                            className="w-12 h-12 rounded-2xl shadow-md border border-foreground/10 dark:border-white/10"
-                          />
-                          <div className="flex-1">
-                            <p className="text-sm text-white/80">
-                              <span className="font-semibold text-white">{item.user_name}</span>{' '}
-                              {t('createdAnEvent')}
-                            </p>
-                            <p className="font-medium mt-1 text-white">{item.activity_data.event_name}</p>
-                            <p className="text-xs text-white/70 mt-1 font-mono">
-                              {new Date(item.created_at).toLocaleDateString(locale)}
-                            </p>
-                          </div>
+                          {(() => {
+                            const isOwnActivity = !!user && item.user_id === user.id;
+                            const ownAvatar = user?.profile?.avatar_url || user?.profile?.picture;
+                            const avatarSrc = isOwnActivity && ownAvatar ? ownAvatar : (item.user_avatar || '/logo-econexo.png');
+                            const displayName = isOwnActivity && user?.profile?.full_name
+                              ? user.profile.full_name
+                              : item.user_name;
+                            return (
+                              <>
+                                <UserAvatar
+                                  src={avatarSrc}
+                                  alt={displayName}
+                                  name={displayName}
+                                  sizeClassName="w-12 h-12"
+                                  className="rounded-2xl shadow-md border border-foreground/10 dark:border-white/10"
+                                />
+                                <div className="flex-1">
+                                  <p className="text-sm text-white/80">
+                                    <span className="font-semibold text-white">{displayName}</span>{' '}
+                                    {t('createdAnEvent')}
+                                  </p>
+                                  <p className="font-medium mt-1 text-white">{item.activity_data.event_name}</p>
+                                  <p className="text-xs text-white/70 mt-1 font-mono">
+                                    {new Date(item.created_at).toLocaleDateString(locale)}
+                                  </p>
+                                </div>
+                              </>
+                            );
+                          })()}
                         </div>
                       </div>
                     ))}

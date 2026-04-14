@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -21,28 +21,7 @@ export default function MobileFeatures({ onLocationUpdate, onImageCapture }: Mob
   const [location, setLocation] = useState<LocationData | null>(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
-  useEffect(() => {
-    // Detectar si estamos en una app nativa
-    setIsNative(Capacitor.isNativePlatform());
-    
-    if (Capacitor.isNativePlatform()) {
-      initializeMobileFeatures();
-    }
-  }, []);
-
-  const initializeMobileFeatures = async () => {
-    try {
-      // Configurar notificaciones push
-      await setupPushNotifications();
-      
-      // Obtener ubicación actual
-      await getCurrentLocation();
-    } catch (error) {
-      console.warn('Error initializing mobile features:', error);
-    }
-  };
-
-  const setupPushNotifications = async () => {
+  const setupPushNotifications = useCallback(async () => {
     try {
       // Solicitar permisos
       const permStatus = await PushNotifications.requestPermissions();
@@ -73,9 +52,9 @@ export default function MobileFeatures({ onLocationUpdate, onImageCapture }: Mob
     } catch (error) {
       console.warn('Push notifications not available:', error);
     }
-  };
+  }, []);
 
-  const getCurrentLocation = async () => {
+  const getCurrentLocation = useCallback(async () => {
     try {
       const coordinates = await Geolocation.getCurrentPosition({
         enableHighAccuracy: true,
@@ -93,7 +72,26 @@ export default function MobileFeatures({ onLocationUpdate, onImageCapture }: Mob
     } catch (error) {
       console.warn('Geolocation not available:', error);
     }
-  };
+  }, [onLocationUpdate]);
+
+  const initializeMobileFeatures = useCallback(async () => {
+    try {
+      // Configurar notificaciones push
+      await setupPushNotifications();
+      
+      // Obtener ubicación actual
+      await getCurrentLocation();
+    } catch (error) {
+      console.warn('Error initializing mobile features:', error);
+    }
+  }, [getCurrentLocation, setupPushNotifications]);
+
+  useEffect(() => {
+    setIsNative(Capacitor.isNativePlatform());
+    if (Capacitor.isNativePlatform()) {
+      initializeMobileFeatures();
+    }
+  }, [initializeMobileFeatures]);
 
   const captureImage = async () => {
     try {

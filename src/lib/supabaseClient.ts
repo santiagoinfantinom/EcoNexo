@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/database.types";
 
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
+type SupabaseClient = ReturnType<typeof createClient<Database>>;
+let supabaseInstance: SupabaseClient | null = null;
 
 export function getSupabase() {
   if (supabaseInstance) return supabaseInstance;
@@ -24,9 +26,9 @@ export function getSupabase() {
   }
 
   if (!url || !key || url.includes("your_supabase_url_here") || key.includes("your_supabase_anon_key_here")) {
-    supabaseInstance = createClient("https://mock.supabase.co", "mock-key");
+    supabaseInstance = createClient<Database>("https://mock.supabase.co", "mock-key");
   } else {
-    supabaseInstance = createClient(url, key);
+    supabaseInstance = createClient<Database>(url, key);
   }
 
   return supabaseInstance;

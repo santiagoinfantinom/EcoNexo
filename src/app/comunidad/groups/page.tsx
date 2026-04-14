@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import Link from "next/link";
 import { LocalGroup } from "@/lib/social-types";
+import UserAvatar from "@/components/UserAvatar";
 
 export default function GruposPage() {
   const { t, locale } = useI18n();
@@ -13,11 +14,7 @@ export default function GruposPage() {
   const [filter, setFilter] = useState<'all' | 'my_groups' | 'nearby'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    loadGroups();
-  }, [filter, searchQuery, locale]);
-
-  const loadGroups = async () => {
+  const loadGroups = useCallback(async () => {
     try {
       setLoading(true);
       // TODO: Replace with actual API call
@@ -63,7 +60,11 @@ export default function GruposPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [locale, t]);
+
+  useEffect(() => {
+    loadGroups();
+  }, [loadGroups]);
 
   const filteredGroups = groups.filter(group => {
     if (searchQuery) {
@@ -152,6 +153,11 @@ export default function GruposPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredGroups.map((group) => (
+              (() => {
+                const isOwnGroup = !!user && group.created_by === user.id;
+                const ownAvatar = user?.profile?.avatar_url || user?.profile?.picture;
+                const avatarSrc = isOwnGroup && ownAvatar ? ownAvatar : (group.avatar_url || '/logo-econexo.png');
+                return (
               <Link
                 key={group.id}
                 href={`/community/groups/${group.id}`}
@@ -171,10 +177,13 @@ export default function GruposPage() {
                 <div className="p-6 flex flex-col items-center">
                   {/* Avatar and Name */}
                   <div className="flex flex-col items-center -mt-16 mb-4">
-                    <img
-                      src={group.avatar_url || '/logo-econexo.png'}
+                    <UserAvatar
+                      src={avatarSrc}
                       alt={group.name}
-                      className="w-20 h-20 rounded-full border-4 border-white dark:border-slate-800 shadow-md bg-white object-contain"
+                      name={group.name}
+                      sizeClassName="w-20 h-20"
+                      className="border-4 border-white dark:border-slate-800 shadow-md bg-white"
+                      imageClassName="object-contain"
                     />
                     <div className="mt-3 text-center">
                       <h3 className="text-xl font-bold text-gray-800 dark:text-white leading-tight">{group.name}</h3>
@@ -218,6 +227,8 @@ export default function GruposPage() {
                   </div>
                 </div>
               </Link>
+                );
+              })()
             ))}
           </div>
         )}

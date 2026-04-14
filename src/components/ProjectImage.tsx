@@ -1,16 +1,25 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { getProjectVisualImage } from "@/lib/projectVisuals";
 
 type Props = {
   src: string;
   alt: string;
   fallbackSrc: string;
+  category?: string;
+  projectId?: string;
   className?: string;
 };
 
-export default function ProjectImage({ src, alt, fallbackSrc, className }: Props) {
-  const candidates = [src, fallbackSrc, "/window.svg"];
+export default function ProjectImage({ src, alt, fallbackSrc, category, projectId, className }: Props) {
+  const specificImage = getProjectVisualImage({
+    id: projectId,
+    name: alt,
+    category,
+    fallback: src || fallbackSrc,
+  });
+  const candidates = [specificImage, src, fallbackSrc, "/window.svg"];
   const [imgIndex, setImgIndex] = useState(0);
 
   return (

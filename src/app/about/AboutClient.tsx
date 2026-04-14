@@ -2,7 +2,7 @@
 import { useI18n } from "@/lib/i18n";
 
 export default function AboutClient() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       <div className="max-w-4xl mx-auto px-4 py-16">
@@ -13,7 +13,43 @@ export default function AboutClient() {
           <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-200 opacity-90 max-w-3xl mx-auto">
             {t('aboutSubtitle')}
           </p>
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
+            {locale === "es"
+              ? "EcoNexo combina comunidad, datos y ejecución local para generar impacto climático medible y escalable."
+              : locale === "de"
+                ? "EcoNexo verbindet Community, Daten und lokale Umsetzung für messbare und skalierbare Klimawirkung."
+                : "EcoNexo combines community, data, and local execution to deliver measurable and scalable climate impact."}
+          </p>
         </div>
+
+        <section className="mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+              <div className="text-sm font-bold uppercase tracking-wider text-green-700 dark:text-green-300 mb-2">
+                {locale === "es" ? "Tracción" : locale === "de" ? "Traction" : "Traction"}
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                {locale === "es" ? "Actividad constante en comunidad, foros y eventos." : locale === "de" ? "Konstante Aktivität in Community, Foren und Events." : "Consistent activity across community, forums, and events."}
+              </p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+              <div className="text-sm font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300 mb-2">
+                {locale === "es" ? "Confianza" : locale === "de" ? "Vertrauen" : "Trust"}
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                {locale === "es" ? "Arquitectura preparada para partners institucionales y de impacto." : locale === "de" ? "Architektur bereit für institutionelle und Impact-Partner." : "Architecture ready for institutional and impact partners."}
+              </p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+              <div className="text-sm font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300 mb-2">
+                {locale === "es" ? "Escalabilidad" : locale === "de" ? "Skalierbarkeit" : "Scalability"}
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                {locale === "es" ? "Modelo replicable por ciudad para expansión internacional." : locale === "de" ? "Pro-Stadt-Modell für internationale Expansion." : "City-by-city model for international expansion."}
+              </p>
+            </div>
+          </div>
+        </section>
 
         <section className="mb-16">
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8">

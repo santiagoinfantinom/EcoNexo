@@ -16,31 +16,27 @@ export function usePushNotifications() {
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   const [isSupported, setIsSupported] = useState(false);
 
-  useEffect(() => {
-    // Check if push notifications are supported
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      setIsSupported(true);
-      checkPermission();
-    }
-  }, []);
-
-  const checkPermission = () => {
-    if (!isSupported) return;
-    
-    const permission = Notification.permission;
+  const updatePermissionState = () => {
+    const currentPermission = Notification.permission;
     setPermission({
-      granted: permission === 'granted',
-      denied: permission === 'denied',
-      default: permission === 'default'
+      granted: currentPermission === 'granted',
+      denied: currentPermission === 'denied',
+      default: currentPermission === 'default'
     });
   };
+
+  useEffect(() => {
+    const supported = 'serviceWorker' in navigator && 'PushManager' in window;
+    setIsSupported(supported);
+    if (supported) updatePermissionState();
+  }, []);
 
   const requestPermission = async () => {
     if (!isSupported) return false;
     
     try {
       const permission = await Notification.requestPermission();
-      checkPermission();
+      updatePermissionState();
       
       if (permission === 'granted') {
         trackEvent('Push Notification Permission Granted');

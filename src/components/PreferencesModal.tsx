@@ -23,7 +23,18 @@ const CATEGORY_MAP: Record<Category, { icon: string }> = {
     'Salud': { icon: '⚕️' },
     'Comunidad': { icon: '🫂' },
     'Océanos': { icon: '🌊' },
-    'Alimentación': { icon: '🍎' }
+    'Alimentación': { icon: '🍎' },
+    'Tecnología': { icon: '💻' }
+};
+
+const CATEGORY_LABELS: Record<Category, { es: string; en: string; de: string }> = {
+    'Medio ambiente': { es: 'Medio ambiente', en: 'Environment', de: 'Umwelt' },
+    'Educación': { es: 'Educación', en: 'Education', de: 'Bildung' },
+    'Salud': { es: 'Salud', en: 'Health', de: 'Gesundheit' },
+    'Comunidad': { es: 'Comunidad', en: 'Community', de: 'Gemeinschaft' },
+    'Océanos': { es: 'Océanos', en: 'Oceans', de: 'Ozeane' },
+    'Alimentación': { es: 'Alimentación', en: 'Food', de: 'Ernährung' },
+    'Tecnología': { es: 'Tecnología', en: 'Technology', de: 'Technologie' },
 };
 
 export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -75,12 +86,13 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
     const slideVariants = {
         hiddenRight: { x: 50, opacity: 0 },
         hiddenLeft: { x: -50, opacity: 0 },
-        visible: { x: 0, opacity: 1, transition: { type: 'spring', bounce: 0.3, duration: 0.6 } },
-        exitLeft: { x: -50, opacity: 0, transition: { ease: 'easeInOut', duration: 0.2 } },
-        exitRight: { x: 50, opacity: 0, transition: { ease: 'easeInOut', duration: 0.2 } },
+        visible: { x: 0, opacity: 1, transition: { type: 'spring' as const, bounce: 0.3, duration: 0.6 } },
+        exitLeft: { x: -50, opacity: 0, transition: { ease: 'easeInOut' as const, duration: 0.2 } },
+        exitRight: { x: 50, opacity: 0, transition: { ease: 'easeInOut' as const, duration: 0.2 } },
     };
 
     const progressPercentage = step === 1 ? 33 : step === 2 ? 66 : 100;
+    const lang = locale === 'de' ? 'de' : locale === 'en' ? 'en' : 'es';
 
     return (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-md md:p-4">
@@ -103,10 +115,12 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                     <div className="px-6 pt-8 pb-4 flex justify-between items-center relative z-10">
                         <div className="flex flex-col">
                             <span className="text-sm font-bold text-green-600 dark:text-green-400 tracking-wider uppercase mb-1">
-                                {t('onboardingSubtitle') || 'Personaliza tu experiencia'}
+                                {t('onboardingSubtitle') || (lang === 'de' ? 'Personalisiere dein Erlebnis' : lang === 'en' ? 'Customize your experience' : 'Personaliza tu experiencia')}
                             </span>
                             <h2 className="text-2xl font-black text-gray-900 dark:text-white">
-                                {step === 1 ? t('causesTitle') || '¿Qué te motiva?' : t('skillsTitle') || '¿Cómo puedes ayudar?'}
+                                {step === 1
+                                    ? (t('causesTitle') || (lang === 'de' ? 'Was bewegt dich?' : lang === 'en' ? 'What motivates you?' : '¿Qué te motiva?'))
+                                    : (t('skillsTitle') || (lang === 'de' ? 'Wie kannst du helfen?' : lang === 'en' ? 'How can you help?' : '¿Cómo puedes ayudar?'))}
                             </h2>
                         </div>
                         <button 
@@ -157,7 +171,7 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                                                     {CATEGORY_MAP[cat].icon}
                                                 </div>
                                                 <span className={`font-bold ${isSelected ? 'text-green-800 dark:text-green-300' : 'text-gray-700 dark:text-gray-300'}`}>
-                                                    {cat}
+                                                    {CATEGORY_LABELS[cat][lang]}
                                                 </span>
                                                 {isSelected && (
                                                     <div className="absolute top-4 right-4 bg-green-500 text-white p-1 rounded-full">
@@ -182,7 +196,11 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                                 className="px-6 pb-24 pt-4"
                             >
                                 <p className="text-gray-600 dark:text-gray-400 mb-6 font-medium">
-                                    {locale === 'es' ? '¿En qué destacas? Te conectaremos con equipos que busquen superpoderes como los tuyos.' : 'What are you good at? We will match you with teams looking for superpowers like yours.'}
+                                    {locale === 'es'
+                                        ? '¿En qué destacas? Te conectaremos con equipos que busquen superpoderes como los tuyos.'
+                                        : locale === 'de'
+                                            ? 'Worin bist du gut? Wir verbinden dich mit Teams, die genau deine Stärken suchen.'
+                                            : 'What are you good at? We will match you with teams looking for superpowers like yours.'}
                                 </p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {AVAILABLE_SKILLS.map((skill) => {
@@ -234,10 +252,18 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                                             <div className="absolute inset-0 flex items-center justify-center text-3xl">✨</div>
                                         </div>
                                         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                                            {locale === 'es' ? 'Analizando tu perfil...' : 'Analyzing your profile...'}
+                                            {locale === 'es'
+                                                ? 'Analizando tu perfil...'
+                                                : locale === 'de'
+                                                    ? 'Dein Profil wird analysiert...'
+                                                    : 'Analyzing your profile...'}
                                         </h3>
                                         <p className="text-gray-500 dark:text-gray-400">
-                                            {locale === 'es' ? 'Buscando el mejor impacto para ti' : 'Finding the best impact for you'}
+                                            {locale === 'es'
+                                                ? 'Buscando el mejor impacto para ti'
+                                                : locale === 'de'
+                                                    ? 'Wir suchen die beste Wirkungsmöglichkeit für dich'
+                                                    : 'Finding the best impact for you'}
                                         </p>
                                     </>
                                 ) : (
@@ -251,12 +277,14 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                                             <Check className="w-12 h-12 text-green-500" strokeWidth={3} />
                                         </motion.div>
                                         <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-500 mb-3">
-                                            {locale === 'es' ? '¡Match Encontrado!' : 'Match Found!'}
+                                            {locale === 'es' ? '¡Match Encontrado!' : locale === 'de' ? 'Match gefunden!' : 'Match Found!'}
                                         </h3>
                                         <p className="text-gray-600 dark:text-gray-300 font-medium">
                                             {locale === 'es' 
                                                 ? 'Hemos personalizado tu mapa y eventos.' 
-                                                : 'We have personalized your map and events.'}
+                                                : locale === 'de'
+                                                    ? 'Wir haben deine Karte und Events personalisiert.'
+                                                    : 'We have personalized your map and events.'}
                                         </p>
                                     </>
                                 )}
@@ -273,14 +301,14 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                                 onClick={() => setStep(step - 1)}
                                 className="px-6 py-3.5 text-gray-600 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition"
                             >
-                                {t('back') || 'Atrás'}
+                                {t('back') || (lang === 'de' ? 'Zurück' : lang === 'en' ? 'Back' : 'Atrás')}
                             </button>
                         ) : (
                             <button
                                 onClick={onClose}
                                 className="px-6 py-3.5 text-gray-400 font-semibold hover:text-gray-600 transition"
                             >
-                                {t('skip') || 'Omitir'}
+                                {t('skip') || (lang === 'de' ? 'Überspringen' : lang === 'en' ? 'Skip' : 'Omitir')}
                             </button>
                         )}
 
@@ -289,7 +317,9 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                             onClick={step === 2 ? handleFinish : () => setStep(2)}
                             className="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3.5 rounded-xl font-bold shadow-xl shadow-gray-900/20 dark:shadow-white/10 transition-all active:shadow-sm"
                         >
-                            {step === 1 ? (t('next') || 'Siguiente') : (locale === 'es' ? 'Descubrir mi Match' : 'Find my Match')}
+                            {step === 1
+                                ? (t('next') || (lang === 'de' ? 'Weiter' : lang === 'en' ? 'Next' : 'Siguiente'))
+                                : (locale === 'es' ? 'Descubrir mi Match' : locale === 'de' ? 'Mein Match finden' : 'Find my Match')}
                         </motion.button>
                     </div>
                 )}

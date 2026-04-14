@@ -3,10 +3,11 @@ import { getSupabase } from "@/lib/supabaseClient";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const groupId = params.id;
+    const { id } = await params;
+    const groupId = id;
     const supabase = getSupabase();
     const { data: { user } } = await supabase.auth.getUser();
     

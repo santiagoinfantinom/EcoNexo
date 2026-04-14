@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ensureEventImage } from "@/lib/eventImages";
 import { useI18n, categoryLabel } from '@/lib/i18n';
 
@@ -70,17 +70,7 @@ export default function PersonalizedRecommendations({
   const [loading, setLoading] = useState(true);
   const [recommendationReason, setRecommendationReason] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    loadUserProfile();
-  }, [userId]);
-
-  useEffect(() => {
-    if (userProfile && events.length > 0) {
-      generateRecommendations();
-    }
-  }, [userProfile, events]);
-
-  const loadUserProfile = async () => {
+  const loadUserProfile = useCallback(async () => {
     // In a real app, this would fetch from API
     const mockProfile: UserProfile = {
       id: userId,
@@ -106,9 +96,13 @@ export default function PersonalizedRecommendations({
 
     setUserProfile(mockProfile);
     setLoading(false);
-  };
+  }, [userId]);
 
-  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+  useEffect(() => {
+    loadUserProfile();
+  }, [loadUserProfile]);
+
+  const calculateDistance = useCallback((lat1: number, lng1: number, lat2: number, lng2: number): number => {
     const R = 6371; // Earth's radius in km
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lng2 - lng1) * Math.PI / 180;
@@ -117,16 +111,16 @@ export default function PersonalizedRecommendations({
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
-  };
+  }, []);
 
-  const getTimeOfDay = (time: string): string => {
+  const getTimeOfDay = useCallback((time: string): string => {
     const hour = parseInt(time.split(':')[0]);
     if (hour < 12) return 'morning';
     if (hour < 18) return 'afternoon';
     return 'evening';
-  };
+  }, []);
 
-  const calculateRecommendationScore = (event: Event, profile: UserProfile): number => {
+  const calculateRecommendationScore = useCallback((event: Event, profile: UserProfile): number => {
     let score = 0;
     const reasons: string[] = [];
 
@@ -212,9 +206,9 @@ export default function PersonalizedRecommendations({
     }
 
     return Math.max(0, Math.min(100, score));
-  };
+  }, [calculateDistance, getTimeOfDay, locale, t]);
 
-  const generateRecommendations = () => {
+  const generateRecommendations = useCallback(() => {
     if (!userProfile) return;
 
     const scoredEvents = events.map(event => ({
@@ -284,7 +278,13 @@ export default function PersonalizedRecommendations({
 
     setRecommendations(topRecommendations);
     setRecommendationReason(reasonMap);
-  };
+  }, [calculateDistance, calculateRecommendationScore, events, getTimeOfDay, userProfile]);
+
+  useEffect(() => {
+    if (userProfile && events.length > 0) {
+      generateRecommendations();
+    }
+  }, [events.length, generateRecommendations, userProfile]);
 
   const getScoreColor = (score: number): string => {
     if (score >= 80) return 'text-green-600 bg-green-100';

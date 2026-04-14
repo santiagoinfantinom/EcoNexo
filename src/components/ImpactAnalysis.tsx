@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 interface ImpactMetrics {
   co2Reduction: number; // kg CO2
@@ -43,11 +43,7 @@ export default function ImpactAnalysis({ event, onAnalysisComplete }: ImpactAnal
   const [loading, setLoading] = useState(true);
   const [analysisDetails, setAnalysisDetails] = useState<string[]>([]);
 
-  useEffect(() => {
-    calculateImpact();
-  }, [event]);
-
-  const calculateImpact = async () => {
+  const calculateImpact = useCallback(async () => {
     setLoading(true);
     
     try {
@@ -66,7 +62,11 @@ export default function ImpactAnalysis({ event, onAnalysisComplete }: ImpactAnal
     } finally {
       setLoading(false);
     }
-  };
+  }, [event, onAnalysisComplete]);
+
+  useEffect(() => {
+    calculateImpact();
+  }, [calculateImpact]);
 
   const performImpactCalculation = async (event: Event): Promise<ImpactMetrics> => {
     // Base multipliers by category

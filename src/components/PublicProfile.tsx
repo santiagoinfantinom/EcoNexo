@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import Link from "next/link";
-import Image from "next/image";
 import { UserProfile, FollowStatus } from "@/lib/social-types";
+import UserAvatar from "@/components/UserAvatar";
 
 interface PublicProfileProps {
   userId: string;
@@ -18,14 +18,7 @@ export default function PublicProfile({ userId }: PublicProfileProps) {
   const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
 
-  useEffect(() => {
-    loadProfile();
-    if (currentUser?.id && currentUser.id !== userId) {
-      checkFollowStatus();
-    }
-  }, [userId, currentUser]);
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     try {
       // TODO: Replace with actual API call
       const mockProfile: UserProfile = {
@@ -54,12 +47,19 @@ export default function PublicProfile({ userId }: PublicProfileProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
 
   const checkFollowStatus = async () => {
     // TODO: Implement actual follow status check
     setFollowStatus('none');
   };
+
+  useEffect(() => {
+    loadProfile();
+    if (currentUser?.id && currentUser.id !== userId) {
+      checkFollowStatus();
+    }
+  }, [currentUser, loadProfile, userId]);
 
   const handleFollow = async () => {
     if (!currentUser) return;
@@ -103,14 +103,13 @@ export default function PublicProfile({ userId }: PublicProfileProps) {
       <div className="px-6 pb-6 -mt-16">
         <div className="flex items-end justify-between">
           <div className="flex items-end gap-4">
-            <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shrink-0">
-              <Image
-                src={profile.avatar_url || '/logo-econexo.png'}
-                alt={profile.full_name}
-                fill
-                className="object-cover"
-              />
-            </div>
+            <UserAvatar
+              src={profile.avatar_url || "/logo-econexo.png"}
+              alt={profile.full_name}
+              name={profile.full_name}
+              sizeClassName="w-24 h-24"
+              className="border-4 border-white dark:border-slate-800 shrink-0"
+            />
             <div>
               <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{profile.full_name}</h1>
               {profile.city && profile.country && (

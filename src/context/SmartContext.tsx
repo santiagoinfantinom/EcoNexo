@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { UserPreferences } from '@/lib/matching';
 import { useToast } from '@/components/ToastNotification';
 import { useI18n } from '@/lib/i18n';
+import { useAuth } from '@/lib/auth';
 
 interface GamificationState {
     points: number;
@@ -116,15 +117,40 @@ const SmartContext = createContext<SmartContextType | undefined>(undefined);
 
 export function SmartProvider({ children }: { children: ReactNode }) {
     const { t } = useI18n(); // Helper hook
+    const { user } = useAuth();
     const [preferences, setPreferences] = useState<UserPreferences>(defaultPreferences);
     const [showOnboarding, setShowOnboarding] = useState(false);
     const [gamification, setGamification] = useState<GamificationState>(defaultGamification);
 
-    // Load from localStorage on mount
-    // Load from localStorage on mount
+    const storageSuffix = user?.id ? `user:${user.id}` : 'anon';
+    const preferencesStorageKey = `econexo_preferences:${storageSuffix}`;
+    const gamificationStorageKey = `econexo_gamification:${storageSuffix}`;
+    const migrationMarkerKey = `econexo_migrated:${storageSuffix}`;
+
+    // Load from localStorage on mount / user switch
     useEffect(() => {
-        const savedPrefs = localStorage.getItem('econexo_preferences');
-        const savedGamification = localStorage.getItem('econexo_gamification');
+        // Explicit one-time migration from legacy global keys into scoped user keys
+        // so existing users keep their progress after auth-scoped persistence rollout.
+        if (user?.id) {
+            const alreadyMigrated = localStorage.getItem(migrationMarkerKey);
+            if (!alreadyMigrated) {
+                const legacyPrefs = localStorage.getItem('econexo_preferences');
+                const legacyGamification = localStorage.getItem('econexo_gamification');
+                const hasScopedPrefs = localStorage.getItem(preferencesStorageKey);
+                const hasScopedGamification = localStorage.getItem(gamificationStorageKey);
+
+                if (legacyPrefs && !hasScopedPrefs) {
+                    localStorage.setItem(preferencesStorageKey, legacyPrefs);
+                }
+                if (legacyGamification && !hasScopedGamification) {
+                    localStorage.setItem(gamificationStorageKey, legacyGamification);
+                }
+                localStorage.setItem(migrationMarkerKey, 'true');
+            }
+        }
+
+        const savedPrefs = localStorage.getItem(preferencesStorageKey) || localStorage.getItem('econexo_preferences');
+        const savedGamification = localStorage.getItem(gamificationStorageKey) || localStorage.getItem('econexo_gamification');
 
         // Logic to determine if we should show onboarding (Preferences Modal)
         const checkOnboardingStatus = () => {
@@ -251,13 +277,14 @@ export function SmartProvider({ children }: { children: ReactNode }) {
         return () => {
             window.removeEventListener('intro-completed', handleIntroComplete);
         };
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.id, migrationMarkerKey, preferencesStorageKey, gamificationStorageKey, t]);
 
     const { showToast } = useToast();
 
-    // Persistence helpers
-    const savePrefs = (prefs: UserPreferences) => localStorage.setItem('econexo_preferences', JSON.stringify(prefs));
-    const saveGamification = (game: GamificationState) => localStorage.setItem('econexo_gamification', JSON.stringify(game));
+    // Persistence helpers (scoped per authenticated user)
+    const savePrefs = (prefs: UserPreferences) => localStorage.setItem(preferencesStorageKey, JSON.stringify(prefs));
+    const saveGamification = (game: GamificationState) => localStorage.setItem(gamificationStorageKey, JSON.stringify(game));
 
     const updatePreferences = (newPrefs: Partial<UserPreferences>) => {
         setPreferences(prev => {
@@ -290,7 +317,7 @@ export function SmartProvider({ children }: { children: ReactNode }) {
             let newShareCount = prev.shareCount || 0;
             let newWorkshopCount = prev.workshopCount || 0;
             let newJoinedProjectCount = prev.joinedProjectCount || 0;
-            let newBadges = [...prev.badges];
+            const newBadges = [...prev.badges];
 
             if (reason.includes("Compartir") || reason.includes("Share")) {
                 newShareCount += 1;

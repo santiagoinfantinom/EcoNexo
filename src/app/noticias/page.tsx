@@ -1,34 +1,44 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, Newspaper, RefreshCw } from "lucide-react";
 
 export default function NoticiasPage() {
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
 
     const [allNewsItems, setAllNewsItems] = useState<any[]>([]);
     const [displayedNews, setDisplayedNews] = useState<any[]>([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
 
-    const fetchNews = async () => {
+    const fetchNews = useCallback(async () => {
         setIsLoading(true);
+        setLoadError(false);
         try {
-            const res = await fetch('/api/news');
+            const res = await fetch(`/api/news?lang=${locale}`, { cache: "no-store" });
+            if (!res.ok) throw new Error(`News request failed (${res.status})`);
             const data = await res.json();
-            if (data && data.news) {
+            if (data && Array.isArray(data.news)) {
                 setAllNewsItems(data.news);
                 setDisplayedNews(data.news.slice(0, 4));
+            } else {
+                setAllNewsItems([]);
+                setDisplayedNews([]);
+                setLoadError(true);
             }
         } catch (error) {
             console.error("Failed to fetch news:", error);
+            setAllNewsItems([]);
+            setDisplayedNews([]);
+            setLoadError(true);
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [locale]);
 
     const loadRandomNews = () => {
         if (allNewsItems.length === 0) return;
@@ -42,8 +52,7 @@ export default function NoticiasPage() {
 
     useEffect(() => {
         fetchNews();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [fetchNews]);
 
     return (
         <div className="min-h-screen bg-modern pb-20">
@@ -53,6 +62,9 @@ export default function NoticiasPage() {
             <section className="relative py-16 md:py-24 px-4 overflow-hidden mb-12">
                 <div className="absolute inset-0 bg-gradient-hero opacity-95 transform -skew-y-2 origin-top-left scale-105" />
                 <div className="relative max-w-5xl mx-auto text-center z-10 flex flex-col items-center">
+                    <span className="mb-4 inline-flex items-center rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white/90">
+                        {locale === "es" ? "Inteligencia climática" : locale === "de" ? "Klima-Intelligence" : "Climate intelligence"}
+                    </span>
                     <div className="inline-flex items-center justify-center p-4 bg-white/20 backdrop-blur-md rounded-2xl mb-6 shadow-xl border border-white/20">
                         <Newspaper className="w-12 h-12 text-white" />
                     </div>
@@ -61,6 +73,13 @@ export default function NoticiasPage() {
                     </h1>
                     <p className="text-xl text-green-50 max-w-2xl font-light">
                         {t('ecoNewsDescription')}
+                    </p>
+                    <p className="mt-4 text-sm text-white/80 max-w-2xl">
+                        {locale === "es"
+                            ? "Fuentes ambientales curadas para decisiones con impacto y contexto local."
+                            : locale === "de"
+                                ? "Kuratiertes Umwelt-Reporting für wirkungsorientierte Entscheidungen mit lokalem Kontext."
+                                : "Curated environmental coverage for impact-driven decisions with local context."}
                     </p>
                 </div>
             </section>
@@ -76,6 +95,26 @@ export default function NoticiasPage() {
                         <span>{t('refresh') || 'Refresh'}</span>
                     </button>
                 </div>
+                {!isLoading && displayedNews.length === 0 && (
+                    <div className="mb-6 rounded-xl border border-white/40 bg-white/70 dark:bg-slate-800/60 px-4 py-6 text-center">
+                        <p className="text-gray-800 dark:text-gray-200 font-medium">
+                            {locale === 'de'
+                                ? 'Der News-Feed ist gerade nicht verfügbar. Bitte aktualisieren Sie in ein paar Sekunden.'
+                                : locale === 'es'
+                                    ? 'El feed de noticias no está disponible en este momento. Intenta actualizar en unos segundos.'
+                                    : 'The news feed is currently unavailable. Please refresh in a few seconds.'}
+                        </p>
+                    </div>
+                )}
+                {loadError && !isLoading && displayedNews.length > 0 && (
+                    <div className="mb-6 rounded-xl border border-amber-300/60 bg-amber-50/80 dark:bg-amber-900/20 px-4 py-3 text-sm text-amber-900 dark:text-amber-100">
+                        {locale === 'de'
+                            ? 'Fallback-News werden angezeigt, da einige Quellen nicht erreichbar waren.'
+                            : locale === 'es'
+                                ? 'Mostrando noticias de respaldo porque algunas fuentes no estuvieron disponibles.'
+                                : 'Showing fallback news because some sources were unavailable.'}
+                    </div>
+                )}
                 <div className={`grid gap-6 md:gap-8 transition-opacity duration-300 ${isRefreshing ? 'opacity-50' : 'opacity-100'}`}>
                     {displayedNews.map((news, idx) => (
                         <a

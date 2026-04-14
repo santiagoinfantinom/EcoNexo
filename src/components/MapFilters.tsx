@@ -163,7 +163,7 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
           title={t("centerOnLocation")}
         >
           <span>📍</span>
-          <span className="hidden sm:inline">{locale === 'de' ? 'Standort' : locale === 'es' ? 'Ubicación' : 'Location'}</span>
+          <span className="hidden sm:inline">{t("location")}</span>
         </button>
       </div>
 

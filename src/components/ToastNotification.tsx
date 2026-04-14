@@ -80,10 +80,10 @@ interface ToastItemProps {
 function ToastItem({ toast, onRemove }: ToastItemProps) {
   const [isExiting, setIsExiting] = useState(false);
 
-  const handleRemove = () => {
+  const handleRemove = useCallback(() => {
     setIsExiting(true);
     setTimeout(() => onRemove(toast.id), 300);
-  };
+  }, [onRemove, toast.id]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -91,7 +91,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
     }, toast.duration || 4000);
 
     return () => clearTimeout(timer);
-  }, [toast.duration, toast.id]);
+  }, [handleRemove, toast.duration]);
 
   const typeStyles = {
     success: {

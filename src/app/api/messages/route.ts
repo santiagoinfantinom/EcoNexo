@@ -14,12 +14,12 @@ export async function GET(req: Request) {
     try {
       const supabase = getSupabase();
       const { data, error } = await supabase
-        .from("messages")
+        .from("messages" as any)
         .select("*")
         .or(`from.eq.${user},to.eq.${user}`)
         .order("ts", { ascending: true });
       if (error) throw error;
-      return NextResponse.json(data as Message[]);
+      return NextResponse.json((data || []) as unknown as Message[]);
     } catch {
       return NextResponse.json([
         { id: "1", from: "Ana", to: user, text: "Hola!", ts: new Date(Date.now()-60000).toISOString() },
@@ -36,9 +36,9 @@ export async function POST(req: Request) {
     const body = (await req.json()) as Message;
     try {
       const supabase = getSupabase();
-      const { data, error } = await supabase.from("messages").insert(body).select().single();
+      const { data, error } = await supabase.from("messages" as any).insert(body as any).select().single();
       if (error) throw error;
-      return NextResponse.json(data as Message);
+      return NextResponse.json(data as unknown as Message);
     } catch {
       return NextResponse.json(body);
     }

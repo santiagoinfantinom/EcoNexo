@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MapContainer, TileLayer, Polyline, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 
@@ -46,13 +46,7 @@ export default function SustainableRoutes({
     driving: 0.35
   };
 
-  useEffect(() => {
-    if (startLocation && endLocation) {
-      calculateRoutes();
-    }
-  }, [startLocation, endLocation]);
-
-  const calculateRoutes = async () => {
+  const calculateRoutes = useCallback(async () => {
     setLoading(true);
     try {
       // Calculate distance using Haversine formula
@@ -117,7 +111,13 @@ export default function SustainableRoutes({
     } finally {
       setLoading(false);
     }
-  };
+  }, [costFactors.driving, costFactors.public_transport, emissionFactors.driving, emissionFactors.public_transport, endLocation, startLocation]);
+
+  useEffect(() => {
+    if (startLocation && endLocation) {
+      calculateRoutes();
+    }
+  }, [calculateRoutes, endLocation, startLocation]);
 
   const calculateDistance = (start: [number, number], end: [number, number]): number => {
     const R = 6371; // Earth's radius in km

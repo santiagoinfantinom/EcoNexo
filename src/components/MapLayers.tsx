@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
 import { useI18n } from "@/lib/i18n";
@@ -14,7 +14,7 @@ export default function MapLayers({ onLayerChange }: MapLayersProps) {
   const [activeLayer, setActiveLayer] = useState("light");
 
   // Providers with built-in fallbacks ordered by reliability
-  const layers = {
+  const layers = useMemo(() => ({
     light: {
       name: locale === 'es' ? "Claro" : locale === 'de' ? "Hell" : "Light",
       urls: [
@@ -55,7 +55,7 @@ export default function MapLayers({ onLayerChange }: MapLayersProps) {
       ],
       attribution: '&copy; OpenTopoMap, &copy; OpenStreetMap contributors'
     }
-  } as const;
+  } as const), [locale, t]);
 
   useEffect(() => {
     // Remove existing tile layers
@@ -84,7 +84,7 @@ export default function MapLayers({ onLayerChange }: MapLayersProps) {
     addWithFallback();
 
     onLayerChange?.(activeLayer);
-  }, [activeLayer, map, onLayerChange]);
+  }, [activeLayer, layers, map, onLayerChange]);
 
   return (
     <div className="absolute bottom-2 left-2 z-[1000] bg-white/95 backdrop-blur rounded-lg shadow-lg border p-1">

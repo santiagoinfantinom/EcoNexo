@@ -28,15 +28,6 @@ export function CaptchaComponent({
                       (window.location.hostname === 'localhost' || 
                        window.location.hostname === '127.0.0.1');
 
-  // Don't show reCAPTCHA if site key is not configured, is a placeholder, or we're on localhost
-  if (!siteKey || 
-      siteKey === 'your_recaptcha_site_key_here' || 
-      siteKey === 'demo-site-key' ||
-      isLocalhost) {
-    // Return null instead of showing an error - let Math Captcha handle it
-    return null;
-  }
-
   // Ocultar errores de reCAPTCHA que aparecen directamente del widget
   useEffect(() => {
     const hideRecaptchaErrors = () => {
@@ -74,6 +65,15 @@ export function CaptchaComponent({
     
     return () => clearInterval(interval);
   }, []);
+
+  // Don't show reCAPTCHA if site key is not configured, is a placeholder, or we're on localhost
+  if (!siteKey || 
+      siteKey === 'your_recaptcha_site_key_here' || 
+      siteKey === 'demo-site-key' ||
+      isLocalhost) {
+    // Return null instead of showing an error - let Math Captcha handle it
+    return null;
+  }
 
   return (
     <div className={`flex justify-center ${className}`} style={{ position: 'relative' }}>
@@ -125,7 +125,7 @@ export async function verifyCaptchaToken(token: string): Promise<boolean> {
 /**
  * Simple math captcha as fallback
  */
-export function generateMathCaptcha(locale: string = 'en'): { question: string; answer: number } {
+export function generateMathCaptcha(t: any): { question: string; answer: number } {
   const operations = ['+', '-', '*'];
   const operation = operations[Math.floor(Math.random() * operations.length)];
   
@@ -153,10 +153,8 @@ export function generateMathCaptcha(locale: string = 'en'): { question: string; 
       answer = 2;
   }
   
-  const howMuchIs = locale === 'de' ? 'Wie viel ist' : locale === 'es' ? '¿Cuánto es' : 'How much is';
-  
   return {
-    question: `${howMuchIs} ${num1} ${operation} ${num2}?`,
+    question: `${t("howMuchIsLabel")} ${num1} ${operation} ${num2}?`,
     answer,
   };
 }
@@ -167,8 +165,8 @@ export interface MathCaptchaProps {
 }
 
 export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaProps) {
-  const { t, locale } = useI18n();
-  const [captcha, setCaptcha] = useState(() => generateMathCaptcha(locale));
+  const { t } = useI18n();
+  const [captcha, setCaptcha] = useState(() => generateMathCaptcha(t));
   const [userAnswer, setUserAnswer] = useState('');
   const [isVerified, setIsVerified] = useState(false);
 
@@ -180,7 +178,7 @@ export function MathCaptchaComponent({ onVerify, className = '' }: MathCaptchaPr
     
     if (!isValid) {
       // Generate new captcha on wrong answer
-      setCaptcha(generateMathCaptcha(locale));
+      setCaptcha(generateMathCaptcha(t));
       setUserAnswer('');
     }
   };

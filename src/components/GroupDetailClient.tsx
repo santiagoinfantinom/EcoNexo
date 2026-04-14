@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { LocalGroup, GroupMember } from "@/lib/social-types";
+import UserAvatar from "@/components/UserAvatar";
 
 export default function GroupDetailClient({ groupId }: { groupId: string }) {
     const { t, locale } = useI18n();
@@ -18,16 +19,7 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'overview' | 'members' | 'events'>('overview');
 
-    useEffect(() => {
-        if (groupId) {
-            loadGroup();
-            if (user) {
-                checkMembership();
-            }
-        }
-    }, [groupId, user]);
-
-    const loadGroup = async () => {
+    const loadGroup = useCallback(async () => {
         try {
             // TODO: Replace with actual API call
             const mockGroup: LocalGroup = {
@@ -53,7 +45,7 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [groupId]);
 
     const checkMembership = async () => {
         try {
@@ -64,6 +56,15 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
             console.error('Error checking membership:', error);
         }
     };
+
+    useEffect(() => {
+        if (groupId) {
+            loadGroup();
+            if (user) {
+                checkMembership();
+            }
+        }
+    }, [groupId, loadGroup, user]);
 
     const handleJoin = async () => {
         if (!user) {
@@ -119,13 +120,13 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        {locale === 'es' ? 'Grupo no encontrado' : locale === 'de' ? 'Gruppe nicht gefunden' : 'Group not found'}
+                        {t("groupNotFound")}
                     </p>
                     <Link
                         href="/community/groups"
                         className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors inline-block"
                     >
-                        {locale === 'es' ? 'Volver a Grupos' : locale === 'de' ? 'Zurück zu Gruppen' : 'Back to Groups'}
+                        {t("backToGroups")}
                     </Link>
                 </div>
             </div>
@@ -133,6 +134,12 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
     }
 
     const isCreator = user?.id === group.created_by;
+    const creatorAvatar = isCreator
+        ? (user?.profile?.avatar_url || user?.profile?.picture || group.avatar_url || '/logo-econexo.png')
+        : (group.avatar_url || '/logo-econexo.png');
+    const creatorName = isCreator
+        ? (user?.profile?.full_name || user?.email?.split('@')[0] || group.created_by_name)
+        : group.created_by_name;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
@@ -141,7 +148,7 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                     href="/community/groups"
                     className="text-green-600 hover:text-green-700 mb-4 inline-block"
                 >
-                    ← {locale === 'es' ? 'Volver a Grupos' : locale === 'de' ? 'Zurück zu Gruppen' : 'Back to Groups'}
+                    ← {t("backToGroups")}
                 </Link>
 
                 {group.cover_image_url ? (
@@ -157,10 +164,12 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                 <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 mb-6">
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div className="flex items-start gap-4">
-                            <img
-                                src={group.avatar_url || '/logo-econexo.png'}
+                            <UserAvatar
+                                src={creatorAvatar}
                                 alt={group.name}
-                                className="w-20 h-20 rounded-full border-4 border-white dark:border-slate-800"
+                                name={creatorName}
+                                sizeClassName="w-20 h-20"
+                                className="border-4 border-white dark:border-slate-800"
                             />
                             <div>
                                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">{group.name}</h1>
@@ -168,7 +177,7 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                                     📍 {group.city}, {group.country}
                                 </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-500">
-                                    {locale === 'es' ? 'Creado por' : locale === 'de' ? 'Erstellt von' : 'Created by'} {group.created_by_name}
+                                    {t("createdBy")} {creatorName}
                                 </p>
                             </div>
                         </div>
@@ -178,7 +187,7 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                                     href={`/community/groups/${groupId}/editar`}
                                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                 >
-                                    {locale === 'es' ? 'Editar' : locale === 'de' ? 'Bearbeiten' : 'Edit'}
+                                    {t("editLabel")}
                                 </Link>
                             )}
                             {isMember ? (
@@ -186,14 +195,14 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                                     onClick={handleLeave}
                                     className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                                 >
-                                    {locale === 'es' ? 'Salir' : locale === 'de' ? 'Verlassen' : 'Leave'}
+                                    {t("leaveLabel")}
                                 </button>
                             ) : (
                                 <button
                                     onClick={handleJoin}
                                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                                 >
-                                    {locale === 'es' ? 'Unirse' : locale === 'de' ? 'Beitreten' : 'Join'}
+                                    {t("joinLabel")}
                                 </button>
                             )}
                         </div>
@@ -220,13 +229,13 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                         <div>
                             <div className="text-2xl font-bold text-green-600">{group.members_count}</div>
                             <div className="text-sm text-gray-600 dark:text-gray-400">
-                                {locale === 'es' ? 'Miembros' : locale === 'de' ? 'Mitglieder' : 'Members'}
+                                {t("membersLabel")}
                             </div>
                         </div>
                         <div>
                             <div className="text-2xl font-bold text-blue-600">{group.events_count}</div>
                             <div className="text-sm text-gray-600 dark:text-gray-400">
-                                {locale === 'es' ? 'Eventos' : locale === 'de' ? 'Events' : 'Events'}
+                                {t("events")}
                             </div>
                         </div>
                     </div>
@@ -235,9 +244,9 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                 <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg">
                     <div className="flex border-b border-gray-200 dark:border-slate-700">
                         {[
-                            { id: 'overview', label: locale === 'es' ? 'Resumen' : locale === 'de' ? 'Übersicht' : 'Overview' },
-                            { id: 'members', label: locale === 'es' ? 'Miembros' : locale === 'de' ? 'Mitglieder' : 'Members' },
-                            { id: 'events', label: locale === 'es' ? 'Eventos' : locale === 'de' ? 'Events' : 'Events' }
+                            { id: 'overview', label: t("overviewLabel") },
+                            { id: 'members', label: t("membersLabel") },
+                            { id: 'events', label: t("events") }
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -256,7 +265,7 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                         {activeTab === 'overview' && (
                             <div>
                                 <h2 className="text-xl font-bold mb-4">
-                                    {locale === 'es' ? 'Sobre este grupo' : locale === 'de' ? 'Über diese Gruppe' : 'About this group'}
+                                    {t("aboutThisGroup")}
                                 </h2>
                                 <p className="text-gray-700 dark:text-gray-300">{group.description}</p>
                             </div>
@@ -265,10 +274,10 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                         {activeTab === 'members' && (
                             <div>
                                 <h2 className="text-xl font-bold mb-4">
-                                    {locale === 'es' ? 'Miembros' : locale === 'de' ? 'Mitglieder' : 'Members'} ({group.members_count})
+                                    {t("membersLabel")} ({group.members_count})
                                 </h2>
                                 <p className="text-gray-600 dark:text-gray-400">
-                                    {locale === 'es' ? 'Lista de miembros próximamente...' : locale === 'de' ? 'Mitgliederliste folgt...' : 'Member list coming soon...'}
+                                    {t("memberListSoon")}
                                 </p>
                             </div>
                         )}
@@ -277,19 +286,19 @@ export default function GroupDetailClient({ groupId }: { groupId: string }) {
                             <div>
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-xl font-bold">
-                                        {locale === 'es' ? 'Eventos del Grupo' : locale === 'de' ? 'Gruppen-Events' : 'Group Events'} ({group.events_count})
+                                        {t("groupEventsTitle")} ({group.events_count})
                                     </h2>
                                     {isMember && (
                                         <Link
                                             href={`/eventos?group=${groupId}`}
                                             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                                         >
-                                            {locale === 'es' ? '+ Crear Evento' : locale === 'de' ? '+ Event erstellen' : '+ Create Event'}
+                                            {t("createEvent")}
                                         </Link>
                                     )}
                                 </div>
                                 <p className="text-gray-600 dark:text-gray-400">
-                                    {locale === 'es' ? 'Lista de eventos próximamente...' : locale === 'de' ? 'Eventliste folgt...' : 'Event list coming soon...'}
+                                    {t("eventListSoon")}
                                 </p>
                             </div>
                         )}

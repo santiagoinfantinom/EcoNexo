@@ -4,6 +4,7 @@ import { useI18n, categoryLabel } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import CalendarView from "@/components/CalendarView";
 import { useSmartContext } from "@/context/SmartContext";
+import { EVENT_DETAILS } from "@/data/eventDetails";
 import {
   Leaf,
   BookOpen,
@@ -21,7 +22,8 @@ import {
   RefreshCw,
   Upload,
   X,
-  Eye
+  Eye,
+  Trash2
 } from "lucide-react";
 
 // Función para formatear fechas de manera legible
@@ -33,6 +35,39 @@ function formatDate(dateStr: string, locale: string): string {
     day: 'numeric'
   };
   return date.toLocaleDateString(locale === 'es' ? 'es-ES' : locale === 'de' ? 'de-DE' : 'en-US', options);
+}
+
+// Helper to get correctly translated field data either from ev object or EVENT_DETAILS
+function getLocalizedEventField(ev: any, field: string, locale: string) {
+  let valueObj = ev;
+  // If the event corresponds to a known ID in EVENT_DETAILS, prioritize that for translation keys.
+  if (ev.id && EVENT_DETAILS[ev.id]) {
+    valueObj = EVENT_DETAILS[ev.id];
+  }
+
+  if (locale === 'en' && valueObj[`${field}_en`]) return valueObj[`${field}_en`];
+  if (locale === 'de' && valueObj[`${field}_de`]) return valueObj[`${field}_de`];
+  return valueObj[field];
+}
+
+// Helper to get appropriately translated City and Country from EVENT_DETAILS overriding existing local storage splits
+function getLocalizedCityCountry(ev: any, locale: string) {
+  if (ev.id && EVENT_DETAILS[ev.id]) {
+    const locString = getLocalizedEventField(ev, 'location', locale);
+    if (locString && typeof locString === 'string') {
+      const parts = locString.split(',');
+      return {
+        city: parts[0]?.trim() || ev.city,
+        country: parts[1]?.trim() || ev.country
+      };
+    }
+  }
+  
+  // Fallback to ev properties (possibly already translated)
+  return {
+    city: getLocalizedEventField(ev, 'city', locale) || ev.city,
+    country: getLocalizedEventField(ev, 'country', locale) || ev.country
+  };
 }
 
 type Category =
@@ -121,6 +156,34 @@ export default function EventosPage() {
   const refreshParticipatedEvents = () => {
     const participatedEvents = JSON.parse(localStorage.getItem('econexo:participatedEvents') || '[]');
     setList(participatedEvents);
+  };
+
+  const deleteEvent = async (eventId?: string) => {
+    if (!eventId) return;
+
+    const confirmText = locale === 'es'
+      ? "Quieres borrar este evento?"
+      : locale === 'de'
+        ? "Mochten Sie dieses Ereignis loschen?"
+        : "Do you want to delete this event?";
+
+    if (!window.confirm(confirmText)) return;
+
+    try {
+      await fetch(`/api/events?id=${encodeURIComponent(eventId)}`, { method: "DELETE" });
+    } catch (error) {
+      console.warn("Delete API unavailable, removing from local state:", error);
+    }
+
+    setList((prev) => prev.filter((ev: any) => ev?.id !== eventId));
+
+    try {
+      const saved = JSON.parse(localStorage.getItem('econexo:participatedEvents') || '[]');
+      const updated = saved.filter((ev: any) => ev?.id !== eventId);
+      localStorage.setItem('econexo:participatedEvents', JSON.stringify(updated));
+    } catch {
+      // ignore localStorage parsing errors
+    }
   };
 
   // Listen for storage changes to update the list when events are added from other tabs
@@ -261,9 +324,19 @@ export default function EventosPage() {
   return (
     <div className="w-full max-w-5xl mx-auto text-center mt-6 sm:mt-8 md:mt-10 px-3 sm:px-4">
       <div className="flex flex-col items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white/90">
+          {locale === "es" ? "Pipeline de impacto local" : locale === "de" ? "Lokale Impact-Pipeline" : "Local impact pipeline"}
+        </span>
         <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-sm font-sans">
           {viewMode === 'form' ? t("createEvent") : t("calendar")}
         </h1>
+        <p className="max-w-2xl text-sm text-white/80">
+          {locale === "es"
+            ? "Planifica, publica y escala eventos con trazabilidad para comunidad, aliados y crecimiento."
+            : locale === "de"
+              ? "Plane, veröffentliche und skaliere Events mit nachvollziehbarer Wirkung für Community, Partner und Wachstum."
+              : "Plan, publish, and scale events with traceable impact for community, partners, and growth."}
+        </p>
 
         {/* Search Bar */}
         <div className="w-full max-w-md relative mx-auto group">
@@ -365,12 +438,13 @@ export default function EventosPage() {
                     <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{t("country")}</th>
                     <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{t("category")}</th>
                     <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{t("capacity")}</th>
+                    <th className="text-left p-4 text-white/80 font-bold uppercase tracking-widest text-[10px]">{locale === 'es' ? 'Acciones' : locale === 'de' ? 'Aktionen' : 'Actions'}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredList.length === 0 ? (
                     <tr>
-                      <td className="p-4 text-white/70 text-center font-medium" colSpan={6}>
+                        <td className="p-4 text-white/70 text-center font-medium" colSpan={7}>
                         {list.length === 0 ? t("noParticipatedEvents") : t("noResultsFound") || "No se encontraron eventos"}
                       </td>
                     </tr>
@@ -383,7 +457,7 @@ export default function EventosPage() {
                       >
                         <td className="p-4 text-white">
                           <div className="flex items-center gap-2 group-hover:text-green-300 transition-colors font-bold font-sans">
-                            {ev.title}
+                            {getLocalizedEventField(ev, "title", locale)}
                             <Eye size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                         </td>
@@ -398,8 +472,8 @@ export default function EventosPage() {
                             </div>
                           )}
                         </td>
-                        <td className="p-4 text-white font-mono text-sm">{ev.city}</td>
-                        <td className="p-4 text-white font-mono text-sm">{ev.country}</td>
+                        <td className="p-4 text-white font-mono text-sm">{getLocalizedCityCountry(ev, locale).city}</td>
+                        <td className="p-4 text-white font-mono text-sm">{getLocalizedCityCountry(ev, locale).country}</td>
                         <td className="p-4">
                           <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 w-fit bg-white/10 text-white border border-white/20`}>
                             {CATEGORY_ICON[ev.category as Category] && React.cloneElement(CATEGORY_ICON[ev.category as Category] as React.ReactElement<any>, { size: 12 })}
@@ -407,6 +481,23 @@ export default function EventosPage() {
                           </span>
                         </td>
                         <td className="p-4 text-white font-mono text-sm">{ev.capacity ?? "-"}</td>
+                        <td className="p-4">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              deleteEvent((ev as any).id);
+                            }}
+                            disabled={!(ev as any).id}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/20 text-red-200 border border-red-400/40 hover:bg-red-500/30 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                          >
+                            <Trash2 size={14} />
+                            <span className="text-xs font-bold">
+                              {locale === 'es' ? 'Borrar' : locale === 'de' ? 'Loschen' : 'Delete'}
+                            </span>
+                          </button>
+                        </td>
                       </tr>
                     ))
                   )}

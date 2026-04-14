@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSmartContext } from "@/context/SmartContext";
 import { PROJECTS } from "@/data/projects";
@@ -8,17 +8,61 @@ import { generateMissions, EcoMission, DIFFICULTY_LABELS } from "@/data/eco-miss
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Clock, Zap, Star, Navigation, RefreshCw, CheckCircle2, Sparkles, Trophy } from "lucide-react";
 import Link from "next/link";
+import { Capacitor } from "@capacitor/core";
+import { Geolocation as CapacitorGeolocation } from "@capacitor/geolocation";
+
+const LAST_LOCATION_KEY = "econexo_last_location";
+const LOCATION_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const MISSION_RADIUS_KEY = "econexo_mission_radius_km";
 
 export default function MisionesPage() {
   const { locale } = useI18n();
   const { addPoints } = useSmartContext();
+  const minuteLabel = locale === "es" ? "min" : locale === "de" ? "Min." : "min";
+  const meterLabel = locale === "es" ? "m" : locale === "de" ? "m" : "m";
+  const kilometerLabel = locale === "es" ? "km" : locale === "de" ? "km" : "km";
+  const xpLabel = locale === "es" ? "XP" : locale === "de" ? "EP" : "XP";
+  const karmaLabel = locale === "es" ? "Karma" : locale === "de" ? "Karma" : "Karma";
+  const xpMeaning =
+    locale === "es"
+      ? "Puntos de experiencia para subir de nivel."
+      : locale === "de"
+        ? "Erfahrungspunkte zum Aufsteigen."
+        : "Experience points to level up.";
+  const karmaMeaning =
+    locale === "es"
+      ? "Tu reputación por impacto positivo se refleja en el perfil."
+      : locale === "de"
+        ? "Deine Impact-Reputation wird im Profil angezeigt."
+        : "Your positive impact reputation is shown in your profile.";
+  const difficultyMeaning =
+    locale === "es"
+      ? "Fácil: rápida · Mediana: requiere algo más de tiempo · Difícil: más esfuerzo o coordinación."
+      : locale === "de"
+        ? "Leicht: schnell · Mittel: braucht etwas mehr Zeit · Schwer: mehr Aufwand oder Koordination."
+        : "Easy: quick · Medium: needs a bit more time · Hard: more effort or coordination.";
 
   const [missions, setMissions] = useState<EcoMission[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationStatus, setLocationStatus] = useState<'idle' | 'requesting' | 'granted' | 'denied'>('idle');
+  const [locationError, setLocationError] = useState<"permission" | "unavailable" | "timeout" | "insecure" | "unsupported" | null>(null);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [celebratingId, setCelebratingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [radiusKm, setRadiusKm] = useState<number>(25);
+  const hasFreshCachedLocationRef = useRef(false);
+  const userLocationRef = useRef<{ lat: number; lng: number } | null>(null);
+
+  useEffect(() => {
+    userLocationRef.current = userLocation;
+  }, [userLocation]);
+
+  const persistLocation = useCallback((lat: number, lng: number) => {
+    setUserLocation({ lat, lng });
+    setLocationStatus("granted");
+    setLocationError(null);
+    localStorage.setItem(LAST_LOCATION_KEY, JSON.stringify({ lat, lng, savedAt: Date.now() }));
+  }, []);
 
   // Load completed missions from localStorage
   useEffect(() => {
@@ -26,29 +70,155 @@ export default function MisionesPage() {
     if (saved) {
       setCompletedIds(new Set(JSON.parse(saved)));
     }
-  }, []);
 
-  // Request geolocation
-  const requestLocation = useCallback(() => {
-    setLocationStatus('requesting');
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-          setLocationStatus('granted');
-        },
-        () => {
-          setLocationStatus('denied');
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
-    } else {
-      setLocationStatus('denied');
+    const savedLocation = localStorage.getItem(LAST_LOCATION_KEY);
+    if (savedLocation) {
+      try {
+        const parsed = JSON.parse(savedLocation) as { lat: number; lng: number; savedAt?: number };
+        const isFresh = typeof parsed.savedAt === "number" && (Date.now() - parsed.savedAt) <= LOCATION_CACHE_TTL_MS;
+        if (typeof parsed.lat === "number" && typeof parsed.lng === "number" && isFresh) {
+          hasFreshCachedLocationRef.current = true;
+          setUserLocation({ lat: parsed.lat, lng: parsed.lng });
+          setLocationStatus("granted");
+        } else {
+          localStorage.removeItem(LAST_LOCATION_KEY);
+        }
+      } catch {
+        // Ignore corrupted cache
+        localStorage.removeItem(LAST_LOCATION_KEY);
+      }
+    }
+
+    const savedRadius = localStorage.getItem(MISSION_RADIUS_KEY);
+    if (savedRadius) {
+      const parsedRadius = Number(savedRadius);
+      if ([5, 10, 25].includes(parsedRadius)) {
+        setRadiusKm(parsedRadius);
+      }
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem(MISSION_RADIUS_KEY, String(radiusKm));
+  }, [radiusKm]);
+
+  // Request geolocation with a hard timeout safeguard so UI never stays stuck in "requesting".
+  const getCurrentPosition = useCallback((options: PositionOptions, hardTimeoutMs = 10000) => {
+    return new Promise<GeolocationPosition>((resolve, reject) => {
+      let didFinish = false;
+      const hardTimeout = window.setTimeout(() => {
+        if (didFinish) return;
+        didFinish = true;
+        reject(new Error("hard-timeout"));
+      }, hardTimeoutMs);
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          if (didFinish) return;
+          didFinish = true;
+          window.clearTimeout(hardTimeout);
+          resolve(pos);
+        },
+        (err) => {
+          if (didFinish) return;
+          didFinish = true;
+          window.clearTimeout(hardTimeout);
+          reject(err);
+        },
+        options
+      );
+    });
+  }, []);
+
+  const requestLocation = useCallback(async (opts?: { forceFresh?: boolean }): Promise<boolean> => {
+    if (typeof window === "undefined") return false;
+    const forceFresh = Boolean(opts?.forceFresh);
+    const keepGrantedOnFailure = Boolean(userLocationRef.current);
+    setLocationStatus('requesting');
+    setLocationError(null);
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const permission = await CapacitorGeolocation.requestPermissions();
+        if (permission.location !== "granted" && permission.coarseLocation !== "granted") {
+          setLocationStatus(keepGrantedOnFailure ? "granted" : "denied");
+          setLocationError("permission");
+          return false;
+        }
+        const nativePos = await CapacitorGeolocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: forceFresh ? 0 : 60000,
+        });
+        persistLocation(nativePos.coords.latitude, nativePos.coords.longitude);
+        return true;
+      } catch {
+        setLocationStatus(keepGrantedOnFailure ? "granted" : "denied");
+        setLocationError("unavailable");
+        return false;
+      }
+    }
+
+    const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    if (!window.isSecureContext && !isLocalhost) {
+      setLocationStatus("denied");
+      setLocationError("insecure");
+      return false;
+    }
+
+    if (!("geolocation" in navigator)) {
+      setLocationStatus('denied');
+      setLocationError("unsupported");
+      return false;
+    }
+
+    if ("permissions" in navigator && typeof navigator.permissions.query === "function") {
+      try {
+        const permission = await navigator.permissions.query({ name: "geolocation" });
+        if (permission.state === "denied") {
+          setLocationStatus(keepGrantedOnFailure ? "granted" : "denied");
+          setLocationError("permission");
+          return false;
+        }
+      } catch {
+        // Ignore permissions API errors and continue with geolocation request.
+      }
+    }
+
+    try {
+      const pos = await getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 7000,
+        maximumAge: forceFresh ? 0 : 60000,
+      }, 8000);
+      persistLocation(pos.coords.latitude, pos.coords.longitude);
+      return true;
+    } catch {
+      // Retry with less strict settings; some devices/browsers fail high-accuracy requests.
+    }
+
+    try {
+      const fallbackPos = await getCurrentPosition({
+        enableHighAccuracy: false,
+        timeout: 8000,
+        maximumAge: forceFresh ? 0 : 300000,
+      }, 9000);
+      persistLocation(fallbackPos.coords.latitude, fallbackPos.coords.longitude);
+      return true;
+    } catch (err) {
+      const geolocationError = err as GeolocationPositionError;
+      setLocationStatus(keepGrantedOnFailure ? "granted" : "denied");
+      if (geolocationError?.code === 1) setLocationError("permission");
+      else if (geolocationError?.code === 2) setLocationError("unavailable");
+      else if (geolocationError?.code === 3) setLocationError("timeout");
+      else setLocationError("unavailable");
+      return false;
+    }
+  }, [getCurrentPosition, persistLocation]);
+
   // Auto-request location on mount
   useEffect(() => {
+    if (hasFreshCachedLocationRef.current) return;
     requestLocation();
   }, [requestLocation]);
 
@@ -56,19 +226,29 @@ export default function MisionesPage() {
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => {
+      if (!userLocation) {
+        setMissions([]);
+        setIsLoading(false);
+        return;
+      }
       const generated = generateMissions(
         PROJECTS,
         userLocation?.lat,
         userLocation?.lng,
         12
       );
-      setMissions(generated);
+      const nearbyMissions = generated.filter((mission) => mission.distanceKm === undefined || mission.distanceKm <= radiusKm);
+      setMissions(nearbyMissions);
       setIsLoading(false);
     }, 600); // Small delay for UX feel
     return () => clearTimeout(timer);
-  }, [userLocation]);
+  }, [radiusKm, userLocation]);
 
   const refreshMissions = () => {
+    if (!userLocation) {
+      requestLocation();
+      return;
+    }
     setIsLoading(true);
     setTimeout(() => {
       const generated = generateMissions(
@@ -77,9 +257,16 @@ export default function MisionesPage() {
         userLocation?.lng,
         12
       );
-      setMissions(generated);
+      const nearbyMissions = generated.filter((mission) => mission.distanceKm === undefined || mission.distanceKm <= radiusKm);
+      setMissions(nearbyMissions);
       setIsLoading(false);
     }, 500);
+  };
+
+  const locateAndRefresh = async () => {
+    const located = await requestLocation({ forceFresh: true });
+    if (!located) return;
+    refreshMissions();
   };
 
   const completeMission = (mission: EcoMission) => {
@@ -88,7 +275,12 @@ export default function MisionesPage() {
     setCelebratingId(mission.id);
     
     // Award points
-    addPoints(mission.xpReward, `Misión: ${mission.title}`, mission.karmaReward);
+    const localizedTitle = locale === "en"
+      ? (mission.title_en || mission.title)
+      : locale === "de"
+        ? (mission.title_de || mission.title_en || mission.title)
+        : mission.title;
+    addPoints(mission.xpReward, `Mission: ${localizedTitle}`, mission.karmaReward);
     
     // Mark as completed
     const newCompleted = new Set(completedIds);
@@ -101,10 +293,18 @@ export default function MisionesPage() {
   };
 
   const getLocalizedTitle = (m: EcoMission) => 
-    locale === 'en' ? m.title_en : locale === 'de' ? m.title_de : m.title;
+    locale === 'en'
+      ? (m.title_en || m.title || m.title_de)
+      : locale === 'de'
+        ? (m.title_de || m.title_en || m.title)
+        : (m.title || m.title_en || m.title_de);
   
   const getLocalizedDesc = (m: EcoMission) =>
-    locale === 'en' ? m.description_en : locale === 'de' ? m.description_de : m.description;
+    locale === 'en'
+      ? (m.description_en || m.description || m.description_de)
+      : locale === 'de'
+        ? (m.description_de || m.description_en || m.description)
+        : (m.description || m.description_en || m.description_de);
 
   const getDiffLabel = (d: EcoMission['difficulty']) => {
     const l = DIFFICULTY_LABELS[d];
@@ -112,6 +312,18 @@ export default function MisionesPage() {
   };
 
   const completedCount = missions.filter(m => completedIds.has(m.id)).length;
+  const locationErrorText =
+    locationError === "permission"
+      ? (locale === "es" ? "Permiso de ubicación bloqueado. Actívalo en tu navegador." : locale === "de" ? "Standortberechtigung blockiert. Bitte im Browser aktivieren." : "Location permission is blocked. Enable it in your browser.")
+      : locationError === "timeout"
+        ? (locale === "es" ? "No pudimos obtener tu ubicación a tiempo. Reintenta." : locale === "de" ? "Standort konnte nicht rechtzeitig ermittelt werden. Bitte erneut versuchen." : "We couldn't get your location in time. Please try again.")
+        : locationError === "insecure"
+          ? (locale === "es" ? "La geolocalización requiere HTTPS (o localhost)." : locale === "de" ? "Geolokalisierung benötigt HTTPS (oder localhost)." : "Geolocation requires HTTPS (or localhost).")
+          : locationError === "unsupported"
+            ? (locale === "es" ? "Este navegador no soporta geolocalización." : locale === "de" ? "Dieser Browser unterstützt keine Geolokalisierung." : "This browser does not support geolocation.")
+            : locationError === "unavailable"
+              ? (locale === "es" ? "Ubicación no disponible en este momento." : locale === "de" ? "Standort ist derzeit nicht verfügbar." : "Location is currently unavailable.")
+              : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-green-50 dark:from-slate-950 dark:to-slate-900">
@@ -145,19 +357,49 @@ export default function MisionesPage() {
                 </span>
               ) : locationStatus === 'denied' ? (
                 <button 
-                  onClick={requestLocation}
+                  onClick={locateAndRefresh}
+                  disabled={locationStatus === "requesting"}
                   className="inline-flex items-center gap-1.5 text-xs font-bold bg-white/20 text-white px-3 py-1.5 rounded-full backdrop-blur-sm hover:bg-white/30 transition"
                 >
                   <MapPin className="w-3 h-3" />
-                  {locale === 'es' ? 'Activar ubicación' : 'Enable location'}
+                  {locale === 'es' ? 'Activar ubicación' : locale === 'de' ? 'Standort aktivieren' : 'Enable location'}
                 </button>
               ) : (
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold bg-white/20 text-white px-3 py-1.5 rounded-full backdrop-blur-sm animate-pulse">
-                  <Navigation className="w-3 h-3" />
-                  {locale === 'es' ? 'Buscando...' : 'Locating...'}
-                </span>
+                <button
+                  onClick={locateAndRefresh}
+                  disabled={locationStatus === "requesting"}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold bg-white/20 text-white px-3 py-1.5 rounded-full backdrop-blur-sm hover:bg-white/30 transition disabled:opacity-60"
+                >
+                  <MapPin className="w-3 h-3" />
+                  {locationStatus === "requesting"
+                    ? (locale === 'es' ? 'Buscando...' : locale === 'de' ? 'Suche...' : 'Locating...')
+                    : (locale === 'es' ? 'Ubicarme ahora' : locale === 'de' ? 'Jetzt orten' : 'Locate me now')}
+                </button>
               )}
             </div>
+            {userLocation && (
+              <p className="mt-2 text-xs text-white/85">
+                {locale === "es"
+                  ? `Usando tu ubicación: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`
+                  : locale === "de"
+                    ? `Dein Standort: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`
+                    : `Using your location: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`}
+              </p>
+            )}
+            {locationErrorText && (
+              <p className="mt-2 text-xs text-red-100/95 font-medium">
+                {locationErrorText}
+              </p>
+            )}
+            {locationStatus === "requesting" && (
+              <p className="mt-2 text-xs text-white/90">
+                {locale === "es"
+                  ? "Buscando ubicación actual (alta precisión y respaldo)..."
+                  : locale === "de"
+                    ? "Aktueller Standort wird gesucht (hohe Genauigkeit + Fallback)..."
+                    : "Finding your current location (high accuracy + fallback)..."}
+              </p>
+            )}
 
             {/* Stats Bar */}
             <div className="mt-5 flex items-center gap-4">
@@ -174,6 +416,35 @@ export default function MisionesPage() {
                   {locale === 'es' ? 'Nuevas misiones' : locale === 'de' ? 'Neue Missionen' : 'New missions'}
                 </span>
               </button>
+            </div>
+
+            <div className="mt-3 flex items-center gap-2">
+              {[5, 10, 25].map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setRadiusKm(option)}
+                  className={`rounded-full px-3 py-1 text-xs transition ${
+                    radiusKm === option
+                      ? "bg-white text-green-700"
+                      : "bg-white/20 text-white hover:bg-white/30"
+                  }`}
+                >
+                  {option} km
+                </button>
+              ))}
+            </div>
+
+            {/* Rewards and difficulty legend */}
+            <div className="mt-4 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 p-3 space-y-1.5">
+              <p className="text-[11px] md:text-xs text-green-50">
+                {xpLabel}: {xpMeaning}
+              </p>
+              <p className="text-[11px] md:text-xs text-green-50">
+                {karmaLabel}: {karmaMeaning}
+              </p>
+              <p className="text-[11px] md:text-xs text-green-50">
+                {locale === "es" ? "Dificultad" : locale === "de" ? "Schwierigkeit" : "Difficulty"}: {difficultyMeaning}
+              </p>
             </div>
           </div>
         </div>
@@ -225,12 +496,17 @@ export default function MisionesPage() {
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1, rotate: [0, 15, -15, 0] }}
-                        transition={{ type: "spring" }}
+                        transition={{
+                          scale: { type: "spring", stiffness: 380, damping: 14, mass: 0.7 },
+                          rotate: { duration: 0.32, ease: "easeOut" },
+                        }}
                       >
                         <Sparkles className="w-12 h-12 text-yellow-300" />
                       </motion.div>
-                      <span className="text-white font-black text-lg">+{mission.xpReward} XP</span>
-                      <span className="text-green-100 text-sm font-medium">+{mission.karmaReward} Karma</span>
+                      <span className="text-white font-black text-lg">+{mission.xpReward} {xpLabel}</span>
+                      <span className="text-green-100 text-sm font-medium">
+                        {locale === 'es' ? 'Karma aplicado en tu perfil' : locale === 'de' ? 'Karma wird im Profil gutgeschrieben' : 'Karma is reflected in your profile'}
+                      </span>
                     </motion.div>
                   )}
 
@@ -260,21 +536,18 @@ export default function MisionesPage() {
                             {getDiffLabel(mission.difficulty)}
                           </span>
                           <span className="inline-flex items-center gap-1 text-[10px] font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-slate-700 px-2 py-0.5 rounded-full">
-                            <Clock className="w-2.5 h-2.5" /> {mission.estimatedMinutes} min
+                            <Clock className="w-2.5 h-2.5" /> {mission.estimatedMinutes} {minuteLabel}
                           </span>
                           {mission.distanceKm !== undefined && (
                             <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full">
                               <MapPin className="w-2.5 h-2.5" /> 
                               {mission.distanceKm < 1 
-                                ? `${Math.round(mission.distanceKm * 1000)}m` 
-                                : `${mission.distanceKm} km`}
+                                ? `${Math.round(mission.distanceKm * 1000)}${meterLabel}` 
+                                : `${mission.distanceKm} ${kilometerLabel}`}
                             </span>
                           )}
                           <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded-full">
-                            <Zap className="w-2.5 h-2.5" /> {mission.xpReward} XP
-                          </span>
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/30 px-2 py-0.5 rounded-full">
-                            <Star className="w-2.5 h-2.5" /> {mission.karmaReward} Karma
+                            <Zap className="w-2.5 h-2.5" /> {mission.xpReward} {xpLabel}
                           </span>
                         </div>
                       </div>
@@ -287,6 +560,12 @@ export default function MisionesPage() {
                         className="text-xs font-medium text-green-600 dark:text-green-400 hover:underline"
                       >
                         📍 {mission.city}
+                      </Link>
+                      <Link
+                        href="/perfil"
+                        className="text-[11px] text-purple-600 dark:text-purple-400 hover:underline"
+                      >
+                        {locale === 'es' ? 'Tu karma total se ve en Perfil' : locale === 'de' ? 'Dein Karma siehst du im Profil' : 'See your total karma in Profile'}
                       </Link>
 
                       {!isCompleted ? (
@@ -316,10 +595,10 @@ export default function MisionesPage() {
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🔍</div>
             <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300">
-              {locale === 'es' ? 'No hay misiones disponibles' : 'No missions available'}
+              {locale === 'es' ? 'Activa tu ubicación para ver misiones cercanas' : locale === 'de' ? 'Aktiviere deinen Standort für Missionen in deiner Nähe' : 'Enable your location to see nearby missions'}
             </h3>
             <p className="text-sm text-gray-500 mt-2">
-              {locale === 'es' ? 'Activa tu ubicación para encontrar misiones cercanas' : 'Enable your location to find nearby missions'}
+              {locale === 'es' ? 'Toca "Ubicarme ahora" y te mostraremos acciones alrededor de ti.' : locale === 'de' ? 'Tippe auf "Jetzt orten", um Missionen in deiner Nähe zu sehen.' : 'Tap "Locate me now" and we will show missions around you.'}
             </p>
           </div>
         )}

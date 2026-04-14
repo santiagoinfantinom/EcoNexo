@@ -118,7 +118,7 @@ export default function ProjectsCarousel() {
           const imageSrc = ensureEventImage({
             image_url: project.image_url,
             category: project.category,
-            website: project.info_url
+            website: project.links?.website
           });
 
           return (

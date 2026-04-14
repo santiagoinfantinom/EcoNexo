@@ -522,7 +522,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
     if (baseEvent && baseEvent.currentVolunteers !== undefined) {
       setCurrentVolunteers(baseEvent.currentVolunteers);
     }
-  }, [baseEvent?.id, baseEvent?.currentVolunteers]);
+  }, [baseEvent]);
 
   // Load saved state (guest/local + Supabase) - must be before conditional returns
   React.useEffect(() => {
@@ -661,9 +661,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
         }
 
         // ALWAYS fall back to mock data if API fails or returns empty
-        console.log(`[EventDetailClient] Attempting to load event ${eventId} from EVENT_DETAILS...`);
-        console.log(`[EventDetailClient] Total events in EVENT_DETAILS:`, Object.keys(EVENT_DETAILS).length);
-        console.log(`[EventDetailClient] Events containing "${eventId.slice(1, 3)}":`, Object.keys(EVENT_DETAILS).filter(k => k.includes(eventId.slice(1, 3))).join(', '));
+        console.log(`[EventDetailClient] Attempting to load event ${eventId} from local event details...`);
 
         const mockEvent = await getLocalizedEventData(eventId, locale);
         if (mockEvent) {
@@ -679,15 +677,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
           setBaseEvent(mockEvent);
         } else {
           console.error(`❌ [EventDetailClient] Event ${eventId} not found in mock data`);
-          console.error(`   Available events containing "${eventId.slice(1, 3)}":`, Object.keys(EVENT_DETAILS).filter(k => k.includes(eventId.slice(1, 3))).join(', '));
-          console.error(`   First 30 available events:`, Object.keys(EVENT_DETAILS).slice(0, 30).join(', '));
-          const notFoundMessage =
-            locale === 'de'
-              ? `Veranstaltung ${eventId} nicht gefunden`
-              : locale === 'en'
-                ? `Event ${eventId} not found`
-                : `Evento ${eventId} no encontrado`;
-          setError(notFoundMessage);
+          setError(t("eventNotFound"));
         }
       } catch (err) {
         console.error(`Error loading event ${eventId}:`, err);
@@ -705,7 +695,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
     };
 
     loadEventData();
-  }, [eventId, locale]);
+  }, [eventId, locale, t]);
 
   // Debug: Log component state
   console.log(`[EventDetailClient Render] State:`, {
@@ -741,7 +731,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
           >
-            {locale === 'de' ? 'Seite neu laden' : locale === 'en' ? 'Reload page' : 'Recargar página'}
+            {t("reloadPage")}
           </button>
         </div>
       </div>
@@ -796,14 +786,14 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
 
   const handleJoin = () => {
     if (!user) {
-      alert(locale === 'es' ? 'Debes iniciar sesión para unirte al evento' : t('mustLoginToJoin'));
+      alert(t("mustLoginToJoin"));
       return;
     }
     setShowRegistrationForm(true);
   };
 
   const handleDelete = async () => {
-    if (!confirm(locale === 'es' ? '¿Estás seguro de que deseas eliminar este evento?' : 'Are you sure you want to delete this event?')) {
+    if (!confirm(t("deleteEventConfirm"))) {
       return;
     }
 
@@ -818,11 +808,11 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
         if (error) throw error;
       }
 
-      alert(locale === 'es' ? 'Evento eliminado con éxito' : 'Event deleted successfully');
+      alert(t("eventDeletedSuccess"));
       window.location.href = '/';
     } catch (err) {
       console.error('Error deleting event:', err);
-      alert(locale === 'es' ? 'Error al eliminar el evento' : 'Error deleting event');
+      alert(t("errorDeletingEvent"));
     }
   };
 
@@ -966,20 +956,10 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
         }
       }
 
-      alert(locale === 'de' ?
-        'Du hast dich erfolgreich für die Veranstaltung angemeldet!' :
-        locale === 'en' ?
-          'You have successfully registered for the event!' :
-          '¡Te has registrado exitosamente al evento!'
-      );
+      alert(t("registrationSuccess"));
     } catch (error) {
       console.error('Registration error:', error);
-      alert(locale === 'de' ?
-        'Fehler bei der Anmeldung.' :
-        locale === 'en' ?
-          'Registration failed.' :
-          'Error en el registro.'
-      );
+      alert(t("registrationFailed"));
     }
   };
 
@@ -1249,7 +1229,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
                       : 'Remember to say you came through EcoNexo!'
                 }
               >
-                {locale === 'es' ? 'Inscribirme Ahora' : locale === 'de' ? 'Jetzt Anmelden' : 'Register Now'}
+                {t("registerNow")}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                   <polyline points="15 3 21 3 21 9"></polyline>
@@ -1258,11 +1238,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
               </a>
               {/* Custom tooltip bubble */}
               <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl z-10">
-                {locale === 'es'
-                  ? '💚 Recuerda decir que llegaste a través de EcoNexo'
-                  : locale === 'de'
-                    ? '💚 Vergiss nicht zu sagen, dass du über EcoNexo gekommen bist'
-                    : '💚 Remember to say you came through EcoNexo'}
+                {t("rememberToTellThemTooltip")}
                 <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
                   <div className="border-4 border-transparent border-t-slate-900"></div>
                 </div>
@@ -1280,7 +1256,7 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
               onClick={handleDelete}
               className="px-8 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors shadow-lg"
             >
-              {locale === 'es' ? 'Eliminar Evento' : locale === 'de' ? 'Event löschen' : 'Delete Event'}
+              {t("deleteEventLabel")}
             </button>
           )}
         </div>

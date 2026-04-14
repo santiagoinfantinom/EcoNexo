@@ -18,10 +18,40 @@ export default function ImageWithFallback({
     category,
     className,
     referrerPolicy = "no-referrer",
+    fill,
+    priority,
+    sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     ...props
 }: ImageWithFallbackProps) {
     const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
     const [retryStage, setRetryStage] = useState(0);
+
+    const getCategoryImage = (value?: string, prefix = "") => {
+        if (!value) return "";
+        const normalizedCategory = value.toLowerCase().trim();
+        if (normalizedCategory.includes('medio ambiente') || normalizedCategory.includes('environment') || normalizedCategory.includes('umwelt')) {
+            return `${prefix}/assets/categories/environment.jpg`;
+        }
+        if (normalizedCategory.includes('educación') || normalizedCategory.includes('education') || normalizedCategory.includes('bildung')) {
+            return `${prefix}/assets/categories/education.jpg`;
+        }
+        if (normalizedCategory.includes('salud') || normalizedCategory.includes('health') || normalizedCategory.includes('gesundheit')) {
+            return `${prefix}/assets/categories/health.jpg`;
+        }
+        if (normalizedCategory.includes('océanos') || normalizedCategory.includes('oceans') || normalizedCategory.includes('ozeane')) {
+            return `${prefix}/assets/categories/oceans.jpg`;
+        }
+        if (normalizedCategory.includes('alimentación') || normalizedCategory.includes('food') || normalizedCategory.includes('ernährung')) {
+            return `${prefix}/assets/categories/food.jpg`;
+        }
+        if (normalizedCategory.includes('comunidad') || normalizedCategory.includes('community') || normalizedCategory.includes('gemeinschaft')) {
+            return `${prefix}/assets/categories/community.jpg`;
+        }
+        if (normalizedCategory.includes('tecnología') || normalizedCategory.includes('technology') || normalizedCategory.includes('technologie')) {
+            return `${prefix}/assets/categories/technology.jpg`;
+        }
+        return "";
+    };
 
     useEffect(() => {
         const isGH = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
@@ -34,33 +64,24 @@ export default function ImageWithFallback({
             finalSrc = `${prefix}${src}`;
         }
 
+        // Force-replace legacy generic project thumbnails with thematic category images.
+        if (finalSrc && finalSrc.startsWith(`${prefix}/projects/`) || finalSrc?.startsWith('/projects/')) {
+            const categoryImage = getCategoryImage(category, prefix);
+            if (categoryImage) {
+                finalSrc = categoryImage;
+            }
+        }
+
         setImgSrc(finalSrc || fallbackSrc);
         setRetryStage(0);
-    }, [src, fallbackSrc]);
+    }, [src, fallbackSrc, category]);
 
     const handleError = () => {
         // Stage 1: Try category fallback if available
         if (retryStage === 0 && category) {
-            const normalizedCategory = category.toLowerCase().trim();
             const isGH = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
             const prefix = isGH ? '/EcoNexo' : '';
-            let categoryImage = "";
-
-            if (normalizedCategory.includes('medio ambiente') || normalizedCategory.includes('environment') || normalizedCategory.includes('umwelt')) {
-                categoryImage = `${prefix}/assets/categories/environment.jpg`;
-            } else if (normalizedCategory.includes('educación') || normalizedCategory.includes('education') || normalizedCategory.includes('bildung')) {
-                categoryImage = `${prefix}/assets/categories/education.jpg`;
-            } else if (normalizedCategory.includes('salud') || normalizedCategory.includes('health') || normalizedCategory.includes('gesundheit')) {
-                categoryImage = `${prefix}/assets/categories/health.jpg`;
-            } else if (normalizedCategory.includes('océanos') || normalizedCategory.includes('oceans') || normalizedCategory.includes('ozeane')) {
-                categoryImage = `${prefix}/assets/categories/oceans.jpg`;
-            } else if (normalizedCategory.includes('alimentación') || normalizedCategory.includes('food') || normalizedCategory.includes('ernährung')) {
-                categoryImage = `${prefix}/assets/categories/food.jpg`;
-            } else if (normalizedCategory.includes('comunidad') || normalizedCategory.includes('community') || normalizedCategory.includes('gemeinschaft')) {
-                categoryImage = `${prefix}/assets/categories/community.jpg`;
-            } else if (normalizedCategory.includes('tecnología') || normalizedCategory.includes('technology') || normalizedCategory.includes('technologie')) {
-                categoryImage = `${prefix}/assets/categories/technology.jpg`;
-            }
+            const categoryImage = getCategoryImage(category, prefix);
 
             if (categoryImage) {
                 setImgSrc(categoryImage);
@@ -84,6 +105,8 @@ export default function ImageWithFallback({
             className={className}
             referrerPolicy={referrerPolicy as any}
             fill={!props.width && !props.height}
+            sizes={fill ? sizes : undefined}
+            priority={priority}
             {...(props as any)}
         />
     );

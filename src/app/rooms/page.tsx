@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
 import DigitalRoom from '@/components/DigitalRoom';
@@ -31,17 +31,12 @@ export default function RoomsPage() {
   const [roomDescription, setRoomDescription] = useState('');
   const [autoDestroyMinutes, setAutoDestroyMinutes] = useState(60);
 
-  useEffect(() => {
-    loadRooms();
-    // Refresh rooms every 10 seconds
-    const interval = setInterval(loadRooms, 10000);
-    return () => clearInterval(interval);
-  }, [user]);
+  const userIdentifier = useMemo(() => user?.id || user?.email, [user?.id, user?.email]);
 
-  const loadRooms = async () => {
+  const loadRooms = useCallback(async () => {
     try {
-      const url = user 
-        ? `/api/rooms?userId=${user.id || user.email}`
+      const url = userIdentifier
+        ? `/api/rooms?userId=${userIdentifier}`
         : '/api/rooms';
       const response = await fetch(url);
       if (response.ok) {
@@ -53,7 +48,13 @@ export default function RoomsPage() {
     } catch (error) {
       console.error('Error loading rooms:', error);
     }
-  };
+  }, [userIdentifier]);
+
+  useEffect(() => {
+    loadRooms();
+    const interval = setInterval(loadRooms, 10000);
+    return () => clearInterval(interval);
+  }, [loadRooms]);
 
   const handleCreateRoom = async () => {
     if (!user || !roomName.trim()) return;

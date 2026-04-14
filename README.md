@@ -68,6 +68,11 @@ cp env.example .env.local
 # Edit .env.local with your configurations
 ```
 
+4. **Regenerate Supabase types when schema changes**
+```bash
+npm run db:types
+```
+
 4. **Run in development mode**
 ```bash
 npm run dev

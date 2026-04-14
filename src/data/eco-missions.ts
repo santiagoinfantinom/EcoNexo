@@ -146,6 +146,58 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
   ],
 };
 
+const CATEGORY_ALIASES: Record<string, keyof typeof TEMPLATES> = {
+  "medio ambiente": "Medio ambiente",
+  environment: "Medio ambiente",
+  umwelt: "Medio ambiente",
+  alimentación: "Alimentación",
+  alimentacion: "Alimentación",
+  food: "Alimentación",
+  ernahrung: "Alimentación",
+  ernährung: "Alimentación",
+  océanos: "Océanos",
+  oceanos: "Océanos",
+  oceans: "Océanos",
+  ozeane: "Océanos",
+  comunidad: "Comunidad",
+  community: "Comunidad",
+  gemeinschaft: "Comunidad",
+  educación: "Educación",
+  educacion: "Educación",
+  education: "Educación",
+  bildung: "Educación",
+  salud: "Salud",
+  health: "Salud",
+  gesundheit: "Salud",
+  tecnología: "Tecnología",
+  tecnologia: "Tecnología",
+  technology: "Tecnología",
+  technologie: "Tecnología",
+};
+
+const FALLBACK_TEMPLATES: MissionTemplate[] = [
+  {
+    titlePattern: "Acción rápida en {project}",
+    titlePattern_en: "Quick action at {project}",
+    titlePattern_de: "Schnelle Aktion bei {project}",
+    descPattern: "Completa una acción positiva cerca de {project} para sumar impacto.",
+    descPattern_en: "Complete one positive action near {project} to add impact.",
+    descPattern_de: "Führe eine positive Aktion in der Nähe von {project} aus, um Wirkung zu erzielen.",
+    icon: "✨",
+    xpReward: 50,
+    karmaReward: 8,
+    difficulty: "easy",
+    estimatedMinutes: 10,
+  },
+];
+
+const normalizeCategory = (value: string): string =>
+  value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+
 /**
  * Calculate distance between two coordinates in km (Haversine formula)
  */
@@ -194,12 +246,15 @@ export function generateMissions(
   }
 
   for (const project of sortedProjects) {
-    const categoryTemplates = TEMPLATES[project.category];
-    if (!categoryTemplates || categoryTemplates.length === 0) continue;
+    const normalized = normalizeCategory(project.category);
+    const canonicalCategory = CATEGORY_ALIASES[normalized] || (project.category as keyof typeof TEMPLATES);
+    const categoryTemplates = TEMPLATES[canonicalCategory] || FALLBACK_TEMPLATES;
 
     // Pick a random template for this project
     const template = categoryTemplates[Math.floor(Math.random() * categoryTemplates.length)];
-    const projectName = project.name;
+    const projectNameEs = project.name;
+    const projectNameEn = project.name_en || project.name;
+    const projectNameDe = project.name_de || project.name;
     const cityName = project.city || '';
 
     const distance =
@@ -209,12 +264,12 @@ export function generateMissions(
 
     missions.push({
       id: `mission-${project.id}-${template.icon}`,
-      title: template.titlePattern.replace('{project}', projectName).replace('{city}', cityName),
-      title_en: template.titlePattern_en.replace('{project}', projectName).replace('{city}', cityName),
-      title_de: template.titlePattern_de.replace('{project}', projectName).replace('{city}', cityName),
-      description: template.descPattern.replace('{project}', projectName).replace('{city}', cityName),
-      description_en: template.descPattern_en.replace('{project}', projectName).replace('{city}', cityName),
-      description_de: template.descPattern_de.replace('{project}', projectName).replace('{city}', cityName),
+      title: template.titlePattern.replace('{project}', projectNameEs).replace('{city}', cityName),
+      title_en: template.titlePattern_en.replace('{project}', projectNameEn).replace('{city}', cityName),
+      title_de: template.titlePattern_de.replace('{project}', projectNameDe).replace('{city}', cityName),
+      description: template.descPattern.replace('{project}', projectNameEs).replace('{city}', cityName),
+      description_en: template.descPattern_en.replace('{project}', projectNameEn).replace('{city}', cityName),
+      description_de: template.descPattern_de.replace('{project}', projectNameDe).replace('{city}', cityName),
       icon: template.icon,
       xpReward: template.xpReward,
       karmaReward: template.karmaReward,
@@ -222,7 +277,7 @@ export function generateMissions(
       estimatedMinutes: template.estimatedMinutes,
       category: project.category,
       linkedProjectId: project.id,
-      linkedProjectName: projectName,
+      linkedProjectName: projectNameEs,
       distanceKm: distance ? Math.round(distance * 10) / 10 : undefined,
       city: project.city,
       country: project.country,

@@ -46,21 +46,21 @@ export default function PWAInstallPrompt() {
         
         <div className="flex-1 pt-1">
           <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-1">
-            {locale === 'es' ? 'Instala EcoNexo App' : 'Install EcoNexo App'}
+            {t("pwaInstallTitle")}
           </h3>
           <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-3">
             {isIOS 
-              ? (locale === 'es' ? 'Toca el botón Compartir abajo y selecciona "Añadir a pantalla de inicio".' : 'Tap the Share button below and select "Add to Home Screen".')
-              : (locale === 'es' ? 'Añade EcoNexo a tu pantalla de inicio para una experiencia más rápida.' : 'Add EcoNexo to your home screen for a faster experience.')
+              ? t("pwaInstallIOS")
+              : t("pwaInstallAndroid")
             }
           </p>
           
           {isIOS && (
             <div className="flex items-center gap-2 text-xs bg-slate-50 dark:bg-slate-700 p-2 rounded-lg text-gray-600 dark:text-gray-300">
               <Share className="w-4 h-4" /> 
-              <span>{locale === 'es' ? '1. Compartir' : '1. Share'} ➔ </span>
+              <span>{t("pwaShareStep")} ➔ </span>
               <span className="font-semibold px-1 py-0.5 border dark:border-slate-500 rounded bg-white dark:bg-slate-600">
-                + {locale === 'es' ? 'Añadir a inicio' : 'Add to home'}
+                + {t("pwaAddStep")}
               </span>
             </div>
           )}

@@ -57,14 +57,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const supabase = getSupabase();
     let mounted = true;
 
+    const withTimeout = async <T,>(promise: Promise<T>, timeoutMs: number, fallback: T): Promise<T> => {
+      let timeoutId: ReturnType<typeof setTimeout> | null = null;
+      const timeoutPromise = new Promise<T>((resolve) => {
+        timeoutId = setTimeout(() => resolve(fallback), timeoutMs);
+      });
+      const result = await Promise.race([promise, timeoutPromise]);
+      if (timeoutId) clearTimeout(timeoutId);
+      return result;
+    };
+
     const init = async () => {
       setLoading(true);
+      const loadingGuard = setTimeout(() => {
+        if (mounted) {
+          console.warn('Auth init timeout reached, unlocking UI with guest state');
+          setLoading(false);
+        }
+      }, 5000);
 
       // 1. Try Supabase session first
-      const { data } = await supabase.auth.getSession();
+      let data: any = null;
+      try {
+        const sessionResult = await withTimeout(
+          supabase.auth.getSession(),
+          4000,
+          { data: { session: null } } as any
+        );
+        data = sessionResult.data;
+      } catch (err) {
+        console.warn('Auth getSession failed, continuing with guest/localStorage mode', err);
+      }
       if (!mounted) return;
 
-      const sessionUser = data.session?.user ?? null;
+      const sessionUser = data?.session?.user ?? null;
 
       if (sessionUser) {
         try {
@@ -95,6 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }
       }
+      clearTimeout(loadingGuard);
       setLoading(false);
     };
 
