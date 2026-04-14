@@ -10,7 +10,7 @@ type EventDetailPageProps = {
 };
 
 // Disable dynamic routes that aren't pre-generated for static export
-export const dynamicParams = true;
+export const dynamicParams = false;
 
 // Required for static export
 export async function generateStaticParams() {
