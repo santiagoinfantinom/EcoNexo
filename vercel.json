@@ -46,6 +46,17 @@
   ],
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "econexo-europe.vercel.app"
+        }
+      ],
+      "destination": "https://econexo-web.vercel.app/:path*",
+      "permanent": true
+    },
+    {
       "source": "/projects/:path*",
       "destination": "/projects/:path*/",
       "permanent": true

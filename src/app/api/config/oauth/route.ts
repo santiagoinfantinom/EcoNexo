@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getSiteUrl } from '@/lib/site';
 
 // Fallback Client ID - usar el valor real de Google Cloud Console
 const FALLBACK_GOOGLE_CLIENT_ID = 'demo-client-id';
@@ -21,7 +22,7 @@ export async function GET() {
     outlookClientId = null;
   }
   
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://econexo.app';
+  const siteUrl = getSiteUrl();
   
   console.log('🔍 API Config OAuth:', {
     googleClientId: googleClientId ? 'CONFIGURED' : 'NOT CONFIGURED',

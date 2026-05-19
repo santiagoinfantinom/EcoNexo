@@ -4,7 +4,7 @@
 
 1. **Abre tu app en modo privado:**
    ```
-   https://econexo-europe.vercel.app
+   https://econexo-web.vercel.app
    ```
 
 2. **Abre las herramientas de desarrollador:**
@@ -64,20 +64,20 @@
 
 2. **En "Authorized redirect URIs", verifica que esté EXACTAMENTE:**
    ```
-   https://econexo-europe.vercel.app/auth/google/callback`
+   https://econexo-web.vercel.app/auth/google/callback`
    ```
 
 3. **Verifica que:**
    - ✅ Empiece con `https://` (no `http://`)
    - ✅ No tenga espacios al inicio o al final
    - ✅ Termine con `/auth/google/callback`
-   - ✅ El dominio sea exactamente `econexo-europe.vercel.app`
+   - ✅ El dominio sea exactamente `econexo-web.vercel.app`
 
 ## ⚠️ Problemas Comunes
 
 1. **Espacios invisibles:** Copia y pega el redirect URI directamente desde aquí
 2. **http vs https:** Debe ser `https://`, no `http://`
-3. **Dominio incorrecto:** Verifica que sea el dominio oficial de Vercel (econexo-europe.vercel.app)
+3. **Dominio incorrecto:** Verifica que sea el dominio oficial de Vercel (econexo-web.vercel.app)
 4. **Cambios no aplicados:** Espera 2-3 minutos después de guardar en Google Cloud Console
 
 ## 📝 Qué Hacer con la Información

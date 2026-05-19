@@ -15,7 +15,7 @@
 1. Busca tu **OAuth 2.0 Client ID** llamado **"EcoNexo"**
 2. Haz clic en el nombre para editarlo.
 3. En la sección **"Authorized redirect URIs"**, asegúrate de que aparezca EXACTAMENTE la siguiente URL:
-   `https://econexo-europe.vercel.app/auth/google/callback`
+   `https://econexo-web.vercel.app/auth/google/callback`
 4. Si falta, haz clic en **"ADD URI"** y pégala.
 5. Haz clic en **"SAVE"** (Guardar).
 
@@ -34,7 +34,7 @@
 ## 📋 Paso 3: Probar Google OAuth
 
 ### 3.1 Probar en producción
-1. Ve a tu sitio oficial: **https://econexo-europe.vercel.app**
+1. Ve a tu sitio oficial: **https://econexo-web.vercel.app**
 2. Haz clic en el botón de **Google** para iniciar sesión.
 3. Si recibes un error de Google, espera 2 minutos y vuelve a intentarlo (Google tarda un poco en propagar los cambios de redirección).
 
@@ -42,7 +42,7 @@
 
 ## ✅ Checklist Final
 
-- [ ] URL `https://econexo-europe.vercel.app/auth/google/callback` agregada en Google Console.
+- [ ] URL `https://econexo-web.vercel.app/auth/google/callback` agregada en Google Console.
 - [ ] Botón "SAVE" presionado en la consola de Google.
 - [ ] Variables de entorno correctas en Vercel.
 - [ ] Sesión iniciada con éxito.

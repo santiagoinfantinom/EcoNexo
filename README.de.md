@@ -8,7 +8,7 @@
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000)](https://vercel.com/)
 [![Capacitor](https://img.shields.io/badge/Capacitor-7.4.3-119EFF)](https://capacitorjs.com/)
 
-🌍 **EcoNexo ist jetzt in Produktion:** [https://econexo-europe.vercel.app](https://econexo-europe.vercel.app)
+🌍 **EcoNexo ist jetzt in Produktion:** [https://econexo-web.vercel.app](https://econexo-web.vercel.app)
 
 EcoNexo ist eine umfassende Plattform, die nachhaltige Gemeinschaften verbindet, die Teilnahme an ökologischen Veranstaltungen erleichtert und grüne Jobs fördert. Unsere Mission ist es, ein digitales Ökosystem zu schaffen, das kollektives Umweltengagement in ganz Europa vorantreibt.
 
@@ -89,7 +89,7 @@ npm run deploy
 ./deploy.sh
 ```
 
-**Produktions-URL:** [https://econexo-europe.vercel.app](https://econexo-europe.vercel.app)
+**Produktions-URL:** [https://econexo-web.vercel.app](https://econexo-web.vercel.app)
 
 ### 📱 **Mobile Deploy**
 ```bash
@@ -231,7 +231,7 @@ npm run lint
 - **PWA** vollständig funktional
 
 ### 🌐 **Produktions-URLs**
-- **Web:** [https://econexo-europe.vercel.app](https://econexo-europe.vercel.app)
+- **Web:** [https://econexo-web.vercel.app](https://econexo-web.vercel.app)
 - **Vercel Dashboard:** https://vercel.com/santiagoinfantinom/econexo
 
 ## 📊 Qualitätsmetriken
@@ -309,7 +309,7 @@ Dieses Projekt steht unter der MIT-Lizenz. Siehe die `LICENSE`-Datei für weiter
 ## 📞 Kontakt
 
 - **Email:** contacto@econexo.app
-- **Website:** [EcoNexo](https://econexo-europe.vercel.app)
+- **Website:** [EcoNexo](https://econexo-web.vercel.app)
 - **Vercel:** [Dashboard](https://vercel.com/santiagoinfantinom/econexo)
 
 ## 🙏 Danksagungen

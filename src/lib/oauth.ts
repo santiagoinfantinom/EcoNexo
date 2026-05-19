@@ -767,7 +767,7 @@ async function fetchOAuthConfig(): Promise<OAuthConfig> {
     // venga del API o de las variables de entorno
     const siteUrl = typeof window !== 'undefined'
       ? window.location.origin  // SIEMPRE usar el dominio actual del navegador en cliente
-      : (process.env.NEXT_PUBLIC_SITE_URL || 'https://econexo.app');  // En servidor, usar env var
+      : (process.env.NEXT_PUBLIC_SITE_URL || 'https://econexo-web.vercel.app');
 
     try {
       // Try to get from API endpoint (works in both server and client)
@@ -855,7 +855,7 @@ export async function createOAuthService(): Promise<OAuthService> {
 // Synchronous version for backwards compatibility (will use fallback)
 export function createOAuthServiceSync(): OAuthService {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
-    (typeof window !== 'undefined' ? window.location.origin : 'https://econexo.app');
+    (typeof window !== 'undefined' ? window.location.origin : 'https://econexo-web.vercel.app');
 
   const config: OAuthConfig = {
     google: {

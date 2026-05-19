@@ -5,6 +5,7 @@ import PROJECTS from "@/data/projects";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 import ProjectNotFound from "@/components/ProjectNotFound";
 import { impactTagLabel, projectDescriptionLabel } from "@/lib/i18n";
+import { getSiteUrl } from "@/lib/site";
 
 type Project = {
   id: string;
@@ -160,7 +161,7 @@ export async function generateStaticParams() {
   return PROJECTS.map((p) => ({ id: String(p.id) }));
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.app";
+const SITE_URL = getSiteUrl();
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;

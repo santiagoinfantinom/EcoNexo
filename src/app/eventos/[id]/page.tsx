@@ -2,7 +2,9 @@ import EventDetailClient from "@/components/EventDetailClient";
 import type { Metadata } from "next";
 import Script from "next/script";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://econexo.app";
+import { getSiteUrl } from "@/lib/site";
+
+const SITE_URL = getSiteUrl();
 
 type EventDetailPageProps = {
   // In Next.js 15, dynamic route params are provided as a Promise
