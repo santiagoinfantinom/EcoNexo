@@ -59,7 +59,7 @@ export default function RecommendedProjects() {
       setCargandoIA(true);
       try {
         // PON AQUÍ TU URL DIRECTA DE HUGGING FACE COMPLETANDO EL /match AL FINAL
-        const urlHuggingFace = 'https://tu_usuario-api-econexo.hf.space/match'; 
+        const urlHuggingFace = 'https://santiagoinfantinomoreno-api-econexo.hf.space/match'; 
 
         const respuesta = await fetch(urlHuggingFace, {
           method: 'POST',
