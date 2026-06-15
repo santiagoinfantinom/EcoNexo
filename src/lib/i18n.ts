@@ -1,16 +1,21 @@
 "use client";
 import React, { createContext, useContext, useMemo, useState, useEffect } from "react";
 import { Locale, categoryLabel, locationLabel, projectDescriptionLabel, projectNameLabel, impactTagLabel } from "./dictionaries";
+import enDictModule from "./dictionaries/en";
 
 export type { Locale };
 export { categoryLabel, locationLabel, projectDescriptionLabel, projectNameLabel, impactTagLabel };
+
+const EN_DICT: Record<string, string> =
+  (enDictModule as { default?: Record<string, string> }).default ??
+  (enDictModule as Record<string, string>);
 
 const I18nContext = createContext<{ t: (k: string, vars?: Record<string, any>) => string; locale: Locale; setLocale: (l: Locale) => void } | null>(null);
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("en");
-  const [dict, setDict] = useState<Record<string, string>>({});
-  const [enDict, setEnDict] = useState<Record<string, string>>({});
+  const [dict, setDict] = useState<Record<string, string>>(EN_DICT);
+  const [enDict] = useState<Record<string, string>>(EN_DICT);
 
   useEffect(() => {
     try {
@@ -21,16 +26,18 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         }
       }
     } catch { }
-    // Fetch EN fallback
-    import('./dictionaries/en').then(m => setEnDict(m.default || m)).catch(() => {});
   }, []);
 
   useEffect(() => {
     let isMounted = true;
-    if (["es", "en", "de"].includes(locale)) {
-      import(`./dictionaries/${locale}`).then(m => {
+    if (locale === "en") {
+      setDict(EN_DICT);
+      return;
+    }
+    if (["es", "de"].includes(locale)) {
+      import(`./dictionaries/${locale}`).then((m) => {
         if (isMounted) setDict(m.default || m);
-      }).catch(e => console.error("Dict load error", e));
+      }).catch((e) => console.error("Dict load error", e));
     }
     return () => { isMounted = false; };
   }, [locale]);
@@ -57,12 +64,12 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const t = useMemo(() => {
     return (k: string, vars?: Record<string, any>) => {
       let translation = dict[k] || enDict[k];
-      
+
       if (!translation) {
         translation = humanizeKey(k);
       }
 
-      if (vars && typeof translation === 'string') {
+      if (vars && typeof translation === "string") {
         Object.entries(vars).forEach(([key, value]) => {
           translation = translation.replace(`{{${key}}}`, String(value));
         });

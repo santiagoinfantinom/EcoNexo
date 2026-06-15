@@ -37,6 +37,8 @@ const SocialMediaFeed = dynamic(() => import("@/components/SocialMediaFeed"));
 const EcoTips = dynamic(() => import("@/components/EcoTips"));
 const EcoTipsBulletPoints = dynamic(() => import("@/components/EcoTipsBulletPoints"));
 const StreakBanner = dynamic(() => import("@/components/StreakBanner"), { ssr: false });
+const HeroImpactMetrics = dynamic(() => import("@/components/HeroImpactMetrics"), { ssr: false });
+const MapNearMeCta = dynamic(() => import("@/components/MapNearMeCta"), { ssr: false });
 
 // Dynamic import to avoid SSR issues with Leaflet
 const InteractiveMap = dynamic(
@@ -120,6 +122,14 @@ export default function Home() {
 
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.hash === "#tour-home-map") {
+      document.getElementById("tour-home-map")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.setTimeout(() => window.dispatchEvent(new Event("econexo:explore-near-me")), 500);
+    }
   }, []);
 
   useEffect(() => {
@@ -222,29 +232,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Stats Cards */}
-          <div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto"
-          >
-            <div className="glass-card p-6 text-center transform hover:scale-105 hover:-translate-y-1 transition-transform duration-300">
-              <div className="text-4xl font-bold text-green-600 mb-2">{liveImpact.trees.toLocaleString()}</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">
-                {locale === "es" ? "Iniciativas activas" : locale === "de" ? "Aktive Initiativen" : "Active initiatives"}
-              </div>
-            </div>
-            <div className="glass-card p-6 text-center transform hover:scale-105 hover:-translate-y-1 transition-transform duration-300">
-              <div className="text-4xl font-bold text-blue-600 mb-2">{liveImpact.volunteers.toLocaleString()}+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">
-                {locale === "es" ? "Personas movilizadas" : locale === "de" ? "Aktive Personen" : "People mobilized"}
-              </div>
-            </div>
-            <div className="glass-card p-6 text-center transform hover:scale-105 hover:-translate-y-1 transition-transform duration-300">
-              <div className="text-4xl font-bold text-purple-600 mb-2">{liveImpact.co2.toLocaleString()}</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium uppercase tracking-wider text-sm">
-                {locale === "es" ? "Kg CO2 evitados" : locale === "de" ? "Kg CO2 eingespart" : "Kg CO2 avoided"}
-              </div>
-            </div>
-          </div>
+          <HeroImpactMetrics
+            trees={liveImpact.trees}
+            volunteers={liveImpact.volunteers}
+            co2={liveImpact.co2}
+          />
 
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-3 max-w-5xl mx-auto text-left">
             <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
@@ -292,6 +284,8 @@ export default function Home() {
           {/* Interactive Map Section */}
           <section
             ref={mapRef}
+            id="tour-home-map"
+            data-tour="home-map"
             className="glass-card p-2 overflow-hidden border-2 border-emerald-200/40 dark:border-emerald-900/30"
           >
             <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 mb-2">
@@ -301,10 +295,13 @@ export default function Home() {
                   {t('interactiveMap')}
                 </h2>
               </div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
-                <Flame className="h-3.5 w-3.5" />
-                {locale === "es" ? "Experiencia central" : locale === "de" ? "Kern-Erlebnis" : "Core experience"}
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <MapNearMeCta />
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                  <Flame className="h-3.5 w-3.5" />
+                  {locale === "es" ? "Experiencia central" : locale === "de" ? "Kern-Erlebnis" : "Core experience"}
+                </span>
+              </div>
             </div>
             <p className="px-4 pb-3 text-sm text-gray-600 dark:text-gray-300">
               {locale === "es" ? "Descubre iniciativas en tiempo real, filtra por impacto y entra directo a colaborar." : locale === "de" ? "Entdecke Initiativen in Echtzeit, filtere nach Wirkung und mach direkt mit." : "Discover initiatives in real time, filter by impact, and jump in to collaborate."}

@@ -19,6 +19,10 @@ export default function RecommendedProjects() {
   const [feedSessionId, setFeedSessionId] = useState<string>('');
   const trackedSectionsRef = useRef<Set<string>>(new Set());
 
+  // --- NUEVOS ESTADOS PARA NUESTRA IA ---
+  const [aiMatches, setAiMatches] = useState<Record<string, string>>({});
+  const [cargandoIA, setCargandoIA] = useState<boolean>(false);
+
   useEffect(() => {
     try {
       const rawValue = localStorage.getItem(FEEDBACK_KEY);
@@ -45,7 +49,62 @@ export default function RecommendedProjects() {
     }
   }, []);
 
-  const feed = useMemo(() => getFeedProjects(PROJECTS, preferences, feedback), [feedback, preferences]);
+  // --- LLAMADA A TU SERVIDOR DE IA EN HUGGING FACE ---
+  useEffect(() => {
+    const consultarIA = async () => {
+      const urlHuggingFace = 'https://santiagoinfantinomoreno-api-econexo.hf.space'
+      const descripcionUsuario = preferences?.description || "Interés en sostenibilidad urbana, paneles solares y acción climática comunitaria";
+      const nombreUsuario = preferences?.name || "Voluntario de Prueba";
+
+      setCargandoIA(true);
+      try {
+        // PON AQUÍ TU URL DIRECTA DE HUGGING FACE COMPLETANDO EL /match AL FINAL
+        const urlHuggingFace = 'https://tu_usuario-api-econexo.hf.space/match'; 
+
+        const respuesta = await fetch(urlHuggingFace, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre: nombreUsuario,
+            descripcion: descripcionUsuario
+          })
+        });
+
+        if (respuesta.ok) {
+          const data = await respuesta.json();
+          // Mapeamos los resultados devueltos por Python {"Nombre del proyecto": "85.40%"}
+          const mapaResultados: Record<string, string> = {};
+          data.matches.forEach((m: any) => {
+            mapaResultados[m.nombre] = m.match_semantico;
+          });
+          setAiMatches(mapaResultados);
+        }
+      } catch (error) {
+        console.error("Error conectando con la IA en Hugging Face:", error);
+      } finally {
+        setCargandoIA(false);
+      }
+    };
+
+    consultarIA();
+  }, [preferences]);
+
+  const feed = useMemo(() => {
+    const proyectosBase = getFeedProjects(PROJECTS, preferences, feedback);
+    
+    // Inyectamos dinámicamente los porcentajes reales calculados por tu IA
+    return proyectosBase.map(proyecto => {
+      // Buscamos si nuestra IA en Hugging Face calculó un porcentaje para este proyecto
+      const porcentajeIA = aiMatches[proyecto.name];
+      if (porcentajeIA) {
+        return {
+          ...proyecto,
+          recommendationScore: Math.round(parseFloat(porcentajeIA.replace("%", "")))
+        };
+      }
+      return proyecto;
+    });
+  }, [feedback, preferences, aiMatches]);
 
   const forYou = feed.slice(0, 4);
   const nearby = [...feed]
@@ -81,7 +140,7 @@ export default function RecommendedProjects() {
     sections.forEach((section) => {
       if (section.count > 0 && !trackedSectionsRef.current.has(section.key)) {
         trackEvent('feed_section_view', {
-          section: section.key,
+          section: section.section, // Ajustado de la propiedad original segura
           items: section.count,
           session_id: feedSessionId,
           ts: Date.now(),
@@ -113,7 +172,7 @@ export default function RecommendedProjects() {
       className="group bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all p-5 border border-green-100 dark:border-slate-700 relative overflow-hidden"
     >
       <div className="absolute top-0 right-0 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-bl-xl z-10">
-        {project.recommendationScore}% Match
+        {cargandoIA ? "⏳ Calculando..." : `${project.recommendationScore}% Match`}
       </div>
 
       <Link
@@ -190,10 +249,10 @@ export default function RecommendedProjects() {
       <div className="max-w-7xl mx-auto space-y-10">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
-            {locale === 'en' ? 'Personalized Feed' : locale === 'de' ? 'Personalisierter Feed' : 'Feed personalizado'}
+            {locale === 'en' ? 'Personalized Feed' : locale === 'de' ? 'Personalisierter Feed' : 'Feed personalizado con IA 🔮'}
           </h2>
           <span className="text-xs md:text-sm rounded-full px-3 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
-            KPI objetivo: +20% clics feed · +10% sesiones repetidas (2-3 semanas)
+            {cargandoIA ? "🧠 IA Analizando perfil..." : "⚡ Conectado a Hugging Face"}
           </span>
         </div>
 

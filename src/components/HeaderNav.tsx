@@ -6,7 +6,6 @@ import { useAuth } from "@/lib/auth";
 import { useToast } from "./ToastNotification";
 import AuthButton from "./AuthButton";
 import EcoNexoLogo from "./EcoNexoLogo";
-import LanguageSwitcher from "./LanguageSwitcher";
 import {
   Menu,
   Map as MapIcon,
@@ -19,8 +18,11 @@ import {
   User,
   Info,
   Heart,
-  Newspaper
+  Newspaper,
+  CircleHelp,
 } from "lucide-react";
+import { requestProductTour } from "@/lib/startProductTour";
+import MapNearMeCta from "./MapNearMeCta";
 
 import dynamic from "next/dynamic";
 const OnboardingTour = dynamic(() => import("./OnboardingTour"), { ssr: false });
@@ -59,7 +61,7 @@ export default function HeaderNav() {
 
           {/* Left: Brand Identity */}
           <div className="flex-shrink-0 flex items-center justify-between w-full md:w-auto">
-            <Link href="/" className="flex items-center gap-4 group transition-all">
+            <Link href="/" className="flex items-center gap-4 group transition-all" data-tour="nav-map">
               <div className="w-[72px] h-[72px] sm:w-[110px] sm:h-[110px] flex items-center justify-center flex-shrink-0">
                 <EcoNexoLogo size={110} className="w-full h-full" />
               </div>
@@ -76,7 +78,15 @@ export default function HeaderNav() {
               </div>
             </Link>
             {/* Top row: User Identity for Mobile */}
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => requestProductTour()}
+                className="p-2 rounded-xl border border-white/15 bg-white/5 text-green-300 hover:bg-green-500/20"
+                aria-label={t("howItWorks")}
+              >
+                <CircleHelp className="h-5 w-5" />
+              </button>
               <AuthButton variant="outline" size="sm" className="bg-white/5 border-white/10 text-white hover:bg-green-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-all" />
             </div>
           </div>
@@ -84,7 +94,16 @@ export default function HeaderNav() {
           {/* Right: Actions & Nav Grid */}
           <div className="hidden md:flex flex-col items-center lg:items-end gap-5 w-full lg:w-auto">
             {/* Top row: User Identity Desktop */}
-            <div className="flex justify-end w-full px-2 gap-2">
+            <div className="flex justify-end w-full px-2 gap-2 items-center flex-wrap">
+              <MapNearMeCta className="hidden lg:inline-flex text-xs" />
+              <button
+                type="button"
+                onClick={() => requestProductTour()}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold text-white/90 hover:bg-green-500/20 transition-colors"
+              >
+                <CircleHelp className="h-4 w-4 text-green-300" />
+                {t("howItWorks")}
+              </button>
               <AuthButton variant="outline" size="sm" className="bg-white/5 border-white/10 text-white hover:bg-green-500/20 px-6 py-2 rounded-xl text-base font-bold transition-all" />
             </div>
 
@@ -120,6 +139,19 @@ export default function HeaderNav() {
                     key={item.href}
                     href={item.href}
                     id={`nav-${item.href === '/' ? 'map' : item.href.substring(1)}`}
+                    data-tour={
+                      item.href === "/"
+                        ? "nav-map"
+                        : item.href === "/calendario"
+                          ? "nav-calendar"
+                          : item.href === "/trabajos"
+                            ? "nav-jobs"
+                            : item.href === "/chat"
+                              ? "nav-chat"
+                              : item.href === "/perfil"
+                                ? "nav-profile"
+                                : undefined
+                    }
                     className="flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-green-500/20 border border-white/10 transition-all group min-w-[145px]"
                   >
                     <item.icon className="w-4 h-4 text-green-400 group-hover:text-green-300" />

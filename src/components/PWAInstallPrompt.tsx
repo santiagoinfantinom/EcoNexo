@@ -23,9 +23,19 @@ export default function PWAInstallPrompt() {
     if (!isInStandaloneMode && (isIOSDevice || /android/.test(userAgent))) {
       const bannerDismissed = localStorage.getItem('econexo_pwa_dismissed');
       if (!bannerDismissed) {
-        // Retrasamos la aparición un poco para no ser intrusivos nada más entrar
-        const timer = setTimeout(() => setShowPrompt(true), 3000);
-        return () => clearTimeout(timer);
+        const tryShow = () => {
+          if (document.querySelector('[data-intro-modal="true"]')) return;
+          setShowPrompt(true);
+        };
+        const timer = setTimeout(tryShow, 8000);
+        const onIntroDone = () => {
+          window.setTimeout(tryShow, 2000);
+        };
+        window.addEventListener('intro-completed', onIntroDone);
+        return () => {
+          clearTimeout(timer);
+          window.removeEventListener('intro-completed', onIntroDone);
+        };
       }
     }
   }, []);
@@ -38,7 +48,7 @@ export default function PWAInstallPrompt() {
   if (isStandalone || !showPrompt) return null;
 
   return (
-    <div className="fixed top-4 left-4 right-4 z-[110] animate-fade-in-up">
+    <div className="fixed bottom-[calc(88px+env(safe-area-inset-bottom))] md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-[80] animate-fade-in-up">
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-4 flex gap-4 items-start border border-green-500/20">
         <div className="bg-green-100 dark:bg-green-900/40 p-3 rounded-xl flex-shrink-0">
           <Download className="w-6 h-6 text-green-600 dark:text-green-400" />

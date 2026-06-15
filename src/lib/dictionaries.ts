@@ -3300,6 +3300,19 @@ export function locationLabel(original: string, locale: Locale) {
 }
 
 export function categoryLabel(category: string, locale: Locale) {
+  const slugMap: Record<string, Record<string, string>> = {
+    environment: { en: "Environment", de: "Umwelt", es: "Medio ambiente" },
+    education: { en: "Education", de: "Bildung", es: "Educación" },
+    community: { en: "Community", de: "Gemeinschaft", es: "Comunidad" },
+    health: { en: "Health", de: "Gesundheit", es: "Salud" },
+    oceans: { en: "Oceans", de: "Ozeane", es: "Océanos" },
+    food: { en: "Food", de: "Ernährung", es: "Alimentación" },
+  };
+  const slug = category.toLowerCase();
+  if (slugMap[slug]?.[locale]) {
+    return slugMap[slug][locale];
+  }
+
   const categoryMap: Record<string, Record<string, string>> = {
     "Medio ambiente": { en: "Environment", de: "Umwelt", es: "Medio ambiente", fr: "Environnement", it: "Ambiente", pl: "Środowisko", nl: "Milieu" },
     "Educación": { en: "Education", de: "Bildung", es: "Educación", fr: "Éducation", it: "Educazione", pl: "Edukacja", nl: "Onderwijs" },

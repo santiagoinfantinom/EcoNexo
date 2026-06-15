@@ -107,6 +107,8 @@ export default function InteractiveMap({
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isActivated, setIsActivated] = useState(false);
+  const [nearbyCenter, setNearbyCenter] = useState<[number, number] | null>(null);
+  const [nearbyCount, setNearbyCount] = useState<number | null>(null);
   
   // Cache for icons to avoid recreation
   const iconCache = useRef<Record<string, L.DivIcon>>({});
@@ -174,8 +176,26 @@ export default function InteractiveMap({
       next = next.filter((p) => selectedCategories.includes(p.category));
     }
     next = next.filter((p) => frequencyFilters[getFrequency(p)]);
+    if (nearbyCenter) {
+      const [cLat, cLng] = nearbyCenter;
+      const R = 6371;
+      next = next.filter((p) => {
+        const dLat = ((p.lat - cLat) * Math.PI) / 180;
+        const dLng = ((p.lng - cLng) * Math.PI) / 180;
+        const a =
+          Math.sin(dLat / 2) ** 2 +
+          Math.cos((cLat * Math.PI) / 180) *
+            Math.cos((p.lat * Math.PI) / 180) *
+            Math.sin(dLng / 2) ** 2;
+        const km = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return km <= 120;
+      });
+      setNearbyCount(next.length);
+    } else {
+      setNearbyCount(null);
+    }
     setFilteredProjects(next);
-  }, [baseFilteredProjects, filterMode, frequencyFilters, selectedCategories]);
+  }, [baseFilteredProjects, filterMode, frequencyFilters, selectedCategories, nearbyCenter]);
 
   useEffect(() => {
     if (!mapRef.current || typeof window === 'undefined') return;
@@ -222,6 +242,7 @@ export default function InteractiveMap({
       (pos) => {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
+        setNearbyCenter([lat, lon]);
         mapRef.current?.setView([lat, lon], 13, { animate: true });
         const circle = L.circle([lat, lon], { radius: 300, color: "#16a34a", fillOpacity: 0.15 }).addTo(mapRef.current!);
         setTimeout(() => circle.remove(), 2500);
@@ -233,6 +254,13 @@ export default function InteractiveMap({
       { enableHighAccuracy: true, timeout: 8000 }
     );
   };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onExploreNearMe = () => handleCenterOnLocation();
+    window.addEventListener("econexo:explore-near-me", onExploreNearMe);
+    return () => window.removeEventListener("econexo:explore-near-me", onExploreNearMe);
+  }, [locale]);
 
   function getFrequency(p: Project): 'once' | 'regular' | 'permanent' {
     const isPermanent = Boolean(p.isPermanent || (!p.startsAt && !p.endsAt));
@@ -529,6 +557,11 @@ export default function InteractiveMap({
       {geoError && (
         <div className="absolute bottom-24 right-6 z-[2000] animate-premium-fade bg-red-500 text-white px-4 py-2 rounded-xl shadow-xl text-xs font-medium">
           {geoError}
+        </div>
+      )}
+      {nearbyCount !== null && !geoError && (
+        <div className="absolute bottom-24 right-6 z-[2000] animate-premium-fade bg-emerald-700 text-white px-4 py-2 rounded-xl shadow-xl text-xs font-medium max-w-[220px]">
+          {t("nearbyProjectsFound", { count: nearbyCount })}
         </div>
       )}
 

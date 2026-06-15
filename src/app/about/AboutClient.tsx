@@ -51,6 +51,13 @@ export default function AboutClient() {
           </div>
         </section>
 
+        <section id="impact-methodology" className="mb-16 scroll-mt-24">
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-800/40 rounded-xl shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{t("impactMethodologyTitle")}</h2>
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{t("impactMethodologyP1")}</p>
+          </div>
+        </section>
+
         <section className="mb-16">
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8">
             <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">{t('aboutMissionTitle')}</h2>

@@ -911,3 +911,49 @@ div[class*="recaptcha-error"] {
 .animate-pulse-slow {
   animation: pulse-slow 3s ease-in-out infinite;
 }
+
+/* driver.js product tour — match EcoNexo brand */
+.driver-active-element,
+.driver-overlay {
+  z-index: 10050 !important;
+}
+
+.driver-popover.econexo-tour-popover,
+.driver-popover {
+  z-index: 10051 !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 20px 40px rgba(6, 78, 59, 0.25) !important;
+  max-width: min(340px, calc(100vw - 24px)) !important;
+  min-width: 260px !important;
+  padding: 16px !important;
+}
+
+.driver-popover-arrow {
+  display: block !important;
+}
+
+.driver-popover-title {
+  font-weight: 700 !important;
+  color: #064e3b !important;
+}
+
+.driver-popover-description {
+  color: #4b5563 !important;
+  line-height: 1.5 !important;
+}
+
+.driver-popover-footer button {
+  border-radius: 10px !important;
+  text-shadow: none !important;
+}
+
+.driver-popover-next-btn,
+.driver-popover-done-btn {
+  background: #059669 !important;
+  color: #fff !important;
+}
+
+.driver-popover-prev-btn {
+  color: #047857 !important;
+}
