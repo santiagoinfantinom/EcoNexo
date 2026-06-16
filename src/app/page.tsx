@@ -145,7 +145,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-modern relative overflow-hidden">
+   <div className="min-h-screen bg-modern relative overflow-y-auto">
       {/* Background Decoration */}
       <div className="animated-gradient-bg" />
 

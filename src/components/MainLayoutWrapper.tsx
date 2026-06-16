@@ -44,10 +44,9 @@ export default function MainLayoutWrapper({ children, header, footer }: MainLayo
                   <LanguageSwitcher />
                   {header}
                   <GlobalProgressBar />
-                  <main className="min-h-screen pb-[calc(70px+env(safe-area-inset-bottom))] md:pb-0">
-                    {children}
+                  <main className="h-auto min-h-screen pb-[calc(70px+env(safe-area-inset-bottom))] md:pb-0">
+                      {children}
                   </main>
-                  {footer}
                 </ErrorBoundary>
               </SmartProvider>
             </ToastProvider>

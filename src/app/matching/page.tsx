@@ -1,11 +1,14 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import MatchingAgentChat from '@/components/MatchingAgentChat';
 import { useRouter } from 'next/navigation';
 import { useSmartContext } from '@/context/SmartContext';
 import { PROJECTS } from '@/data/projects';
 import { buildCandidateMatches, buildIntelligentProjectMatches, MatchCandidate } from '@/lib/matching';
+
+// URL de tu supercerebro en Hugging Face
+const IA_API_URL = "https://santiagoinfantinomoreno-api-econexo.hf.space/match-jobs";
 
 const MOCK_CANDIDATES: MatchCandidate[] = [
   {
@@ -50,9 +53,56 @@ export default function MatchingPage() {
   const { locale } = useI18n();
   const router = useRouter();
   const { preferences } = useSmartContext();
+  
+  // Estados para controlar el cálculo en tiempo real con la IA
+  const [jobMatches, setJobMatches] = useState<any[]>([]);
+  const [loadingIA, setLoadingIA] = useState(false);
+
   const intelligentProjectMatches = buildIntelligentProjectMatches(PROJECTS, preferences);
   const peopleMatches = buildCandidateMatches(MOCK_CANDIDATES, preferences, 'Madrid');
 
+  // EFECTO 1: Consulta en tiempo real al modelo Transformers en Hugging Face
+  useEffect(() => {
+    async function consultarMatchIA() {
+      if (!preferences || loadingIA) return;
+      
+      try {
+        setLoadingIA(true);
+        
+        // Estructuramos el perfil según lo que espera recibir el backend en Python
+        const perfilUsuario = {
+          areas: preferences.selectedCategories?.join(", ") || "Sostenibilidad",
+          experienceYears: 2.0, // Valor base; se puede vincular a un slider del usuario más adelante
+          jobs: PROJECTS.map(p => ({
+            id: p.id,
+            title: { es: p.name, en: p.name },
+            description: { es: p.description || "", en: p.description || "" },
+            knowledgeAreas: { es: p.tags || [], en: p.tags || [] },
+            experienceYears: 1.0
+          }))
+        };
+
+        const response = await fetch(IA_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(perfilUsuario)
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setJobMatches(data.matches || []);
+        }
+      } catch (error) {
+        console.error("Error conectando con el servidor de IA de Hugging Face:", error);
+      } finally {
+        setLoadingIA(false);
+      }
+    }
+
+    consultarMatchIA();
+  }, [preferences]);
+
+  // EFECTO 2: Refresh preventivo del sistema
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const FLAG = 'econexo:matching-refresh:v1';
@@ -114,113 +164,71 @@ export default function MatchingPage() {
             {/* Info Card */}
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
               <h2 className="text-xl font-semibold mb-4">
-                {locale === 'es'
-                  ? 'Cómo funciona'
-                  : locale === 'de'
-                    ? 'Wie es funktioniert'
-                    : 'How it works'}
+                {locale === 'es' ? 'Cómo funciona' : locale === 'de' ? 'Wie es funktioniert' : 'How it works'}
               </h2>
               <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
                 <li className="flex items-start gap-2">
                   <span className="text-green-600">✓</span>
-                  <span>
-                    {locale === 'es'
-                      ? 'Describe qué tipo de proyectos te interesan'
-                      : locale === 'de'
-                        ? 'Beschreibe, welche Art von Projekten dich interessieren'
-                        : 'Describe what type of projects interest you'}
-                  </span>
+                  <span>{locale === 'es' ? 'Describe qué tipo de proyectos te interesan' : 'Describe what type of projects interest you'}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-green-600">✓</span>
-                  <span>
-                    {locale === 'es'
-                      ? 'El asistente analiza tu perfil y preferencias'
-                      : locale === 'de'
-                        ? 'Der Assistent analysiert dein Profil und deine Präferenzen'
-                        : 'The assistant analyzes your profile and preferences'}
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600">✓</span>
-                  <span>
-                    {locale === 'es'
-                      ? 'Recibe recomendaciones personalizadas con explicaciones'
-                      : locale === 'de'
-                        ? 'Erhalte personalisierte Empfehlungen mit Erklärungen'
-                        : 'Receive personalized recommendations with explanations'}
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600">✓</span>
-                  <span>
-                    {locale === 'es'
-                      ? 'Refina tu búsqueda basándote en feedback'
-                      : locale === 'de'
-                        ? 'Verfeinere deine Suche basierend auf Feedback'
-                        : 'Refine your search based on feedback'}
-                  </span>
+                  <span>{locale === 'es' ? 'La IA analiza semánticamente tus competencias reales' : 'The AI semantically analyzes your real skills'}</span>
                 </li>
               </ul>
             </div>
 
-            {/* Tips Card */}
-            <div className="bg-green-50 dark:bg-green-900/20 rounded-xl shadow-lg p-6 border border-green-200 dark:border-green-800">
-              <h3 className="font-semibold text-green-900 dark:text-green-100 mb-2">
-                {locale === 'es' ? '💡 Consejos' : locale === 'de' ? '💡 Tipps' : '💡 Tips'}
-              </h3>
-              <ul className="text-sm text-green-800 dark:text-green-200 space-y-2">
-                <li>
-                  {locale === 'es'
-                    ? '• Sé específico sobre ubicación y categorías'
-                    : locale === 'de'
-                      ? '• Sei spezifisch bezüglich Standort und Kategorien'
-                      : '• Be specific about location and categories'}
-                </li>
-                <li>
-                  {locale === 'es'
-                    ? '• Menciona tus habilidades o experiencia'
-                    : locale === 'de'
-                      ? '• Erwähne deine Fähigkeiten oder Erfahrung'
-                      : '• Mention your skills or experience'}
-                </li>
-                <li>
-                  {locale === 'es'
-                    ? '• Proporciona feedback para mejorar resultados'
-                    : locale === 'de'
-                      ? '• Gib Feedback, um Ergebnisse zu verbessern'
-                      : '• Provide feedback to improve results'}
-                </li>
-              </ul>
-            </div>
-
+            {/* Panel de Match de Proyectos por IA */}
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-                {locale === 'es' ? '🚀 Matchmaking inteligente' : locale === 'de' ? '🚀 Intelligentes Matchmaking' : '🚀 Intelligent Matchmaking'}
+                {locale === 'es' ? '🚀 Matchmaking con IA en Tiempo Real' : '🚀 Real-time AI Matchmaking'}
               </h3>
 
               <div className="space-y-3">
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                  {locale === 'es' ? 'Proyectos más compatibles' : locale === 'de' ? 'Am besten passende Projekte' : 'Most compatible projects'}
+                  {locale === 'es' ? 'Proyectos recomendados por Red Neuronal' : 'Projects recommended by Neural Network'}
                 </p>
-                {intelligentProjectMatches.slice(0, 3).map((project) => (
-                  <button
-                    key={project.id}
-                    type="button"
-                    onClick={() => router.push(`/projects/${project.id}`)}
-                    className="w-full text-left rounded-lg border border-slate-200 dark:border-slate-700 p-3 hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors"
-                  >
-                    <p className="font-medium text-slate-900 dark:text-white">{project.name}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      {project.recommendationScore}% match · {project.city}
-                    </p>
-                  </button>
-                ))}
+                
+                {loadingIA ? (
+                  <p className="text-xs text-slate-400 animate-pulse">Calculando similitud semántica con Hugging Face...</p>
+                ) : jobMatches.length > 0 ? (
+                  jobMatches.slice(0, 3).map((match) => {
+                    const projectData = PROJECTS.find(p => p.id === match.id);
+                    if (!projectData) return null;
+                    return (
+                      <button
+                        key={match.id}
+                        type="button"
+                        onClick={() => router.push(`/projects/${match.id}`)}
+                        className="w-full text-left rounded-lg border border-green-200 dark:border-green-900/40 p-3 bg-green-50/30 dark:bg-green-900/10 hover:bg-green-50 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        <p className="font-medium text-slate-900 dark:text-white">{projectData.name}</p>
+                        <p className="text-xs text-green-600 dark:text-green-400 font-semibold">
+                          {match.match}% de coincidencia IA · {projectData.city}
+                        </p>
+                      </button>
+                    );
+                  })
+                ) : (
+                  // Respaldo estático si la IA está cargando o apagada
+                  intelligentProjectMatches.slice(0, 3).map((project) => (
+                    <button
+                      key={project.id}
+                      type="button"
+                      onClick={() => router.push(`/projects/${project.id}`)}
+                      className="w-full text-left rounded-lg border border-slate-200 dark:border-slate-700 p-3 hover:bg-slate-50 transition-colors"
+                    >
+                      <p className="font-medium text-slate-900 dark:text-white">{project.name}</p>
+                      <p className="text-xs text-slate-500">{project.recommendationScore}% match · {project.city}</p>
+                    </button>
+                  ))
+                )}
               </div>
 
+              {/* Colaboradores Recomendados */}
               <div className="mt-5 space-y-3">
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                  {locale === 'es' ? 'Personas para colaborar' : locale === 'de' ? 'Personen zum Zusammenarbeiten' : 'People to collaborate with'}
+                  {locale === 'es' ? 'Personas para colaborar' : 'People to collaborate with'}
                 </p>
                 {peopleMatches.map((person) => (
                   <div key={person.id} className="rounded-lg border border-slate-200 dark:border-slate-700 p-3">
@@ -233,10 +241,10 @@ export default function MatchingPage() {
                 ))}
               </div>
             </div>
+
           </div>
         </div>
       </div>
     </div>
   );
 }
-

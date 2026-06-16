@@ -957,3 +957,9 @@ div[class*="recaptcha-error"] {
 .driver-popover-prev-btn {
   color: #047857 !important;
 }
+
+html, body, #__next, main {
+  overflow-y: auto !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}

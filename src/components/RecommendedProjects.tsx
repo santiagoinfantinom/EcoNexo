@@ -12,6 +12,16 @@ import { trackEvent } from '@/lib/analytics';
 const FEEDBACK_KEY = 'econexo-feed-feedback';
 const FEED_SESSION_KEY = 'econexo-feed-session-id';
 
+const CATEGORY_IMAGES: Record<string, string> = {
+  'environment': '/assets/categories/environment.jpg',
+  'education': '/assets/categories/education.jpg',
+  'community': '/assets/categories/community.jpg',
+  'health': '/assets/categories/health.jpg',
+  // Asegúrate de que estas rutas coincidan con los nombres de tus archivos en la carpeta 'public/assets/categories/'
+  'default': '/assets/default-event.png' 
+};
+
+
 export default function RecommendedProjects() {
   const { preferences } = useSmartContext();
   const { locale } = useI18n();
@@ -190,7 +200,8 @@ export default function RecommendedProjects() {
       >
         <div className="h-36 -mx-5 -mt-5 mb-4 overflow-hidden relative">
           <ImageWithFallback
-            src={project.image_url || '/assets/default-event.png'}
+            // Aquí usamos el diccionario que acabas de definir
+            src={project.image_url || CATEGORY_IMAGES[project.category] || CATEGORY_IMAGES['default']}
             alt={project.name}
             category={project.category}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

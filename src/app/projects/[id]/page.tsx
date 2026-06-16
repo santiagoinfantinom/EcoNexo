@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Script from "next/script";
-import PROJECTS from "@/data/projects";
+import { PROJECTS } from "@/data/projects";
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 import ProjectNotFound from "@/components/ProjectNotFound";
 import { impactTagLabel, projectDescriptionLabel } from "@/lib/i18n";
