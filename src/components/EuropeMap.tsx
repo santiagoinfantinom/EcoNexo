@@ -88,8 +88,37 @@ export default function InteractiveMap({ projects, region = 'europe', center, zo
         <MapLayers />
         
         {filteredProjects.map((p: any) => (
-          <Marker key={p.id} position={[p.lat, p.lng]}>
-             <Popup>{p.name}</Popup>
+          <Marker key={p.id} position={[p.lat, p.lng]} icon={redIcon}>
+            <Popup>
+              <Link href={`/projects/${p.id}`} className="block no-underline">
+                <div className="w-64 p-0">
+                  <div className="flex gap-3">
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
+                      <ImageWithFallback
+                        src={p.image_url || '/assets/default-project.png'}
+                        alt={p.name}
+                        className="w-full h-full object-cover"
+                        preferTextFallback={true}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-bold text-slate-900 mb-1">{p.name}</h3>
+                      <div className="text-xs text-slate-500 mb-2">
+                        📍 {p.city}, {p.country}
+                      </div>
+                      {p.category && (
+                        <span className="inline-block text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded mb-2">
+                          {categoryLabel(p.category, locale)}
+                        </span>
+                      )}
+                      {p.description && (
+                        <p className="text-xs text-slate-600 line-clamp-2">{p.description}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </Popup>
           </Marker>
         ))}
       </MapContainer>

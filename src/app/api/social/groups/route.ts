@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabaseClient";
+import { rateLimit } from "@/lib/rateLimiter";
+
+const cacheHeaders = {
+  'Cache-Control': 'public, max-age=30, stale-while-revalidate=30',
+};
 
 export async function GET(req: NextRequest) {
   try {
@@ -35,7 +40,7 @@ export async function GET(req: NextRequest) {
         const groupIds = memberships.map(m => m.group_id);
         query = query.in("id", groupIds);
       } else {
-        return NextResponse.json([]);
+        return NextResponse.json([], { headers: cacheHeaders });
       }
     }
 
@@ -65,7 +70,7 @@ export async function GET(req: NextRequest) {
       })
     );
 
-    return NextResponse.json(groupsWithStats);
+    return NextResponse.json(groupsWithStats, { headers: cacheHeaders });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
@@ -74,6 +79,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = rateLimit(req, "social-groups-create", 10, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const body = await req.json();
     const { name, description, city, country, region, is_public, tags } = body;
 

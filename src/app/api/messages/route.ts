@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabaseClient";
+import { rateLimit } from "@/lib/rateLimiter";
 
-// Required for static export
-export const dynamic = 'force-static';
-export const revalidate = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 type Message = { id: string; from: string; to: string; text: string; ts: string };
 
@@ -33,6 +33,16 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const rl = rateLimit(req, 'messages-write', 20, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      });
+    }
+
     const body = (await req.json()) as Message;
     try {
       const supabase = getSupabase();

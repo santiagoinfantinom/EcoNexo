@@ -1028,7 +1028,8 @@ export default function EventDetailClient({ eventId }: { eventId: string }) {
             <ImageWithFallback
               src={headerImageSrc}
               alt={event.title}
-              className="object-cover"
+                className="object-cover"
+                preferTextFallback={true}
               referrerPolicy="no-referrer"
               fill
               unoptimized

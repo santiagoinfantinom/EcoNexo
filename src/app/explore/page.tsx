@@ -147,6 +147,7 @@ export default function ExplorePage() {
                                                         alt={getEventTitle(event)}
                                                         category={event.category}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                        preferTextFallback={true}
                                                     />
                                                     <span className="absolute top-2 right-2 px-2 py-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur text-xs font-bold rounded-lg shadow-sm text-emerald-700 dark:text-emerald-400">
                                                         {categoryLabel(event.category, locale)}

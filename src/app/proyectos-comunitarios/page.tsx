@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import PROJECTS from "@/data/projects";
+import { PROJECTS } from "@/data/projects";
 
 export default function ProyectosComunitariosPage() {
     const { t, locale } = useI18n();

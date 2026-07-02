@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
 import Parser from 'rss-parser';
 
-// Revalidate every 24 hours (86400 seconds)
-export const revalidate = 86400;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+const cacheHeaders = {
+  'Cache-Control': 'public, max-age=300, stale-while-revalidate=86400',
+};
 
 // Keyword → category mapping with relevant Unsplash fallback images
 const CATEGORY_MAP: { keywords: string[]; category: string; fallbackImage: string }[] = [
@@ -265,7 +268,7 @@ function isEnvironmentArticle(item: any, lang: string): boolean {
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = request.nextUrl;
     const lang = (searchParams.get('lang') || 'en').toLowerCase();
     const parser = new Parser({
       customFields: {
@@ -331,17 +334,17 @@ export async function GET(request: Request) {
       };
     });
 
-    return NextResponse.json({ news: articles.length > 0 ? articles : fallbackNews(lang) });
+    return NextResponse.json({ news: articles.length > 0 ? articles : fallbackNews(lang) }, { headers: cacheHeaders });
   } catch (error) {
     console.error('Error fetching RSS feed:', error);
     const lang = (() => {
       try {
-        const { searchParams } = new URL(request.url);
+        const { searchParams } = request.nextUrl;
         return (searchParams.get('lang') || 'en').toLowerCase();
       } catch {
         return 'en';
       }
     })();
-    return NextResponse.json({ news: fallbackNews(lang), fallback: true }, { status: 200 });
+    return NextResponse.json({ news: fallbackNews(lang), fallback: true }, { status: 200, headers: cacheHeaders });
   }
 }

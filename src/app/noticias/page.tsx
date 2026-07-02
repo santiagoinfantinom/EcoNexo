@@ -19,7 +19,7 @@ export default function NoticiasPage() {
         setIsLoading(true);
         setLoadError(false);
         try {
-            const res = await fetch(`/api/news?lang=${locale}`, { cache: "no-store" });
+            const res = await fetch(`/api/news?lang=${locale}`, { cache: "force-cache" });
             if (!res.ok) throw new Error(`News request failed (${res.status})`);
             const data = await res.json();
             if (data && Array.isArray(data.news)) {

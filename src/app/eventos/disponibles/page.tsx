@@ -274,6 +274,7 @@ export default function EventosDisponiblesPage() {
                         alt={getEventTitle(event)}
                         category={event.category}
                         className="w-full h-full object-cover"
+                        preferTextFallback={true}
                         loading="lazy"
                       />
                     </div>

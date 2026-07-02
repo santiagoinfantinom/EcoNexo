@@ -367,6 +367,7 @@ export default function IntelligentClustering({
                         alt={event.title}
                         category={event.category}
                         className="w-full h-full object-cover"
+                        preferTextFallback={true}
                         loading="lazy"
                         referrerPolicy="no-referrer"
                       />

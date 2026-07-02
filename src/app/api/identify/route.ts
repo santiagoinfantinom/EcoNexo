@@ -12,5 +12,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
         ip: clientIp,
         timestamp: new Date().toISOString()
+    }, {
+      headers: {
+        'Cache-Control': 'no-store'
+      }
     });
 }

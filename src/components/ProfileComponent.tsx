@@ -167,62 +167,49 @@ export default function ProfileComponent() {
   });
 
   // Load profile data from Supabase or localStorage
-  useEffect(() => {
-    const loadProfile = async () => {
-      let isFirstLogin = false;
+  // Extracted profile loader so it can be retried by the user
+  const loadProfile = async () => {
+    setError("");
+    setIsLoading(true);
+    let isFirstLogin = false;
 
+    try {
       // Check for OAuth imported data first
       const oauthData = localStorage.getItem('oauth_data');
       if (oauthData) {
         try {
           const importedData = JSON.parse(oauthData);
           console.log('📥 Datos OAuth importados:', importedData);
-
-          // Import OAuth data into profile
           setProfileData(prev => ({
             ...prev,
             full_name: importedData.name || prev.full_name,
             email: importedData.email || prev.email,
             avatar_url: importedData.picture || '/logo-econexo.png',
             preferred_language: importedData.locale || prev.preferred_language,
-            // Mark as imported
             oauth_imported: true,
             oauth_provider: importedData.provider
           }));
-
-          // Clear OAuth data after import
           localStorage.removeItem('oauth_data');
-
-          // Show success message
           setSuccessMessage(`✅ Datos importados desde ${importedData.provider === 'google' ? 'Google' : 'Microsoft'}`);
           setTimeout(() => setSuccessMessage(''), 5000);
-
-          // Mark as first login to show edit mode
           isFirstLogin = true;
-
         } catch (err) {
           console.error('Error importing OAuth data:', err);
         }
       }
 
       if (!user) {
-        // Load from localStorage if no user
         const authProvider = localStorage.getItem('econexo_auth_provider');
         const savedProfile = localStorage.getItem('econexo:profile');
 
         if (authProvider && savedProfile) {
-          // User is logged in via OAuth but not via Supabase
           const parsedProfile = JSON.parse(savedProfile);
           console.log('📥 Cargando perfil desde localStorage:', parsedProfile);
-
-          // Check if this is a first login by checking oauth_imported flag
           if (parsedProfile.oauth_imported && parsedProfile.oauth_imported === true) {
             isFirstLogin = true;
-            // Remove the flag so it doesn't trigger again
             parsedProfile.oauth_imported = false;
             localStorage.setItem('econexo:profile', JSON.stringify(parsedProfile));
           }
-
           setProfileData(prev => ({
             ...prev,
             ...parsedProfile,
@@ -231,52 +218,46 @@ export default function ProfileComponent() {
         }
 
         setIsLoading(false);
-
-        // Show edit mode on first login
-        if (isFirstLogin) {
-          setIsEditing(true);
-        }
-
+        if (isFirstLogin) setIsEditing(true);
         return;
       }
 
       if (!isSupabaseConfigured()) {
-        // Fallback to localStorage if Supabase not configured
         const savedProfile = localStorage.getItem('econexo:profile');
-        if (savedProfile) {
-          setProfileData(JSON.parse(savedProfile));
-        }
+        if (savedProfile) setProfileData(JSON.parse(savedProfile));
+        setIsLoading(false);
         return;
       }
 
-      try {
-        const supabase = getSupabase();
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
+      const supabase = getSupabase();
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
 
-        if (error && error.code !== 'PGRST116' && error.code !== '22P02') { // PGRST116 = no rows returned
-          console.error('Error loading profile:', error);
-          setError('Error cargando perfil');
-          return;
-        }
-
-        if (data) {
-          setProfileData(prev => ({
-            ...prev,
-            ...normalizeDbProfile(data),
-          }));
-        }
-      } catch (err) {
-        console.error('Error loading profile:', err);
+      if (error && error.code !== 'PGRST116' && error.code !== '22P02') {
+        console.error('Error loading profile:', error);
         setError('Error cargando perfil');
-      } finally {
         setIsLoading(false);
+        return;
       }
-    };
 
+      if (data) {
+        setProfileData(prev => ({
+          ...prev,
+          ...normalizeDbProfile(data),
+        }));
+      }
+    } catch (err: any) {
+      console.error('Error loading profile:', err);
+      setError('Error cargando perfil');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     loadProfile();
   }, [user]);
 
@@ -558,6 +539,12 @@ export default function ProfileComponent() {
           <div className="flex items-center gap-2">
             <span>⚠️</span>
             <span>{error}</span>
+            <button
+              onClick={() => loadProfile()}
+              className="ml-4 bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded-md text-sm font-semibold"
+            >
+              {locale === 'es' ? 'Reintentar' : locale === 'de' ? 'Erneut versuchen' : 'Retry'}
+            </button>
           </div>
         </div>
       )}

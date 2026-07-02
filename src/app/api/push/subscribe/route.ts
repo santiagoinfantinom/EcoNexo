@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabaseClient';
+import { rateLimit } from '@/lib/rateLimiter';
 import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   try {
+    const rl = rateLimit(request, 'push-subscribe', 10, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      });
+    }
+
     const subscription = await request.json();
     const userAgent = request.headers.get('user-agent') || '';
     
@@ -56,6 +67,16 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const rl = rateLimit(request, 'push-unsubscribe', 20, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      });
+    }
+
     const subscription = await request.json();
     
     if (!subscription.endpoint) {

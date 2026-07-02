@@ -1,4 +1,4 @@
-import { Project, Category } from './projects';
+import type { Project, Category } from './projects';
 
 export type MissionDifficulty = 'easy' | 'medium' | 'hard';
 

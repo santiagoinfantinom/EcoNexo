@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabaseClient";
+import { rateLimit } from "@/lib/rateLimiter";
 
-// Required for static export
-export const dynamic = 'force-static';
-export const revalidate = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 15;
+const cacheHeaders = {
+  'Cache-Control': 'public, max-age=15, stale-while-revalidate=30',
+};
 
 type Profile = {
   id: string;
@@ -40,9 +43,9 @@ export async function GET(req: Request) {
       const supabase = getSupabase();
       const { data, error } = await supabase.from("profiles").select("*").eq("id", id).single();
       if (error && error.code !== "PGRST116") throw error; // not found different from other errors
-      return NextResponse.json(data ? mapDbProfileToProfile(data, id) : { ...MOCK_PROFILE, id });
+      return NextResponse.json(data ? mapDbProfileToProfile(data, id) : { ...MOCK_PROFILE, id }, { headers: cacheHeaders });
     } catch {
-      return NextResponse.json({ ...MOCK_PROFILE, id });
+      return NextResponse.json({ ...MOCK_PROFILE, id }, { headers: cacheHeaders });
     }
   } catch (e) {
     return NextResponse.json({ error: "failed" }, { status: 500 });
@@ -51,6 +54,16 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const rl = rateLimit(req, 'profiles-write', 20, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      });
+    }
+
     const body = (await req.json()) as Profile;
     try {
       const supabase = getSupabase();

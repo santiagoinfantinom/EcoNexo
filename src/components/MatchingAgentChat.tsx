@@ -328,7 +328,8 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
         console.warn('API call failed, falling back to client-side matching:', apiErr);
         // Client-side fallback for static export (GitHub Pages)
         const query = input.toLowerCase();
-        const isJobSearch = /(trabajo|empleo|vacante|sueldo|salario|career|job|hiring)/i.test(query);
+        const preferRemote = /(online|en línea|enlinea|en-linea|remote|remoto|remot)/i.test(query);
+        const isJobSearch = /(trabajo|empleo|vacante|sueldo|salario|career|job|hiring|online|en línea|enlinea|en-linea|remote|remoto)/i.test(query) || preferRemote;
         const keywords = query
           .split(/[\s,.-]+/)
           .map(word => word.trim())
@@ -341,6 +342,13 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
 
         const scoredJobs = JOBS.map(job => {
           let score = isJobSearch ? 20 : 0;
+
+          // Boost remote jobs if user queried for online/remote roles
+          if (preferRemote) {
+            if (job.remote) score += 14;
+            else score -= 12;
+          }
+
           const title = getLocalizedText(job.title).toLowerCase();
           const description = getLocalizedText(job.description).toLowerCase();
           const city = getLocalizedText(job.city).toLowerCase();
@@ -732,6 +740,7 @@ export default function MatchingAgentChat({ onMatchClick }: MatchingAgentChatPro
                             alt={getProjectName(match)}
                             category={match.category}
                             className="w-16 h-16 object-cover rounded"
+                            preferTextFallback={true}
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-2">

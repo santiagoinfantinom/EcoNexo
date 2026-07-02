@@ -134,6 +134,7 @@ export default function ProjectsCarousel() {
                   alt={getProjectName(project)}
                   category={project.category}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  preferTextFallback={true}
                   loading="lazy"
                 />
               </div>

@@ -1,12 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabaseClient";
+import { rateLimit } from "@/lib/rateLimiter";
 
-// Required for static export
-export const dynamic = 'force-static';
-export const revalidate = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 15;
+const cacheHeaders = {
+  'Cache-Control': 'public, max-age=15, stale-while-revalidate=30',
+};
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = rateLimit(req, 'volunteers-write', 20, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      });
+    }
+
     const supabase = getSupabase();
     const body = await req.json();
     const { data, error } = await supabase
@@ -37,7 +50,7 @@ export async function GET(req: NextRequest) {
     const { data, error } = await query;
     if (error) throw error;
 
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json(data, { status: 200, headers: cacheHeaders });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });

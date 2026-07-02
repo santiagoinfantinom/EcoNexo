@@ -9,6 +9,7 @@ interface ImageWithFallbackProps extends Omit<ImageProps, "src" | "alt"> {
     alt?: string;
     fallbackSrc?: string;
     category?: string;
+    preferTextFallback?: boolean;
 }
 
 export default function ImageWithFallback({
@@ -17,6 +18,7 @@ export default function ImageWithFallback({
     fallbackSrc = "/assets/default-event.png",
     category,
     className,
+    preferTextFallback = false,
     referrerPolicy = "no-referrer",
     fill,
     priority,
@@ -98,16 +100,23 @@ export default function ImageWithFallback({
     };
 
     return (
-        <Image
-            src={imgSrc || fallbackSrc}
-            alt={alt || "Image"}
-            onError={handleError}
-            className={className}
-            referrerPolicy={referrerPolicy as any}
-            fill={!props.width && !props.height}
-            sizes={fill ? sizes : undefined}
-            priority={priority}
-            {...(props as any)}
-        />
+        // When requested, prefer a textual placeholder instead of the generic image
+        (preferTextFallback && (imgSrc === fallbackSrc || !imgSrc)) ? (
+            <div className={className + " bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-xs text-gray-700 dark:text-gray-200 rounded"}>
+                <span className="px-2 text-center">{alt ? alt.split(" ").slice(0,6).join(" ") : 'Sin imagen'}</span>
+            </div>
+        ) : (
+            <Image
+                src={imgSrc || fallbackSrc}
+                alt={alt || "Image"}
+                onError={handleError}
+                className={className}
+                referrerPolicy={referrerPolicy as any}
+                fill={!props.width && !props.height}
+                sizes={fill ? sizes : undefined}
+                priority={priority}
+                {...(props as any)}
+            />
+        )
     );
 }

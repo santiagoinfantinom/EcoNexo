@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit } from '@/lib/rateLimiter';
 
 interface RoomMessage {
   id: string;
@@ -18,6 +19,11 @@ const rooms = new Map();
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = rateLimit(req, 'rooms-message', 30, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } });
+    }
+
     const body = await req.json();
     const { roomId, senderId, senderName, senderAvatarUrl, content } = body;
 

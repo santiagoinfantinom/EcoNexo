@@ -95,6 +95,7 @@ export default function NearbyEventsList() {
                                 alt={getEventTitle(event)}
                                 category={event.category}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                preferTextFallback={true}
                             />
                         </div>
                         <div className="flex flex-col justify-center overflow-hidden">

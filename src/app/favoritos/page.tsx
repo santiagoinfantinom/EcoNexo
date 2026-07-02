@@ -131,6 +131,7 @@ export default function FavoritesPage() {
                                         alt={item.title || item.name}
                                         category={item.category}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        preferTextFallback={true}
                                     />
                                     <div className="absolute top-2 right-2 flex gap-2">
                                         <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur w-10 h-10 flex items-center justify-center rounded-full shadow-sm">

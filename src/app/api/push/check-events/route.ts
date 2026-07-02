@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabaseClient';
+import { rateLimit } from '@/lib/rateLimiter';
 import webpush from 'web-push';
 
 // Configure VAPID keys
@@ -16,6 +17,16 @@ if (vapidPublicKey && vapidPrivateKey) {
 
 export async function POST(request: NextRequest) {
   try {
+    const rl = rateLimit(request, 'push-check-events', 5, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      });
+    }
+
     // This endpoint should be called by a cron job or scheduled task
     // For now, we'll make it callable manually for testing
     

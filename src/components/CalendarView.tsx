@@ -847,6 +847,7 @@ export default function CalendarView({ projects, onProjectSelect }: CalendarView
                             alt={event.title}
                             category={(event as any).category}
                             className="w-full h-full object-cover"
+                            preferTextFallback={true}
                             loading="lazy"
                             referrerPolicy="no-referrer"
                           />

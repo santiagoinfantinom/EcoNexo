@@ -358,7 +358,7 @@ export default function MisionesPage() {
               ) : locationStatus === 'denied' ? (
                 <button 
                   onClick={locateAndRefresh}
-                  disabled={locationStatus === "requesting"}
+                  disabled={false}
                   className="inline-flex items-center gap-1.5 text-xs font-bold bg-white/20 text-white px-3 py-1.5 rounded-full backdrop-blur-sm hover:bg-white/30 transition"
                 >
                   <MapPin className="w-3 h-3" />

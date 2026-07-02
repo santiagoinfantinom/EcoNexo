@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const noStoreHeaders = {
+  'Cache-Control': 'no-store',
+};
+
 export async function GET(request: NextRequest) {
   try {
     const code = request.nextUrl.searchParams.get('code');
     const state = request.nextUrl.searchParams.get('state');
 
     if (!code || !state) {
-      return NextResponse.json({ success: false, error: 'Missing code or state' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Missing code or state' }, { status: 400, headers: noStoreHeaders });
     }
 
     const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
@@ -15,7 +19,7 @@ export async function GET(request: NextRequest) {
     if (!clientId || !clientSecret) {
       return NextResponse.json(
         { success: false, error: 'GitHub OAuth not configured in environment variables' },
-        { status: 500 }
+        { status: 500, headers: noStoreHeaders }
       );
     }
 
@@ -40,7 +44,7 @@ export async function GET(request: NextRequest) {
     if (!tokenRes.ok || tokenData.error || !tokenData.access_token) {
       return NextResponse.json(
         { success: false, error: tokenData.error_description || tokenData.error || 'Failed to fetch GitHub token' },
-        { status: 400 }
+        { status: 400, headers: noStoreHeaders }
       );
     }
 
@@ -54,7 +58,7 @@ export async function GET(request: NextRequest) {
     });
     const userData = await userRes.json();
     if (!userRes.ok) {
-      return NextResponse.json({ success: false, error: 'Failed to fetch GitHub user' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Failed to fetch GitHub user' }, { status: 400, headers: noStoreHeaders });
     }
 
     const emailsRes = await fetch('https://api.github.com/user/emails', {
@@ -88,9 +92,9 @@ export async function GET(request: NextRequest) {
         locale: 'en',
         verified_email: !!primaryEmailObj?.verified,
       },
-    });
+    }, { headers: noStoreHeaders });
   } catch (error) {
     console.error('GitHub OAuth callback error:', error);
-    return NextResponse.json({ success: false, error: 'Error processing GitHub OAuth' }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Error processing GitHub OAuth' }, { status: 500, headers: noStoreHeaders });
   }
 }

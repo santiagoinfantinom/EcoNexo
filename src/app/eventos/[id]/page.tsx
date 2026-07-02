@@ -11,30 +11,7 @@ type EventDetailPageProps = {
   params: Promise<{ id: string }> | { id: string };
 };
 
-// Disable dynamic routes that aren't pre-generated for static export
-export const dynamicParams = false;
-
-// Required for static export
-export async function generateStaticParams() {
-  // Generate static params for all possible event IDs
-  // Include common event IDs from CalendarView mock events
-  const eventIds = [];
-
-  // Generate e1 to e36 (covers most mock events)
-  for (let i = 1; i <= 36; i++) {
-    eventIds.push({ id: `e${i}` });
-  }
-
-  // Add variant IDs like e1b, e1c, etc.
-  const variants = ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
-  for (let i = 1; i <= 30; i++) {
-    variants.forEach(v => {
-      eventIds.push({ id: `e${i}${v}` });
-    });
-  }
-
-  return eventIds;
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;

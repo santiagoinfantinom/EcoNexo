@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit } from '@/lib/rateLimiter';
 
 const MCP_SERVER_URL = process.env.MCP_SERVER_URL || 'http://localhost:8001';
 
@@ -9,6 +10,16 @@ interface SearchRequest {
 
 export async function POST(req: NextRequest) {
     try {
+        const rl = rateLimit(req, 'events-search', 10, 60000);
+        if (!rl.success) {
+            return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+                status: 429,
+                headers: {
+                    'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+                },
+            });
+        }
+
         const body: SearchRequest = await req.json();
 
         if (!body.city) {

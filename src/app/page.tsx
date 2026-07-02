@@ -529,14 +529,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button
-              onClick={() => {
-                if (user) {
-                  router.push('/eventos');
-                } else {
-                  setAuthMode("register");
-                  setIsAuthModalOpen(true);
-                }
-              }}
+              onClick={() => setShowWelcome(true)}
               className="bg-white text-green-600 px-10 py-5 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:bg-gray-50 transform hover:-translate-y-1 transition-all duration-300"
             >
               {t('letsGo')}

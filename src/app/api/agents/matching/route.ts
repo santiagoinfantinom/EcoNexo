@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PROJECTS } from '@/data/projects';
 import { JOBS } from '@/data/jobs';
+import { rateLimit } from '@/lib/rateLimiter';
 
 const MCP_SERVER_URL = process.env.MCP_SERVER_URL || 'http://localhost:8001';
+const cacheHeaders = {
+  'Cache-Control': 'public, max-age=10, stale-while-revalidate=20',
+};
 
 interface MatchRequest {
   user_id: string;
@@ -91,12 +95,11 @@ function localMatching(query: string, filters: Record<string, any> | undefined |
   const words = queryLower.split(/[\s,.-]+/).filter(w => w.length > 2 && !stopWords.includes(w));
 
   // Determine if user is specifically looking for jobs
-  const isJobSearch = queryLower.includes('trabajo') || queryLower.includes('empleo') ||
-    queryLower.includes('vacante') || queryLower.includes('sueldo') ||
-    queryLower.includes('salario') || queryLower.includes('hire');
+  const preferRemote = /(online|en línea|enlinea|en-linea|remote|remoto|remot)/i.test(queryLower);
+  const isJobSearch = /(trabajo|empleo|vacante|sueldo|salario|hire|job|career|hiring|online|en línea|enlinea|en-linea|remote|remoto)/i.test(queryLower) || preferRemote;
 
   const scoredProjects = PROJECTS.map(p => ({ item: p, type: 'project', score: 0 }));
-  const scoredJobs = JOBS.map(j => ({ item: j, type: 'job', score: isJobSearch ? 10 : 0 }));
+  const scoredJobs = JOBS.map(j => ({ item: j, type: 'job', score: isJobSearch ? 20 : 0 }));
 
   const allScored = [...scoredProjects, ...scoredJobs];
 
@@ -155,6 +158,12 @@ function localMatching(query: string, filters: Record<string, any> | undefined |
     if (entry.type === 'job') {
       const job = entry.item as any;
       const level = String(job.level || '').toLowerCase();
+
+      // If the user explicitly asked for online/remote roles, prefer remote jobs
+      if (preferRemote) {
+        if (job.remote) entry.score += 18;
+        else entry.score -= 12;
+      }
       if (filters?.isRemote && !job.remote) {
         entry.score -= 25;
       }
@@ -265,6 +274,16 @@ function localMatching(query: string, filters: Record<string, any> | undefined |
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = rateLimit(req, 'agents-matching', 5, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      });
+    }
+
     const body: MatchRequest = await req.json();
 
     if (!body.user_id || !body.query) {
@@ -322,15 +341,15 @@ export async function GET() {
     if (!response.ok) {
       return NextResponse.json(
         { status: 'unhealthy', mcp_server: 'down', local_fallback: 'active' },
-        { status: 200 }
+        { status: 200, headers: cacheHeaders }
       );
     }
     const data = await response.json();
-    return NextResponse.json({ status: 'healthy', ...data });
+    return NextResponse.json({ status: 'healthy', ...data }, { headers: cacheHeaders });
   } catch (error) {
     return NextResponse.json(
       { status: 'unhealthy', mcp_server: 'unreachable', local_fallback: 'active' },
-      { status: 200 }
+      { status: 200, headers: cacheHeaders }
     );
   }
 }

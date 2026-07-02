@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabaseClient";
+import { rateLimit } from "@/lib/rateLimiter";
+
+const cacheHeaders = {
+  'Cache-Control': 'public, max-age=20, stale-while-revalidate=30',
+};
 
 // Get all administrators for an event
 export async function GET(
@@ -14,12 +19,12 @@ export async function GET(
 
     if (!isUuid) {
       console.log(`[administrators API] Skipping DB for mock/invalid event ID: ${eventId}`);
-      return NextResponse.json([]);
+      return NextResponse.json([], { headers: cacheHeaders });
     }
 
     const supabase = getSupabase();
     if (!supabase) {
-      return NextResponse.json([]);
+      return NextResponse.json([], { headers: cacheHeaders });
     }
 
     // 1. Get administrator IDs
@@ -34,7 +39,7 @@ export async function GET(
     }
 
     if (!adminLinks || adminLinks.length === 0) {
-      return NextResponse.json([]);
+      return NextResponse.json([], { headers: cacheHeaders });
     }
 
     const userIds = (adminLinks as any[]).map(link => link.user_id);
@@ -49,7 +54,7 @@ export async function GET(
       console.warn(`[administrators API] Error fetching profiles:`, profileError);
       // Return empty if we can't get profiles, or maybe partial data? 
       // Safer to return empty for now to avoid breaking UI
-      return NextResponse.json([]);
+      return NextResponse.json([], { headers: cacheHeaders });
     }
 
     // Transform to expected format (mimicking the original joined structure if needed, or just profiles)
@@ -65,7 +70,7 @@ export async function GET(
       };
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json(result, { headers: cacheHeaders });
   } catch (e) {
     console.error(`[administrators API] Critical error:`, e);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
@@ -78,6 +83,11 @@ export async function POST(
   { params }: { params: Promise<{ eventId: string }> }
 ) {
   try {
+    const rl = rateLimit(req, "events-administrators-add", 10, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const { eventId } = await params;
     const body = await req.json();
     const { user_id } = body;
@@ -122,6 +132,11 @@ export async function DELETE(
   { params }: { params: Promise<{ eventId: string }> }
 ) {
   try {
+    const rl = rateLimit(req, "events-administrators-remove", 10, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const { eventId } = await params;
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("user_id");

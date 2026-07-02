@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabaseClient";
+import { rateLimit } from "@/lib/rateLimiter";
 import { realEvents2026 } from "@/data/events-2026-real";
 
-// Enable dynamic rendering for real-time database access
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 15;
+const cacheHeaders = {
+  'Cache-Control': 'public, max-age=15, stale-while-revalidate=30',
+};
 
 export async function GET(req: NextRequest) {
   try {
@@ -40,7 +43,7 @@ export async function GET(req: NextRequest) {
         data = realEvents2026;
       }
     }
-    return NextResponse.json(data);
+    return NextResponse.json(data, { headers: cacheHeaders });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
@@ -49,6 +52,16 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const rl = rateLimit(req, 'events-write', 20, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      });
+    }
+
     // Read body once at the start
     const body = await req.json();
     let data: unknown = null;
@@ -91,6 +104,16 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    const rl = rateLimit(req, 'events-write', 20, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ error: 'Too many requests, please try again later.' }, {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      });
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 

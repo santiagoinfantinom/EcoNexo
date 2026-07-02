@@ -39,10 +39,13 @@ export async function GET() {
     outlookClientId: outlookClientId || null,
     siteUrl,
     configured: !!googleClientId,
-  });
+  }, { headers: cacheHeaders });
 }
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
+const cacheHeaders = {
+  'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
+};
 

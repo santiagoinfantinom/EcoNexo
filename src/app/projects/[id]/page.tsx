@@ -156,11 +156,6 @@ const IMPACT_TAGS_BY_CATEGORY: Record<string, { label: string; emoji: string; co
   ],
 };
 
-// Required for static export
-export async function generateStaticParams() {
-  return PROJECTS.map((p) => ({ id: String(p.id) }));
-}
-
 const SITE_URL = getSiteUrl();
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -194,25 +189,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   };
 }
 
-async function fetchProject(id: string): Promise<Project | null> {
-  try {
-    const res = await fetch(`/api/projects?id=${encodeURIComponent(id)}` as any, { cache: "no-store" });
-    if (!res.ok) return null;
-    const data: Project | { error?: string } = await res.json();
-    if ((data as any)?.error) return null;
-    return data as Project;
-  } catch {
-    return null;
-  }
-}
-
 export default async function ProjectPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const project = (await fetchProject(id)) ?? (PROJECTS.find((p) => String(p.id) === String(id)) as any) ?? FALLBACK_DETAILS[id];
+  const project = PROJECTS.find((p) => String(p.id) === String(id)) as any ?? FALLBACK_DETAILS[id];
 
   if (!project) {
     return <ProjectNotFound />;

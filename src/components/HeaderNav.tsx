@@ -29,6 +29,7 @@ const OnboardingTour = dynamic(() => import("./OnboardingTour"), { ssr: false })
 
 export default function HeaderNav() {
   const { t, locale } = useI18n();
+  const paypalUrl = process.env.NEXT_PUBLIC_PAYPAL_URL || process.env.NEXT_PUBLIC_PAYPAL_LINK || '#';
   const { user, loading } = useAuth();
   const { showToast } = useToast();
   const [mounted, setMounted] = useState(false);
@@ -174,10 +175,20 @@ export default function HeaderNav() {
 
       {/* Floating Support Button - Bottom Left */}
       <Link
-        href={process.env.NEXT_PUBLIC_PAYPAL_URL || "#"}
+        href={paypalUrl}
         target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => {
+          if (!paypalUrl || paypalUrl === '#') {
+            e.preventDefault();
+            const msg = locale === 'es' ? 'Próximamente en PayPal' : locale === 'de' ? 'Bald verfügbar auf PayPal' : 'Coming soon on PayPal';
+            showToast(msg, 'info');
+          }
+        }}
         className="fixed bottom-[calc(80px+env(safe-area-inset-bottom))] md:bottom-6 left-4 md:left-6 z-50 group"
         aria-label={t("supportUs")}
+        aria-disabled={!paypalUrl || paypalUrl === '#'}
+        title={(!paypalUrl || paypalUrl === '#') ? (locale === 'es' ? 'Próximamente' : locale === 'de' ? 'Demnächst' : 'Coming soon') : ''}
       >
         <div className="absolute inset-0 bg-green-500 rounded-full blur opacity-30"></div>
         <div className="relative bg-gradient-to-r from-[#0b2b26] to-[#154a40] text-white font-bold px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 border border-green-400/20">

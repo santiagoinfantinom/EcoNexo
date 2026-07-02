@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateVerificationToken, registerVerificationToken } from '@/lib/emailVerification';
 import { verifyCaptchaToken } from '@/lib/captcha';
+import { rateLimit } from '@/lib/rateLimiter';
 
 export async function POST(request: NextRequest) {
   try {
+    const rl = rateLimit(request, 'email-verify-send', 5, 60000);
+    if (!rl.success) {
+      return NextResponse.json({ success: false, message: 'Too many requests' }, { status: 429 });
+    }
+
     const { email, captchaToken, locale } = await request.json();
 
     if (!email) {

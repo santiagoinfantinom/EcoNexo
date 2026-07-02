@@ -205,6 +205,7 @@ export default function RecommendedProjects() {
             alt={project.name}
             category={project.category}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            preferTextFallback={true}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
             <span className="text-white font-medium text-sm">{project.city}</span>

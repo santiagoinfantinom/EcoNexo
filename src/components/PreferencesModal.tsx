@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSmartContext } from '@/context/SmartContext';
-import { Category } from '@/data/projects';
+import type { Category } from '@/data/projects';
 import { X, Check } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -95,8 +95,8 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
     const lang = locale === 'de' ? 'de' : locale === 'en' ? 'en' : 'es';
 
     return (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-md md:p-4">
-            <div className="bg-white dark:bg-slate-900 w-full h-full md:h-auto md:max-h-[90vh] md:max-w-lg md:rounded-3xl shadow-2xl flex flex-col overflow-hidden relative">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-md md:p-4" style={{ touchAction: 'pan-y' }}>
+            <div className="bg-white dark:bg-slate-900 w-full max-h-[calc(100vh-2rem)] h-full md:h-auto md:max-h-[90vh] md:max-w-lg md:rounded-3xl shadow-2xl flex flex-col overflow-hidden relative">
                 
                 {/* Visual Progress Bar */}
                 {step < 3 && (
@@ -133,7 +133,7 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                 )}
 
                 {/* Main Content Area */}
-                <div className="flex-1 overflow-y-auto overflow-x-hidden relative">
+                <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
                     <AnimatePresence mode="wait">
                         
                         {/* STEP 1: CAUSES */}

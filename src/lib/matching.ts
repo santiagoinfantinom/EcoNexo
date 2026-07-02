@@ -1,4 +1,4 @@
-import { Project, Category } from '@/data/projects';
+import type { Project, Category } from '@/data/projects';
 
 export interface UserPreferences {
   selectedCategories: Category[];

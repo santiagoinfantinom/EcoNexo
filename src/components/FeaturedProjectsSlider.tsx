@@ -173,6 +173,7 @@ export default function FeaturedProjectsSlider() {
                         alt={project.title}
                         category={project.category}
                         className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                        preferTextFallback={true}
                         loading="lazy"
                       />
                     </div>

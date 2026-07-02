@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const noStoreHeaders = {
+  'Cache-Control': 'no-store',
+};
+
 export async function GET(request: NextRequest) {
   try {
     const code = request.nextUrl.searchParams.get('code');
@@ -9,14 +13,14 @@ export async function GET(request: NextRequest) {
     if (error) {
       return NextResponse.json(
         { success: false, error },
-        { status: 400 }
+        { status: 400, headers: noStoreHeaders }
       );
     }
 
     if (!code || !state) {
       return NextResponse.json(
         { success: false, error: 'Missing code or state' },
-        { status: 400 }
+        { status: 400, headers: noStoreHeaders }
       );
     }
 
@@ -47,7 +51,7 @@ export async function GET(request: NextRequest) {
     if (tokens.error) {
       return NextResponse.json(
         { success: false, error: tokens.error_description || 'Error al obtener tokens' },
-        { status: 400 }
+        { status: 400, headers: noStoreHeaders }
       );
     }
 
@@ -146,12 +150,12 @@ export async function GET(request: NextRequest) {
         gender,
         pronouns,
       },
-    });
+    }, { headers: noStoreHeaders });
   } catch (error) {
     console.error('Google OAuth callback error:', error);
     return NextResponse.json(
       { success: false, error: 'Error al procesar autenticación con Google' },
-      { status: 500 }
+      { status: 500, headers: noStoreHeaders }
     );
   }
 }
