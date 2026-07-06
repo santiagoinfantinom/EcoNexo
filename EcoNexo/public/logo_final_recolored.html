@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoNexo - Final Flip</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #f8fafc;
+            /* Check transparency */
+            background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%), linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e2e8f0 75%), linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+            background-size: 20px 20px;
+
+            color: #1e293b;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 20px;
+            color: #0f172a;
+            background: rgba(255, 255, 255, 0.8);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 350px;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Horizontal Flip (Y-Axis)</h1>
+
+    <div class="gallery">
+        <div class="card">
+            <h2>Previous (-90°)</h2>
+            <p>Estado anterior</p>
+            <img src="logo_rot_m90.png" class="logo-img" alt="-90">
+        </div>
+
+        <div class="card" style="border: 4px solid #F59E0B;">
+            <h2>Flipped Y-Axis</h2>
+            <p><strong>SOLICITADO</strong> (Espejo Horizontal)</p>
+            <img src="logo_final_flipped.png" class="logo-img" alt="Flipped">
+        </div>
+    </div>
+</body>
+
+</html>

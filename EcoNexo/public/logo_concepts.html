@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoNexo - Final Design Exact</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s;
+            border: 1px solid #e2e8f0;
+            width: 320px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            border-color: #DBF58E;
+        }
+
+        .logo-container {
+            width: 240px;
+            height: 240px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin: 0 0 8px 0;
+            color: #1F3D3B;
+            /* Project Dark Teal */
+        }
+
+        p {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-align: center;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Corrected Reconstruction</h1>
+    <p class="subtitle">Refining the shape to match the "Letter D + N" structure from your upload.<br>Colors: Sour Apple
+        (#DBF58E) + Black.</p>
+
+    <div class="gallery">
+        <!-- Variation 1: The "D-N" Monogram match -->
+        <div class="card">
+            <div class="logo-container">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left Shape: "D" / Leaf Stem -->
+                    <!-- A vertical bar with a curve on the right -->
+                    <path d="M25 20 H 40 C 55 20 60 35 55 50 C 50 65 40 65 40 65 H 25 V 20 Z" fill="#DBF58E" />
+
+                    <!-- Right Shape: "N" Stem -->
+                    <!-- A vertical bar on the right -->
+                    <rect x="65" y="20" width="15" height="45" rx="2" fill="#DBF58E" />
+
+                    <!-- The Leaf/Diagonal Crossing -->
+                    <path d="M40 50 L 70 25 C 75 20 75 30 70 35 L 45 60 C 40 65 35 60 40 50 Z" fill="#DBF58E" />
+
+                    <!-- The Node - Top Right -->
+                    <circle cx="85" cy="20" r="10" fill="black" />
+                    <!-- Connector Line -->
+                    <path d="M80 25 L 72 32" stroke="black" stroke-width="5" stroke-linecap="round" />
+                </svg>
+            </div>
+            <h2>Attempt A: D-N Structure</h2>
+            <p>Monogram style combining a D-shape and vertical pillar with the node.</p>
+        </div>
+
+        <!-- Variation 2: Abstract "Eco" Glyph -->
+        <div class="card">
+            <div class="logo-container">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Geometric interpretation of the upload -->
+                    <!-- Left Shape: Broad Leafy Curve -->
+                    <path d="M30 20 H 50 C 70 20 70 50 50 60 L 30 80 V 20 Z" fill="#DBF58E" />
+
+                    <!-- Negative space cut -->
+                    <path d="M30 80 L 70 40" stroke="white" stroke-width="5" />
+
+                    <!-- Right Shape: Parallel Vertical -->
+                    <rect x="60" y="20" width="15" height="40" fill="#DBF58E" />
+
+                    <!-- Node Element -->
+                    <circle cx="85" cy="20" r="12" fill="black" />
+                    <rect x="75" y="20" width="10" height="5" transform="rotate(45 75 20)" fill="black" />
+                </svg>
+            </div>
+            <h2>Attempt B: Abstract Glyph</h2>
+            <p>Broader strokes focusing on the weight of the original image.</p>
+        </div>
+
+        <!-- Variation 3: Precise Trace Attempt -->
+        <div class="card">
+            <div class="logo-container">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 
+                        Tracing the 'Proposal Minimalist' logic:
+                        - Big D shape on left
+                        - N shape on right
+                        - Node on N
+                    -->
+
+                    <!-- 1. The D-Loop (Green) -->
+                    <path d="M25 25 H 45 C 60 25 60 60 45 75 H 25 V 25 Z" stroke="#DBF58E" stroke-width="12" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round" />
+
+                    <!-- 2. The N-Leg (Green) -->
+                    <path d="M65 25 V 75" stroke="#DBF58E" stroke-width="12" stroke-linecap="round" />
+
+                    <!-- 3. The Diagonal Leaf (Green) cutting through -->
+                    <path d="M25 75 C 25 75 45 60 65 25" fill="#DBF58E" /> <!-- Just a fill attempt -->
+                    <path d="M25 75 Q 45 50 65 25" stroke="#DBF58E" stroke-width="10" stroke-linecap="round" />
+
+                    <!-- 4. The Node (Black) -->
+                    <circle cx="80" cy="20" r="10" fill="black" />
+                    <line x1="80" y1="20" x2="65" y2="35" stroke="black" stroke-width="4" />
+                </svg>
+            </div>
+            <h2>Attempt C: Line Weight Match</h2>
+            <p>Using thick strokes to mimic the bold style of the original generation.</p>
+        </div>
+
+    </div>
+</body>
+
+</html>

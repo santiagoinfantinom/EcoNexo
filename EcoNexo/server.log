@@ -1,0 +1,201 @@
+
+> econexo@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.5.4 (Turbopack)
+   - Local:        http://localhost:3002
+   - Network:      http://192.168.0.62:3002
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Compiled middleware in 72ms
+ ✓ Ready in 727ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1503ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET / 200 in 1947ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ HEAD / 200 in 230ms
+ ✓ Compiled /favicon.ico in 123ms
+ HEAD /favicon.ico 200 in 377ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET / 200 in 268ms
+ GET /favicon.ico 200 in 109ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET / 200 in 346ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 450ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 451ms
+ ○ Compiling /eventos ...
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET /eventos/ 200 in 619ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+Missing translation key "node.js" for locale "en"
+Missing translation key "ux/ui" for locale "en"
+Missing translation key "arquitectura" for locale "en"
+Missing translation key "sostenibilidad" for locale "en"
+Missing translation key "cad" for locale "en"
+Missing translation key "certificaciónleed" for locale "en"
+Missing translation key "economía" for locale "en"
+Missing translation key "sostenibilidad" for locale "en"
+Missing translation key "análisisdedatos" for locale "en"
+Missing translation key "políticaspúblicas" for locale "en"
+Missing translation key "ingeniería" for locale "en"
+Missing translation key "energíaeólica" for locale "en"
+Missing translation key "automatización" for locale "en"
+Missing translation key "mantenimiento" for locale "en"
+Missing translation key "marketingdigital" for locale "en"
+Missing translation key "redessociales" for locale "en"
+Missing translation key "videoproducción" for locale "en"
+Missing translation key "agronomía" for locale "en"
+Missing translation key "permacultura" for locale "en"
+Missing translation key "suelos" for locale "en"
+Missing translation key "esg" for locale "en"
+Missing translation key "finanzassostenibles" for locale "en"
+Missing translation key "reporting" for locale "en"
+Missing translation key "auditoría" for locale "en"
+ GET /calendario/ 200 in 722ms
+ GET /trabajos/ 200 in 724ms
+ ✓ Compiled /eventos in 746ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET /chat/ 200 in 349ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET /perfil/ 200 in 406ms
+ ✓ Compiled in 136ms
+ ✓ Compiled in 185ms
+ ✓ Compiled in 163ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET / 200 in 268ms
+ ✓ Compiled /matching in 184ms
+ GET /matching/ 200 in 219ms
+ ✓ Compiled /api/config/oauth in 70ms
+🔍 API Config OAuth: {
+  googleClientId: 'CONFIGURED',
+  googleClientIdSource: 'ENV_VAR',
+  googleClientIdValue: '1059183045627-qjmnmcghdbl5duk2...',
+  siteUrl: 'http://localhost:3000'
+}
+ GET /api/config/oauth/ 200 in 317ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET /perfil/ 200 in 80ms
+ GET /favicon.ico 200 in 236ms
+🔍 API Config OAuth: {
+  googleClientId: 'CONFIGURED',
+  googleClientIdSource: 'ENV_VAR',
+  googleClientIdValue: '1059183045627-qjmnmcghdbl5duk2...',
+  siteUrl: 'http://localhost:3000'
+}
+ GET /api/config/oauth/ 200 in 243ms
+ GET /matching/ 200 in 36ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET /matching/ 200 in 80ms
+ GET /favicon.ico 200 in 116ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 255ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 256ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET /matching/ 200 in 77ms
+ GET / 200 in 52ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 254ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 256ms
+ GET /eventos/ 200 in 54ms
+ ✓ Compiled /api/events in 135ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 245ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 247ms
+ GET /api/events/ 200 in 435ms
+ GET /api/events/ 200 in 436ms
+ GET /api/events/ 200 in 434ms
+ GET /api/events/ 200 in 433ms
+ ✓ Compiled in 217ms
+ ✓ Compiled /eventos/[id] in 230ms
+ GET /eventos/e26f/ 200 in 549ms
+ GET /api/events/?id=e26f 200 in 248ms
+ ✓ Compiled /api/events/[eventId]/administrators in 49ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 234ms
+ GET /api/events/?id=e26f 200 in 232ms
+ GET /api/events/e26f/administrators/ 500 in 689ms
+ GET /api/events/e26f/administrators/ 500 in 230ms
+ GET /api/events/ 200 in 251ms
+ GET /api/events/ 200 in 239ms
+ GET /api/events/ 200 in 234ms
+ GET /api/events/ 200 in 242ms
+ GET /eventos/e21/ 200 in 49ms
+ GET /api/events/?id=e21 200 in 226ms
+ GET /api/events/?id=e21 200 in 239ms
+ GET /api/events/e21/administrators/ 500 in 234ms
+ GET /api/events/e21/administrators/ 500 in 228ms
+ GET /api/events/ 200 in 247ms
+ GET /api/events/ 200 in 238ms
+ GET /api/events/ 200 in 239ms
+ GET /api/events/ 200 in 243ms
+ GET /eventos/e26e/ 200 in 42ms
+ GET /api/events/?id=e26e 200 in 234ms
+ GET /api/events/?id=e26e 200 in 242ms
+ GET /api/events/e26e/administrators/ 500 in 242ms
+ GET /api/events/e26e/administrators/ 500 in 229ms
+ ✓ Compiled in 101ms
+ GET /eventos/ 200 in 56ms
+ GET /api/events/ 200 in 266ms
+ GET /api/events/ 200 in 259ms
+ GET /api/events/ 200 in 224ms
+ GET /api/events/ 200 in 252ms
+ GET /eventos/e26c/ 200 in 52ms
+ GET /api/events/?id=e26c 200 in 223ms
+ GET /api/events/?id=e26c 200 in 244ms
+ GET /api/events/e26c/administrators/ 500 in 238ms
+ GET /api/events/e26c/administrators/ 500 in 229ms
+ GET /api/events/ 200 in 252ms
+ GET /api/events/ 200 in 235ms
+ GET /api/events/ 200 in 238ms
+ GET /api/events/ 200 in 226ms
+ GET /eventos/e20/ 200 in 51ms
+ GET /api/events/?id=e20 200 in 227ms
+ GET /api/events/?id=e20 200 in 241ms
+ GET /api/events/e20/administrators/ 500 in 238ms
+ GET /api/events/e20/administrators/ 500 in 233ms
+🎨 ThemeProvider: Rendering with theme: light mounted: false
+🔧 SimpleIntro: showIntro = false
+ GET / 200 in 318ms
+ GET /favicon.ico 200 in 58ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 228ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 218ms
+ GET /eventos/ 200 in 55ms
+ GET /api/events/ 200 in 278ms
+ GET /api/events/ 200 in 271ms
+ GET /api/events/ 200 in 267ms
+ GET /api/events/ 200 in 271ms
+ GET /api/events/ 200 in 252ms
+ GET /api/events/ 200 in 251ms
+ GET /api/events/ 200 in 256ms
+ GET /eventos/e26c/ 200 in 105ms
+ GET /api/events/?id=e26c 200 in 283ms
+ GET /api/events/?id=e26c 200 in 276ms
+ GET /api/events/e26c/administrators/ 500 in 238ms
+ GET /api/events/e26c/administrators/ 500 in 235ms
+ GET /eventos/ 200 in 45ms
+ GET /api/events/ 200 in 259ms
+ GET /api/events/ 200 in 253ms
+ GET /api/events/ 200 in 252ms
+ GET /api/events/ 200 in 259ms
+ GET /eventos/e26b/ 200 in 49ms
+ GET /api/events/?id=e26b 200 in 236ms
+ GET /api/events/?id=e26b 200 in 229ms
+ GET /api/events/e26b/administrators/ 500 in 241ms
+ GET /api/events/e26b/administrators/ 500 in 235ms
+ GET /api/events/ 200 in 282ms
+ GET /api/events/ 200 in 279ms
+ GET /api/events/ 200 in 279ms
+ GET /api/events/ 200 in 281ms
+[?25h

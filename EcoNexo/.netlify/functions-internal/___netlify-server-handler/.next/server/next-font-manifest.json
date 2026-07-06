@@ -1,0 +1,122 @@
+{
+  "app": {
+    "[project]/src/app/_not-found/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/about/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/admin/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/admin/projects/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/calendario/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/categorias/alimentacion/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/categorias/comunidad/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/categorias/educacion/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/categorias/medio-ambiente/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/categorias/oceanos/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/categorias/salud/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/chat/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/chats/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/eventos/[id]/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/eventos/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/expansion/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/monetizacion/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/perfil/guardados/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/perfil/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/projects/[id]/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/projects/[id]/voluntariado/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ],
+    "[project]/src/app/trabajos/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "static/media/ab57efd000576a30-s.p.37015d44.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pages": {},
+  "pagesUsingSizeAdjust": false
+}

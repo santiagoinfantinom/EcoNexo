@@ -1,0 +1,24 @@
+
+> econexo@0.1.0 mobile:sync
+> npx cap sync
+
+✔ Copying web assets from out to android/app/src/main/assets/public in 27.16ms
+✔ Creating capacitor.config.json in android/app/src/main/assets in 266.33μs
+✔ copy android in 32.41ms
+✔ Updating Android plugins in 954.58μs
+[info] Found 5 Capacitor plugins for android:
+       @capacitor/camera@7.0.2
+       @capacitor/geolocation@7.1.5
+       @capacitor/push-notifications@7.0.3
+       @capacitor/splash-screen@7.0.3
+       @capacitor/status-bar@7.0.3
+✔ update android in 17.17ms
+✔ Copying web assets from out to ios/App/App/public in 24.11ms
+✔ Creating capacitor.config.json in ios/App/App in 289.63μs
+✔ copy ios in 35.74ms
+✔ Updating iOS plugins in 902.75μs
+[warn] Skipping pod install because CocoaPods is not installed
+✖ Updating iOS native dependencies with pod install - failed!
+✖ update ios - failed!
+[error] xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
+        

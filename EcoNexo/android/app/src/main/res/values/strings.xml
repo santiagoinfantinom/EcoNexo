@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">EcoNexo</string>
+    <string name="title_activity_main">EcoNexo</string>
+    <string name="package_name">com.econexo.app</string>
+    <string name="custom_url_scheme">com.econexo.app</string>
+</resources>

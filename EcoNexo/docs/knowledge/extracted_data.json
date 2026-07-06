@@ -1,0 +1,312 @@
+{
+    "projects": [
+        {
+            "id": "env-1",
+            "title": "Urban Reforestation Berlin",
+            "title_es": "Reforestación Urbana Berlín",
+            "description": "Native tree planting project in urban parks to improve air quality and create green corridors.",
+            "description_es": "Proyecto de plantación de árboles nativos en parques urbanos para mejorar la calidad del aire y crear corredores verdes.",
+            "impact": "2,500 trees planted",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "env-2",
+            "title": "Seine River Cleanup",
+            "title_es": "Limpieza del Río Sena",
+            "description": "Cleanup campaign to eliminate plastics and pollutants from the emblematic Parisian river.",
+            "description_es": "Campaña de limpieza para eliminar plásticos y contaminantes del emblemático río parisino.",
+            "impact": "5 tons of waste collected",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "env-3",
+            "title": "Community Gardens Madrid",
+            "title_es": "Huertos Comunitarios Madrid",
+            "description": "Creation of urban green spaces for sustainable agriculture and environmental education.",
+            "description_es": "Creación de espacios verdes urbanos para agricultura sostenible y educación ambiental.",
+            "impact": "15 active community gardens",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "env-4",
+            "title": "Migratory Bird Protection",
+            "title_es": "Protección de Aves Migratorias",
+            "description": "Monitoring and protection of bird migration routes in northern Europe.",
+            "description_es": "Monitoreo y protección de rutas migratorias de aves en el norte de Europa.",
+            "impact": "500 protected species",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "edu-1",
+            "title": "Educational Robotics Workshops",
+            "title_es": "Talleres de Robótica Educativa",
+            "description": "Educational program to teach robotics and programming to children and youth using recycled materials.",
+            "description_es": "Programa educativo para enseñar robótica y programación a niños y jóvenes usando materiales reciclados.",
+            "impact": "300 students trained",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "edu-2",
+            "title": "School Environmental Education",
+            "title_es": "Educación Ambiental Escolar",
+            "description": "Environmental awareness program in primary and secondary schools.",
+            "description_es": "Programa de sensibilización ambiental en escuelas primarias y secundarias.",
+            "impact": "1,200 students educated",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "edu-3",
+            "title": "Rural Digital Libraries",
+            "title_es": "Bibliotecas Digitales Rurales",
+            "description": "Installation of digital access points in rural communities to reduce the technology gap.",
+            "description_es": "Instalación de puntos de acceso digital en comunidades rurales para reducir la brecha tecnológica.",
+            "impact": "50 communities connected",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "edu-4",
+            "title": "Online Sustainability Courses",
+            "title_es": "Cursos de Sostenibilidad Online",
+            "description": "Free educational platform on sustainable practices and circular economy.",
+            "description_es": "Plataforma educativa gratuita sobre prácticas sostenibles y economía circular.",
+            "impact": "5,000 registered users",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "health-1",
+            "title": "Community Mobile Clinic",
+            "title_es": "Clínica móvil comunitaria",
+            "description": "Itinerant medical service that brings basic health care to disadvantaged communities. Includes checkups, vaccination and preventive education.",
+            "description_es": "Servicio médico itinerante que lleva atención sanitaria básica a comunidades desfavorecidas. Incluye chequeos, vacunación y educación preventiva.",
+            "impact": "2,000 patients treated",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "health-2",
+            "title": "Mental Health Program",
+            "title_es": "Programa de Salud Mental",
+            "description": "Workshops, group therapy and community support to promote mental well-being in urban areas.",
+            "description_es": "Talleres, terapia grupal y acompañamiento comunitario para promover el bienestar mental en zonas urbanas.",
+            "impact": "800 people benefited",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "health-3",
+            "title": "Inclusive Sports",
+            "title_es": "Deporte Inclusivo",
+            "description": "Adapted sports activities for people with physical and cognitive disabilities.",
+            "description_es": "Actividades deportivas adaptadas para personas con discapacidades físicas y cognitivas.",
+            "impact": "300 inclusive athletes",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "health-4",
+            "title": "Community Nutrition",
+            "title_es": "Nutrición Comunitaria",
+            "description": "Healthy cooking workshops and nutritional education for low-income families.",
+            "description_es": "Talleres de cocina saludable y educación nutricional para familias de bajos recursos.",
+            "impact": "1,500 families educated",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "comm-1",
+            "title": "Inclusive Neighborhood Centers",
+            "title_es": "Centros vecinales inclusivos",
+            "description": "Community spaces that foster social integration and mutual support among neighbors.",
+            "description_es": "Espacios comunitarios que fomentan la integración social y el apoyo mutuo entre vecinos.",
+            "impact": "15 active centers",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "comm-2",
+            "title": "Refugee Support Network",
+            "title_es": "Red de Apoyo a Refugiados",
+            "description": "Integration and support program for refugee families in local communities.",
+            "description_es": "Programa de integración y apoyo para familias refugiadas en comunidades locales.",
+            "impact": "200 families integrated",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "comm-3",
+            "title": "Cultural Festivals",
+            "title_es": "Festivales Culturales",
+            "description": "Events that celebrate cultural diversity and promote social cohesion.",
+            "description_es": "Eventos que celebran la diversidad cultural y promueven la cohesión social.",
+            "impact": "50 festivals organized",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "comm-4",
+            "title": "Youth Mentoring Program",
+            "title_es": "Programa de Mentores Juveniles",
+            "description": "Connects young people with adult mentors for academic and professional guidance.",
+            "description_es": "Conecta jóvenes con mentores adultos para orientación académica y profesional.",
+            "impact": "300 young people mentored",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "ocean-1",
+            "title": "Beach Recovery",
+            "title_es": "Recuperación de playas",
+            "description": "Cleanup and restoration of coastal ecosystems affected by marine pollution.",
+            "description_es": "Limpieza y restauración de ecosistemas costeros afectados por la contaminación marina.",
+            "impact": "10 beaches restored",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "ocean-2",
+            "title": "Coral Protection",
+            "title_es": "Protección de Corales",
+            "description": "Coral reef restoration project in the Mediterranean.",
+            "description_es": "Proyecto de restauración de arrecifes de coral en el Mediterráneo.",
+            "impact": "5 hectares of coral protected",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "ocean-3",
+            "title": "Marine Monitoring",
+            "title_es": "Monitoreo Marino",
+            "description": "Citizen science to study marine biodiversity and the impact of climate change.",
+            "description_es": "Ciencia ciudadana para estudiar la biodiversidad marina y el impacto del cambio climático.",
+            "impact": "1,000 species catalogued",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "ocean-4",
+            "title": "Sustainable Fishing",
+            "title_es": "Pesca Sostenible",
+            "description": "Education on responsible fishing practices and marine conservation.",
+            "description_es": "Educación sobre prácticas de pesca responsable y conservación marina.",
+            "impact": "200 fishermen trained",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "food-1",
+            "title": "Urban Gardens",
+            "title_es": "Huertos urbanos",
+            "description": "Creation of urban agricultural spaces to promote local and sustainable food.",
+            "description_es": "Creación de espacios agrícolas urbanos para promover la alimentación local y sostenible.",
+            "impact": "20 active urban gardens",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "food-2",
+            "title": "Food Bank",
+            "title_es": "Banco de Alimentos",
+            "description": "Redistribution of surplus food to combat waste and food insecurity.",
+            "description_es": "Redistribución de alimentos excedentes para combatir el desperdicio y la inseguridad alimentaria.",
+            "impact": "5,000 families fed",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "food-3",
+            "title": "Regenerative Agriculture",
+            "title_es": "Agricultura Regenerativa",
+            "description": "Promotion of agricultural techniques that restore soil health and biodiversity.",
+            "description_es": "Promoción de técnicas agrícolas que restauran la salud del suelo y la biodiversidad.",
+            "impact": "100 hectares regenerated",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "food-4",
+            "title": "Sustainable Cooking",
+            "title_es": "Cocina Sostenible",
+            "description": "Cooking workshops with local ingredients and waste reduction techniques.",
+            "description_es": "Talleres de cocina con ingredientes locales y técnicas de reducción de desperdicios.",
+            "impact": "800 people trained",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "tech-1",
+            "title": "Green Hackathon",
+            "title_es": "Hackathon Verde",
+            "description": "48-hour hackathon to develop sustainable technological solutions. Includes IoT workshops, blockchain and responsible consumption apps.",
+            "description_es": "Hackathon de 48 horas para desarrollar soluciones tecnológicas sostenibles. Incluye talleres de IoT, blockchain y apps de consumo responsable.",
+            "impact": "15 projects developed",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "tech-2",
+            "title": "Sustainable Innovation Lab",
+            "title_es": "Laboratorio de Innovación Sostenible",
+            "description": "Collaborative space to develop green technologies: IoT sensors, circular economy apps and renewable energy platforms.",
+            "description_es": "Espacio colaborativo para desarrollar tecnologías verdes: sensores IoT, apps de economía circular y plataformas de energía renovable.",
+            "impact": "20 prototypes created",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "tech-3",
+            "title": "Smart City Lab",
+            "title_es": "Smart City Lab",
+            "description": "Development of smart city solutions: waste management with sensors, public transport optimization and energy efficiency.",
+            "description_es": "Desarrollo de soluciones de ciudad inteligente: gestión de residuos con sensores, optimización de transporte público y eficiencia energética.",
+            "impact": "5 cities implementing solutions",
+            "source": "categoryProjects.ts"
+        },
+        {
+            "id": "tech-4",
+            "title": "Blockchain for Environmental Transparency",
+            "title_es": "Blockchain para Transparencia Ambiental",
+            "description": "Workshop on using blockchain to track sustainable supply chains and verifiable environmental certifications.",
+            "description_es": "Workshop sobre uso de blockchain para rastrear cadenas de suministro sostenibles y certificaciones ambientales verificables.",
+            "impact": "10 supply chains tracked",
+            "source": "categoryProjects.ts"
+        }
+    ],
+    "tips": [
+        {
+            "id": "bank",
+            "title_key": "ecoTipBankTitle",
+            "description_key": "ecoTipBankDescription",
+            "source": "EcoTips.tsx"
+        },
+        {
+            "id": "transport",
+            "title_key": "ecoTipTransportTitle",
+            "description_key": "ecoTipTransportDescription",
+            "source": "EcoTips.tsx"
+        },
+        {
+            "id": "vegetarian",
+            "title_key": "ecoTipVegetarianTitle",
+            "description_key": "ecoTipVegetarianDescription",
+            "source": "EcoTips.tsx"
+        },
+        {
+            "id": "energy",
+            "title_key": "ecoTipEnergyTitle",
+            "description_key": "ecoTipEnergyDescription",
+            "source": "EcoTips.tsx"
+        },
+        {
+            "id": "waste",
+            "title_key": "ecoTipWasteTitle",
+            "description_key": "ecoTipWasteDescription",
+            "source": "EcoTips.tsx"
+        },
+        {
+            "id": "water",
+            "title_key": "ecoTipWaterTitle",
+            "description_key": "ecoTipWaterDescription",
+            "source": "EcoTips.tsx"
+        },
+        {
+            "id": "oceans",
+            "title_key": "ecoTipOceanTitle",
+            "description_key": "ecoTipOceanDescription",
+            "source": "EcoTips.tsx"
+        },
+        {
+            "id": "health",
+            "title_key": "ecoTipHealthTitle",
+            "description_key": "ecoTipHealthDescription",
+            "source": "EcoTips.tsx"
+        },
+        {
+            "id": "education",
+            "title_key": "ecoTipEducationTitle",
+            "description_key": "ecoTipEducationDescription",
+            "source": "EcoTips.tsx"
+        }
+    ]
+}

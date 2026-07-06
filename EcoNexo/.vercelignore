@@ -1,0 +1,58 @@
+# Ignore mobile app folders
+android
+ios
+
+# Ignore backend / non-web components
+mcp-server
+supabase
+docs
+scripts
+directives
+
+# Ignore local configs and backups
+.agent
+.env.vercel*
+.env.local.backup*
+.env.local.bak
+.env.vercel.prod
+.netlify
+build.log
+mobile-build.log
+mobile-sync.log
+server.log
+scraper_debug.log
+
+# Ignore git
+.git
+.github
+
+# Ignore Next.js artifacts (already in .gitignore but just in case)
+.next
+node_modules
+out
+
+# Ignore other files
+*.py
+*.js
+*.sh
+*.pdf
+Makefile
+LICENSE
+urls.txt
+urls_to_check.txt
+task_updated.md
+*.tsbuildinfo
+next-env.d.ts
+
+# DO NOT IGNORE
+!src
+!public
+!package.json
+!package-lock.json
+!next.config.js
+!next.config.ts
+!tsconfig.json
+!postcss.config.js
+!postcss.config.mjs
+!tailwind.config.js
+!vercel.json

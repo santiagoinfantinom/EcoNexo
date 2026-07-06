@@ -1,0 +1,64 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#a7f3d0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#34d399;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="darkLeafGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle - dark green -->
+  <circle cx="100" cy="100" r="95" fill="#064e3b"/>
+  
+  <!-- Main curving stem from bottom-left to top-right -->
+  <path d="M60 160 Q80 120, 100 90 Q120 60, 135 30" 
+        stroke="#2d5016" 
+        stroke-width="3" 
+        stroke-linecap="round"
+        fill="none"
+        opacity="0.4"/>
+  
+  <!-- Leaf 1 - Top right, small -->
+  <path d="M145 35 L135 20 L150 25 Z" fill="url(#leafGradient)"/>
+  <path d="M142 32 L135 20" stroke="#059669" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Leaf 2 -->
+  <path d="M150 55 L138 45 L155 52 Z" fill="url(#leafGradient)"/>
+  <path d="M147 52 L138 45" stroke="#059669" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Leaf 3 -->
+  <path d="M152 75 L140 68 L158 72 Z" fill="url(#darkLeafGradient)"/>
+  <path d="M149 73 L140 68" stroke="#10b981" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Leaf 4 -->
+  <path d="M153 95 L142 88 L160 92 Z" fill="url(#leafGradient)"/>
+  <path d="M150 92 L142 88" stroke="#059669" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Leaf 5 -->
+  <path d="M152 115 L143 108 L158 112 Z" fill="url(#darkLeafGradient)"/>
+  <path d="M149 113 L143 108" stroke="#10b981" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Leaf 6 -->
+  <path d="M150 135 L142 128 L156 132 Z" fill="url(#leafGradient)"/>
+  <path d="M147 133 L142 128" stroke="#059669" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Leaf 7 -->
+  <path d="M145 155 L140 148 L152 152 Z" fill="url(#darkLeafGradient)"/>
+  <path d="M143 153 L140 148" stroke="#10b981" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Leaf 8 - Larger at bottom -->
+  <path d="M138 170 L125 155 L145 162 Z" fill="url(#leafGradient)"/>
+  <path d="M136 168 L125 155" stroke="#059669" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Leaf 9 - Bottom left, medium -->
+  <path d="M75 165 L85 150 L70 160 Z" fill="url(#darkLeafGradient)"/>
+  <path d="M73 163 L85 150" stroke="#10b981" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Additional small leaves for detail -->
+  <path d="M148 45 L145 40 L152 42 Z" fill="#6ee7b7" opacity="0.6"/>
+  <path d="M146 85 L144 80 L149 82 Z" fill="#a7f3d0" opacity="0.5"/>
+  
+</svg>

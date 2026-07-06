@@ -1,0 +1,217 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:file((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/]+\\.\\w+)/",
+      "destination": "/:file",
+      "internal": true,
+      "missing": [
+        {
+          "type": "header",
+          "key": "x-nextjs-data"
+        }
+      ],
+      "statusCode": 308,
+      "regex": "^(?:/((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/]+\\.\\w+))/$"
+    },
+    {
+      "source": "/:notfile((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/\\.]+)",
+      "destination": "/:notfile/",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/\\.]+))$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/eventos/[id]",
+      "regex": "^/eventos/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/eventos/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]",
+      "regex": "^/projects/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]/voluntariado",
+      "regex": "^/projects/([^/]+?)/voluntariado(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)/voluntariado(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/about",
+      "regex": "^/about(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/about(?:/)?$"
+    },
+    {
+      "page": "/admin",
+      "regex": "^/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin(?:/)?$"
+    },
+    {
+      "page": "/admin/projects",
+      "regex": "^/admin/projects(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/projects(?:/)?$"
+    },
+    {
+      "page": "/calendario",
+      "regex": "^/calendario(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/calendario(?:/)?$"
+    },
+    {
+      "page": "/categorias/alimentacion",
+      "regex": "^/categorias/alimentacion(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/categorias/alimentacion(?:/)?$"
+    },
+    {
+      "page": "/categorias/comunidad",
+      "regex": "^/categorias/comunidad(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/categorias/comunidad(?:/)?$"
+    },
+    {
+      "page": "/categorias/educacion",
+      "regex": "^/categorias/educacion(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/categorias/educacion(?:/)?$"
+    },
+    {
+      "page": "/categorias/medio-ambiente",
+      "regex": "^/categorias/medio\\-ambiente(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/categorias/medio\\-ambiente(?:/)?$"
+    },
+    {
+      "page": "/categorias/oceanos",
+      "regex": "^/categorias/oceanos(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/categorias/oceanos(?:/)?$"
+    },
+    {
+      "page": "/categorias/salud",
+      "regex": "^/categorias/salud(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/categorias/salud(?:/)?$"
+    },
+    {
+      "page": "/chat",
+      "regex": "^/chat(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/chat(?:/)?$"
+    },
+    {
+      "page": "/chats",
+      "regex": "^/chats(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/chats(?:/)?$"
+    },
+    {
+      "page": "/eventos",
+      "regex": "^/eventos(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/eventos(?:/)?$"
+    },
+    {
+      "page": "/expansion",
+      "regex": "^/expansion(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/expansion(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/monetizacion",
+      "regex": "^/monetizacion(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/monetizacion(?:/)?$"
+    },
+    {
+      "page": "/perfil",
+      "regex": "^/perfil(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/perfil(?:/)?$"
+    },
+    {
+      "page": "/perfil/guardados",
+      "regex": "^/perfil/guardados(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/perfil/guardados(?:/)?$"
+    },
+    {
+      "page": "/robots.txt",
+      "regex": "^/robots\\.txt(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/robots\\.txt(?:/)?$"
+    },
+    {
+      "page": "/sitemap.xml",
+      "regex": "^/sitemap\\.xml(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sitemap\\.xml(?:/)?$"
+    },
+    {
+      "page": "/trabajos",
+      "regex": "^/trabajos(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/trabajos(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}
