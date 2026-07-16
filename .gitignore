@@ -2,3 +2,6 @@ node_modules/
 EcoNexo/node_modules/
 .next/
 EcoNexo/.next/
+.env
+.env.local
+.env.development.local

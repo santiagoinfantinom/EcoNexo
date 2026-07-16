@@ -271,7 +271,7 @@ export default function PreferencesModal({ isOpen, onClose }: { isOpen: boolean;
                                         <motion.div 
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
-                                            transition={{ type: "spring", duration: 0.6 }}
+                                            transition={{ type: "tween", duration: 0.5 }}
                                             className="w-24 h-24 mb-6 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(74,222,128,0.4)]"
                                         >
                                             <Check className="w-12 h-12 text-green-500" strokeWidth={3} />

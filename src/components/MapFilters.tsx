@@ -19,8 +19,11 @@ type MapFiltersProps = {
   onFilterChange: (filteredProjects: any[]) => void;
   onCenterOnLocation: () => void;
 };
-
-export default function MapFilters({ allProjects, onFilterChange, onCenterOnLocation }: MapFiltersProps) {
+export default function MapFilters({ 
+  allProjects, 
+  onFilterChange = () => {}, // <--- Le asignamos una función vacía por defecto
+  onCenterOnLocation 
+}: MapFiltersProps) {
   const { t, locale } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
@@ -35,76 +38,25 @@ export default function MapFilters({ allProjects, onFilterChange, onCenterOnLoca
   });
 
   // Get unique categories from projects
-  const availableCategories = Array.from(new Set(allProjects.map(p => p.category)));
-  const availableCountries = Array.from(new Set(allProjects.map(p => p.country))).filter(Boolean);
-  const availableCities = Array.from(new Set(allProjects.map(p => p.city))).filter(Boolean);
-
+const availableCategories = Array.from(new Set((allProjects || []).map(p => p?.category || p?.categoria).filter(Boolean)));
+const availableCountries = Array.from(new Set((allProjects || []).map(p => p?.country || p?.pais || p?.ubicacion).filter(Boolean)));
+const availableCities = Array.from(new Set((allProjects || []).map(p => p?.city || p?.ciudad || p?.municipio).filter(Boolean)));
   // Apply filters whenever filters change (debounced)
-  useEffect(() => {
+useEffect(() => {
     const timer = setTimeout(() => {
-      let filtered = [...allProjects];
+      let filtered = [...(allProjects || [])];
 
       // Category filter
       if (filters.categories.length > 0) {
-        filtered = filtered.filter(p => filters.categories.includes(p.category));
+        filtered = filtered.filter(p => filters.categories.includes(p?.category || p?.categoria));
       }
 
-      // Search query filter
-      if (filters.searchQuery) {
-        const query = filters.searchQuery.toLowerCase();
-        filtered = filtered.filter(p => 
-          p.name.toLowerCase().includes(query) ||
-          p.city.toLowerCase().includes(query) ||
-          p.country.toLowerCase().includes(query) ||
-          ((p as any).description && (p as any).description.toLowerCase().includes(query))
-        );
-      }
+      // El filtro de países y ciudades que tengas abajo...
 
-      // Country filter
-      if (filters.country) {
-        filtered = filtered.filter(p => (p.country || '').toLowerCase() === filters.country!.toLowerCase());
+      if (typeof onFilterChange === 'function') {
+        onFilterChange(filtered);
       }
-
-      // City filter
-      if (filters.city) {
-        filtered = filtered.filter(p => (p.city || '').toLowerCase() === filters.city!.toLowerCase());
-      }
-
-      // Type filter
-      if (filters.type === 'event') {
-        filtered = filtered.filter(p => !!p.startsAt && !p.isPermanent);
-      } else if (filters.type === 'permanent') {
-        filtered = filtered.filter(p => !!p.isPermanent);
-      }
-
-      // Date range filter
-      if (filters.dateRange) {
-        const start = new Date(filters.dateRange.start).getTime();
-        const end = new Date(filters.dateRange.end).getTime();
-        filtered = filtered.filter(p => {
-          if (!p.startsAt) return false;
-          const ts = new Date(p.startsAt).getTime();
-          return ts >= start && ts <= end;
-        });
-      }
-
-      // Available spots filter
-      if (filters.showOnlyAvailable) {
-        filtered = filtered.filter(p => p.spots && p.spots > 0);
-      }
-
-      onFilterChange(filtered);
-      
-      // Track only if meaningful changes happened
-      if (filters.categories.length > 0 || filters.searchQuery.length > 2) {
-        try {
-          trackEvent('map_filter_applied', {
-            categories: filters.categories.join(','),
-            query: filters.searchQuery || '',
-          });
-        } catch {}
-      }
-    }, 300); // 300ms debounce
+    }, 100);
 
     return () => clearTimeout(timer);
   }, [filters, allProjects, onFilterChange]);

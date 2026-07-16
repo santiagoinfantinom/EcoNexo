@@ -66,14 +66,13 @@ export default function ImageWithFallback({
             finalSrc = `${prefix}${src}`;
         }
 
-        // Force-replace legacy generic project thumbnails with thematic category images.
-        if (finalSrc && finalSrc.startsWith(`${prefix}/projects/`) || finalSrc?.startsWith('/projects/')) {
-            const categoryImage = getCategoryImage(category, prefix);
-            if (categoryImage) {
-                finalSrc = categoryImage;
-            }
-        }
-
+    // Force-replace legacy generic project thumbnails with thematic category images
+    if (finalSrc?.startsWith('/projects/') || finalSrc?.startsWith('/eventos/')) {
+      const categoryImage = getCategoryImage(category, prefix);
+      if (categoryImage) {
+        finalSrc = categoryImage;
+      }
+    }
         setImgSrc(finalSrc || fallbackSrc);
         setRetryStage(0);
     }, [src, fallbackSrc, category]);
