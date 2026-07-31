@@ -8,6 +8,7 @@ import GreenCompass from "@/components/GreenCompass";
 import PlausibleProvider from "next-plausible";
 import { generateMetadata, generateViewport } from "@/lib/metadata";
 import MainLayoutWrapper from "@/components/MainLayoutWrapper";
+import { Analytics } from '@vercel/analytics/react';
 
 const interTight = Inter_Tight({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
               </>
             }
           >
+            <Analytics/>
             {children}
           </MainLayoutWrapper>
         </PlausibleProvider>

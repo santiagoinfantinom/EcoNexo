@@ -79,6 +79,21 @@ export default function HeaderNav() {
               </div>
             </Link>
             {/* Top row: User Identity for Mobile */}
+            <button
+  onClick={() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => alert(`¡Listo! Proyectos detectados cerca de: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`),
+        (err) => alert("Para ver proyectos cerca, por favor autoriza tu ubicación en el navegador.")
+      );
+    } else {
+      alert("Tu navegador no soporta geolocalización.");
+    }
+  }}
+  className="flex items-center gap-1 text-sm font-semibold text-white/80 hover:text-white transition-colors"
+>
+  📍 <span>Cerca de mí</span>
+</button>
             <div className="md:hidden flex items-center gap-2">
               <button
                 type="button"
