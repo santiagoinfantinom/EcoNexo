@@ -40,15 +40,15 @@ export default function LanguagePicker({
   const selectLocale = (next: Locale) => {
     if (next !== locale) {
       setLocale(next);
-      markLanguageIntroComplete();
       window.dispatchEvent(new Event("econexo-locale-changed"));
       try {
         trackEvent("language_change", { to: next });
       } catch {
         /* optional */
       }
-      onSelect?.(next);
     }
+    markLanguageIntroComplete();
+    onSelect?.(next);
     setOpen(false);
   };
 
