@@ -248,7 +248,7 @@ export default async function ProjectPage({
     Math.round((details.budgetRaisedEur / details.budgetGoalEur) * 100)
   );
 
-  const paypalLink = process.env.NEXT_PUBLIC_PAYPAL_LINK || "https://www.paypal.com/donate";
+  const paypalLink = process.env.NEXT_PUBLIC_PAYPAL_LINK || "https://paypal.me/econexoweb";
   const stripeLink = process.env.NEXT_PUBLIC_STRIPE_LINK || "https://stripe.com/payments/checkout";
 
   // Translate impact tags based on current locale on the client, so pass raw labels

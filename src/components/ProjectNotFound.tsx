@@ -45,7 +45,7 @@ export default function ProjectNotFound() {
           { label: "Local", emoji: "🏠", color: "bg-gray-100 text-gray-800" },
           { label: "New", emoji: "✨", color: "bg-green-100 text-green-800" }
         ]}
-        paypalLink="https://paypal.com"
+        paypalLink="https://paypal.me/econexoweb"
         stripeLink="https://stripe.com"
       />
     );

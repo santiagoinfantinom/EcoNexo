@@ -19,7 +19,7 @@ export default function WelcomeMessage({ onClose }: WelcomeMessageProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("register");
-  const paypalUrl = process.env.NEXT_PUBLIC_PAYPAL_URL || '#';
+  const paypalUrl = process.env.NEXT_PUBLIC_PAYPAL_URL || 'https://paypal.me/econexoweb';
 
   useEffect(() => {
     // Mostrar el mensaje después de un pequeño delay para mejor UX

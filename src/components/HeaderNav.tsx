@@ -29,7 +29,7 @@ const OnboardingTour = dynamic(() => import("./OnboardingTour"), { ssr: false })
 
 export default function HeaderNav() {
   const { t, locale } = useI18n();
-  const paypalUrl = process.env.NEXT_PUBLIC_PAYPAL_URL || process.env.NEXT_PUBLIC_PAYPAL_LINK || '#';
+  const paypalUrl = process.env.NEXT_PUBLIC_PAYPAL_URL || process.env.NEXT_PUBLIC_PAYPAL_LINK || 'https://paypal.me/econexoweb';
   const { user, loading } = useAuth();
   const { showToast } = useToast();
   const [mounted, setMounted] = useState(false);
