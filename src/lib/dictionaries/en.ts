@@ -1253,4 +1253,7 @@ export default {
   impactStatPeople: "People mobilized",
   impactStatCo2: "Kg CO₂ avoided",
   nearbyProjectsFound: "{{count}} initiatives within 120 km",
+  loadingMap: "Loading map...",
+  mapUnavailable: "The map is temporarily unavailable.",
+  reloadPage: "Reload page",
 };

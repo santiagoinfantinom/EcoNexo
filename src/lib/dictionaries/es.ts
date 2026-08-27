@@ -1238,4 +1238,7 @@ export default {
   impactStatPeople: "Personas movilizadas",
   impactStatCo2: "Kg CO₂ evitados",
   nearbyProjectsFound: "{{count}} iniciativas en un radio de 120 km",
+  loadingMap: "Cargando mapa...",
+  mapUnavailable: "El mapa no está disponible temporalmente.",
+  reloadPage: "Recargar página",
 };

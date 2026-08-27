@@ -24,6 +24,9 @@ import {
   ShieldCheck,
   Handshake
 } from "lucide-react";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+// ... tus otros imports
 
 // Dynamic Import Heavy Components
 const AuthModal = dynamic(() => import("@/components/AuthModal"), { ssr: false });
@@ -40,38 +43,46 @@ const StreakBanner = dynamic(() => import("@/components/StreakBanner"), { ssr: f
 const HeroImpactMetrics = dynamic(() => import("@/components/HeroImpactMetrics"), { ssr: false });
 const MapNearMeCta = dynamic(() => import("@/components/MapNearMeCta"), { ssr: false });
 
+function MapErrorFallback() {
+  const { t } = useI18n();
+  return (
+    <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
+      <div className="text-center p-8">
+        <p className="text-gray-600 dark:text-gray-400 mb-4">
+          {t('mapUnavailable')}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          {t('reloadPage')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function MapLoadingFallback() {
+  const { t } = useI18n();
+  return (
+    <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-400">{t('loadingMap')}</p>
+      </div>
+    </div>
+  );
+}
+
 // Dynamic import to avoid SSR issues with Leaflet
 const InteractiveMap = dynamic(
   () => import("@/components/EuropeMap").then(mod => ({ default: mod.default })).catch(err => {
     console.error('Error loading EuropeMap:', err);
-    return {
-      default: () => (
-        <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
-          <div className="text-center p-8">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              El mapa no está disponible temporalmente.
-            </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-            >
-              Recargar página
-            </button>
-          </div>
-        </div>
-      )
-    };
+    return { default: MapErrorFallback };
   }),
   {
     ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Cargando mapa...</p>
-        </div>
-      </div>
-    )
+    loading: MapLoadingFallback
   }
 );
 
@@ -324,7 +335,7 @@ export default function Home() {
                 ) : (
                   <div className="animate-pulse flex flex-col items-center">
                     <div className="rounded-full h-12 w-12 border-b-2 border-green-600 mb-4"></div>
-                    <span className="text-gray-500">Cargando mapa...</span>
+                    <span className="text-gray-500">{t('loadingMap')}</span>
                   </div>
                 )
               ) : null}
