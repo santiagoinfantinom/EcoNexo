@@ -34,6 +34,11 @@ export interface Project {
   volunteers?: number;
   startsAt?: string;
   endsAt?: string;
+  testimonial?: string;
+  testimonial_en?: string;
+  testimonial_de?: string;
+  testimonialLang?: "es" | "en" | "de";
+  volunteerName?: string;
 }
 
 export const PROJECTS: Project[] = [

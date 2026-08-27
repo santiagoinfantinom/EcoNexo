@@ -1241,4 +1241,9 @@ export default {
   loadingMap: "Karte wird geladen...",
   mapUnavailable: "Die Karte ist vorübergehend nicht verfügbar.",
   reloadPage: "Seite neu laden",
+  communityVoice: "Stimme der Gemeinschaft",
+  originallyWrittenIn: "Ursprünglich auf {{lang}} verfasst",
+  defaultTestimonial: "Dank bürgerschaftlichem Engagement verwandeln wir diesen Ort in eine grüne Lunge für die Stadt.",
+  defaultVolunteerName: "EcoNexo-Projektleiter",
+  missionReflectionPrompt: "Kurze Reflexion",
 };

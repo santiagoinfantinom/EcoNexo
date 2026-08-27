@@ -1256,4 +1256,9 @@ export default {
   loadingMap: "Loading map...",
   mapUnavailable: "The map is temporarily unavailable.",
   reloadPage: "Reload page",
+  communityVoice: "Community Voice",
+  originallyWrittenIn: "Originally written in {{lang}}",
+  defaultTestimonial: "Thanks to citizen participation, we're transforming this space into a green lung for the city.",
+  defaultVolunteerName: "EcoNexo Project Leader",
+  missionReflectionPrompt: "Quick reflection",
 };

@@ -1241,4 +1241,9 @@ export default {
   loadingMap: "Cargando mapa...",
   mapUnavailable: "El mapa no está disponible temporalmente.",
   reloadPage: "Recargar página",
+  communityVoice: "Voz de la Comunidad",
+  originallyWrittenIn: "Escrito originalmente en {{lang}}",
+  defaultTestimonial: "Gracias a la participación ciudadana, estamos transformando este espacio en un pulmón verde para la ciudad.",
+  defaultVolunteerName: "Líder de Proyecto EcoNexo",
+  missionReflectionPrompt: "Reflexión rápida",
 };

@@ -16,7 +16,7 @@ const LOCATION_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const MISSION_RADIUS_KEY = "econexo_mission_radius_km";
 
 export default function MisionesPage() {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const { addPoints } = useSmartContext();
   const minuteLabel = locale === "es" ? "min" : locale === "de" ? "Min." : "min";
   const meterLabel = locale === "es" ? "m" : locale === "de" ? "m" : "m";
@@ -306,6 +306,13 @@ export default function MisionesPage() {
         ? (m.description_de || m.description_en || m.description)
         : (m.description || m.description_en || m.description_de);
 
+  const getLocalizedQuestion = (m: EcoMission) =>
+    locale === 'en'
+      ? (m.completionQuestion_en || m.completionQuestion)
+      : locale === 'de'
+        ? (m.completionQuestion_de || m.completionQuestion_en || m.completionQuestion)
+        : (m.completionQuestion || m.completionQuestion_en);
+
   const getDiffLabel = (d: EcoMission['difficulty']) => {
     const l = DIFFICULTY_LABELS[d];
     return locale === 'en' ? l.en : locale === 'de' ? l.de : l.es;
@@ -507,6 +514,11 @@ export default function MisionesPage() {
                       <span className="text-green-100 text-sm font-medium">
                         {locale === 'es' ? 'Karma aplicado en tu perfil' : locale === 'de' ? 'Karma wird im Profil gutgeschrieben' : 'Karma is reflected in your profile'}
                       </span>
+                      {getLocalizedQuestion(mission) && (
+                        <p className="mt-1 px-6 text-center text-white/90 text-xs font-medium italic">
+                          {t('missionReflectionPrompt')}: {getLocalizedQuestion(mission)}
+                        </p>
+                      )}
                     </motion.div>
                   )}
 

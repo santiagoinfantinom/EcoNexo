@@ -22,6 +22,10 @@ export interface EcoMission {
   distanceKm?: number;
   city?: string;
   country?: string;
+  // Reflection question shown when the mission is marked as completed
+  completionQuestion: string;
+  completionQuestion_en: string;
+  completionQuestion_de: string;
 }
 
 // Templates per category — these generate contextual missions from real projects
@@ -37,6 +41,9 @@ interface MissionTemplate {
   karmaReward: number;
   difficulty: MissionDifficulty;
   estimatedMinutes: number;
+  completionQuestion: string;
+  completionQuestion_en: string;
+  completionQuestion_de: string;
 }
 
 const TEMPLATES: Record<string, MissionTemplate[]> = {
@@ -48,7 +55,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Recoge al menos 5 piezas de basura alrededor de {project}. ¡Cada pequeña acción cuenta!',
       descPattern_en: 'Pick up at least 5 pieces of litter around {project}. Every small action counts!',
       descPattern_de: 'Sammle mindestens 5 Müllstücke rund um {project}. Jede kleine Aktion zählt!',
-      icon: '🧹', xpReward: 80, karmaReward: 15, difficulty: 'easy', estimatedMinutes: 15
+      icon: '🧹', xpReward: 80, karmaReward: 15, difficulty: 'easy', estimatedMinutes: 15,
+      completionQuestion: '¿Cuántas piezas de basura recogiste?',
+      completionQuestion_en: 'How many pieces of litter did you collect?',
+      completionQuestion_de: 'Wie viele Müllstücke hast du gesammelt?',
     },
     {
       titlePattern: 'Foto-reporte ambiental en {city}',
@@ -57,7 +67,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Documenta con 3 fotos el estado de espacios verdes cercanos a {project}.',
       descPattern_en: 'Document with 3 photos the state of green spaces near {project}.',
       descPattern_de: 'Dokumentiere mit 3 Fotos den Zustand der Grünflächen bei {project}.',
-      icon: '📸', xpReward: 60, karmaReward: 10, difficulty: 'easy', estimatedMinutes: 10
+      icon: '📸', xpReward: 60, karmaReward: 10, difficulty: 'easy', estimatedMinutes: 10,
+      completionQuestion: '¿Qué observaste sobre el estado del espacio verde?',
+      completionQuestion_en: 'What did you notice about the state of the green space?',
+      completionQuestion_de: 'Was ist dir am Zustand der Grünfläche aufgefallen?',
     },
     {
       titlePattern: 'Inspección de reciclaje en {city}',
@@ -66,7 +79,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Verifica que los contenedores de reciclaje del barrio estén correctamente señalizados.',
       descPattern_en: 'Check that the neighborhood recycling bins are properly marked.',
       descPattern_de: 'Überprüfe, ob die Recycling-Behälter richtig gekennzeichnet sind.',
-      icon: '♻️', xpReward: 100, karmaReward: 20, difficulty: 'medium', estimatedMinutes: 25
+      icon: '♻️', xpReward: 100, karmaReward: 20, difficulty: 'medium', estimatedMinutes: 25,
+      completionQuestion: '¿Estaban los contenedores correctamente señalizados?',
+      completionQuestion_en: 'Were the recycling bins properly labeled?',
+      completionQuestion_de: 'Waren die Recycling-Behälter richtig gekennzeichnet?',
     },
   ],
   'Alimentación': [
@@ -77,7 +93,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Visita el huerto comunitario de {project} y aprende qué se cultiva esta temporada.',
       descPattern_en: 'Visit the community garden at {project} and learn what is growing this season.',
       descPattern_de: 'Besuche den Gemeinschaftsgarten bei {project} und erfahre, was in dieser Saison waechst.',
-      icon: '🌱', xpReward: 70, karmaReward: 12, difficulty: 'easy', estimatedMinutes: 20
+      icon: '🌱', xpReward: 70, karmaReward: 12, difficulty: 'easy', estimatedMinutes: 20,
+      completionQuestion: '¿Qué se está cultivando en el huerto esta temporada?',
+      completionQuestion_en: "What's growing in the garden this season?",
+      completionQuestion_de: 'Was wächst gerade in diesem Garten?',
     },
     {
       titlePattern: 'Compra local cerca de {project}',
@@ -86,7 +105,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Compra un producto local de km 0 en tu mercado más cercano.',
       descPattern_en: 'Buy a local km-0 product at your nearest market.',
       descPattern_de: 'Kaufe ein lokales Produkt auf dem nächsten Markt.',
-      icon: '🛒', xpReward: 50, karmaReward: 8, difficulty: 'easy', estimatedMinutes: 15
+      icon: '🛒', xpReward: 50, karmaReward: 8, difficulty: 'easy', estimatedMinutes: 15,
+      completionQuestion: '¿Qué producto local compraste?',
+      completionQuestion_en: 'What local product did you buy?',
+      completionQuestion_de: 'Welches lokale Produkt hast du gekauft?',
     },
   ],
   'Océanos': [
@@ -97,7 +119,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Dedica 15 minutos a recolectar plásticos en la costa más cercana a {project}.',
       descPattern_en: 'Spend 15 minutes collecting plastics on the coast nearest to {project}.',
       descPattern_de: 'Verbringe 15 Minuten Plastik an der Küste bei {project} zu sammeln.',
-      icon: '🏖️', xpReward: 120, karmaReward: 25, difficulty: 'medium', estimatedMinutes: 20
+      icon: '🏖️', xpReward: 120, karmaReward: 25, difficulty: 'medium', estimatedMinutes: 20,
+      completionQuestion: '¿Cuánto plástico recogiste en la costa?',
+      completionQuestion_en: 'How much plastic did you collect from the coast?',
+      completionQuestion_de: 'Wie viel Plastik hast du an der Küste gesammelt?',
     },
   ],
   'Comunidad': [
@@ -108,7 +133,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Visita {project} y pregunta cómo puedes ayudar como voluntario.',
       descPattern_en: 'Visit {project} and ask how you can help as a volunteer.',
       descPattern_de: 'Besuche {project} und frage, wie du als Freiwilliger helfen kannst.',
-      icon: '🤝', xpReward: 90, karmaReward: 18, difficulty: 'easy', estimatedMinutes: 15
+      icon: '🤝', xpReward: 90, karmaReward: 18, difficulty: 'easy', estimatedMinutes: 15,
+      completionQuestion: '¿Cómo puedes ayudar a este proyecto como voluntario?',
+      completionQuestion_en: 'How can you help this project as a volunteer?',
+      completionQuestion_de: 'Wie kannst du diesem Projekt als Freiwillige*r helfen?',
     },
   ],
   'Educación': [
@@ -119,7 +147,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Cuéntale a 3 personas lo que hace {project}. ¡Educa e inspira!',
       descPattern_en: 'Tell 3 people about what {project} does. Educate and inspire!',
       descPattern_de: 'Erzähle 3 Personen, was {project} macht. Bilde und inspiriere!',
-      icon: '📚', xpReward: 60, karmaReward: 10, difficulty: 'easy', estimatedMinutes: 10
+      icon: '📚', xpReward: 60, karmaReward: 10, difficulty: 'easy', estimatedMinutes: 10,
+      completionQuestion: '¿A quién le contaste sobre este proyecto?',
+      completionQuestion_en: 'Who did you tell about this project?',
+      completionQuestion_de: 'Wem hast du von diesem Projekt erzählt?',
     },
   ],
   'Salud': [
@@ -130,7 +161,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Camina hasta {project} en vez de usar transporte motorizado. ¡Tu salud y el planeta lo agradecen!',
       descPattern_en: 'Walk to {project} instead of using motorized transport. Your health and the planet thank you!',
       descPattern_de: 'Geh zu Fuß zu {project} statt mit dem Auto. Deine Gesundheit und der Planet danken es dir!',
-      icon: '🚶', xpReward: 70, karmaReward: 10, difficulty: 'easy', estimatedMinutes: 30
+      icon: '🚶', xpReward: 70, karmaReward: 10, difficulty: 'easy', estimatedMinutes: 30,
+      completionQuestion: '¿Cómo te sentiste después de la caminata?',
+      completionQuestion_en: 'How did the walk make you feel?',
+      completionQuestion_de: 'Wie hast du dich nach dem Spaziergang gefühlt?',
     },
   ],
   'Tecnología': [
@@ -141,7 +175,10 @@ const TEMPLATES: Record<string, MissionTemplate[]> = {
       descPattern: 'Crea un post en redes sociales etiquetando a {project} y contando su impacto.',
       descPattern_en: 'Create a social media post tagging {project} and sharing their impact.',
       descPattern_de: 'Erstelle einen Social-Media-Beitrag und markiere {project} mit ihrem Impact.',
-      icon: '💻', xpReward: 55, karmaReward: 8, difficulty: 'easy', estimatedMinutes: 10
+      icon: '💻', xpReward: 55, karmaReward: 8, difficulty: 'easy', estimatedMinutes: 10,
+      completionQuestion: '¿Qué impacto destacaste en tu publicación?',
+      completionQuestion_en: 'What impact did you highlight in your post?',
+      completionQuestion_de: 'Welchen Impact hast du in deinem Beitrag hervorgehoben?',
     },
   ],
 };
@@ -188,6 +225,9 @@ const FALLBACK_TEMPLATES: MissionTemplate[] = [
     karmaReward: 8,
     difficulty: "easy",
     estimatedMinutes: 10,
+    completionQuestion: "¿Qué acción positiva realizaste?",
+    completionQuestion_en: "What positive action did you take?",
+    completionQuestion_de: "Welche positive Aktion hast du durchgeführt?",
   },
 ];
 
@@ -281,6 +321,9 @@ export function generateMissions(
       distanceKm: distance ? Math.round(distance * 10) / 10 : undefined,
       city: project.city,
       country: project.country,
+      completionQuestion: template.completionQuestion,
+      completionQuestion_en: template.completionQuestion_en,
+      completionQuestion_de: template.completionQuestion_de,
     });
 
     if (missions.length >= maxResults) break;
