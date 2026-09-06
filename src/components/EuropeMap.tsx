@@ -50,6 +50,23 @@ function LocationMarker({ location }: { location: UserLocation | null }) {
   );
 }
 
+/** Flies the map to a point whenever MapSearch (country/city/project search) dispatches one. */
+function MapCenterListener() {
+  const map = useMap();
+
+  useEffect(() => {
+    const onCenter = (e: Event) => {
+      const { lat, lon } = (e as CustomEvent<{ lat: number; lon: number }>).detail || ({} as any);
+      if (typeof lat !== "number" || typeof lon !== "number") return;
+      map.flyTo([lat, lon], Math.max(map.getZoom(), 6));
+    };
+    window.addEventListener("econexo:center", onCenter);
+    return () => window.removeEventListener("econexo:center", onCenter);
+  }, [map]);
+
+  return null;
+}
+
 const NEARBY_RADIUS_KM = 50;
 
 export default function InteractiveMap({ projects, center, zoom }: any) {
@@ -183,7 +200,9 @@ const getTranslatedText = (project: any, field: string) => {
 
       <MapContainer key={`map-${locale}`} style={{ height: "600px", width: "100%" }} center={center || [50.11, 8.68]} zoom={zoom || 4} scrollWheelZoom={false}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <LocationMarker location={location} />{Array.isArray(projects) && projects.map((project: any) => (
+        <LocationMarker location={location} />
+        <MapCenterListener />
+        {Array.isArray(projects) && projects.map((project: any) => (
     <Marker 
       key={project.id} 
       position={[project.lat, project.lng]} 

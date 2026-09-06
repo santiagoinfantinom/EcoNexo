@@ -42,6 +42,7 @@ const EcoTipsBulletPoints = dynamic(() => import("@/components/EcoTipsBulletPoin
 const StreakBanner = dynamic(() => import("@/components/StreakBanner"), { ssr: false });
 const HeroImpactMetrics = dynamic(() => import("@/components/HeroImpactMetrics"), { ssr: false });
 const MapNearMeCta = dynamic(() => import("@/components/MapNearMeCta"), { ssr: false });
+const MapSearch = dynamic(() => import("@/components/MapSearch"), { ssr: false });
 
 function MapErrorFallback() {
   const { t } = useI18n();
@@ -119,6 +120,7 @@ export default function Home() {
   const { ref: tipsRef, inView: tipsInView } = useInView({ triggerOnce: true, rootMargin: "200px 0px" });
 
   const [mapProjects, setMapProjects] = useState<any[]>([]);
+  const [mapSearchResults, setMapSearchResults] = useState<any[] | null>(null);
 
   useEffect(() => {
     if (mapInView && mapProjects.length === 0) {
@@ -317,6 +319,20 @@ export default function Home() {
             <p className="px-4 pb-3 text-sm text-gray-600 dark:text-gray-300">
               {locale === "es" ? "Descubre iniciativas en tiempo real, filtra por impacto y entra directo a colaborar." : locale === "de" ? "Entdecke Initiativen in Echtzeit, filtere nach Wirkung und mach direkt mit." : "Discover initiatives in real time, filter by impact, and jump in to collaborate."}
             </p>
+            {mapProjects.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2 px-4 pb-3">
+                <MapSearch allProjects={mapProjects} onResults={setMapSearchResults} />
+                {mapSearchResults && (
+                  <button
+                    type="button"
+                    onClick={() => setMapSearchResults(null)}
+                    className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200"
+                  >
+                    {locale === "es" ? "Mostrar todos" : locale === "de" ? "Alle anzeigen" : "Show all"}
+                  </button>
+                )}
+              </div>
+            )}
             <div className="flex flex-wrap gap-2 px-4 pb-3">
               <Link href="/eventos/disponibles" className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200">
                 {locale === "es" ? "Eventos cercanos" : locale === "de" ? "Nahe Events" : "Nearby events"}
@@ -331,7 +347,7 @@ export default function Home() {
             <div className="rounded-xl h-[460px] md:h-[620px] shadow-inner bg-gray-100 dark:bg-gray-800 flex justify-center items-center">
               {showMap && isClient && typeof window !== 'undefined' ? (
                 mapInView && mapProjects.length > 0 ? (
-                  <InteractiveMap projects={mapProjects} region="europe" />
+                  <InteractiveMap projects={mapSearchResults ?? mapProjects} region="europe" />
                 ) : (
                   <div className="animate-pulse flex flex-col items-center">
                     <div className="rounded-full h-12 w-12 border-b-2 border-green-600 mb-4"></div>
