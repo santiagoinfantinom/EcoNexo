@@ -328,7 +328,7 @@ export default function Home() {
                 {locale === "es" ? "Ver tendencias" : locale === "de" ? "Trends ansehen" : "See trends"}
               </Link>
             </div>
-            <div className="rounded-xl overflow-hidden h-[460px] md:h-[620px] shadow-inner bg-gray-100 dark:bg-gray-800 flex justify-center items-center">
+            <div className="rounded-xl h-[460px] md:h-[620px] shadow-inner bg-gray-100 dark:bg-gray-800 flex justify-center items-center">
               {showMap && isClient && typeof window !== 'undefined' ? (
                 mapInView && mapProjects.length > 0 ? (
                   <InteractiveMap projects={mapProjects} region="europe" />

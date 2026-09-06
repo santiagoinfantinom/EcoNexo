@@ -115,7 +115,16 @@ const getTranslatedText = (project: any, field: string) => {
   }
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div
+      className="relative w-full h-full"
+      onWheel={(e) => {
+        // scrollWheelZoom is off, but the Leaflet container's own
+        // `overflow: hidden` stops the browser from chaining an unused wheel
+        // scroll up to the page. Forward it manually so scrolling past the
+        // map always works.
+        window.scrollBy({ top: e.deltaY, left: 0 });
+      }}
+    >
       {/* Locate me button — especially useful on mobile where the full map is hard to scan */}
       <button
         type="button"
@@ -172,7 +181,7 @@ const getTranslatedText = (project: any, field: string) => {
         </div>
       )}
 
-      <MapContainer key={`map-${locale}`} style={{ height: "600px", width: "100%" }} center={center || [50.11, 8.68]} zoom={zoom || 4}>
+      <MapContainer key={`map-${locale}`} style={{ height: "600px", width: "100%" }} center={center || [50.11, 8.68]} zoom={zoom || 4} scrollWheelZoom={false}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <LocationMarker location={location} />{Array.isArray(projects) && projects.map((project: any) => (
     <Marker 
