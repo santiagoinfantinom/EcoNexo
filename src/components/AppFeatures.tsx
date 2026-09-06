@@ -20,9 +20,9 @@ export default function AppFeatures() {
       id: 'map',
       icon: '🗺️',
       title: t('sustainableProjectsMap'),
-      description: locale === 'es' ? 'Explora proyectos sostenibles en el mapa interactivo de Europa' :
-                   locale === 'de' ? 'Erkunden Sie nachhaltige Projekte auf der interaktiven Europakarte' :
-                   'Explore sustainable projects on the interactive Europe map',
+      description: locale === 'es' ? 'Explora proyectos sostenibles en el mapa interactivo mundial' :
+                   locale === 'de' ? 'Erkunden Sie nachhaltige Projekte auf der interaktiven Weltkarte' :
+                   'Explore sustainable projects on the interactive world map',
       link: '/',
       color: 'bg-green-500'
     },

@@ -373,8 +373,8 @@ export const DICTS: Record<Locale, Dict> = {
     orGoDirectlyToEn: "Or go directly to:",
     orGoDirectlyToDe: "Oder direkt zu:",
     // App metadata
-    appTitle: "EcoNexo - Sustainable Projects in Europe",
-    appDescription: "Connect with sustainable projects and events across Europe. Join the community building a greener future.",
+    appTitle: "EcoNexo - Sustainable Projects Around the World",
+    appDescription: "Connect with sustainable projects and events around the globe. Join the community building a greener future.",
     // About page
     aboutTitle: "About EcoNexo",
     aboutSubtitle: "Connecting Europe's environmental community for a sustainable future",
@@ -1461,8 +1461,8 @@ export const DICTS: Record<Locale, Dict> = {
     orGoDirectlyToEn: "Or go directly to:",
     orGoDirectlyToDe: "Oder direkt zu:",
     // App metadata
-    appTitle: "EcoNexo - Nachhaltige Projekte in Europa",
-    appDescription: "Verbinden Sie sich mit nachhaltigen Projekten und Veranstaltungen in ganz Europa. Treten Sie der Gemeinschaft bei, die eine grünere Zukunft aufbaut.",
+    appTitle: "EcoNexo - Nachhaltige Projekte weltweit",
+    appDescription: "Verbinden Sie sich mit nachhaltigen Projekten und Veranstaltungen weltweit. Treten Sie der Gemeinschaft bei, die eine grünere Zukunft aufbaut.",
     // About page
     aboutTitle: "Über EcoNexo",
     aboutSubtitle: "Europas Umweltgemeinschaft für eine nachhaltige Zukunft verbinden",
@@ -2518,8 +2518,8 @@ export const DICTS: Record<Locale, Dict> = {
     orGoDirectlyToEn: "Or go directly to:",
     orGoDirectlyToDe: "Oder direkt zu:",
     // App metadata
-    appTitle: "EcoNexo - Proyectos Sostenibles en Europa",
-    appDescription: "Conecta con proyectos y eventos sostenibles en toda Europa. Únete a la comunidad que está construyendo un futuro más verde.",
+    appTitle: "EcoNexo - Proyectos Sostenibles en el Mundo",
+    appDescription: "Conecta con proyectos y eventos sostenibles alrededor del mundo. Únete a la comunidad que está construyendo un futuro más verde.",
     // About page
     aboutTitle: "Sobre EcoNexo",
     aboutSubtitle: "Conectando la comunidad ambiental de Europa para un futuro sostenible",

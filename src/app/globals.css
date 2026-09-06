@@ -958,6 +958,19 @@ div[class*="recaptcha-error"] {
   color: #047857 !important;
 }
 
+/*
+ * Fix: scrollable containers inside fixed-position modals (preferences,
+ * eco tips, workshop details, etc.) don't respond to touch-drag scrolling
+ * on Android Chrome even though wheel/programmatic scroll works — the
+ * effective touch-action for the container ends up ambiguous when nested
+ * under motion/gesture-enabled children. Making it explicit fixes it.
+ */
+.overflow-y-auto {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 html, body, #__next, main {
   overflow-y: auto !important;
   height: auto !important;
